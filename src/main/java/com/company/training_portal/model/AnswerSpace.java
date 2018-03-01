@@ -38,6 +38,26 @@ public class AnswerSpace {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnswerSpace that = (AnswerSpace) o;
+
+        if (!answerSpaceId.equals(that.answerSpaceId)) return false;
+        if (!questionId.equals(that.questionId)) return false;
+        return studentAnswer.equals(that.studentAnswer);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = answerSpaceId.hashCode();
+        result = 31 * result + questionId.hashCode();
+        result = 31 * result + studentAnswer.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "AnswerSpace{" +
                 "answerSpaceId=" + answerSpaceId +

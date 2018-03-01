@@ -79,6 +79,35 @@ public class Question {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        if (!questionId.equals(question.questionId)) return false;
+        if (!quizId.equals(question.quizId)) return false;
+        if (!name.equals(question.name)) return false;
+        if (!body.equals(question.body)) return false;
+        if (explanation != null ? !explanation.equals(question.explanation) : question.explanation != null)
+            return false;
+        if (questionType != question.questionType) return false;
+        return score != null ? score.equals(question.score) : question.score == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = questionId.hashCode();
+        result = 31 * result + quizId.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + body.hashCode();
+        result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
+        result = 31 * result + questionType.hashCode();
+        result = 31 * result + (score != null ? score.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Question{" +
                 "questionId=" + questionId +

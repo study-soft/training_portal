@@ -80,6 +80,34 @@ public class Quiz {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Quiz quiz = (Quiz) o;
+
+        if (!quizId.equals(quiz.quizId)) return false;
+        if (!name.equals(quiz.name)) return false;
+        if (!description.equals(quiz.description)) return false;
+        if (explanation != null ? !explanation.equals(quiz.explanation) : quiz.explanation != null) return false;
+        if (!creationDate.equals(quiz.creationDate)) return false;
+        if (passingTime != null ? !passingTime.equals(quiz.passingTime) : quiz.passingTime != null) return false;
+        return authorId.equals(quiz.authorId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = quizId.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
+        result = 31 * result + creationDate.hashCode();
+        result = 31 * result + (passingTime != null ? passingTime.hashCode() : 0);
+        result = 31 * result + authorId.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Quiz{" +
                 "quizId=" + quizId +

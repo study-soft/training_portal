@@ -10,8 +10,8 @@ public class UserQuizJunction {
     private Long userId;
     private Long quizId;
     private Integer result;
-    private LocalDateTime finishDate;
     private LocalDateTime submitDate;
+    private LocalDateTime finishDate;
     private Integer reopenCounter;
     private QuizStatus quizStatus;
 
@@ -20,8 +20,8 @@ public class UserQuizJunction {
         this.userId = builder.userId;
         this.quizId = builder.quizId;
         this.result = builder.result;
-        this.finishDate = builder.finishDate;
         this.submitDate = builder.submitDate;
+        this.finishDate = builder.finishDate;
         this.reopenCounter = builder.reopenCounter;
         this.quizStatus = builder.quizStatus;
     }
@@ -88,6 +88,37 @@ public class UserQuizJunction {
 
     public void setQuizStatus(QuizStatus quizStatus) {
         this.quizStatus = quizStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserQuizJunction that = (UserQuizJunction) o;
+
+        if (!userQuizJunctionId.equals(that.userQuizJunctionId)) return false;
+        if (!userId.equals(that.userId)) return false;
+        if (!quizId.equals(that.quizId)) return false;
+        if (result != null ? !result.equals(that.result) : that.result != null) return false;
+        if (submitDate != null ? !submitDate.equals(that.submitDate) : that.submitDate != null) return false;
+        if (finishDate != null ? !finishDate.equals(that.finishDate) : that.finishDate != null) return false;
+        if (reopenCounter != null ? !reopenCounter.equals(that.reopenCounter) : that.reopenCounter != null)
+            return false;
+        return quizStatus == that.quizStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        int result1 = userQuizJunctionId.hashCode();
+        result1 = 31 * result1 + userId.hashCode();
+        result1 = 31 * result1 + quizId.hashCode();
+        result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
+        result1 = 31 * result1 + (submitDate != null ? submitDate.hashCode() : 0);
+        result1 = 31 * result1 + (finishDate != null ? finishDate.hashCode() : 0);
+        result1 = 31 * result1 + (reopenCounter != null ? reopenCounter.hashCode() : 0);
+        result1 = 31 * result1 + quizStatus.hashCode();
+        return result1;
     }
 
     @Override

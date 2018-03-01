@@ -1,7 +1,8 @@
 package com.company.training_portal.model.enums;
 
 public enum QuizStatus {
-    CREATED(0), OPENED(1), CLOSED(2), REOPENED(3);
+    OPENED(0), PASSED_UNCONFIRMED(1), PASSED_CONFIRMED(2), REOPENED(3), CLOSED(4);
+
     private int id;
 
     QuizStatus(int id) {

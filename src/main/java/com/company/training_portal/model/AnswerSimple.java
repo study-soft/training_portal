@@ -57,6 +57,7 @@ public class AnswerSimple {
     }
 
     public static final class AnswerSimpleBuilder {
+
         private Long answerSimpleId;
         private Long questionId;
         private String body;

@@ -39,6 +39,27 @@ public class AnswerAccordance {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnswerAccordance that = (AnswerAccordance) o;
+
+        if (answerAccordanceId != null ? !answerAccordanceId.equals(that.answerAccordanceId) : that.answerAccordanceId != null)
+            return false;
+        if (questionId != null ? !questionId.equals(that.questionId) : that.questionId != null) return false;
+        return correctMap != null ? correctMap.equals(that.correctMap) : that.correctMap == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = answerAccordanceId != null ? answerAccordanceId.hashCode() : 0;
+        result = 31 * result + (questionId != null ? questionId.hashCode() : 0);
+        result = 31 * result + (correctMap != null ? correctMap.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "AnswerAccordance{" +
                 "answerAccordanceId=" + answerAccordanceId +

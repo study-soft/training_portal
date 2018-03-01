@@ -49,6 +49,28 @@ public class Group {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Group group = (Group) o;
+
+        if (groupId != null ? !groupId.equals(group.groupId) : group.groupId != null) return false;
+        if (name != null ? !name.equals(group.name) : group.name != null) return false;
+        if (description != null ? !description.equals(group.description) : group.description != null) return false;
+        return creationDate != null ? creationDate.equals(group.creationDate) : group.creationDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = groupId != null ? groupId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Group{" +
                 "groupId=" + groupId +

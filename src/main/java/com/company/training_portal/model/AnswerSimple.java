@@ -47,6 +47,29 @@ public class AnswerSimple {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnswerSimple that = (AnswerSimple) o;
+
+        if (correct != that.correct) return false;
+        if (answerSimpleId != null ? !answerSimpleId.equals(that.answerSimpleId) : that.answerSimpleId != null)
+            return false;
+        if (questionId != null ? !questionId.equals(that.questionId) : that.questionId != null) return false;
+        return body != null ? body.equals(that.body) : that.body == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = answerSimpleId != null ? answerSimpleId.hashCode() : 0;
+        result = 31 * result + (questionId != null ? questionId.hashCode() : 0);
+        result = 31 * result + (body != null ? body.hashCode() : 0);
+        result = 31 * result + (correct ? 1 : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "AnswerSimple{" +
                 "answerSimpleId=" + answerSimpleId +

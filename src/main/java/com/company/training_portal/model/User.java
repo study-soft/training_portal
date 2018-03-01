@@ -122,6 +122,42 @@ public class User {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!userId.equals(user.userId)) return false;
+        if (!groupId.equals(user.groupId)) return false;
+        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
+        if (!email.equals(user.email)) return false;
+        if (dateOfBirth != null ? !dateOfBirth.equals(user.dateOfBirth) : user.dateOfBirth != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
+        if (!Arrays.equals(photo, user.photo)) return false;
+        if (!login.equals(user.login)) return false;
+        if (!password.equals(user.password)) return false;
+        return userRole == user.userRole;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId.hashCode();
+        result = 31 * result + groupId.hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + email.hashCode();
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(photo);
+        result = 31 * result + login.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + userRole.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +

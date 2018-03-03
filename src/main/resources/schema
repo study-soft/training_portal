@@ -1,30 +1,28 @@
 -- tables
--- Table: answer_accordance
-CREATE TABLE answer_accordance (
+-- Table: answers_accordance
+CREATE TABLE answers_accordance (
   answer_accordance_id bigint NOT NULL AUTO_INCREMENT,
-  correct_map_id bigint NOT NULL,
   question_id bigint NOT NULL,
   CONSTRAINT answer_accordance_pk PRIMARY KEY (answer_accordance_id)
 );
 
--- Table: answer_number
-CREATE TABLE answer_number (
+-- Table: answers_number
+CREATE TABLE answers_number (
   answer_number_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
   correct int NOT NULL,
   CONSTRAINT answer_space_pk PRIMARY KEY (answer_number_id)
 );
 
--- Table: answer_sequence
-CREATE TABLE answer_sequence (
+-- Table: answers_sequence
+CREATE TABLE answers_sequence (
   answer_sequence_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
-  correct_list_id bigint NOT NULL,
   CONSTRAINT answer_sequence_pk PRIMARY KEY (answer_sequence_id)
 );
 
--- Table: answer_simple
-CREATE TABLE answer_simple (
+-- Table: answers_simple
+CREATE TABLE answers_simple (
   answer_simple_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
   body varchar(256) NOT NULL,
@@ -32,32 +30,34 @@ CREATE TABLE answer_simple (
   CONSTRAINT answer_simple_pk PRIMARY KEY (answer_simple_id)
 );
 
--- Table: correct_list
-CREATE TABLE correct_list (
+-- Table: correct_lists
+CREATE TABLE correct_lists (
   correct_list_id bigint NOT NULL AUTO_INCREMENT,
   item varchar(256) NOT NULL,
+  answer_sequence_id BIGINT NOT NULL ,
   CONSTRAINT correct_list_pk PRIMARY KEY (correct_list_id)
 );
 
--- Table: correct_map
-CREATE TABLE correct_map (
+-- Table: correct_maps
+CREATE TABLE correct_maps (
   correct_map_id bigint NOT NULL AUTO_INCREMENT,
   left_side varchar(64) NOT NULL,
   right_side varchar(64) NOT NULL,
+  answer_accordance_id BIGINT NOT NULL ,
   CONSTRAINT correct_map_pk PRIMARY KEY (correct_map_id)
 );
 
--- Table: group
-CREATE TABLE `group` (
+-- Table: groups
+CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(64) NOT NULL,
+  name varchar(64) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   creation_date date NOT NULL,
   CONSTRAINT group_pk PRIMARY KEY (group_id)
 );
 
--- Table: question
-CREATE TABLE question (
+-- Table: questions
+CREATE TABLE questions (
   question_id bigint NOT NULL AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
   name varchar(64) NOT NULL,
@@ -68,10 +68,10 @@ CREATE TABLE question (
   CONSTRAINT question_pk PRIMARY KEY (question_id)
 );
 
--- Table: quiz
-CREATE TABLE quiz (
+-- Table: quizzes
+CREATE TABLE quizzes (
   quiz_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(64) NOT NULL,
+  name varchar(64) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   explanation varchar(2048) NULL,
   creation_date date NOT NULL,
@@ -80,72 +80,72 @@ CREATE TABLE quiz (
   CONSTRAINT quiz_pk PRIMARY KEY (quiz_id)
 );
 
--- Table: user
-CREATE TABLE user (
+-- Table: users
+CREATE TABLE users (
   user_id bigint NOT NULL AUTO_INCREMENT,
-  group_id bigint NOT NULL,
+  group_id bigint NULL,
   first_name varchar(64) NULL,
   last_name varchar(64) NULL,
-  email varchar(64) NOT NULL,
+  email varchar(64) UNIQUE NOT NULL,
   date_of_birth varchar(64) NULL,
-  phone_number varchar(64) NOT NULL,
+  phone_number varchar(64) UNIQUE NOT NULL,
   photo blob NULL,
-  login varchar(64) NOT NULL,
+  login varchar(64) UNIQUE NOT NULL,
   password varchar(64) NOT NULL,
   user_role varchar(64) NOT NULL,
   CONSTRAINT user_pk PRIMARY KEY (user_id)
 );
 
--- Table: user_quiz_junction
-CREATE TABLE user_quiz_junction (
+-- Table: user_quiz_junctions
+CREATE TABLE user_quiz_junctions (
   user_quiz_junction_id bigint NOT NULL AUTO_INCREMENT,
   user_id bigint NOT NULL,
   quiz_id bigint NOT NULL,
   result int NOT NULL,
-  submit_date date NULL,
-  finish_date date NULL,
+  submit_date datetime NULL,
+  finish_date datetime NULL,
   reopen_counter int NOT NULL,
   quiz_status varchar(64) NOT NULL,
   CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_quiz_junction_id)
 );
 
 -- foreign keys
--- Reference: User_Group (table: user)
-ALTER TABLE user ADD CONSTRAINT user_group_fk FOREIGN KEY (group_id)
-REFERENCES `group` (group_id);
+-- Reference: User_Group (table: users)
+ALTER TABLE users ADD CONSTRAINT users_groups_fk FOREIGN KEY (group_id)
+REFERENCES groups (group_id);
 
--- Reference: answer_accordance_correct_map (table: answer_accordance)
-ALTER TABLE answer_accordance ADD CONSTRAINT answer_accordance_correct_map_fk FOREIGN KEY (correct_map_id)
-REFERENCES correct_map (correct_map_id);
+-- Reference: answer_accordance_correct_map (table: answers_accordance)
+ALTER TABLE correct_maps ADD CONSTRAINT correct_maps_answers_accordance_fk FOREIGN KEY (answer_accordance_id)
+REFERENCES answers_accordance (answer_accordance_id);
 
--- Reference: answer_accordance_question (table: answer_accordance)
-ALTER TABLE answer_accordance ADD CONSTRAINT answer_accordance_question_fk FOREIGN KEY (question_id)
-REFERENCES question (question_id);
+-- Reference: answer_accordance_question (table: answers_accordance)
+ALTER TABLE answers_accordance ADD CONSTRAINT answers_accordance_questions_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
 
--- Reference: correct_list_answer_sequence (table: answer_sequence)
-ALTER TABLE answer_sequence ADD CONSTRAINT correct_list_answer_sequence_fk FOREIGN KEY (correct_list_id)
-REFERENCES correct_list (correct_list_id);
+-- Reference: correct_list_answer_sequence (table: answers_sequence)
+ALTER TABLE correct_lists ADD CONSTRAINT answer_sequences_correct_lists_fk FOREIGN KEY (answer_sequence_id)
+REFERENCES answers_sequence (answer_sequence_id);
 
--- Reference: question_answer_sequence (table: answer_sequence)
-ALTER TABLE answer_sequence ADD CONSTRAINT question_answer_sequence_fk FOREIGN KEY (question_id)
-REFERENCES question (question_id);
+-- Reference: question_answer_sequence (table: answers_sequence)
+ALTER TABLE answers_sequence ADD CONSTRAINT questions_answers_sequence_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
 
--- Reference: question_answer_simple (table: answer_simple)
-ALTER TABLE answer_simple ADD CONSTRAINT question_answer_simple_fk FOREIGN KEY (question_id)
-REFERENCES question (question_id);
+-- Reference: question_answer_simple (table: answers_simple)
+ALTER TABLE answers_simple ADD CONSTRAINT questions_answers_simple_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
 
--- Reference: question_answer_space (table: answer_number)
-ALTER TABLE answer_number ADD CONSTRAINT question_answer_space_fk FOREIGN KEY (question_id)
-REFERENCES question (question_id);
+-- Reference: question_answer_space (table: answers_number)
+ALTER TABLE answers_number ADD CONSTRAINT questions_answers_space_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
 
--- Reference: question_quiz (table: question)
-ALTER TABLE question ADD CONSTRAINT question_quiz_fk FOREIGN KEY (quiz_id)
-REFERENCES quiz (quiz_id);
+-- Reference: question_quiz (table: questions)
+ALTER TABLE questions ADD CONSTRAINT questions_quizzes_fk FOREIGN KEY (quiz_id)
+REFERENCES quizzes (quiz_id);
 
--- Reference: user_quiz_junction_quiz (table: user_quiz_junction)
-ALTER TABLE user_quiz_junction ADD CONSTRAINT user_quiz_junction_quiz_fk FOREIGN KEY (quiz_id)
-REFERENCES quiz (quiz_id);
+-- Reference: user_quiz_junction_quiz (table: user_quiz_junctions)
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_quizzes_fk FOREIGN KEY (quiz_id)
+REFERENCES quizzes (quiz_id);
 
--- Reference: user_quiz_junction_user (table: user_quiz_junction)
-ALTER TABLE user_quiz_junction ADD CONSTRAINT user_quiz_junction_user_fk FOREIGN KEY (user_id)
-REFERENCES user (user_id);
+-- Reference: user_quiz_junction_user (table: user_quiz_junctions)
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_users_fk FOREIGN KEY (user_id)
+REFERENCES users (user_id);

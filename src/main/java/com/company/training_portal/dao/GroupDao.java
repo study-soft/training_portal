@@ -20,9 +20,9 @@ public interface GroupDao {
 
     Integer findGroupsNumberByAuthorId(Long authorId);
 
-    Integer addGroup(Group group);
+    Long addGroup(Group group);
 
-    void updateGroup(Group group);
+    void editGroup(Group group);
 
-    void deleteGroup(Integer groupId);
+    void deleteGroup(Long groupId);
 }

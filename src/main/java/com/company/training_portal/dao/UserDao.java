@@ -21,7 +21,9 @@ public interface UserDao {
 
     Collection<User> findAllStudents();
 
-    Collection<User> findAllTeacers();
+    Collection<User> findAllTeachers();
+
+    Collection<User> findAllStudentsByQuizIdAndGroupId(Long quizId, Long groupId);
 
     Integer findStudentsNumber();
 
@@ -45,13 +47,13 @@ public interface UserDao {
 
     boolean checkUserByLoginAndPassword(User user);
 
-    Integer addUser(User user);
+    Long addUser(User user);
 
     void addStudentToGroup(Integer userId, Integer groupId);
 
     void addStudentsToGroup(Collection<User> users, Integer groupId);
 
-    void updateUser(User user);
+    void editUser(User user);
 
-    void deleteUserFromGroup(Integer userId);
+    void deleteUserFromGroup(Long userId);
 }

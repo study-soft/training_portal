@@ -25,7 +25,7 @@ CREATE TABLE answers_sequence (
 CREATE TABLE answers_simple (
   answer_simple_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
-  body varchar(256) NOT NULL,
+  body varchar(255) NOT NULL,
   correct bool NOT NULL,
   CONSTRAINT answer_simple_pk PRIMARY KEY (answer_simple_id)
 );
@@ -33,7 +33,7 @@ CREATE TABLE answers_simple (
 -- Table: correct_lists
 CREATE TABLE correct_lists (
   correct_list_id bigint NOT NULL AUTO_INCREMENT,
-  item varchar(256) NOT NULL,
+  item varchar(255) NOT NULL,
   answer_sequence_id BIGINT NOT NULL ,
   CONSTRAINT correct_list_pk PRIMARY KEY (correct_list_id)
 );
@@ -41,8 +41,8 @@ CREATE TABLE correct_lists (
 -- Table: correct_maps
 CREATE TABLE correct_maps (
   correct_map_id bigint NOT NULL AUTO_INCREMENT,
-  left_side varchar(64) NOT NULL,
-  right_side varchar(64) NOT NULL,
+  left_side varchar(255) NOT NULL,
+  right_side varchar(255) NOT NULL,
   answer_accordance_id BIGINT NOT NULL ,
   CONSTRAINT correct_map_pk PRIMARY KEY (correct_map_id)
 );
@@ -50,7 +50,7 @@ CREATE TABLE correct_maps (
 -- Table: groups
 CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(64) UNIQUE NOT NULL,
+  name varchar(255) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   creation_date date NOT NULL,
   author_id BIGINT NOT NULL,
@@ -61,10 +61,10 @@ CREATE TABLE groups (
 CREATE TABLE questions (
   question_id bigint NOT NULL AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
-  name varchar(64) NOT NULL,
+  name varchar(255) NOT NULL,
   body varchar(2048) NOT NULL,
   explanation varchar(2048) NULL,
-  question_type varchar(64) NOT NULL,
+  question_type varchar(255) NOT NULL,
   score int NOT NULL,
   CONSTRAINT question_pk PRIMARY KEY (question_id)
 );
@@ -72,7 +72,7 @@ CREATE TABLE questions (
 -- Table: quizzes
 CREATE TABLE quizzes (
   quiz_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(64) UNIQUE NOT NULL,
+  name varchar(255) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   explanation varchar(2048) NULL,
   creation_date date NOT NULL,
@@ -85,15 +85,15 @@ CREATE TABLE quizzes (
 CREATE TABLE users (
   user_id bigint NOT NULL AUTO_INCREMENT,
   group_id bigint NULL,
-  first_name varchar(64) NULL,
-  last_name varchar(64) NULL,
-  email varchar(64) UNIQUE NOT NULL,
-  date_of_birth varchar(64) NULL,
-  phone_number varchar(64) UNIQUE NOT NULL,
+  first_name varchar(255) NULL,
+  last_name varchar(255) NULL,
+  email varchar(255) UNIQUE NOT NULL,
+  date_of_birth varchar(255) NULL,
+  phone_number varchar(255) UNIQUE NOT NULL,
   photo blob NULL,
-  login varchar(64) UNIQUE NOT NULL,
-  password varchar(64) NOT NULL,
-  user_role varchar(64) NOT NULL,
+  login varchar(255) UNIQUE NOT NULL,
+  password varchar(255) NOT NULL,
+  user_role varchar(255) NOT NULL,
   CONSTRAINT user_pk PRIMARY KEY (user_id)
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE user_quiz_junctions (
   submit_date datetime NULL,
   finish_date datetime NULL,
   reopen_counter int NOT NULL,
-  quiz_status varchar(64) NOT NULL,
+  quiz_status varchar(255) NOT NULL,
   CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_quiz_junction_id)
 );
 

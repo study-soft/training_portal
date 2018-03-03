@@ -1,15 +1,15 @@
 package com.company.training_portal.model.enums;
 
 public enum QuizStatus {
-    OPENED(0), PASSED(1), REOPENED(2), CLOSED(3);
+    OPENED("opened"), PASSED("passed"), REOPENED("reopened"), CLOSED("closed");
 
-    private int id;
+    private String quizStatus;
 
-    QuizStatus(int id) {
-        this.id = id;
+    QuizStatus(String quizStatus) {
+        this.quizStatus = quizStatus;
     }
 
-    public int getId() {
-        return id;
+    public String getQuizStatus() {
+        return quizStatus;
     }
 }

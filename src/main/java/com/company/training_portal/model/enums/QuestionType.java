@@ -1,15 +1,16 @@
 package com.company.training_portal.model.enums;
 
 public enum QuestionType {
-    ONE_ANSWER(0), FEW_ANSWERS(1), ACCORDANCE(2), SEQUENCE(3), NUMBER(4);
+    ONE_ANSWER("one_answer"), FEW_ANSWERS("few_answers"), ACCORDANCE("accordance"),
+    SEQUENCE("sequence"), NUMBER("number");
 
-    private int id;
+    private String questionType;
 
-    QuestionType(int id) {
-        this.id = id;
+    QuestionType(String questionType) {
+        this.questionType = questionType;
     }
 
-    public int getId() {
-        return id;
+    public String getQuestionType() {
+        return questionType;
     }
 }

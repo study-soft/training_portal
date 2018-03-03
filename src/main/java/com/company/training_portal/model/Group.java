@@ -8,12 +8,14 @@ public class Group {
     private String name;
     private String description;
     private LocalDate creationDate;
+    private Long authorId;
 
     private Group(GroupBuilder builder) {
         this.groupId = builder.groupId;
         this.name = builder.name;
         this.description = builder.description;
         this.creationDate = builder.creationDate;
+        this.authorId = builder.authorId;
     }
 
     public Long getGroupId() {
@@ -48,6 +50,14 @@ public class Group {
         this.creationDate = creationDate;
     }
 
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,18 +65,20 @@ public class Group {
 
         Group group = (Group) o;
 
-        if (groupId != null ? !groupId.equals(group.groupId) : group.groupId != null) return false;
-        if (name != null ? !name.equals(group.name) : group.name != null) return false;
+        if (!groupId.equals(group.groupId)) return false;
+        if (!name.equals(group.name)) return false;
         if (description != null ? !description.equals(group.description) : group.description != null) return false;
-        return creationDate != null ? creationDate.equals(group.creationDate) : group.creationDate == null;
+        if (!creationDate.equals(group.creationDate)) return false;
+        return authorId.equals(group.authorId);
     }
 
     @Override
     public int hashCode() {
-        int result = groupId != null ? groupId.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = groupId.hashCode();
+        result = 31 * result + name.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        result = 31 * result + creationDate.hashCode();
+        result = 31 * result + authorId.hashCode();
         return result;
     }
 
@@ -77,6 +89,7 @@ public class Group {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", creationDate=" + creationDate +
+                ", authorId=" + authorId +
                 '}';
     }
 
@@ -86,6 +99,7 @@ public class Group {
         private String name;
         private String description;
         private LocalDate creationDate;
+        private Long authorId;
 
         public GroupBuilder() {
         }
@@ -107,6 +121,11 @@ public class Group {
 
         public GroupBuilder creationDate(LocalDate creationDate) {
             this.creationDate = creationDate;
+            return this;
+        }
+
+        public GroupBuilder authorId(Long authorId) {
+            this.authorId = authorId;
             return this;
         }
 

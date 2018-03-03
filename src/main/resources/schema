@@ -53,6 +53,7 @@ CREATE TABLE groups (
   name varchar(64) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   creation_date date NOT NULL,
+  author_id BIGINT NOT NULL,
   CONSTRAINT group_pk PRIMARY KEY (group_id)
 );
 
@@ -149,3 +150,11 @@ REFERENCES quizzes (quiz_id);
 -- Reference: user_quiz_junction_user (table: user_quiz_junctions)
 ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_users_fk FOREIGN KEY (user_id)
 REFERENCES users (user_id);
+
+-- Reference: quiz_user (table: quizzes)
+ALTER TABLE quizzes ADD CONSTRAINT quizzes_users_fk FOREIGN KEY (author_id)
+REFERENCES users(user_id);
+
+-- Reference: group_user (table: groups)
+ALTER TABLE groups ADD CONSTRAINT groups_users_fk FOREIGN KEY (author_id)
+REFERENCES users(user_id);

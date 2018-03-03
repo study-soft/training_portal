@@ -1,15 +1,15 @@
 package com.company.training_portal.model.enums;
 
 public enum UserRole {
-    TEACHER(0), STUDENT(1);
+    TEACHER("teacher"), STUDENT("student");
 
-    private int id;
+    private String role;
 
-    UserRole(int id) {
-        this.id = id;
+    UserRole(String role) {
+        this.role = role;
     }
 
-    public int getId() {
-        return id;
+    public String getRole() {
+        return role;
     }
 }

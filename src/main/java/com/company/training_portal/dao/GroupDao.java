@@ -2,23 +2,27 @@ package com.company.training_portal.dao;
 
 import com.company.training_portal.model.Group;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public interface GroupDao {
 
     Group findGroupByGroupId(Long groupId);
 
-    Collection<Group> findGroupsByAuthorId(Long authorId);
+    List<Group> findGroupsByAuthorId(Long authorId);
 
-    Collection<String> findAllGroupNames();
+    List<String> findAllGroupNames();
 
-    Collection<String> findAllGroupNamesByAuthorId(Long authorId);
+    List<String> findAllGroupNamesByAuthorId(Long authorId);
 
-    Collection<Group> findAllGroups();
+    List<Group> findAllGroups();
 
     Integer findStudentsNumberInGroup(Long groupId);
 
     Integer findGroupsNumberByAuthorId(Long authorId);
+
+    //key: groupName, value: numberOfStudents
+    Map<String, Integer> findAllGroupAndStudentsNumberInThem();
 
     Long addGroup(Group group);
 

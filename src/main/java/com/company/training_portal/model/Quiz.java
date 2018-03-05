@@ -12,6 +12,7 @@ public class Quiz {
     private LocalDate creationDate;
     private Duration passingTime;
     private Long authorId;
+    private Boolean published;
 
     private Quiz(QuizBuilder builder) {
         this.quizId = builder.quizId;
@@ -21,6 +22,7 @@ public class Quiz {
         this.creationDate = builder.creationDate;
         this.passingTime = builder.passingTime;
         this.authorId = builder.authorId;
+        this.published = builder.published;
     }
 
     public Long getQuizId() {
@@ -79,6 +81,14 @@ public class Quiz {
         this.authorId = authorId;
     }
 
+    public Boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,22 +98,24 @@ public class Quiz {
 
         if (!quizId.equals(quiz.quizId)) return false;
         if (!name.equals(quiz.name)) return false;
-        if (!description.equals(quiz.description)) return false;
+        if (description != null ? !description.equals(quiz.description) : quiz.description != null) return false;
         if (explanation != null ? !explanation.equals(quiz.explanation) : quiz.explanation != null) return false;
         if (!creationDate.equals(quiz.creationDate)) return false;
-        if (passingTime != null ? !passingTime.equals(quiz.passingTime) : quiz.passingTime != null) return false;
-        return authorId.equals(quiz.authorId);
+        if (!passingTime.equals(quiz.passingTime)) return false;
+        if (!authorId.equals(quiz.authorId)) return false;
+        return published.equals(quiz.published);
     }
 
     @Override
     public int hashCode() {
         int result = quizId.hashCode();
         result = 31 * result + name.hashCode();
-        result = 31 * result + description.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
         result = 31 * result + creationDate.hashCode();
-        result = 31 * result + (passingTime != null ? passingTime.hashCode() : 0);
+        result = 31 * result + passingTime.hashCode();
         result = 31 * result + authorId.hashCode();
+        result = 31 * result + published.hashCode();
         return result;
     }
 
@@ -117,6 +129,7 @@ public class Quiz {
                 ", creationDate=" + creationDate +
                 ", passingTime=" + passingTime +
                 ", authorId=" + authorId +
+                ", published=" + published +
                 '}';
     }
 
@@ -129,6 +142,7 @@ public class Quiz {
         private LocalDate creationDate;
         private Duration passingTime;
         private Long authorId;
+        private Boolean published;
 
         public QuizBuilder() {
         }
@@ -165,6 +179,11 @@ public class Quiz {
 
         public QuizBuilder authorId(Long authorId) {
             this.authorId = authorId;
+            return this;
+        }
+
+        public QuizBuilder published(Boolean published) {
+            this.published = published;
             return this;
         }
 

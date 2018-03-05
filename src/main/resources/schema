@@ -78,6 +78,7 @@ CREATE TABLE quizzes (
   creation_date date NOT NULL,
   passing_time time NULL,
   author_id bigint NOT NULL,
+  published BOOLEAN NOT NULL,
   CONSTRAINT quiz_pk PRIMARY KEY (quiz_id)
 );
 

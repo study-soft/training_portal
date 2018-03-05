@@ -3,17 +3,17 @@ package com.company.training_portal.dao;
 import com.company.training_portal.model.Question;
 import com.company.training_portal.model.enums.QuestionType;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface QuestionDao {
 
     Question findQuestionById(Long questionId);
 
-    Collection<Question> findQuestionsByQuizId(Long quizId);
+    List<Question> findQuestionsByQuizId(Long quizId);
 
-    Collection<Question> findQuestionsByQuizIdAndQuestionType(Long quizId, QuestionType questionType);
+    List<Question> findQuestionsByQuizIdAndQuestionType(Long quizId, QuestionType questionType);
 
-    Collection<Question> findQuestionsByQuizIdAndScore(Long quizId, Integer score);
+    List<Question> findQuestionsByQuizIdAndScore(Long quizId, Integer score);
 
     Integer findQuestionsNumberByQuizId(Long quizId);
 

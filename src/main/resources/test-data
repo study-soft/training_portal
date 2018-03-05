@@ -22,14 +22,14 @@ INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'student');
 
 -- Table: quizzes
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id)
-VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:20:00', 1);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id)
-VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id)
-VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id)
-VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2);
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
+VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:20:00', 1, false);
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
+VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, true);
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
+VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, false);
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
+VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, true);
 
 -- Table: questions
 INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)

@@ -4,36 +4,42 @@ import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.QuizStatus;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public interface QuizDao {
 
     Quiz findQuizByQuizId(Long quizId);
 
-    Collection<Quiz> findAllQuizzes();
+    List<Quiz> findAllQuizzes();
 
-    Collection<String> findAllQuizNames();
+    List<String> findAllQuizNames();
 
-    Collection<Quiz> findAllQuizzesByAuthorId(Long authorId);
+    List<Quiz> findAllQuizzesByAuthorId(Long authorId);
 
-    Collection<String> findAllQuizNamesByAuthorId(Long authorId);
+    List<String> findAllQuizNamesByAuthorId(Long authorId);
 
-    Collection<Quiz> findAllQuizzesByStudentId(Long studentId);
+    List<Quiz> findAllQuizzesByStudentId(Long studentId);
 
-    Collection<String> findAllQuizNamesByStudentId(Long studentId);
+    List<String> findAllQuizNamesByStudentId(Long studentId);
 
-    Collection<String> findAllClosedQuizNamesByAuthorId(Long authorId);
+    List<String> findAllClosedQuizNamesByAuthorId(Long authorId);
 
-    Collection<Quiz> findAllNotPublishedQuizzesByAuthorId(Long authorId);
+    List<Quiz> findAllNotPublishedQuizzesByAuthorId(Long authorId);
 
-    Collection<String> findAllQuizNamesByStudentIdAndQuizStatus (Long studentId, QuizStatus quizStatus);
+    List<String> findAllQuizNamesByStudentIdAndQuizStatus(Long studentId, QuizStatus quizStatus);
 
     Integer findQuizzesNumberByAuthorId(Long authorId);
 
-    Integer findClosedQuizzesNumberByAuthorId(Long authorId);
+    // key: quizStatus, value: number of students
+    Map<QuizStatus, Integer> findQuizzesNumberByAuthorIdWithQuizStatus(Long authorId);
 
-    Collection<String> findQuizNamesByStudentIdAndReopenCounter(Long studentId, Integer reopenCounter);
+    // key: quiz's name, value: result
+    Map<String, Integer> findAllStudentResults(Long userId);
 
-    Collection<String> findQuizzesByStudentIdAndAuthorId(Long studentId, Long authorId);
+    List<String> findQuizNamesByStudentIdAndReopenCounter(Long studentId, Integer reopenCounter);
+
+    List<String> findQuizNamesByStudentIdAndAuthorId(Long studentId, Long authorId);
 
     Long addQuiz(Quiz quiz);
 

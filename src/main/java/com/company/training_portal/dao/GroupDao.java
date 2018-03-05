@@ -17,15 +17,14 @@ public interface GroupDao {
 
     List<Group> findAllGroups();
 
-    Integer findStudentsNumberInGroup(Long groupId);
-
     Integer findGroupsNumberByAuthorId(Long authorId);
 
     //key: groupName, value: numberOfStudents
-    Map<String, Integer> findAllGroupAndStudentsNumberInThem();
+    Map<String, Integer> findAllGroupsAndStudentsNumberInThem();
 
     Long addGroup(Group group);
 
+    //todo: make user cases of editGroup(Group group)
     void editGroup(Group group);
 
     void deleteGroup(Long groupId);

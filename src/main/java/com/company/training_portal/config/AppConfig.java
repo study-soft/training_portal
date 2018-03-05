@@ -1,7 +1,5 @@
 package com.company.training_portal.config;
 
-import com.company.training_portal.dao.UserDao;
-import com.company.training_portal.dao.impl.UserDaoJdbc;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +16,8 @@ public class AppConfig {
     public DataSource h2DataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("schema")
-                .addScript("test-data")
+                .addScript("schema.sql")
+                .addScript("test-data.sql")
                 .build();
     }
 }

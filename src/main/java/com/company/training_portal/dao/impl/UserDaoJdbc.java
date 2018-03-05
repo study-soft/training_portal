@@ -20,7 +20,6 @@ public class UserDaoJdbc implements UserDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
     @Override
     public User findUserByUserId(Long userId) {
         return null;

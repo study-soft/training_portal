@@ -1,6 +1,6 @@
 package com.company.training_portal.model;
 
-import com.company.training_portal.model.enums.QuizStatus;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class UserQuizJunctionTest {
         userQuizJunction.setSubmitDate(
                 LocalDateTime.of(2018, 3, 6, 4, 56, 34));
         userQuizJunction.setReopenCounter(5);
-        userQuizJunction.setQuizStatus(QuizStatus.OPENED);
+        userQuizJunction.setStudentQuizStatus(StudentQuizStatus.OPENED);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class UserQuizJunctionTest {
                 .submitDate(
                         LocalDateTime.of(2018, 3, 6, 4, 56, 34))
                 .reopenCounter(5)
-                .quizStatus(QuizStatus.OPENED)
+                .quizStatus(StudentQuizStatus.OPENED)
                 .build();
 
         assertEquals(userQuizJunction, userQuizJunctionBuilt);

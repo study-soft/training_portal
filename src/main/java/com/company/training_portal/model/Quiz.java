@@ -1,5 +1,7 @@
 package com.company.training_portal.model;
 
+import com.company.training_portal.model.enums.TeacherQuizStatus;
+
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -12,7 +14,7 @@ public class Quiz {
     private LocalDate creationDate;
     private Duration passingTime;
     private Long authorId;
-    private Boolean published;
+    private TeacherQuizStatus teacherQuizStatus;
 
     private Quiz(QuizBuilder builder) {
         this.quizId = builder.quizId;
@@ -22,7 +24,7 @@ public class Quiz {
         this.creationDate = builder.creationDate;
         this.passingTime = builder.passingTime;
         this.authorId = builder.authorId;
-        this.published = builder.published;
+        this.teacherQuizStatus = builder.teacherQuizStatus;
     }
 
     public Long getQuizId() {
@@ -81,12 +83,12 @@ public class Quiz {
         this.authorId = authorId;
     }
 
-    public Boolean isPublished() {
-        return published;
+    public TeacherQuizStatus getTeacherQuizStatus() {
+        return teacherQuizStatus;
     }
 
-    public void setPublished(Boolean published) {
-        this.published = published;
+    public void setTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus) {
+        this.teacherQuizStatus = teacherQuizStatus;
     }
 
     @Override
@@ -103,7 +105,7 @@ public class Quiz {
         if (!creationDate.equals(quiz.creationDate)) return false;
         if (!passingTime.equals(quiz.passingTime)) return false;
         if (!authorId.equals(quiz.authorId)) return false;
-        return published.equals(quiz.published);
+        return teacherQuizStatus.equals(quiz.teacherQuizStatus);
     }
 
     @Override
@@ -115,7 +117,7 @@ public class Quiz {
         result = 31 * result + creationDate.hashCode();
         result = 31 * result + passingTime.hashCode();
         result = 31 * result + authorId.hashCode();
-        result = 31 * result + published.hashCode();
+        result = 31 * result + teacherQuizStatus.hashCode();
         return result;
     }
 
@@ -129,7 +131,7 @@ public class Quiz {
                 ", creationDate=" + creationDate +
                 ", passingTime=" + passingTime +
                 ", authorId=" + authorId +
-                ", published=" + published +
+                ", teacherQuizStatus=" + teacherQuizStatus +
                 '}';
     }
 
@@ -142,7 +144,7 @@ public class Quiz {
         private LocalDate creationDate;
         private Duration passingTime;
         private Long authorId;
-        private Boolean published;
+        private TeacherQuizStatus teacherQuizStatus;
 
         public QuizBuilder() {
         }
@@ -182,8 +184,8 @@ public class Quiz {
             return this;
         }
 
-        public QuizBuilder published(Boolean published) {
-            this.published = published;
+        public QuizBuilder teacherQuizStatus(TeacherQuizStatus teacherQuizStatus) {
+            this.teacherQuizStatus = teacherQuizStatus;
             return this;
         }
 

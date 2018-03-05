@@ -1,5 +1,6 @@
 -- tables
 -- Table: answers_accordance
+DROP TABLE IF EXISTS answers_accordance;
 CREATE TABLE answers_accordance (
   answer_accordance_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
@@ -7,6 +8,7 @@ CREATE TABLE answers_accordance (
 );
 
 -- Table: answers_number
+DROP TABLE IF EXISTS answers_number;
 CREATE TABLE answers_number (
   answer_number_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
@@ -15,6 +17,7 @@ CREATE TABLE answers_number (
 );
 
 -- Table: answers_sequence
+DROP TABLE IF EXISTS answers_sequence;
 CREATE TABLE answers_sequence (
   answer_sequence_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
@@ -22,6 +25,7 @@ CREATE TABLE answers_sequence (
 );
 
 -- Table: answers_simple
+DROP TABLE IF EXISTS answers_simple;
 CREATE TABLE answers_simple (
   answer_simple_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
@@ -31,6 +35,7 @@ CREATE TABLE answers_simple (
 );
 
 -- Table: correct_lists
+DROP TABLE IF EXISTS correct_lists;
 CREATE TABLE correct_lists (
   correct_list_id bigint NOT NULL AUTO_INCREMENT,
   item varchar(255) NOT NULL,
@@ -39,6 +44,7 @@ CREATE TABLE correct_lists (
 );
 
 -- Table: correct_maps
+DROP TABLE IF EXISTS correct_maps;
 CREATE TABLE correct_maps (
   correct_map_id bigint NOT NULL AUTO_INCREMENT,
   left_side varchar(255) NOT NULL,
@@ -48,6 +54,7 @@ CREATE TABLE correct_maps (
 );
 
 -- Table: groups
+DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
   name varchar(255) UNIQUE NOT NULL,
@@ -58,6 +65,7 @@ CREATE TABLE groups (
 );
 
 -- Table: questions
+DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
   question_id bigint NOT NULL AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
@@ -70,6 +78,7 @@ CREATE TABLE questions (
 );
 
 -- Table: quizzes
+DROP TABLE IF EXISTS quizzes;
 CREATE TABLE quizzes (
   quiz_id bigint NOT NULL AUTO_INCREMENT,
   name varchar(255) UNIQUE NOT NULL,
@@ -78,11 +87,12 @@ CREATE TABLE quizzes (
   creation_date date NOT NULL,
   passing_time time NULL,
   author_id bigint NOT NULL,
-  published BOOLEAN NOT NULL,
+  teacher_quiz_status VARCHAR(255) NOT NULL,
   CONSTRAINT quiz_pk PRIMARY KEY (quiz_id)
 );
 
 -- Table: users
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id bigint NOT NULL AUTO_INCREMENT,
   group_id bigint NULL,
@@ -99,15 +109,16 @@ CREATE TABLE users (
 );
 
 -- Table: user_quiz_junctions
+DROP TABLE IF EXISTS user_quiz_junctions;
 CREATE TABLE user_quiz_junctions (
   user_quiz_junction_id bigint NOT NULL AUTO_INCREMENT,
   user_id bigint NOT NULL,
   quiz_id bigint NOT NULL,
-  result int NOT NULL,
+  result int NULL,
   submit_date datetime NULL,
   finish_date datetime NULL,
   reopen_counter int NOT NULL,
-  quiz_status varchar(255) NOT NULL,
+  student_quiz_status varchar(255) NOT NULL,
   CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_quiz_junction_id)
 );
 

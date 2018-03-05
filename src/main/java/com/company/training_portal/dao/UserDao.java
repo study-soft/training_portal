@@ -1,7 +1,9 @@
 package com.company.training_portal.dao;
 
 import com.company.training_portal.model.User;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public interface UserDao {
 
     Integer findStudentsNumberInGroup(Long groupId);
 
-    Integer findStudentNumberInGroupWithClosedQuiz(Long groupId, Long quizId);
+    Integer findStudentNumberInGroupWithFinishedQuiz(Long groupId, Long quizId);
 
     List<Integer> findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
 
@@ -43,6 +45,10 @@ public interface UserDao {
     // key: student's first name + last name, value: result
     Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId, Long quizId);
 
+    Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId);
+
+    Integer findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId);
+
     boolean userExists(String login, String email, String phoneNumber);
 
     boolean checkUserByLoginAndPassword(User user);
@@ -52,6 +58,14 @@ public interface UserDao {
     void addStudentToGroup(Integer userId, Integer groupId);
 
     void addStudentsToGroup(List<User> users, Integer groupId);
+
+    Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
+                                 LocalDateTime submitDate, LocalDateTime finishDate,
+                                 StudentQuizStatus studentQuizStatus);
+
+    void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result,
+                                    LocalDateTime finishDate, Integer reopenCounter,
+                                    StudentQuizStatus studentQuizStatus);
 
     //todo: make use cases of editUser(User user)
     void editUser(User user);

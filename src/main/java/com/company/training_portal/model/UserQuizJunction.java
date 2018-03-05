@@ -1,6 +1,6 @@
 package com.company.training_portal.model;
 
-import com.company.training_portal.model.enums.QuizStatus;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +13,7 @@ public class UserQuizJunction {
     private LocalDateTime submitDate;
     private LocalDateTime finishDate;
     private Integer reopenCounter;
-    private QuizStatus quizStatus;
+    private StudentQuizStatus studentQuizStatus;
 
     private UserQuizJunction(UserQuizJunctionBuilder builder) {
         this.userQuizJunctionId = builder.userQuizJunctionId;
@@ -23,7 +23,7 @@ public class UserQuizJunction {
         this.submitDate = builder.submitDate;
         this.finishDate = builder.finishDate;
         this.reopenCounter = builder.reopenCounter;
-        this.quizStatus = builder.quizStatus;
+        this.studentQuizStatus = builder.studentQuizStatus;
     }
 
     public Long getUserQuizJunctionId() {
@@ -82,12 +82,12 @@ public class UserQuizJunction {
         this.reopenCounter = reopenCounter;
     }
 
-    public QuizStatus getQuizStatus() {
-        return quizStatus;
+    public StudentQuizStatus getStudentQuizStatus() {
+        return studentQuizStatus;
     }
 
-    public void setQuizStatus(QuizStatus quizStatus) {
-        this.quizStatus = quizStatus;
+    public void setStudentQuizStatus(StudentQuizStatus studentQuizStatus) {
+        this.studentQuizStatus = studentQuizStatus;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class UserQuizJunction {
         if (finishDate != null ? !finishDate.equals(that.finishDate) : that.finishDate != null) return false;
         if (reopenCounter != null ? !reopenCounter.equals(that.reopenCounter) : that.reopenCounter != null)
             return false;
-        return quizStatus == that.quizStatus;
+        return studentQuizStatus == that.studentQuizStatus;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UserQuizJunction {
         result1 = 31 * result1 + (submitDate != null ? submitDate.hashCode() : 0);
         result1 = 31 * result1 + (finishDate != null ? finishDate.hashCode() : 0);
         result1 = 31 * result1 + (reopenCounter != null ? reopenCounter.hashCode() : 0);
-        result1 = 31 * result1 + quizStatus.hashCode();
+        result1 = 31 * result1 + studentQuizStatus.hashCode();
         return result1;
     }
 
@@ -131,7 +131,7 @@ public class UserQuizJunction {
                 ", finishDate=" + finishDate +
                 ", submitDate=" + submitDate +
                 ", reopenCounter=" + reopenCounter +
-                ", quizStatus=" + quizStatus +
+                ", studentQuizStatus=" + studentQuizStatus +
                 '}';
     }
 
@@ -144,7 +144,7 @@ public class UserQuizJunction {
         private LocalDateTime finishDate;
         private LocalDateTime submitDate;
         private Integer reopenCounter;
-        private QuizStatus quizStatus;
+        private StudentQuizStatus studentQuizStatus;
 
         public UserQuizJunctionBuilder() {
         }
@@ -184,8 +184,8 @@ public class UserQuizJunction {
             return this;
         }
 
-        public UserQuizJunctionBuilder quizStatus(QuizStatus quizStatus) {
-            this.quizStatus = quizStatus;
+        public UserQuizJunctionBuilder quizStatus(StudentQuizStatus studentQuizStatus) {
+            this.studentQuizStatus = studentQuizStatus;
             return this;
         }
 

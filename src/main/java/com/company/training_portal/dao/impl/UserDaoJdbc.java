@@ -2,11 +2,13 @@ package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +83,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Integer findStudentNumberInGroupWithClosedQuiz(Long groupId, Long quizId) {
+    public Integer findStudentNumberInGroupWithFinishedQuiz(Long groupId, Long quizId) {
         return null;
     }
 
@@ -102,6 +104,16 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId, Long quizId) {
+        return null;
+    }
+
+    @Override
+    public Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId) {
+        return null;
+    }
+
+    @Override
+    public Integer findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId) {
         return null;
     }
 
@@ -127,6 +139,16 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void addStudentsToGroup(List<User> users, Integer groupId) {
+
+    }
+
+    @Override
+    public Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result, LocalDateTime submitDate, LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
+        return null;
+    }
+
+    @Override
+    public void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result, LocalDateTime finishDate, Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
 
     }
 

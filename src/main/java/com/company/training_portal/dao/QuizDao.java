@@ -1,9 +1,9 @@
 package com.company.training_portal.dao;
 
 import com.company.training_portal.model.Quiz;
-import com.company.training_portal.model.enums.QuizStatus;
+import com.company.training_portal.model.enums.StudentQuizStatus;
+import com.company.training_portal.model.enums.TeacherQuizStatus;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +27,15 @@ public interface QuizDao {
 
     List<Quiz> findAllNotPublishedQuizzesByAuthorId(Long authorId);
 
-    List<String> findAllQuizNamesByStudentIdAndQuizStatus(Long studentId, QuizStatus quizStatus);
+    List<String> findAllQuizNamesByStudentIdAndStudentQuizStatus(Long studentId, StudentQuizStatus studentQuizStatus);
 
     Integer findQuizzesNumberByAuthorId(Long authorId);
 
-    // key: quizStatus, value: number of students
-    Map<QuizStatus, Integer> findQuizzesNumberByAuthorIdWithQuizStatus(Long authorId);
+    // key: studentQuizStatus, value: number of students
+    Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(Long authorId, StudentQuizStatus studentQuizStatus);
+
+    // key: teacherQuizStatus, value: number of quizzes
+    Map<TeacherQuizStatus, Integer> FindQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId);
 
     // key: quiz's name, value: result
     Map<String, Integer> findAllStudentResults(Long userId);

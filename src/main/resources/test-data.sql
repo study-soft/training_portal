@@ -22,14 +22,51 @@ INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'student');
 
 -- Table: quizzes
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
-VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:20:00', 1, false);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
-VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, true);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
-VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, false);
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, published)
-VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, true);
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:20:00', 1, 'published');
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'published');
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, 'published');
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, 'published');
+
+-- Table: user_quiz_junctions
+/*1*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (7, 1, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'passed');
+/*2*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (7, 2, 30, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'passed');
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 25, FINISH_DATE = '2018-03-05 00:00:10', REOPEN_COUNTER = 1, STUDENT_QUIZ_STATUS = 'finished'
+WHERE USER_QUIZ_JUNCTION_ID = 2;
+/*3*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (3, 3, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'finished');
+/*4*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (3, 4, 40, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'passed');
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 40, FINISH_DATE = '2018-03-05 00:00:10', REOPEN_COUNTER = 1, STUDENT_QUIZ_STATUS = 'passed'
+WHERE USER_QUIZ_JUNCTION_ID = 4;
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 35, FINISH_DATE = '2018-03-05 00:00:15', REOPEN_COUNTER = 2, STUDENT_QUIZ_STATUS = 'finished'
+WHERE USER_QUIZ_JUNCTION_ID = 4;
+/*5*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (3, 2, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'finished');
+/*6*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (3, 1, null, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'opened');
+/*7*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (4, 1, null, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'opened');
+/*8*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (5, 3, null, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'opened');
+/*9*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (6, 3, null, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'opened');
+/*10*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)
+VALUES (4, 2, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:04', 0, 'finished');
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 19, FINISH_DATE = '2018-03-05 00:00:10', REOPEN_COUNTER = 0, STUDENT_QUIZ_STATUS = 'passed'
+WHERE USER_QUIZ_JUNCTION_ID = 6;
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 19, FINISH_DATE = '2018-03-05 00:00:15', REOPEN_COUNTER = 1, STUDENT_QUIZ_STATUS = 'finished'
+WHERE USER_QUIZ_JUNCTION_ID = 6;
 
 -- Table: questions
 INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)

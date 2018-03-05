@@ -17,8 +17,6 @@ public interface QuestionDao {
 
     Integer findQuestionsNumberByQuizId(Long quizId);
 
-    Integer findQuizScoreByQuizId(Long quizId);
-
     Long addQuestion(Question question);
 
     void editQuestion(Question question);

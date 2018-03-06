@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface QuestionDao {
 
-    Question findQuestionById(Long questionId);
+    Question findQuestionByQuestionId(Long questionId);
 
     List<Question> findQuestionsByQuizId(Long quizId);
 

@@ -2,6 +2,8 @@ package com.company.training_portal.dao;
 
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
+import com.company.training_portal.model.enums.UserRole;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +19,7 @@ public interface UserDao {
 
     User findUserByPhoneNumber(String phoneNumber);
 
-    List<User> findUsersByFirstNameAndLastName(String firstName, String lastName);
+    List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName, String lastName, UserRole userRole);
 
     List<User> findStudentsByGroupName(String groupName);
 
@@ -25,7 +27,7 @@ public interface UserDao {
 
     List<User> findAllTeachers();
 
-    List<User> findAllStudentsByQuizIdAndGroupId(Long quizId, Long groupId);
+    List<User> findAllStudentsByGroupIdAndQuizId(Long quizId, Long groupId);
 
     Integer findStudentsNumber();
 
@@ -33,11 +35,11 @@ public interface UserDao {
 
     Integer findStudentsNumberInGroup(Long groupId);
 
-    Integer findStudentNumberInGroupWithFinishedQuiz(Long groupId, Long quizId);
+    Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId);
 
-    List<Integer> findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
+    Integer findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
 
-    List<Integer> findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
+    Integer findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
 
     // key: quiz's name, value: result
     Map<String, Integer> findAllStudentResults(Long userId);
@@ -47,17 +49,24 @@ public interface UserDao {
 
     Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId);
 
-    Integer findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId);
+    Long findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId);
 
     boolean userExists(String login, String email, String phoneNumber);
 
-    boolean checkUserByLoginAndPassword(User user);
+    /**
+     * Returns instance of user if user exists. Otherwise returns null.
+     * @param login user login
+     * @param password user password
+     * @return instance of user if exists or null otherwise
+     */
+    @Nullable
+    User checkUserByLoginAndPassword(String login, String password);
 
-    Long addUser(User user);
+    Long registerUser(User user);
 
-    void addStudentToGroup(Integer userId, Integer groupId);
+    void addStudentToGroupByGroupNameAndUserId(String groupName, Long studentId);
 
-    void addStudentsToGroup(List<User> users, Integer groupId);
+    void addStudentsToGroup(String groupName, List<Long> studentIds);
 
     Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                  LocalDateTime submitDate, LocalDateTime finishDate,
@@ -70,5 +79,5 @@ public interface UserDao {
     //todo: make use cases of editUser(User user)
     void editUser(User user);
 
-    void deleteUserFromGroup(Long userId, Long groupId);
+    void deleteStudentFromGroupByUserId(Long userId);
 }

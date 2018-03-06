@@ -46,6 +46,11 @@ public class QuestionDaoJdbc implements QuestionDao {
     }
 
     @Override
+    public Integer findQuizScoreByQuizId(Long quizId) {
+        return null;
+    }
+
+    @Override
     public Long addQuestion(Question question) {
         return null;
     }

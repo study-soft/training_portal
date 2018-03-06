@@ -3,162 +3,464 @@ package com.company.training_portal.dao.impl;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
+import com.company.training_portal.model.enums.UserRole;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public class UserDaoJdbc implements UserDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate template;
+
+    private static final Logger logger = Logger.getLogger(UserDaoJdbc.class);
 
     @Autowired
     public UserDaoJdbc(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        template = new JdbcTemplate(dataSource);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findUserByUserId(Long userId) {
-        return null;
+        User user = template.queryForObject(FIND_USER_BY_USER_ID,
+                new Object[]{userId}, User.class);
+        logger.info("User found by userId: " + user);
+        return user;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findUserByLogin(String login) {
-        return null;
+        User user = template.queryForObject(FIND_USER_BY_LOGIN,
+                new Object[]{login}, User.class);
+        logger.info("User found by login: " + user);
+        return user;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findUserByEmail(String email) {
-        return null;
+        User user = template.queryForObject(FIND_USER_BY_EMAIL,
+                new Object[]{email}, User.class);
+        logger.info("User found by email: " + user);
+        return user;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findUserByPhoneNumber(String phoneNumber) {
-        return null;
+        User user = template.queryForObject(FIND_USER_BY_PHONE_NUMBER,
+                new Object[]{phoneNumber}, User.class);
+        logger.info("User found by phoneNumber: " + user);
+        return user;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<User> findUsersByFirstNameAndLastName(String firstName, String lastName) {
-        return null;
+    public List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName,
+                                                                 String lastName,
+                                                                 UserRole userRole) {
+        List<User> users = template.query(FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE,
+                new Object[]{firstName, lastName, userRole}, this::mapUser);
+        logger.info("Users found by firstName, lastName, userRole:");
+        users.forEach(logger::info);
+        return users;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> findStudentsByGroupName(String groupName) {
-        return null;
+        List<User> students = template.query(FIND_STUDENTS_BY_GROUP_NAME,
+                new Object[]{groupName}, this::mapUser);
+        logger.info("Students found by groupName:");
+        students.forEach(logger::info);
+        return students;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> findAllStudents() {
-        return null;
+        List<User> students = template.query(FIND_ALL_STUDENTS, this::mapUser);
+        logger.info("All students found:");
+        students.forEach(logger::info);
+        return students;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> findAllTeachers() {
-        return null;
+        List<User> teachers = template.query(FIND_ALL_TEACHERS, this::mapUser);
+        logger.info("All teachers found:");
+        teachers.forEach(logger::info);
+        return teachers;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<User> findAllStudentsByQuizIdAndGroupId(Long quizId, Long groupId) {
-        return null;
+    public List<User> findAllStudentsByGroupIdAndQuizId(Long groupId, Long quizId) {
+        List<User> students = template.query(FIND_ALL_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, this::mapUser);
+        logger.info("All students by groupId and quizId found:");
+        students.forEach(logger::info);
+        return students;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Integer findStudentsNumber() {
-        return null;
+        Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER, Integer.class);
+        logger.info("Students number found: " + studentsNumber);
+        return studentsNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Integer findTeachersNumber() {
-        return null;
+        Integer teachersNumber = template.queryForObject(FIND_TEACHERS_NUMBER, Integer.class);
+        logger.info("Teachers number found: " + teachersNumber);
+        return teachersNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Integer findStudentsNumberInGroup(Long groupId) {
-        return null;
+        Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER_IN_GROUP,
+                new Object[]{groupId}, Integer.class);
+        logger.info("Students number in group found: " + studentsNumber);
+        return studentsNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Integer findStudentNumberInGroupWithFinishedQuiz(Long groupId, Long quizId) {
-        return null;
+    public Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId) {
+        Integer studentsNumber = template.queryForObject(
+                FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ,
+                new Object[]{groupId, quizId}, Integer.class);
+        logger.info("Students number in group with finished quiz found: " + studentsNumber);
+        return studentsNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<Integer> findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
-        return null;
+    public Integer findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
+        Integer resultsNumber = template.queryForObject(
+                FIND_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, Integer.class);
+        logger.info("Results number by groupId and quizId found: " + resultsNumber);
+        return resultsNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<Integer> findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
-        return null;
+    public Integer findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
+        Integer resultsNumber = template.queryForObject(
+                FIND_FINAL_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, Integer.class);
+        logger.info("Final results number by groupId and quizId found: " + resultsNumber);
+        return resultsNumber;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Map<String, Integer> findAllStudentResults(Long userId) {
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId, Long quizId) {
-        return null;
+    public Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId,
+                                                                             Long quizId) {
+        Map<String, Integer> results = new HashMap<>();
+        template.query(
+                FIND_RESULTS_AND_STUDENT_NAMES_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, new ResultSetExtractor<Map<String, Integer>>() {
+                    @Override
+                    public Map<String, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        while (rs.next()) {
+                            String firstName = rs.getString(1);
+                            String lastName = rs.getString(2);
+                            Integer result = rs.getInt(3);
+                            results.put(firstName + " " + lastName, result);
+                        }
+                        return results;
+                    }
+                });
+        logger.info("Results and student names by groupId and quizId found:");
+        results.forEach((name, result) -> logger.info(name + ": " + result));
+        return results;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId) {
-        return null;
+        Integer counter = template.queryForObject(
+                FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, Integer.class);
+        logger.info("Reopen counter by studentId and quizId found: " + counter);
+        return counter;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Integer findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId) {
-        return null;
+    public Long findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId) {
+        Long id = template.queryForObject(
+                FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, Long.class);
+        logger.info("userQuizJunctionId by studentId, quizId found: " + id);
+        return id;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean userExists(String login, String email, String phoneNumber) {
-        return false;
+        List<User> users = template.query(
+                FIND_USER_BY_LOGIN_EMAIL_PHONE_NUMBER,
+                new Object[]{login, email, phoneNumber}, this::mapUser);
+        boolean exists = !users.isEmpty();
+        if (exists) {
+            logger.info("User with login '" + login + "', email '" + email + "' " +
+                    "and phoneNumber '" + phoneNumber + "' already exists");
+        } else {
+            logger.info("User with login '" + login + "', email '" + email + "' " +
+                    "and phoneNumber '" + phoneNumber + "' does not exists");
+        }
+        return exists;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public boolean checkUserByLoginAndPassword(User user) {
-        return false;
+    public User checkUserByLoginAndPassword(String login, String password) {
+        User user = template.queryForObject(
+                FIND_USER_BY_LOGIN_AND_PASSWORD,
+                new Object[]{login, password}, User.class);
+        logger.info("User by login and password found: " + user);
+        return user;
     }
 
+    @Transactional
     @Override
-    public Long addUser(User user) {
-        return null;
+    public Long registerUser(User user) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement stmt = con.prepareStatement(REGISTER_USER, new String[]{"user_id"});
+                stmt.setString(1, user.getFirstName());
+                stmt.setString(2, user.getLastName());
+                stmt.setString(3, user.getEmail());
+                stmt.setDate(4, Date.valueOf(user.getDateOfBirth()));
+                stmt.setString(5, user.getPhoneNumber());
+                stmt.setString(6, user.getLogin());
+                stmt.setString(7, user.getPassword());
+                stmt.setString(8, user.getUserRole().getRole());
+                return stmt;
+            }
+        }, keyHolder);
+        long userId = keyHolder.getKey().longValue();
+        user.setUserId(userId);
+        logger.info("User registered: " + user);
+        return userId;
     }
 
+    @Transactional
     @Override
-    public void addStudentToGroup(Integer userId, Integer groupId) {
-
+    public void addStudentToGroupByGroupNameAndUserId(String groupName, Long studentId) {
+        template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID, groupName, studentId);
+        logger.info("Student with id = " + studentId +
+                " added to group with name = '" + groupName + "'");
     }
 
+    @Transactional
     @Override
-    public void addStudentsToGroup(List<User> users, Integer groupId) {
-
+    public void addStudentsToGroup(String groupName, List<Long> studentIds) {
+        for (Long id : studentIds) {
+            template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID, groupName, id);
+        }
+        logger.info("Students with ids = " + studentIds +
+                " added to group with name = '" + groupName + "'");
     }
 
+    @Transactional
     @Override
-    public Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result, LocalDateTime submitDate, LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
-        return null;
+    public Long addStudentInfoAboutQuiz(
+            Long studentId, Long quizId, Integer result, LocalDateTime submitDate,
+            LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                        PreparedStatement stmt = con.prepareStatement(
+                                ADD_STUDENT_INFO_ABOUT_QUIZ,
+                                Statement.RETURN_GENERATED_KEYS);
+                        stmt.setLong(1, studentId);
+                        stmt.setLong(2, quizId);
+                        stmt.setInt(3, result);
+                        stmt.setTimestamp(4, Timestamp.valueOf(submitDate));
+                        stmt.setTimestamp(5, Timestamp.valueOf(finishDate));
+                        stmt.setString(6, studentQuizStatus.getStudentQuizStatus());
+                        return stmt;
+                    }
+                }, keyHolder);
+        long userQuizJunctionId = keyHolder.getKey().longValue();
+        logger.info("Added student info about quiz:");
+        logger.info("userQuizJunctionId: " + userQuizJunctionId +
+                ", studentId: " + studentId +
+                ", quizId: " + quizId +
+                ", result: " + result +
+                ", submitDate: " + submitDate.toString() +
+                ", finishDate: " + finishDate.toString() +
+                ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
+        return userQuizJunctionId;
     }
 
+    @Transactional
     @Override
-    public void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result, LocalDateTime finishDate, Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
-
+    public void updateStudentInfoAboutQuiz(
+            Long userQuizJunctionId, Integer result, LocalDateTime finishDate,
+            Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
+        template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
+                userQuizJunctionId, result, Timestamp.valueOf(finishDate),
+                reopenCounter, studentQuizStatus.getStudentQuizStatus());
+        logger.info("Updated student info about quiz:");
+        logger.info("userQuizJunctionId: " + userQuizJunctionId +
+        ", result: " + result +
+        ", finishDate: " + finishDate.toString() +
+        ", reopenCounter: " + reopenCounter +
+        ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
     }
 
     @Override
     public void editUser(User user) {
-
+        throw new UnsupportedOperationException();
     }
 
+    @Transactional
     @Override
-    public void deleteUserFromGroup(Long userId, Long groupId) {
-
+    public void deleteStudentFromGroupByUserId(Long userId) {
+        template.update(DELETE_STUDENT_FROM_GROUP_BY_USER_ID, userId);
+        logger.info("Student deleted form group by userId: " + userId);
     }
+
+    private User mapUser(ResultSet rs, int rowNum) throws SQLException {
+        return new User.UserBuilder()
+                .userId(rs.getLong("user_id"))
+                .groupId(rs.getLong("group_id"))
+                .firstName(rs.getString("first_name"))
+                .lastName(rs.getString("last_name"))
+                .email(rs.getString("email"))
+                .dateOfBirth(rs.getDate("date_of_birth").toLocalDate())
+                .phoneNumber(rs.getString("phone_number"))
+                .photo(null)
+                .login(rs.getString("login"))
+                .password(rs.getString("password"))
+                .userRole(UserRole.valueOf(rs.getString("user_role")))
+                .build();
+    }
+
+    private static final String FIND_USER_BY_USER_ID = "SELECT * FROM USERS WHERE USER_ID = ?;";
+
+    private static final String FIND_USER_BY_LOGIN = "SELECT * FROM USERS WHERE LOGIN = ?;";
+
+    private static final String FIND_USER_BY_EMAIL = "SELECT * FROM USERS WHERE EMAIL = ?;";
+
+    private static final String FIND_USER_BY_PHONE_NUMBER = "SELECT * FROM USERS WHERE PHONE_NUMBER = ?;";
+
+    private static final String FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE =
+    "SELECT * FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ? AND USER_ROLE = ?";
+
+    private static final String FIND_STUDENTS_BY_GROUP_NAME =
+    "SELECT * " +
+    "FROM USERS " +
+    "WHERE GROUP_ID = (SELECT GROUPS.GROUP_ID FROM GROUPS WHERE GROUPS.NAME = ?) AND USER_ROLE = 'student';";
+
+    private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'student';";
+
+    private static final String FIND_ALL_TEACHERS = "SELECT * FROM USERS WHERE USER_ROLE = 'teacher';";
+
+    private static final String FIND_ALL_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT USERS.FIRST_NAME, USERS.LAST_NAME, J.RESULT, J.REOPEN_COUNTER, J.STUDENT_QUIZ_STATUS " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.USER_ROLE = 'student' AND USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
+
+    private static final String FIND_STUDENTS_NUMBER =
+    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'student';";
+
+    private static final String FIND_TEACHERS_NUMBER =
+    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'teacher';";
+
+    private static final String FIND_STUDENTS_NUMBER_IN_GROUP =
+    "SELECT COUNT(USER_ID) FROM USERS WHERE GROUP_ID = ?;";
+
+    private static final String FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ =
+    "SELECT COUNT(USERS.USER_ID) " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.USER_ROLE = 'student' AND USERS.GROUP_ID = ? AND J.QUIZ_ID = ? " +
+    "AND J.STUDENT_QUIZ_STATUS = 'finished';";
+
+    private static final String FIND_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT COUNT(J.RESULT) " +
+    "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
+
+    private static final String FIND_FINAL_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT COUNT(J.RESULT) " +
+    "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'finished';";
+
+    private static final String FIND_RESULTS_AND_STUDENT_NAMES_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT USERS.FIRST_NAME, USERS.LAST_NAME, J.RESULT " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
+
+    private static final String FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT J.REOPEN_COUNTER FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
+
+    private static final String FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT J.USER_QUIZ_JUNCTION_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
+
+    private static final String FIND_USER_BY_LOGIN_EMAIL_PHONE_NUMBER =
+    "SELECT * FROM USERS WHERE LOGIN = ? AND EMAIL = ? AND PHONE_NUMBER = ?;";
+
+    private static final String FIND_USER_BY_LOGIN_AND_PASSWORD =
+    "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;";
+
+    private static final String REGISTER_USER =
+    "INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, " +
+    "DATE_OF_BIRTH, PHONE_NUMBER, LOGIN, PASSWORD, USER_ROLE) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+    private static final String ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID =
+    "UPDATE USERS " +
+    "SET GROUP_ID = (SELECT GROUP_ID FROM GROUPS WHERE GROUPS.NAME = ?) " +
+    "WHERE USER_ID = ? AND USER_ROLE = 'student';";
+
+    private static final String ADD_STUDENT_INFO_ABOUT_QUIZ =
+    "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, " +
+    "FINISH_DATE, STUDENT_QUIZ_STATUS) " +
+    "VALUES (?, ?, ?, ?, ?, ?);";
+
+    private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
+    "UPDATE USER_QUIZ_JUNCTIONS " +
+    "SET RESULT = ?, FINISH_DATE = ?, REOPEN_COUNTER = ?, STUDENT_QUIZ_STATUS = ? " +
+    "WHERE USER_QUIZ_JUNCTION_ID = ?;";
+
+    private static final String EDIT_USER = "";
+
+    private static final String DELETE_STUDENT_FROM_GROUP_BY_USER_ID =
+            "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'student';";
 }

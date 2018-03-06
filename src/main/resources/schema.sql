@@ -4,6 +4,14 @@ DROP TABLE IF EXISTS answers_accordance;
 CREATE TABLE answers_accordance (
   answer_accordance_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
+  left_side_1 VARCHAR(255) NOT NULL,
+  right_side_1 VARCHAR(255) NOT NULL,
+  left_side_2 VARCHAR(255) NOT NULL,
+  right_side_2 VARCHAR(255) NOT NULL,
+  left_side_3 VARCHAR(255) NOT NULL,
+  right_side_3 VARCHAR(255) NOT NULL,
+  left_side_4 VARCHAR(255) NOT NULL,
+  right_side_4 VARCHAR(255) NOT NULL,
   CONSTRAINT answer_accordance_pk PRIMARY KEY (answer_accordance_id)
 );
 
@@ -21,6 +29,10 @@ DROP TABLE IF EXISTS answers_sequence;
 CREATE TABLE answers_sequence (
   answer_sequence_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
+  item_1 VARCHAR(255) NOT NULL,
+  item_2 VARCHAR(255) NOT NULL,
+  item_3 VARCHAR(255) NOT NULL,
+  item_4 VARCHAR(255) NOT NULL,
   CONSTRAINT answer_sequence_pk PRIMARY KEY (answer_sequence_id)
 );
 
@@ -32,25 +44,6 @@ CREATE TABLE answers_simple (
   body varchar(255) NOT NULL,
   correct bool NOT NULL,
   CONSTRAINT answer_simple_pk PRIMARY KEY (answer_simple_id)
-);
-
--- Table: correct_lists
-DROP TABLE IF EXISTS correct_lists;
-CREATE TABLE correct_lists (
-  correct_list_id bigint NOT NULL AUTO_INCREMENT,
-  item varchar(255) NOT NULL,
-  answer_sequence_id BIGINT NOT NULL ,
-  CONSTRAINT correct_list_pk PRIMARY KEY (correct_list_id)
-);
-
--- Table: correct_maps
-DROP TABLE IF EXISTS correct_maps;
-CREATE TABLE correct_maps (
-  correct_map_id bigint NOT NULL AUTO_INCREMENT,
-  left_side varchar(255) NOT NULL,
-  right_side varchar(255) NOT NULL,
-  answer_accordance_id BIGINT NOT NULL ,
-  CONSTRAINT correct_map_pk PRIMARY KEY (correct_map_id)
 );
 
 -- Table: groups
@@ -127,17 +120,9 @@ CREATE TABLE user_quiz_junctions (
 ALTER TABLE users ADD CONSTRAINT users_groups_fk FOREIGN KEY (group_id)
 REFERENCES groups (group_id);
 
--- Reference: answer_accordance_correct_map (table: answers_accordance)
-ALTER TABLE correct_maps ADD CONSTRAINT correct_maps_answers_accordance_fk FOREIGN KEY (answer_accordance_id)
-REFERENCES answers_accordance (answer_accordance_id);
-
 -- Reference: answer_accordance_question (table: answers_accordance)
 ALTER TABLE answers_accordance ADD CONSTRAINT answers_accordance_questions_fk FOREIGN KEY (question_id)
 REFERENCES questions (question_id);
-
--- Reference: correct_list_answer_sequence (table: answers_sequence)
-ALTER TABLE correct_lists ADD CONSTRAINT answer_sequences_correct_lists_fk FOREIGN KEY (answer_sequence_id)
-REFERENCES answers_sequence (answer_sequence_id);
 
 -- Reference: question_answer_sequence (table: answers_sequence)
 ALTER TABLE answers_sequence ADD CONSTRAINT questions_answers_sequence_fk FOREIGN KEY (question_id)

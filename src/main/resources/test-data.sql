@@ -4,7 +4,6 @@ VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '073-000-
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '073-003-02-01', null, 'Angel', '123', 'teacher');
 
-
 -- Table: groups
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('IS-4', 'Program engineering', '2018-03-02', 1);
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('AM-4', 'Applied Mathematics', '2017-03-02', 2);
@@ -124,21 +123,13 @@ INSERT INTO answers_simple (question_id, body, correct) VALUES (10, 'incorrect a
 INSERT INTO answers_simple (question_id, body, correct) VALUES (10, 'correct answer', true);
 
 -- Table: answers_accordance
-INSERT INTO answers_accordance (question_id) VALUES (3);
-
--- Table: correct_maps
-INSERT INTO correct_maps (left_side, right_side, answer_accordance_id) VALUES ('SQL', 'database', 1);
-INSERT INTO correct_maps (left_side, right_side, answer_accordance_id) VALUES ('Java', 'backend', 1);
-INSERT INTO correct_maps (left_side, right_side, answer_accordance_id) VALUES ('HTML', 'frontend', 1);
+INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
+left_side_3, right_side_3, left_side_4, right_side_4)
+VALUES (3, 'SQL', 'database', 'Java', 'backend', 'HTML', 'frontend', 'Pascal', 'Dead');
 
 -- Table: answers_sequence
-INSERT INTO answers_sequence (question_id) VALUES (4);
-
--- Table: correct_lists
-INSERT INTO correct_lists (item, answer_sequence_id) VALUES ('First', 1);
-INSERT INTO correct_lists (item, answer_sequence_id) VALUES ('Second', 1);
-INSERT INTO correct_lists (item, answer_sequence_id) VALUES ('Third', 1);
-INSERT INTO correct_lists (item, answer_sequence_id) VALUES ('Fourth', 1);
+INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
+VALUES (4, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);

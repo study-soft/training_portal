@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
@@ -31,9 +35,8 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
     @Transactional(readOnly = true)
     @Override
     public AnswerSequence findAnswerSequenceByQuestionId(Long questionId) {
-        AnswerSequence answerSequence = template.queryForObject(
-                FIND_ANSWER_SEQUENCE_BY_QUESTION_ID,
-                new Object[]{questionId}, AnswerSequence.class);
+        AnswerSequence answerSequence = template.queryForObject(FIND_ANSWER_SEQUENCE_BY_QUESTION_ID,
+                this::mapAnswerSequence, questionId);
         logger.info("Found answerSequence by questionId: " + answerSequence);
         return answerSequence;
     }
@@ -45,17 +48,19 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
         template.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement stmt = con.prepareStatement(ADD_ANSWER_SEQUENCE_QUESTION_ID,
+                PreparedStatement stmt = con.prepareStatement(ADD_ANSWER_SEQUENCE,
                         new String[]{"answer_sequence_id"});
                 stmt.setLong(1, answerSequence.getQuestionId());
+                List<String> correctList = answerSequence.getCorrectList();
+                stmt.setString(2, correctList.get(0));
+                stmt.setString(3, correctList.get(1));
+                stmt.setString(4, correctList.get(2));
+                stmt.setString(5, correctList.get(3));
                 return stmt;
             }
         }, keyHolder);
         long answerSequenceId = keyHolder.getKey().longValue();
         answerSequence.setAnswerSequenceId(answerSequenceId);
-        for (String item : answerSequence.getCorrectList()) {
-            template.update(ADD_ANSWER_SEQUENCE_CORRECT_LIST_ITEM, item, answerSequenceId);
-        }
         logger.info("Added answerSequence: " + answerSequence);
         return answerSequenceId;
     }
@@ -63,48 +68,49 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
     @Transactional
     @Override
     public void editAnswerSequence(AnswerSequence answerSequence) {
-        template.update(EDIT_ANSWER_SEQUENCE_QUESTION_ID,
-                answerSequence.getQuestionId(),
-                answerSequence.getAnswerSequenceId());
-        for (String item : answerSequence.getCorrectList()) {
-            template.update(EDIT_ANSWER_SEQUENCE_CORRECT_LIST_ITEM,
-                    answerSequence.getAnswerSequenceId(), item
-                    );
-        }
+        List<String> correctList = answerSequence.getCorrectList();
+        template.update(EDIT_ANSWER_SEQUENCE,
+                correctList.get(0),
+                correctList.get(1),
+                correctList.get(2),
+                correctList.get(3),
+                answerSequence.getQuestionId());
         logger.info("Edited answerSequence: " + answerSequence);
     }
 
+    @Transactional
     @Override
-    public void deleteAnswerSequence(Long answerSequenceId) {
-        template.update(DELETE_ANSWER_SEQUENCE, answerSequenceId);
-        template.update(DELETE_ANSWER_SEQUENCE_CORRECT_LIST, answerSequenceId);
-        logger.info("Deleted answerSequence with id: " + answerSequenceId);
+    public void deleteAnswerSequence(Long questionId) {
+        template.update(DELETE_ANSWER_SEQUENCE, questionId);
+        logger.info("Deleted answerSequence with questionId: " + questionId);
+    }
+
+    private AnswerSequence mapAnswerSequence(ResultSet rs, int rowNum) throws SQLException {
+        List<String> correctList = new ArrayList<>();
+        correctList.add(rs.getString("item_1"));
+        correctList.add(rs.getString("item_2"));
+        correctList.add(rs.getString("item_3"));
+        correctList.add(rs.getString("item_4"));
+
+        return new AnswerSequence.AnswerSequenceBuilder()
+                .answerSequenceId(rs.getLong("answer_sequence_id"))
+                .questionId(rs.getLong("question_id"))
+                .correctList(correctList)
+                .build();
     }
 
     private static final String FIND_ANSWER_SEQUENCE_BY_QUESTION_ID =
-    "SELECT SEQ.ANSWER_SEQUENCE_ID, SEQ.QUESTION_ID, CORRECT_LISTS.ITEM " +
-    "FROM CORRECT_LISTS INNER JOIN ANSWERS_SEQUENCE SEQ " +
-    "ON CORRECT_LISTS.ANSWER_SEQUENCE_ID = SEQ.ANSWER_SEQUENCE_ID " +
-    "WHERE SEQ.QUESTION_ID = ?;";
+    "SELECT * FROM ANSWERS_SEQUENCE WHERE QUESTION_ID = ?;";
 
-    private static final String ADD_ANSWER_SEQUENCE_QUESTION_ID =
-    "INSERT INTO ANSWERS_SEQUENCE (QUESTION_ID) VALUES (?);";
+    private static final String ADD_ANSWER_SEQUENCE =
+    "INSERT INTO ANSWERS_SEQUENCE (question_id, item_1, item_2, item_3, item_4) " +
+    "VALUES (?, ?, ?, ?, ?);";
 
-    private static final String ADD_ANSWER_SEQUENCE_CORRECT_LIST_ITEM =
-    "INSERT INTO CORRECT_LISTS (ITEM, ANSWER_SEQUENCE_ID) VALUES (?, ?);";
-
-    private static final String EDIT_ANSWER_SEQUENCE_QUESTION_ID =
-    "UPDATE ANSWERS_SEQUENCE SET QUESTION_ID = ? WHERE ANSWER_SEQUENCE_ID = ?;";
-
-    private static final String EDIT_ANSWER_SEQUENCE_CORRECT_LIST_ITEM =
-    "UPDATE CORRECT_LISTS SET ANSWER_SEQUENCE_ID = ?, ITEM = ? WHERE CORRECT_LIST_ID = ?;";
-
-    private static final String FIND_CORRECT_LIST_ID_BY_ANSWER_SEQUENCE_ID =
-    "SELECT CORRECT_LIST_ID FROM CORRECT_LISTS WHERE ANSWER_SEQUENCE_ID = ?;";
+    private static final String EDIT_ANSWER_SEQUENCE =
+    "UPDATE ANSWERS_SEQUENCE " +
+    "SET ITEM_1 = ?, ITEM_2 = ?, ITEM_3 = ?, ITEM_4 = ? " +
+    "WHERE QUESTION_ID = ?;";
 
     private static final String DELETE_ANSWER_SEQUENCE =
-    "DELETE FROM ANSWERS_SEQUENCE WHERE ANSWER_SEQUENCE_ID = ?;";
-
-    private static final String DELETE_ANSWER_SEQUENCE_CORRECT_LIST =
-    "DELETE FROM CORRECT_LISTS WHERE ANSWER_SEQUENCE_ID = ?;";
+    "DELETE FROM ANSWERS_SEQUENCE WHERE QUESTION_ID = ?;";
 }

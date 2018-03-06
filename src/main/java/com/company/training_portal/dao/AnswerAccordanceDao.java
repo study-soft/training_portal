@@ -10,5 +10,5 @@ public interface AnswerAccordanceDao {
 
     void editAnswerAccordance(AnswerAccordance answerAccordance);
 
-    void deleteAnswerAccordance(Long answerAccordanceId);
+    void deleteAnswerAccordance(Long questionId);
 }

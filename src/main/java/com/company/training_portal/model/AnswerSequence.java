@@ -87,7 +87,7 @@ public class AnswerSequence {
             return this;
         }
 
-        public AnswerSequenceBuilder setCorrectList(List<String> correctList) {
+        public AnswerSequenceBuilder correctList(List<String> correctList) {
             this.correctList = correctList;
             return this;
         }

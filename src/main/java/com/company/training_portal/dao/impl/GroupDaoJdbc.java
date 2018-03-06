@@ -13,11 +13,11 @@ import java.util.Map;
 @Repository
 public class GroupDaoJdbc implements GroupDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate template;
 
     @Autowired
     public GroupDaoJdbc(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        template = new JdbcTemplate(dataSource);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.company.training_portal.model.enums;
 
 public enum TeacherQuizStatus {
-    UNPUBLISHED("unpublished"), PUBLISHED("teacherQuizStatus"), CLOSED("closed");
+    UNPUBLISHED("unpublished"), PUBLISHED("published"), CLOSED("closed");
 
     private String teacherQuizStatus;
 

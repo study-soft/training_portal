@@ -1,8 +1,10 @@
 package com.company.training_portal.dao;
 
-public interface AnswerAccordance {
+import com.company.training_portal.model.AnswerAccordance;
 
-    AnswerAccordance findAnswerAccordanceByQuestionId(Long quizId);
+public interface AnswerAccordanceDao {
+
+    AnswerAccordance findAnswerAccordanceByQuestionId(Long questionId);
 
     Long addAnswerAccordance(AnswerAccordance answerAccordance);
 

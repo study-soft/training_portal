@@ -10,5 +10,5 @@ public interface AnswerSequenceDao {
 
     void editAnswerSequence(AnswerSequence answerSequence);
 
-    void deleteAnswerSequnce(Long answerSequenceId);
+    void deleteAnswerSequence(Long answerSequenceId);
 }

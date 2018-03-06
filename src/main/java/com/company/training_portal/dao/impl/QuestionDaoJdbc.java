@@ -5,8 +5,10 @@ import com.company.training_portal.model.Question;
 import com.company.training_portal.model.enums.QuestionType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,7 +19,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class QuestionDaoJdbc implements QuestionDao {
@@ -59,6 +63,26 @@ public class QuestionDaoJdbc implements QuestionDao {
         logger.info("Questions found by quizId and questionType:");
         questions.forEach(logger::info);
         return questions;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Map<QuestionType, Integer> findQuestionTypesAndCountByQuizId(Long quizId) {
+        Map<QuestionType, Integer> questionTypes = new HashMap<>();
+        template.query(FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID,
+                new ResultSetExtractor<Map<QuestionType, Integer>>() {
+                    @Override
+                    public Map<QuestionType, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        while (rs.next()) {
+                            questionTypes.put(QuestionType.valueOf(rs.getString(1)),
+                                    rs.getInt(2));
+                        }
+                        return questionTypes;
+                    }
+                });
+        logger.info("Found question types and their count by quizId:");
+        questionTypes.forEach((questionType, count) -> logger.info(questionType + ": " + count));
+        return questionTypes;
     }
 
     @Transactional(readOnly = true)
@@ -145,6 +169,11 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     private static final String FIND_QUESTIONS_BY_QUIZ_ID_AND_QUESTION_TYPE =
     "SELECT * FROM QUESTIONS WHERE QUIZ_ID = ? AND QUESTION_TYPE = ?;";
+
+    private static final String FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID =
+    "SELECT QUESTION_TYPE, COUNT(QUESTION_ID) " +
+    "FROM QUESTIONS WHERE QUIZ_ID = ? " +
+    "GROUP BY QUESTION_TYPE;";
 
     private static final String FIND_QUESTIONS_BY_QUIZ_ID_AND_SCORE =
     "SELECT * FROM QUESTIONS WHERE QUIZ_ID = ? AND SCORE = ?;";

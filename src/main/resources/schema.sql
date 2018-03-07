@@ -89,8 +89,8 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id bigint NOT NULL AUTO_INCREMENT,
   group_id bigint NULL,
-  first_name varchar(255) NULL,
-  last_name varchar(255) NULL,
+  first_name varchar(255) NOT NULL,
+  last_name varchar(255) NOT NULL,
   email varchar(255) UNIQUE NOT NULL,
   date_of_birth varchar(255) NULL,
   phone_number varchar(255) UNIQUE NOT NULL,

@@ -1,7 +1,7 @@
 package com.company.training_portal.model.enums;
 
 public enum UserRole {
-    TEACHER("teacher"), STUDENT("student");
+    TEACHER("TEACHER"), STUDENT("STUDENT");
 
     private String role;
 

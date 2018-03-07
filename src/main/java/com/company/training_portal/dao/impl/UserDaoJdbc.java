@@ -76,7 +76,7 @@ public class UserDaoJdbc implements UserDao {
                                                                  String lastName,
                                                                  UserRole userRole) {
         List<User> users = template.query(FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE,
-                new Object[]{firstName, lastName, userRole}, this::mapUser);
+                new Object[]{firstName, lastName, userRole.getRole()}, this::mapUser);
         logger.info("Users found by firstName, lastName, userRole:");
         users.forEach(logger::info);
         return users;
@@ -84,10 +84,10 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findStudentsByGroupName(String groupName) {
-        List<User> students = template.query(FIND_STUDENTS_BY_GROUP_NAME,
-                new Object[]{groupName}, this::mapUser);
-        logger.info("Students found by groupName:");
+    public List<User> findStudentsByGroupId(Long groupId) {
+        List<User> students = template.query(FIND_STUDENTS_BY_GROUP_ID,
+                new Object[]{groupId}, this::mapUser);
+        logger.info("Students found by groupId:");
         students.forEach(logger::info);
         return students;
     }
@@ -112,19 +112,18 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findAllStudentsByGroupIdAndQuizId(Long groupId, Long quizId) {
-        List<User> students = template.query(FIND_ALL_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID,
-                new Object[]{groupId, quizId}, this::mapUser);
-        logger.info("All students by groupId and quizId found:");
-        students.forEach(logger::info);
-        return students;
+    public List<Long> findStudentIdsByGroupIdAndQuizId(Long groupId, Long quizId) {
+        List<Long> studentIds = template.queryForList(FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, Long.class);
+        logger.info("Found student ids by groupId and quizId: " + studentIds);
+        return studentIds;
     }
 
     @Transactional(readOnly = true)
     @Override
     public Integer findStudentsNumber() {
         Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER, Integer.class);
-        logger.info("Students number found: " + studentsNumber);
+        logger.info("Found students number: " + studentsNumber);
         return studentsNumber;
     }
 
@@ -132,7 +131,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Integer findTeachersNumber() {
         Integer teachersNumber = template.queryForObject(FIND_TEACHERS_NUMBER, Integer.class);
-        logger.info("Teachers number found: " + teachersNumber);
+        logger.info("Found teachers number: " + teachersNumber);
         return teachersNumber;
     }
 
@@ -177,42 +176,26 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<String, Integer> findAllStudentResults(Long userId) {
-        return null;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId,
-                                                                             Long quizId) {
-        Map<String, Integer> results = new HashMap<>();
+    public Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId,
+                                                                         Long quizId) {
+        Map<Long, Integer> results = new HashMap<>();
         template.query(
-                FIND_RESULTS_AND_STUDENT_NAMES_BY_GROUP_ID_AND_QUIZ_ID,
-                new Object[]{groupId, quizId}, new ResultSetExtractor<Map<String, Integer>>() {
+                FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, new ResultSetExtractor<Map<Long, Integer>>() {
                     @Override
-                    public Map<String, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
                         while (rs.next()) {
-                            String firstName = rs.getString(1);
-                            String lastName = rs.getString(2);
-                            Integer result = rs.getInt(3);
-                            results.put(firstName + " " + lastName, result);
+                            Long studentId = rs.getLong(1);
+                            Integer result = rs.getInt(2);
+                            results.put(studentId, result);
                         }
                         return results;
                     }
                 });
-        logger.info("Results and student names by groupId and quizId found:");
-        results.forEach((name, result) -> logger.info(name + ": " + result));
+        logger.info("Found studentIds and results by groupId and quizId: ");
+        results.forEach((studentId, result) ->
+                logger.info("studentId: " + studentId + ", result: " + result));
         return results;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId) {
-        Integer counter = template.queryForObject(
-                FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID,
-                new Object[]{studentId, quizId}, Integer.class);
-        logger.info("Reopen counter by studentId and quizId found: " + counter);
-        return counter;
     }
 
     @Transactional(readOnly = true)
@@ -234,7 +217,7 @@ public class UserDaoJdbc implements UserDao {
         boolean exists = !users.isEmpty();
         if (exists) {
             logger.info("User with login '" + login + "', email '" + email + "' " +
-                    "and phoneNumber '" + phoneNumber + "' already exists");
+                    "and phoneNumber '" + phoneNumber + "' exists");
         } else {
             logger.info("User with login '" + login + "', email '" + email + "' " +
                     "and phoneNumber '" + phoneNumber + "' does not exists");
@@ -245,9 +228,17 @@ public class UserDaoJdbc implements UserDao {
     @Transactional(readOnly = true)
     @Override
     public User checkUserByLoginAndPassword(String login, String password) {
-        User user = template.queryForObject(
-                FIND_USER_BY_LOGIN_AND_PASSWORD,
-                new Object[]{login, password}, User.class);
+        User user = template.query(FIND_USER_BY_LOGIN_AND_PASSWORD,
+                new Object[]{login, password},
+                new ResultSetExtractor<User>() {
+                    @Override
+                    public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapUser(rs, 0);
+                    }
+                });
         logger.info("User by login and password found: " + user);
         return user;
     }
@@ -279,20 +270,20 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional
     @Override
-    public void addStudentToGroupByGroupNameAndUserId(String groupName, Long studentId) {
-        template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID, groupName, studentId);
+    public void addStudentToGroupByGroupIdAndUserId(Long groupId, Long studentId) {
+        template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_ID_AND_USER_ID, groupId, studentId);
         logger.info("Student with id = " + studentId +
-                " added to group with name = '" + groupName + "'");
+                " added to group with id = '" + groupId + "'");
     }
 
     @Transactional
     @Override
-    public void addStudentsToGroup(String groupName, List<Long> studentIds) {
+    public void addStudentsToGroup(Long groupId, List<Long> studentIds) {
         for (Long id : studentIds) {
-            template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID, groupName, id);
+            template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_ID_AND_USER_ID, groupId, id);
         }
         logger.info("Students with ids = " + studentIds +
-                " added to group with name = '" + groupName + "'");
+                " added to group with id = '" + groupId + "'");
     }
 
     @Transactional
@@ -334,8 +325,8 @@ public class UserDaoJdbc implements UserDao {
             Long userQuizJunctionId, Integer result, LocalDateTime finishDate,
             Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
         template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
-                userQuizJunctionId, result, Timestamp.valueOf(finishDate),
-                reopenCounter, studentQuizStatus.getStudentQuizStatus());
+                result, Timestamp.valueOf(finishDate), reopenCounter,
+                studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
         logger.info("Updated student info about quiz:");
         logger.info("userQuizJunctionId: " + userQuizJunctionId +
         ", result: " + result +
@@ -383,52 +374,49 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE =
     "SELECT * FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ? AND USER_ROLE = ?";
 
-    private static final String FIND_STUDENTS_BY_GROUP_NAME =
+    private static final String FIND_STUDENTS_BY_GROUP_ID =
     "SELECT * " +
     "FROM USERS " +
-    "WHERE GROUP_ID = (SELECT GROUPS.GROUP_ID FROM GROUPS WHERE GROUPS.NAME = ?) AND USER_ROLE = 'student';";
+    "WHERE GROUP_ID IS ? AND USER_ROLE = 'STUDENT';";
 
-    private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'student';";
+    private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
-    private static final String FIND_ALL_TEACHERS = "SELECT * FROM USERS WHERE USER_ROLE = 'teacher';";
+    private static final String FIND_ALL_TEACHERS = "SELECT * FROM USERS WHERE USER_ROLE = 'TEACHER';";
 
-    private static final String FIND_ALL_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID =
-    "SELECT USERS.FIRST_NAME, USERS.LAST_NAME, J.RESULT, J.REOPEN_COUNTER, J.STUDENT_QUIZ_STATUS " +
+    private static final String FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT USERS.USER_ID " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.USER_ROLE = 'student' AND USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
+    "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
 
     private static final String FIND_STUDENTS_NUMBER =
-    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'student';";
+    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
     private static final String FIND_TEACHERS_NUMBER =
-    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'teacher';";
+    "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'TEACHER';";
 
     private static final String FIND_STUDENTS_NUMBER_IN_GROUP =
-    "SELECT COUNT(USER_ID) FROM USERS WHERE GROUP_ID = ?;";
+    "SELECT COUNT(USER_ID) FROM USERS WHERE GROUP_ID IS ?;";
 
     private static final String FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ =
     "SELECT COUNT(USERS.USER_ID) " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.USER_ROLE = 'student' AND USERS.GROUP_ID = ? AND J.QUIZ_ID = ? " +
-    "AND J.STUDENT_QUIZ_STATUS = 'finished';";
+    "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? " +
+    "AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
 
     private static final String FIND_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT COUNT(J.RESULT) " +
     "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
+    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
 
     private static final String FIND_FINAL_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT COUNT(J.RESULT) " +
     "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'finished';";
+    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
 
-    private static final String FIND_RESULTS_AND_STUDENT_NAMES_BY_GROUP_ID_AND_QUIZ_ID =
-    "SELECT USERS.FIRST_NAME, USERS.LAST_NAME, J.RESULT " +
+    private static final String FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT USERS.USER_ID, J.RESULT " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
-
-    private static final String FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID =
-    "SELECT J.REOPEN_COUNTER FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
+    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
 
     private static final String FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT J.USER_QUIZ_JUNCTION_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
@@ -440,19 +428,19 @@ public class UserDaoJdbc implements UserDao {
     "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;";
 
     private static final String REGISTER_USER =
-    "INSERT INTO USERS (FIRST_NAME, LAST_NAME, EMAIL, " +
+    "INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, " +
     "DATE_OF_BIRTH, PHONE_NUMBER, LOGIN, PASSWORD, USER_ROLE) " +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String ADD_STUDENT_TO_GROUP_BY_GROUP_NAME_AND_USER_ID =
+    private static final String ADD_STUDENT_TO_GROUP_BY_GROUP_ID_AND_USER_ID =
     "UPDATE USERS " +
-    "SET GROUP_ID = (SELECT GROUP_ID FROM GROUPS WHERE GROUPS.NAME = ?) " +
-    "WHERE USER_ID = ? AND USER_ROLE = 'student';";
+    "SET GROUP_ID = ? " +
+    "WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";
 
     private static final String ADD_STUDENT_INFO_ABOUT_QUIZ =
     "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, " +
-    "FINISH_DATE, STUDENT_QUIZ_STATUS) " +
-    "VALUES (?, ?, ?, ?, ?, ?);";
+    "FINISH_DATE, REOPEN_COUNTER, STUDENT_QUIZ_STATUS) " +
+    "VALUES (?, ?, ?, ?, ?, 0, ?);";
 
     private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
     "UPDATE USER_QUIZ_JUNCTIONS " +
@@ -462,5 +450,5 @@ public class UserDaoJdbc implements UserDao {
     private static final String EDIT_USER = "";
 
     private static final String DELETE_STUDENT_FROM_GROUP_BY_USER_ID =
-            "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'student';";
+            "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";
 }

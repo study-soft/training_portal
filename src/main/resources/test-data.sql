@@ -19,6 +19,8 @@ INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_
 VALUES (2, 'Sara', 'Stivens', 'sara@example.com', '1998-03-01', '098-135-79-11', null, 'Sara', '123', 'STUDENT');
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role) 
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'STUDENT');
+INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
 
 -- Table: quizzes
 INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -66,6 +68,9 @@ WHERE USER_QUIZ_JUNCTION_ID = 6;
 UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 19, FINISH_DATE = '2018-03-05 00:00:15', REOPEN_COUNTER = 1, STUDENT_QUIZ_STATUS = 'FINISHED'
 WHERE USER_QUIZ_JUNCTION_ID = 6;
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 24, FINISH_DATE = '2018-03-05 00:00:10', REOPEN_COUNTER = 0, STUDENT_QUIZ_STATUS = 'PASSED'
+WHERE USER_QUIZ_JUNCTION_ID = 7;
 
 -- Table: questions
 INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)

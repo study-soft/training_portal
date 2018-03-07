@@ -21,13 +21,13 @@ public interface UserDao {
 
     List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName, String lastName, UserRole userRole);
 
-    List<User> findStudentsByGroupName(String groupName);
+    List<User> findStudentsByGroupId(Long groupId);
 
     List<User> findAllStudents();
 
     List<User> findAllTeachers();
 
-    List<User> findAllStudentsByGroupIdAndQuizId(Long quizId, Long groupId);
+    List<Long> findStudentIdsByGroupIdAndQuizId(Long quizId, Long groupId);
 
     Integer findStudentsNumber();
 
@@ -41,13 +41,8 @@ public interface UserDao {
 
     Integer findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
 
-    // key: quiz's name, value: result
-    Map<String, Integer> findAllStudentResults(Long userId);
-
-    // key: student's first name + last name, value: result
-    Map<String, Integer> findResultsAndStudentNamesByGroupIdAndQuizId(Long groupId, Long quizId);
-
-    Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId);
+    // key: studentId, value: result
+    Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId, Long quizId);
 
     Long findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId);
 
@@ -64,9 +59,9 @@ public interface UserDao {
 
     Long registerUser(User user);
 
-    void addStudentToGroupByGroupNameAndUserId(String groupName, Long studentId);
+    void addStudentToGroupByGroupIdAndUserId(Long groupId, Long studentId);
 
-    void addStudentsToGroup(String groupName, List<Long> studentIds);
+    void addStudentsToGroup(Long groupId, List<Long> studentIds);
 
     Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                  LocalDateTime submitDate, LocalDateTime finishDate,

@@ -129,7 +129,7 @@ public class User {
         User user = (User) o;
 
         if (!userId.equals(user.userId)) return false;
-        if (!groupId.equals(user.groupId)) return false;
+        if (groupId != null ? !groupId.equals(user.groupId) : user.groupId != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
         if (!email.equals(user.email)) return false;

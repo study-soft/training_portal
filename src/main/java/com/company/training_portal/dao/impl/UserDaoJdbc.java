@@ -38,7 +38,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User findUserByUserId(Long userId) {
         User user = template.queryForObject(FIND_USER_BY_USER_ID,
-                new Object[]{userId}, User.class);
+                new Object[]{userId}, this::mapUser);
         logger.info("User found by userId: " + user);
         return user;
     }
@@ -47,7 +47,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User findUserByLogin(String login) {
         User user = template.queryForObject(FIND_USER_BY_LOGIN,
-                new Object[]{login}, User.class);
+                new Object[]{login}, this::mapUser);
         logger.info("User found by login: " + user);
         return user;
     }
@@ -56,7 +56,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User findUserByEmail(String email) {
         User user = template.queryForObject(FIND_USER_BY_EMAIL,
-                new Object[]{email}, User.class);
+                new Object[]{email}, this::mapUser);
         logger.info("User found by email: " + user);
         return user;
     }
@@ -65,7 +65,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public User findUserByPhoneNumber(String phoneNumber) {
         User user = template.queryForObject(FIND_USER_BY_PHONE_NUMBER,
-                new Object[]{phoneNumber}, User.class);
+                new Object[]{phoneNumber}, this::mapUser);
         logger.info("User found by phoneNumber: " + user);
         return user;
     }

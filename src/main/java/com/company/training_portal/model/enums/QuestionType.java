@@ -1,8 +1,8 @@
 package com.company.training_portal.model.enums;
 
 public enum QuestionType {
-    ONE_ANSWER("one_answer"), FEW_ANSWERS("few_answers"), ACCORDANCE("accordance"),
-    SEQUENCE("sequence"), NUMBER("number");
+    ONE_ANSWER("ONE_ANSWER"), FEW_ANSWERS("FEW_ANSWERS"), ACCORDANCE("ACCORDANCE"),
+    SEQUENCE("SEQUENCE"), NUMBER("NUMBER");
 
     private String questionType;
 

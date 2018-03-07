@@ -14,35 +14,35 @@ public interface QuizDao {
 
     List<Quiz> findAllQuizzes();
 
-    List<String> findAllQuizNames();
+    List<Long> findAllQuizIds();
 
     List<Quiz> findAllQuizzesByAuthorId(Long authorId);
 
-    List<String> findAllQuizNamesByAuthorId(Long authorId);
+    List<Long> findAllQuizIdsByAuthorId(Long authorId);
 
-    List<String> findAllQuizNamesByStudentId(Long studentId);
+    List<Long> findAllQuizIdsByStudentId(Long studentId);
 
-    List<String> findAllClosedQuizNamesByAuthorId(Long authorId);
+    List<Long> findAllClosedQuizIdsByAuthorId(Long authorId);
 
-    List<Quiz> findAllNotPublishedQuizzesByAuthorId(Long authorId);
+    List<Long> findAllNotPublishedQuizIdsByAuthorId(Long authorId);
 
-    List<String> findAllQuizNamesByStudentIdAndStudentQuizStatus(Long studentId, StudentQuizStatus studentQuizStatus);
+    List<Long> findAllQuizIdsByStudentIdAndStudentQuizStatus(Long studentId, StudentQuizStatus studentQuizStatus);
 
     Integer findQuizzesNumberByAuthorId(Long authorId);
 
     // key: studentQuizStatus, value: number of students
     Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
-            Long authorId, Long groupId, StudentQuizStatus studentQuizStatus);
+            Long authorId, Long groupId, Long quizId);
 
     // key: teacherQuizStatus, value: number of quizzes
     Map<TeacherQuizStatus, Integer> FindQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId);
 
-    // key: quiz's name, value: result
-    Map<String, Integer> findAllStudentResults(Long studentId);
+    // key: quizId, value: result
+    Map<Long, Integer> findAllStudentResults(Long studentId);
 
-    List<String> findQuizNamesByStudentIdAndReopenCounter(Long studentId, Integer reopenCounter);
+    List<Long> findQuizIdsByStudentIdAndReopenCounter(Long studentId, Integer reopenCounter);
 
-    List<String> findQuizNamesByStudentIdAndAuthorId(Long studentId, Long authorId);
+    List<Long> findQuizIdsByStudentIdAndAuthorId(Long studentId, Long authorId);
 
     Integer findResultByStudentIdAndQuizId(Long studentId, Long quizId);
 

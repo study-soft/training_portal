@@ -40,7 +40,7 @@ public class QuizDaoJdbc implements QuizDao {
     @Override
     public Quiz findQuizByQuizId(Long quizId) {
         Quiz quiz = template.queryForObject(FIND_QUIZ_BY_QUIZ_ID,
-                new Object[]{quizId}, Quiz.class);
+                new Object[]{quizId}, this::mapQuiz);
         logger.info("Quiz found by quizId: " + quiz);
         return quiz;
     }
@@ -56,12 +56,11 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAllQuizNames() {
-        List<String> quizNames = template.queryForList(FIND_ALL_QUIZ_NAMES,
-                String.class);
-        logger.info("All quiz names found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+    public List<Long> findAllQuizIds() {
+        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS,
+                Long.class);
+        logger.info("All quiz ids found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -76,56 +75,52 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAllQuizNamesByAuthorId(Long authorId) {
-        List<String> quizNames = template.queryForList(FIND_ALL_QUIZ_NAMES_BY_AUTHOR_ID,
-                String.class);
-        logger.info("All quiz names by authorId found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+    public List<Long> findAllQuizIdsByAuthorId(Long authorId) {
+        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID,
+                new Object[]{authorId}, Long.class);
+        logger.info("All quiz ids by authorId found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAllQuizNamesByStudentId(Long studentId) {
-        List<String> quizNames = template.queryForList(
-                FIND_ALL_QUIZ_NAMES_BY_STUDENT_ID, String.class);
-        logger.info("All quiz names by studentId found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+    public List<Long> findAllQuizIdsByStudentId(Long studentId) {
+        List<Long> quizIds = template.queryForList(
+                FIND_ALL_QUIZ_IDS_BY_STUDENT_ID,
+                new Object[]{studentId}, Long.class);
+        logger.info("All quiz ids by studentId found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAllClosedQuizNamesByAuthorId(Long authorId) {
-        List<String> quizNames = template.queryForList(
-                FIND_ALL_CLOSED_QUIZ_NAMES_BY_AUTHOR_ID,
-                new Object[]{authorId}, String.class);
-        logger.info("All closed quiz names by authorId found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+    public List<Long> findAllClosedQuizIdsByAuthorId(Long authorId) {
+        List<Long> quizIds = template.queryForList(
+                FIND_ALL_CLOSED_QUIZ_IDS_BY_AUTHOR_ID,
+                new Object[]{authorId}, Long.class);
+        logger.info("All closed quiz ids by authorId found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findAllNotPublishedQuizzesByAuthorId(Long authorId) {
-        List<Quiz> quizzes = template.query(FIND_ALL_NOT_PUBLISHED_QUIZZES_BY_AUTHOR_ID,
-                new Object[]{authorId}, this::mapQuiz);
-        logger.info("All not published quizzes by authorId found:");
-        quizzes.forEach(logger::info);
-        return quizzes;
+    public List<Long> findAllNotPublishedQuizIdsByAuthorId(Long authorId) {
+        List<Long> quizIds = template.queryForList(FIND_ALL_NOT_PUBLISHED_QUIZ_IDS_BY_AUTHOR_ID,
+                new Object[]{authorId}, Long.class);
+        logger.info("All not published quiz ids by authorId found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAllQuizNamesByStudentIdAndStudentQuizStatus(
+    public List<Long> findAllQuizIdsByStudentIdAndStudentQuizStatus(
             Long studentId, StudentQuizStatus studentQuizStatus) {
-        List<String> quizNames = template.queryForList(
-                FIND_ALL_QUIZ_NAMES_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS,
+        List<Long> quizIds = template.queryForList(
+                FIND_ALL_QUIZ_IDS_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS,
                 new Object[]{studentId, studentQuizStatus.getStudentQuizStatus()},
-                String.class);
-        logger.info("All quiz names by studentId and studentQuizStatus");
-        quizNames.forEach(logger::info);
-        return quizNames;
+                Long.class);
+        logger.info("All quiz ids by studentId and studentQuizStatus: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -140,11 +135,11 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
-            Long authorId, Long groupId, StudentQuizStatus studentQuizStatus) {
+            Long authorId, Long groupId, Long quizId) {
         Map<StudentQuizStatus, Integer> results = new HashMap<>();
         template.query(
                 FIND_STUDENTS_NUMBER_BY_AUTHOR_ID_AND_GROUP_ID_AND_QUIZ_ID_WITH_STUDENT_QUIZ_STATUS,
-                new Object[]{authorId, groupId, studentQuizStatus.getStudentQuizStatus()},
+                new Object[]{authorId, groupId, quizId},
                 new ResultSetExtractor<Map<StudentQuizStatus, Integer>>() {
                     @Override
                     public Map<StudentQuizStatus, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -183,45 +178,43 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<String, Integer> findAllStudentResults(Long studentId) {
-        Map<String, Integer> results = new HashMap<>();
+    public Map<Long, Integer> findAllStudentResults(Long studentId) {
+        Map<Long, Integer> results = new HashMap<>();
         template.query(FIND_ALL_STUDENT_RESULTS, new Object[]{studentId},
-                new ResultSetExtractor<Map<String, Integer>>() {
+                new ResultSetExtractor<Map<Long, Integer>>() {
                     @Override
-                    public Map<String, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
                         while (rs.next()) {
-                            results.put(rs.getString(1), rs.getInt(2));
+                            results.put(rs.getLong(1), rs.getInt(2));
                         }
                         return results;
                     }
                 });
         logger.info("All student results by studentId found:");
-        results.forEach((k, v) -> logger.info("quiz: " + k + ", result: " + v));
+        results.forEach((k, v) -> logger.info("quizId: " + k + ", result: " + v));
         return results;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findQuizNamesByStudentIdAndReopenCounter(Long studentId,
+    public List<Long> findQuizIdsByStudentIdAndReopenCounter(Long studentId,
                                                                  Integer reopenCounter) {
-        List<String> quizNames = template.queryForList(
-                FIND_QUIZ_NAMES_BY_STUDENT_ID_AND_REOPEN_COUNTER,
+        List<Long> quizIds = template.queryForList(
+                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_REOPEN_COUNTER,
                 new Object[]{studentId, reopenCounter},
-                String.class);
-        logger.info("All quiz names by studentId and reopenCounter found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+                Long.class);
+        logger.info("All quiz ids by studentId and reopenCounter found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findQuizNamesByStudentIdAndAuthorId(Long studentId, Long authorId) {
-        List<String> quizNames = template.queryForList(
-                FIND_QUIZ_NAMES_BY_STUDENT_ID_AND_AUTHOR_ID,
-                new Object[]{studentId, authorId}, String.class);
-        logger.info("All quiz names by studentId and authorId found:");
-        quizNames.forEach(logger::info);
-        return quizNames;
+    public List<Long> findQuizIdsByStudentIdAndAuthorId(Long studentId, Long authorId) {
+        List<Long> quizIds = template.queryForList(
+                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_AUTHOR_ID,
+                new Object[]{studentId, authorId}, Long.class);
+        logger.info("All quiz ids by studentId and authorId found: " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -247,7 +240,7 @@ public class QuizDaoJdbc implements QuizDao {
     @Override
     public LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId) {
         LocalDateTime finishDate = template.queryForObject(
-                FIND_SUBMIT_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
+                FIND_FINISH_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, LocalDateTime.class);
         logger.info("FinishDate by studentId and quizId found: " + finishDate);
         return finishDate;
@@ -341,28 +334,28 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String FIND_ALL_QUIZZES =
     "SELECT * FROM QUIZZES;";
 
-    private static final String FIND_ALL_QUIZ_NAMES =
-    "SELECT QUIZZES.NAME FROM QUIZZES;";
+    private static final String FIND_ALL_QUIZ_IDS =
+    "SELECT QUIZ_ID FROM QUIZZES;";
 
     private static final String FIND_ALL_QUIZZES_BY_AUTHOR_ID =
     "SELECT * FROM QUIZZES WHERE AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_QUIZ_NAMES_BY_AUTHOR_ID =
-    "SELECT QUIZZES.NAME FROM QUIZZES WHERE AUTHOR_ID = ?;";
+    private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
+    "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_QUIZ_NAMES_BY_STUDENT_ID =
-    "SELECT QUIZZES.NAME " +
+    private static final String FIND_ALL_QUIZ_IDS_BY_STUDENT_ID =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ?;";
 
-    private static final String FIND_ALL_CLOSED_QUIZ_NAMES_BY_AUTHOR_ID =
-    "SELECT NAME FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'closed' AND AUTHOR_ID = ?;";
+    private static final String FIND_ALL_CLOSED_QUIZ_IDS_BY_AUTHOR_ID =
+    "SELECT QUIZ_ID FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'CLOSED' AND AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_NOT_PUBLISHED_QUIZZES_BY_AUTHOR_ID =
-    "SELECT * FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'unpublished';";
+    private static final String FIND_ALL_NOT_PUBLISHED_QUIZ_IDS_BY_AUTHOR_ID =
+    "SELECT QUIZ_ID FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'UNPUBLISHED' AND AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_QUIZ_NAMES_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS =
-    "SELECT QUIZZES.NAME " +
+    private static final String FIND_ALL_QUIZ_IDS_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND STUDENT_QUIZ_STATUS = ?;";
 
@@ -382,17 +375,17 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES WHERE AUTHOR_ID = ? GROUP BY TEACHER_QUIZ_STATUS;";
 
     private static final String FIND_ALL_STUDENT_RESULTS =
-    "SELECT QUIZZES.NAME, J.RESULT " +
+    "SELECT QUIZZES.QUIZ_ID, J.RESULT " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ?;";
 
-    private static final String FIND_QUIZ_NAMES_BY_STUDENT_ID_AND_REOPEN_COUNTER =
-    "SELECT QUIZZES.NAME " +
+    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_REOPEN_COUNTER =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND J.REOPEN_COUNTER = ?;";
 
-    private static final String FIND_QUIZ_NAMES_BY_STUDENT_ID_AND_AUTHOR_ID =
-    "SELECT QUIZZES.NAME " +
+    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_AUTHOR_ID =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ?;";
 

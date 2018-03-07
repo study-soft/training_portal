@@ -1,7 +1,7 @@
 package com.company.training_portal.model.enums;
 
 public enum StudentQuizStatus {
-    OPENED("opened"), PASSED("passed"), FINISHED("finished");
+    OPENED("OPENED"), PASSED("PASSED"), FINISHED("FINISHED");
 
     private String studentQuizStatus;
 

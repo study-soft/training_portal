@@ -39,7 +39,7 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Override
     public Question findQuestionByQuestionId(Long questionId) {
         Question question = template.queryForObject(FIND_QUESTION_BY_QUESTION_ID,
-                new Object[]{questionId}, Question.class);
+                new Object[]{questionId}, this::mapQuestion);
         logger.info("Question found by questionId: " + question);
         return question;
     }
@@ -69,7 +69,7 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Override
     public Map<QuestionType, Integer> findQuestionTypesAndCountByQuizId(Long quizId) {
         Map<QuestionType, Integer> questionTypes = new HashMap<>();
-        template.query(FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID,
+        template.query(FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID, new Object[]{quizId},
                 new ResultSetExtractor<Map<QuestionType, Integer>>() {
                     @Override
                     public Map<QuestionType, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {

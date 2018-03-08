@@ -31,6 +31,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
         template = new JdbcTemplate(dataSource);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public AnswerSimple findAnswerSimpleByAnswerSimpleId(Long answerSimpleId) {
         AnswerSimple answerSimple = template.queryForObject(FIND_ANSWER_SIMPLE_BY_ANSWER_SIMPLE_ID,

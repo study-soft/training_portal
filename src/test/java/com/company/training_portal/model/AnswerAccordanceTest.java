@@ -16,7 +16,6 @@ public class AnswerAccordanceTest {
     @Before
     public void setUp() {
         answerAccordance = new AnswerAccordance.AnswerAccordanceBuilder().build();
-        answerAccordance.setAnswerAccordanceId(1L);
         answerAccordance.setQuestionId(1L);
         correctMap = new HashMap<>();
         correctMap.put("leftPart1", "rightPart1");
@@ -32,7 +31,6 @@ public class AnswerAccordanceTest {
         correctMap.put("leftPart2", "rightPart2");
         correctMap.put("leftPart3", "rightPart3");
         AnswerAccordance answerAccordanceBuilt = new AnswerAccordance.AnswerAccordanceBuilder()
-                .answerAccordanceId(1L)
                 .questionId(1L)
                 .correctMap(correctMap)
                 .build();

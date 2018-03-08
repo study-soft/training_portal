@@ -174,6 +174,7 @@ public class QuestionDaoJdbc implements QuestionDao {
         logger.info("Deleted questions with questionId: " + questionId);
     }
 
+    @Transactional
     @Override
     public void deleteQuestionsByQuizId(Long quizId) {
         List<Question> questions = findQuestionsByQuizId(quizId);

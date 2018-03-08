@@ -93,7 +93,6 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
         correctMap.put(rs.getString("left_side_4"), rs.getString("right_side_4"));
 
         return new AnswerAccordance.AnswerAccordanceBuilder()
-                .answerAccordanceId(rs.getLong("answer_accordance_id"))
                 .questionId(rs.getLong("question_id"))
                 .correctMap(correctMap)
                 .build();

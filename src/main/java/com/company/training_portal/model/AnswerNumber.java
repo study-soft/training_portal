@@ -2,22 +2,12 @@ package com.company.training_portal.model;
 
 public class AnswerNumber {
 
-    private Long answerNumberId;
     private Long questionId;
     private Integer correct;
 
     private AnswerNumber(AnswerNumberBuilder builder) {
-        this.answerNumberId = builder.answerNumberId;
         this.questionId = builder.questionId;
         this.correct = builder.correct;
-    }
-
-    public Long getAnswerNumberId() {
-        return answerNumberId;
-    }
-
-    public void setAnswerNumberId(Long answerNumberId) {
-        this.answerNumberId = answerNumberId;
     }
 
     public Long getQuestionId() {
@@ -44,15 +34,13 @@ public class AnswerNumber {
 
         AnswerNumber that = (AnswerNumber) o;
 
-        if (!answerNumberId.equals(that.answerNumberId)) return false;
         if (!questionId.equals(that.questionId)) return false;
         return correct.equals(that.correct);
     }
 
     @Override
     public int hashCode() {
-        int result = answerNumberId.hashCode();
-        result = 31 * result + questionId.hashCode();
+        int result = questionId.hashCode();
         result = 31 * result + correct.hashCode();
         return result;
     }
@@ -60,9 +48,8 @@ public class AnswerNumber {
     @Override
     public String toString() {
         return "AnswerNumber{" +
-                "answerNumberId=" + answerNumberId +
-                ", questionId=" + questionId +
-                ", correct='" + correct + '\'' +
+                "questionId=" + questionId +
+                ", correct=" + correct +
                 '}';
     }
 
@@ -73,11 +60,6 @@ public class AnswerNumber {
         private Integer correct;
 
         public AnswerNumberBuilder() {
-        }
-
-        public AnswerNumberBuilder answerNumberId(Long answerNumberId) {
-            this.answerNumberId = answerNumberId;
-            return this;
         }
 
         public AnswerNumberBuilder questionId(Long questionId) {

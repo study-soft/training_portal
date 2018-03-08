@@ -28,7 +28,7 @@ public class AnswerNumberDaoJdbc implements AnswerNumberDao {
     @Override
     public AnswerNumber findAnswerNumberByQuestionId(Long questionId) {
         AnswerNumber answerNumber = template.queryForObject(FIND_ANSWER_NUMBER_BY_QUESTION_ID,
-                new Object[]{questionId}, AnswerNumber.class);
+                new Object[]{questionId}, this::mapAnswerNumber);
         logger.info("Found answerNumber by questionId: " + answerNumber);
         return answerNumber;
     }
@@ -58,7 +58,6 @@ public class AnswerNumberDaoJdbc implements AnswerNumberDao {
 
     private AnswerNumber mapAnswerNumber(ResultSet rs, int rowNum) throws SQLException {
         return new AnswerNumber.AnswerNumberBuilder()
-                .answerNumberId(rs.getLong("answer_number_id"))
                 .questionId(rs.getLong("question_id"))
                 .correct(rs.getInt("correct"))
                 .build();

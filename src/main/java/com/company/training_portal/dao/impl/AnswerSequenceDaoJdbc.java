@@ -78,7 +78,6 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
         correctList.add(rs.getString("item_4"));
 
         return new AnswerSequence.AnswerSequenceBuilder()
-                .answerSequenceId(rs.getLong("answer_sequence_id"))
                 .questionId(rs.getLong("question_id"))
                 .correctList(correctList)
                 .build();

@@ -35,8 +35,8 @@ public class GroupDaoJdbc implements GroupDao {
     @Override
     public Group findGroupByGroupId(Long groupId) {
         Group group = template.queryForObject(FIND_GROUP_BY_GROUP_ID,
-                new Object[]{groupId}, Group.class);
-        logger.info("Group found by groupId");
+                new Object[]{groupId}, this::mapGroup);
+        logger.info("Group found by groupId: " + group);
         return group;
     }
 
@@ -48,25 +48,6 @@ public class GroupDaoJdbc implements GroupDao {
         logger.info("All groups by authorId found:");
         groups.forEach(logger::info);
         return groups;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<String> findAllGroupNames() {
-       List<String> groupNames = template.queryForList(FIND_ALL_GROUP_NAMES, String.class);
-       logger.info("All group names found:");
-       groupNames.forEach(logger::info);
-       return groupNames;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<String> findAllGroupNamesByAuthorId(Long authorId) {
-        List<String> groupNames = template.queryForList(FIND_ALL_GROUP_NAMES_BY_AUTHOR_ID,
-                new Object[]{authorId}, String.class);
-        logger.info("All group names by authorId found:");
-        groupNames.forEach(logger::info);
-        return groupNames;
     }
 
     @Transactional(readOnly = true)
@@ -89,14 +70,14 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<String, Integer> findAllGroupsAndStudentsNumberInThem() {
-        Map<String, Integer> results = new HashMap<>();
+    public Map<Group, Integer> findAllGroupsAndStudentsNumberInThem() {
+        Map<Group, Integer> results = new HashMap<>();
         template.query(FIND_ALL_GROUPS_AND_STUDENTS_NUMBER_IN_THEM,
-                new ResultSetExtractor<Map<String, Integer>>() {
+                new ResultSetExtractor<Map<Group, Integer>>() {
                     @Override
-                    public Map<String, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                    public Map<Group, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
                         while (rs.next()) {
-                            results.put(rs.getString(1), rs.getInt(2));
+                            results.put(mapGroup(rs, 0), rs.getInt(6));
                         }
                         return results;
                     }
@@ -141,6 +122,7 @@ public class GroupDaoJdbc implements GroupDao {
 
     private Group mapGroup(ResultSet rs, int rowNum) throws SQLException {
         return new Group.GroupBuilder()
+                .groupId(rs.getLong("group_id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .creationDate(rs.getDate("creation_date").toLocalDate())
@@ -154,20 +136,16 @@ public class GroupDaoJdbc implements GroupDao {
     private static final String FIND_GROUPS_BY_AUTHOR_ID =
     "SELECT * FROM GROUPS WHERE AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_GROUP_NAMES = "SELECT NAME FROM GROUPS;";
-
-    private static final String FIND_ALL_GROUP_NAMES_BY_AUTHOR_ID =
-    "SELECT NAME FROM GROUPS WHERE AUTHOR_ID = ?;";
-
     private static final String FIND_ALL_GROUPS = "SELECT * FROM GROUPS;";
 
     private static final String FIND_GROUPS_NUMBER_BY_AUTHOR_ID =
     "SELECT COUNT(GROUP_ID) FROM GROUPS WHERE AUTHOR_ID = ?;";
 
     private static final String FIND_ALL_GROUPS_AND_STUDENTS_NUMBER_IN_THEM =
-    "SELECT GROUPS.NAME, COUNT(USERS.USER_ID) " +
+    "SELECT GROUPS.GROUP_ID, GROUPS.NAME, GROUPS.DESCRIPTION, " +
+            "GROUPS.CREATION_DATE, GROUPS.AUTHOR_ID, COUNT(USERS.USER_ID) " +
     "FROM USERS INNER JOIN GROUPS ON USERS.GROUP_ID = GROUPS.GROUP_ID " +
-    "WHERE USERS.USER_ROLE = 'student' " +
+    "WHERE USERS.USER_ROLE = 'STUDENT' " +
     "GROUP BY GROUPS.NAME;";
 
     private static final String ADD_GROUP =

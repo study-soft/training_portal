@@ -112,6 +112,14 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Long> findStudentIdsWithoutGroup() {
+        List<Long> studentIds = template.queryForList(FIND_STUDENT_IDS_WITHOUT_GROUP, Long.class);
+        logger.info("Found studentIds without group: " + studentIds);
+        return studentIds;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Long> findStudentIdsByGroupIdAndQuizId(Long groupId, Long quizId) {
         List<Long> studentIds = template.queryForList(FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID,
                 new Object[]{groupId, quizId}, Long.class);
@@ -382,6 +390,9 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
     private static final String FIND_ALL_TEACHERS = "SELECT * FROM USERS WHERE USER_ROLE = 'TEACHER';";
+
+    private static final String FIND_STUDENT_IDS_WITHOUT_GROUP =
+    "SELECT USER_ID FROM USERS WHERE USER_ROLE = 'STUDENT' AND GROUP_ID IS NULL;";
 
     private static final String FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT USERS.USER_ID " +

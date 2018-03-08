@@ -11,16 +11,12 @@ public interface GroupDao {
 
     List<Group> findGroupsByAuthorId(Long authorId);
 
-    List<String> findAllGroupNames();
-
-    List<String> findAllGroupNamesByAuthorId(Long authorId);
-
     List<Group> findAllGroups();
 
     Integer findGroupsNumberByAuthorId(Long authorId);
 
-    //key: groupName, value: numberOfStudents
-    Map<String, Integer> findAllGroupsAndStudentsNumberInThem();
+    //key: Group, value: numberOfStudents
+    Map<Group, Integer> findAllGroupsAndStudentsNumberInThem();
 
     Long addGroup(Group group);
 

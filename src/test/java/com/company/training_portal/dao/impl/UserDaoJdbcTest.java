@@ -6,6 +6,7 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -162,6 +163,13 @@ public class UserDaoJdbcTest {
         Integer finalResultsNumber =
                 userDao.findFinalResultsNumberByGroupIdAndQuizId(1L, 1L);
         assertThat(finalResultsNumber, is(1));
+    }
+
+    @Test
+    public void test_find_student_ids_without_group() {
+        List<Long> testStudentIds = new ArrayList<>(Arrays.asList(7L, 8L));
+        List<Long> studentIds = userDao.findStudentIdsWithoutGroup();
+        assertEquals(testStudentIds, studentIds);
     }
 
     @Ignore

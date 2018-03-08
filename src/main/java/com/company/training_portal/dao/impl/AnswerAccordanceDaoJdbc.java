@@ -43,38 +43,21 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
         return answerAccordance;
     }
 
-    @Override
-    public Long findQuestionIdByAnswerAccordanceId(Long answerAccordanceId) {
-        Long questionId = template.queryForObject(
-                FIND_QUESTION_ID_BY_ANSWER_ACCORDANCE_ID,
-                new Object[]{answerAccordanceId}, Long.class);
-        logger.info("Found questionId by AnswerAccordanceId: " + questionId);
-        return questionId;
-    }
-
     @Transactional
     @Override
-    public Long addAnswerAccordance(AnswerAccordance answerAccordance) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement stmt = con.prepareStatement(ADD_ANSWER_ACCORDANCE,
-                        new String[]{"answer_accordance_id"});
-                stmt.setLong(1, answerAccordance.getQuestionId());
-                Map<String, String> correctMap = answerAccordance.getCorrectMap();
-                int index = 2; // parameter index for next columns
-                for (Map.Entry<String, String> entry : correctMap.entrySet()) {
-                    stmt.setString(index++, entry.getKey());
-                    stmt.setString(index++, entry.getValue());
-                }
-                return stmt;
-            }
-        }, keyHolder);
-        long answerAccordanceId = keyHolder.getKey().longValue();
-        answerAccordance.setAnswerAccordanceId(answerAccordanceId);
+    public void addAnswerAccordance(AnswerAccordance answerAccordance) {
+        Map<String, String> correctMap = answerAccordance.getCorrectMap();
+        List<String> leftSide = new ArrayList<>(correctMap.keySet());
+        List<String> rightSide = new ArrayList<>();
+        for (String key : leftSide) {
+            rightSide.add(correctMap.get(key));
+        }
+        template.update(ADD_ANSWER_ACCORDANCE, answerAccordance.getQuestionId(),
+                leftSide.get(0), rightSide.get(0),
+                leftSide.get(1), rightSide.get(1),
+                leftSide.get(2), rightSide.get(2),
+                leftSide.get(3), rightSide.get(3));
         logger.info("Added answerAccordance: " + answerAccordance);
-        return answerAccordanceId;
     }
 
     @Transactional
@@ -118,9 +101,6 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
 
     private static final String FIND_ANSWER_ACCORDANCE_BY_QUESTION_ID =
     "SELECT * FROM ANSWERS_ACCORDANCE WHERE QUESTION_ID = ?;";
-
-    private static final String FIND_QUESTION_ID_BY_ANSWER_ACCORDANCE_ID =
-    "SELECT QUESTION_ID FROM ANSWERS_ACCORDANCE WHERE ANSWER_ACCORDANCE_ID = ?;";
 
     private static final String ADD_ANSWER_ACCORDANCE =
     "INSERT INTO ANSWERS_ACCORDANCE (question_id, left_side_1, right_side_1, left_side_2, right_side_2, " +

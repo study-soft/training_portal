@@ -6,9 +6,7 @@ public interface AnswerAccordanceDao {
 
     AnswerAccordance findAnswerAccordanceByQuestionId(Long questionId);
 
-    Long findQuestionIdByAnswerAccordanceId(Long answerAccordanceId);
-
-    Long addAnswerAccordance(AnswerAccordance answerAccordance);
+    void addAnswerAccordance(AnswerAccordance answerAccordance);
 
     void editAnswerAccordance(AnswerAccordance answerAccordance);
 

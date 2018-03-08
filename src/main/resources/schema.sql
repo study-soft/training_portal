@@ -2,8 +2,7 @@
 -- Table: answers_accordance
 DROP TABLE IF EXISTS answers_accordance;
 CREATE TABLE answers_accordance (
-  answer_accordance_id bigint NOT NULL AUTO_INCREMENT,
-  question_id bigint UNIQUE NOT NULL,
+  question_id bigint,
   left_side_1 VARCHAR(255) NOT NULL,
   right_side_1 VARCHAR(255) NOT NULL,
   left_side_2 VARCHAR(255) NOT NULL,
@@ -12,28 +11,26 @@ CREATE TABLE answers_accordance (
   right_side_3 VARCHAR(255) NOT NULL,
   left_side_4 VARCHAR(255) NOT NULL,
   right_side_4 VARCHAR(255) NOT NULL,
-  CONSTRAINT answer_accordance_pk PRIMARY KEY (answer_accordance_id)
+  CONSTRAINT answer_accordance_pk PRIMARY KEY (question_id)
 );
 
 -- Table: answers_number
 DROP TABLE IF EXISTS answers_number;
 CREATE TABLE answers_number (
-  answer_number_id bigint NOT NULL AUTO_INCREMENT,
-  question_id bigint NOT NULL,
+  question_id bigint,
   correct int NOT NULL,
-  CONSTRAINT answer_number_pk PRIMARY KEY (answer_number_id)
+  CONSTRAINT answer_number_pk PRIMARY KEY (question_id)
 );
 
 -- Table: answers_sequence
 DROP TABLE IF EXISTS answers_sequence;
 CREATE TABLE answers_sequence (
-  answer_sequence_id bigint NOT NULL AUTO_INCREMENT,
-  question_id bigint UNIQUE NOT NULL,
+  question_id bigint,
   item_1 VARCHAR(255) NOT NULL,
   item_2 VARCHAR(255) NOT NULL,
   item_3 VARCHAR(255) NOT NULL,
   item_4 VARCHAR(255) NOT NULL,
-  CONSTRAINT answer_sequence_pk PRIMARY KEY (answer_sequence_id)
+  CONSTRAINT answer_sequence_pk PRIMARY KEY (question_id)
 );
 
 -- Table: answers_simple

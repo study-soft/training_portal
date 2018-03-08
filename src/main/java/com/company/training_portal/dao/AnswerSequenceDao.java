@@ -6,7 +6,7 @@ public interface AnswerSequenceDao {
 
     AnswerSequence findAnswerSequenceByQuestionId(Long questionId);
 
-    Long addAnswerSequence(AnswerSequence answerSequence);
+    void addAnswerSequence(AnswerSequence answerSequence);
 
     void editAnswerSequence(AnswerSequence answerSequence);
 

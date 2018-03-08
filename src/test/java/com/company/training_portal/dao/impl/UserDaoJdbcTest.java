@@ -6,12 +6,11 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
-import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
@@ -23,6 +22,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class UserDaoJdbcTest {
 
     @Autowired
@@ -39,7 +40,6 @@ public class UserDaoJdbcTest {
         this.quizDao = quizDao;
     }
 
-    @Ignore
     @Test
     public void test_find_user_by_userId_login_email_phoneNumber() {
         User testUser = new User.UserBuilder()
@@ -172,7 +172,6 @@ public class UserDaoJdbcTest {
         assertEquals(testStudentIds, studentIds);
     }
 
-    @Ignore
     @Test
     public void test_find_studentIds_and_results_by_groupId_and_quizId() {
         Map<Long, Integer> testResults = new HashMap<>();
@@ -229,16 +228,20 @@ public class UserDaoJdbcTest {
     @Test
     public void test_add_student_to_group_by_groupId_and_userId() {
         userDao.addStudentToGroupByGroupIdAndUserId(1L, 7L);
+
         User user = userDao.findUserByUserId(7L);
         Long groupId = user.getGroupId();
+
         assertThat(groupId, is(1L));
     }
 
     @Test
     public void test_add_students_to_group() {
         userDao.addStudentsToGroup(1L, Arrays.asList(7L, 8L));
+
         Long jasonGroupId = userDao.findUserByUserId(7L).getGroupId();
         Long williamGroupId = userDao.findUserByUserId(8L).getGroupId();
+
         assertThat(jasonGroupId, is(1L));
         assertThat(williamGroupId, is(1L));
     }

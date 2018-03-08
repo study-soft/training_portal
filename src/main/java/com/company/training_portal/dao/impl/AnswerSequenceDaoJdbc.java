@@ -43,26 +43,11 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
 
     @Transactional
     @Override
-    public Long addAnswerSequence(AnswerSequence answerSequence) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement stmt = con.prepareStatement(ADD_ANSWER_SEQUENCE,
-                        new String[]{"answer_sequence_id"});
-                stmt.setLong(1, answerSequence.getQuestionId());
-                List<String> correctList = answerSequence.getCorrectList();
-                stmt.setString(2, correctList.get(0));
-                stmt.setString(3, correctList.get(1));
-                stmt.setString(4, correctList.get(2));
-                stmt.setString(5, correctList.get(3));
-                return stmt;
-            }
-        }, keyHolder);
-        long answerSequenceId = keyHolder.getKey().longValue();
-        answerSequence.setAnswerSequenceId(answerSequenceId);
+    public void addAnswerSequence(AnswerSequence answerSequence) {
+        List<String> correctList = answerSequence.getCorrectList();
+        template.update(ADD_ANSWER_SEQUENCE, answerSequence.getQuestionId(),
+        correctList.get(0), correctList.get(1), correctList.get(2), correctList.get(3));
         logger.info("Added answerSequence: " + answerSequence);
-        return answerSequenceId;
     }
 
     @Transactional

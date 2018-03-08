@@ -6,7 +6,7 @@ public interface AnswerNumberDao {
 
     AnswerNumber findAnswerNumberByQuestionId(Long questionId);
 
-    Long addAnswerNumber(AnswerNumber answerNumber);
+    void addAnswerNumber(AnswerNumber answerNumber);
 
     void editAnswerNumber(AnswerNumber answerNumber);
 

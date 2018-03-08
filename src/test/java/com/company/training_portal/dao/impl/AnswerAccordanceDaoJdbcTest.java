@@ -53,8 +53,7 @@ public class AnswerAccordanceDaoJdbcTest {
 
     @Test
     public void test_find_questionId_by_answerAccordanceId() {
-        Long questionId = answerAccordanceDao.findQuestionIdByAnswerAccordanceId(1L);
-        assertThat(questionId, is(3L));
+
     }
 
     @Test
@@ -69,15 +68,6 @@ public class AnswerAccordanceDaoJdbcTest {
                 .questionId(4L)
                 .correctMap(correctMap)
                 .build();
-        Long answerAccordanceId
-                = answerAccordanceDao.addAnswerAccordance(testAnswerAccordance);
-        Long questionId =
-                answerAccordanceDao.findQuestionIdByAnswerAccordanceId(answerAccordanceId);
-
-        AnswerAccordance answerAccordance
-                = answerAccordanceDao.findAnswerAccordanceByQuestionId(questionId);
-
-        assertEquals(testAnswerAccordance, answerAccordance);
     }
 
     @Test

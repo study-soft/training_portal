@@ -279,4 +279,15 @@ public class UserDaoJdbcTest {
         Long groupId = userDao.findUserByUserId(4L).getGroupId();
         assertThat(groupId, is(0L));
     }
+
+    @Test
+    public void test_delete_students_form_group_by_groupId() {
+        userDao.deleteStudentsFromGroupByGroupId(2L);
+
+        Long mikeGroupId = userDao.findUserByUserId(5L).getGroupId();
+        Long saraGroupId = userDao.findUserByUserId(6L).getGroupId();
+
+        assertThat(mikeGroupId, is(0L));
+        assertThat(saraGroupId, is(0L));
+    }
 }

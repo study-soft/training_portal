@@ -1,6 +1,7 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.dao.GroupDao;
+import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.Group;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,14 @@ public class GroupDaoJdbc implements GroupDao {
 
     private JdbcTemplate template;
 
+    private UserDao userDao;
+
     private static final Logger logger = Logger.getLogger(GroupDaoJdbc.class);
 
     @Autowired
-    public GroupDaoJdbc(DataSource dataSource) {
+    public GroupDaoJdbc(DataSource dataSource, UserDao userDao) {
         template = new JdbcTemplate(dataSource);
+        this.userDao = userDao;
     }
 
     @Transactional(readOnly = true)
@@ -116,6 +120,7 @@ public class GroupDaoJdbc implements GroupDao {
     @Transactional
     @Override
     public void deleteGroup(Long groupId) {
+        userDao.deleteStudentsFromGroupByGroupId(groupId);
         template.update(DELETE_GROUP, groupId);
         logger.info("Deleted group with groupId: " + groupId);
     }

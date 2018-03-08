@@ -2,12 +2,14 @@ package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
 import com.company.training_portal.dao.GroupDao;
+import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.Group;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -102,7 +104,7 @@ public class GroupDaoJdbcTest {
 
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = EmptyResultDataAccessException.class)
     public void delete_group() {
         groupDao.deleteGroup(1L);
         groupDao.findGroupByGroupId(1L);

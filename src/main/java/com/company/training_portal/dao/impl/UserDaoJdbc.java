@@ -352,7 +352,14 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void deleteStudentFromGroupByUserId(Long userId) {
         template.update(DELETE_STUDENT_FROM_GROUP_BY_USER_ID, userId);
-        logger.info("Student deleted form group by userId: " + userId);
+        logger.info("Student deleted from group by userId: " + userId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteStudentsFromGroupByGroupId(Long groupId) {
+        template.update(DELETE_STUDENTS_FROM_GROUP_BY_GROUP_ID, groupId);
+        logger.info("Students deleted form group by groupId: " + groupId);
     }
 
     private User mapUser(ResultSet rs, int rowNum) throws SQLException {
@@ -461,5 +468,8 @@ public class UserDaoJdbc implements UserDao {
     private static final String EDIT_USER = "";
 
     private static final String DELETE_STUDENT_FROM_GROUP_BY_USER_ID =
-            "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";
+    "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";
+
+    private static final String DELETE_STUDENTS_FROM_GROUP_BY_GROUP_ID =
+    "UPDATE USERS SET GROUP_ID = NULL WHERE GROUP_ID = ? AND USER_ROLE = 'STUDENT';";
 }

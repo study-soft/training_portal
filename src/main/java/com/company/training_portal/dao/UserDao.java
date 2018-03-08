@@ -77,4 +77,6 @@ public interface UserDao {
     void editUser(User user);
 
     void deleteStudentFromGroupByUserId(Long userId);
+
+    void deleteStudentsFromGroupByGroupId(Long groupId);
 }

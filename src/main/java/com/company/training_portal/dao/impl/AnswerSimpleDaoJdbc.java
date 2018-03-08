@@ -31,6 +31,14 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
         template = new JdbcTemplate(dataSource);
     }
 
+    @Override
+    public AnswerSimple findAnswerSimpleByAnswerSimpleId(Long answerSimpleId) {
+        AnswerSimple answerSimple = template.queryForObject(FIND_ANSWER_SIMPLE_BY_ANSWER_SIMPLE_ID,
+                new Object[]{answerSimpleId}, this::mapAnswerSimple);
+        logger.info("Found answerSimple by answerSimpleId: " + answerSimple);
+        return answerSimple;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<AnswerSimple> findAllAnswersSimpleByQuestionId(Long questionId) {
@@ -88,6 +96,9 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
                 .correct(rs.getBoolean("correct"))
                 .build();
     }
+
+    private static final String FIND_ANSWER_SIMPLE_BY_ANSWER_SIMPLE_ID =
+    "SELECT * FROM ANSWERS_SIMPLE WHERE ANSWER_SIMPLE_ID = ?;";
 
     private static final String FIND_ALL_ANSWERS_SIMPLE_BY_QUESTION_ID =
     "SELECT * FROM ANSWERS_SIMPLE WHERE QUESTION_ID = ?;";

@@ -1,5 +1,6 @@
 package com.company.training_portal.dao.impl;
 
+import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
@@ -29,11 +30,14 @@ public class QuizDaoJdbc implements QuizDao {
 
     private JdbcTemplate template;
 
+    private QuestionDao questionDao;
+
     private static final Logger logger = Logger.getLogger(QuizDaoJdbc.class);
 
     @Autowired
-    public QuizDaoJdbc(DataSource dataSource) {
+    public QuizDaoJdbc(DataSource dataSource, QuestionDao questionDao) {
         template = new JdbcTemplate(dataSource);
+        this.questionDao = questionDao;
     }
 
     @Transactional(readOnly = true)
@@ -308,8 +312,9 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional
     @Override
-    public void deleteQuiz(Long quizId) {
-        template.update(DELETE_QUIZ, quizId);
+    public void deleteUnpublishedQuiz(Long quizId) {
+        questionDao.deleteQuestionsByQuizId(quizId);
+        template.update(DELETE_UNPUBLISHED_QUIZ, quizId);
         logger.info("Deleted quiz with quizId " + quizId);
     }
 
@@ -416,6 +421,6 @@ public class QuizDaoJdbc implements QuizDao {
     "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, CREATION_DATE = ?, PASSING_TIME = ?, AUTHOR_ID = ?, TEACHER_QUIZ_STATUS = ? " +
     "WHERE QUIZ_ID = ?;";
 
-    private static final String DELETE_QUIZ =
-    "DELETE FROM QUIZZES WHERE QUIZ_ID = ?;";
+    private static final String DELETE_UNPUBLISHED_QUIZ =
+    "DELETE FROM QUIZZES WHERE QUIZ_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED';";
 }

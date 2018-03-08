@@ -20,8 +20,8 @@ public class AppConfig {
     public DataSource h2DataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("schema.sql")
-                .addScript("test-data.sql")
+//                .addScript("schema.sql")
+//                .addScript("test-data.sql")
                 .build();
     }
 

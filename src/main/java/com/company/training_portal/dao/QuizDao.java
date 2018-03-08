@@ -60,5 +60,5 @@ public interface QuizDao {
 
     void editQuiz(Quiz quiz);
 
-    void deleteQuiz(Long quizId);
+    void deleteUnpublishedQuiz(Long quizId);
 }

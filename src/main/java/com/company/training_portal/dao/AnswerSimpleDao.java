@@ -15,4 +15,6 @@ public interface AnswerSimpleDao {
     void editAnswerSimple(AnswerSimple answerSimple);
 
     void deleteAnswerSimple(Long answerSimpleId);
+
+    void deleteAnswersSimpleByQuestionId(Long questionId);
 }

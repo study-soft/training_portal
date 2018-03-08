@@ -2,14 +2,16 @@ package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
 import com.company.training_portal.dao.QuestionDao;
+import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.model.Question;
 import com.company.training_portal.model.enums.QuestionType;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -18,10 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class QuestionDaoJdbcTest {
 
     @Autowired
@@ -62,7 +67,6 @@ public class QuestionDaoJdbcTest {
         assertEquals(testQuestions, questions);
     }
 
-    @Ignore
     @Test
     public void test_find_questions_by_quizId_and_questionType() {
         List<Question> testQuestions = new ArrayList<>();
@@ -89,7 +93,6 @@ public class QuestionDaoJdbcTest {
         assertEquals(testResults, results);
     }
 
-    @Ignore
     @Test
     public void test_find_questions_by_quizId_and_score() {
         List<Question> testQuestions = new ArrayList<>();
@@ -133,9 +136,9 @@ public class QuestionDaoJdbcTest {
         assertEquals(testQuestion, question);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void test_delete_question() {
-        questionDao.deleteQuestion(1L);
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void test_delete_question_by_questionId() {
+        questionDao.deleteQuestionByQuestionId(1L);
         questionDao.findQuestionByQuestionId(1L);
     }
 }

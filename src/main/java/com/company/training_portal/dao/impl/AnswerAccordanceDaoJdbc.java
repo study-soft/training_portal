@@ -38,9 +38,18 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
     public AnswerAccordance findAnswerAccordanceByQuestionId(Long questionId) {
         AnswerAccordance answerAccordance = template.queryForObject(
                 FIND_ANSWER_ACCORDANCE_BY_QUESTION_ID,
-                this::mapAnswerAccordance, questionId);
+                new Object[]{questionId}, this::mapAnswerAccordance);
         logger.info("Found answerAccordance by questionId: " + answerAccordance);
         return answerAccordance;
+    }
+
+    @Override
+    public Long findQuestionIdByAnswerAccordanceId(Long answerAccordanceId) {
+        Long questionId = template.queryForObject(
+                FIND_QUESTION_ID_BY_ANSWER_ACCORDANCE_ID,
+                new Object[]{answerAccordanceId}, Long.class);
+        logger.info("Found questionId by AnswerAccordanceId: " + questionId);
+        return questionId;
     }
 
     @Transactional
@@ -109,6 +118,9 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
 
     private static final String FIND_ANSWER_ACCORDANCE_BY_QUESTION_ID =
     "SELECT * FROM ANSWERS_ACCORDANCE WHERE QUESTION_ID = ?;";
+
+    private static final String FIND_QUESTION_ID_BY_ANSWER_ACCORDANCE_ID =
+    "SELECT QUESTION_ID FROM ANSWERS_ACCORDANCE WHERE ANSWER_ACCORDANCE_ID = ?;";
 
     private static final String ADD_ANSWER_ACCORDANCE =
     "INSERT INTO ANSWERS_ACCORDANCE (question_id, left_side_1, right_side_1, left_side_2, right_side_2, " +

@@ -27,5 +27,7 @@ public interface QuestionDao {
 
     void editQuestion(Question question);
 
-    void deleteQuestion(Long questionId);
+    void deleteQuestionByQuestionId(Long questionId);
+
+    void deleteQuestionsByQuizId(Long quizId);
 }

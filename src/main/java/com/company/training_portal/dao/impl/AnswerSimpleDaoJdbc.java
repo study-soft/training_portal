@@ -88,6 +88,12 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
         logger.info("Deleted answerSimple with id: " + answerSimpleId);
     }
 
+    @Override
+    public void deleteAnswersSimpleByQuestionId(Long questionId) {
+        template.update(DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID, questionId);
+        logger.info("Deleted answerSimple with questionId: " + questionId);
+    }
+
     private AnswerSimple mapAnswerSimple(ResultSet rs, int rowNum) throws SQLException {
         return new AnswerSimple.AnswerSimpleBuilder()
                 .answerSimpleId(rs.getLong("answer_simple_id"))
@@ -111,4 +117,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
 
     private static final String DELETE_ANSWER_SIMPLE =
     "DELETE FROM ANSWERS_SIMPLE WHERE ANSWER_SIMPLE_ID = ?;";
+
+    private static final String DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID =
+    "DELETE FROM ANSWERS_SIMPLE WHERE QUESTION_ID = ?;";
 }

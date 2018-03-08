@@ -31,6 +31,8 @@ INSERT INTO quizzes (name, description, explanation, creation_date, passing_time
 VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, 'PUBLISHED');
 INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, 'PUBLISHED');
+INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
 
 -- Table: user_quiz_junctions
 /*1*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, reopen_counter, STUDENT_QUIZ_STATUS)

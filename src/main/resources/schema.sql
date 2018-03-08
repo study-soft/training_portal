@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS answers_accordance;
 CREATE TABLE answers_accordance (
   answer_accordance_id bigint NOT NULL AUTO_INCREMENT,
-  question_id bigint NOT NULL,
+  question_id bigint UNIQUE NOT NULL,
   left_side_1 VARCHAR(255) NOT NULL,
   right_side_1 VARCHAR(255) NOT NULL,
   left_side_2 VARCHAR(255) NOT NULL,
@@ -21,14 +21,14 @@ CREATE TABLE answers_number (
   answer_number_id bigint NOT NULL AUTO_INCREMENT,
   question_id bigint NOT NULL,
   correct int NOT NULL,
-  CONSTRAINT answer_space_pk PRIMARY KEY (answer_number_id)
+  CONSTRAINT answer_number_pk PRIMARY KEY (answer_number_id)
 );
 
 -- Table: answers_sequence
 DROP TABLE IF EXISTS answers_sequence;
 CREATE TABLE answers_sequence (
   answer_sequence_id bigint NOT NULL AUTO_INCREMENT,
-  question_id bigint NOT NULL,
+  question_id bigint UNIQUE NOT NULL,
   item_1 VARCHAR(255) NOT NULL,
   item_2 VARCHAR(255) NOT NULL,
   item_3 VARCHAR(255) NOT NULL,
@@ -132,8 +132,8 @@ REFERENCES questions (question_id);
 ALTER TABLE answers_simple ADD CONSTRAINT questions_answers_simple_fk FOREIGN KEY (question_id)
 REFERENCES questions (question_id);
 
--- Reference: question_answer_space (table: answers_number)
-ALTER TABLE answers_number ADD CONSTRAINT questions_answers_space_fk FOREIGN KEY (question_id)
+-- Reference: question_answer_number (table: answers_number)
+ALTER TABLE answers_number ADD CONSTRAINT questions_answers_number_fk FOREIGN KEY (question_id)
 REFERENCES questions (question_id);
 
 -- Reference: question_quiz (table: questions)

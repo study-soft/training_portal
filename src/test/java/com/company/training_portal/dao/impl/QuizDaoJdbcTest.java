@@ -8,8 +8,9 @@ import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
@@ -28,6 +29,8 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class QuizDaoJdbcTest {
 
     @Autowired
@@ -62,6 +65,7 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuizByQuizId(2L));
         testQuizzes.add(quizDao.findQuizByQuizId(3L));
         testQuizzes.add(quizDao.findQuizByQuizId(4L));
+        testQuizzes.add(quizDao.findQuizByQuizId(5L));
 
         List<Quiz> quizzes = quizDao.findAllQuizzes();
 
@@ -70,7 +74,7 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_find_all_quiz_ids() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L));
+        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L));
         List<Long> quizIds = quizDao.findAllQuizIds();
         assertEquals(testQuizIds, quizIds);
     }
@@ -121,7 +125,7 @@ public class QuizDaoJdbcTest {
         List<Long> testQuizIds = new ArrayList<>(asList(1L));
         List<Long> quizIds
                 = quizDao.findAllQuizIdsByStudentIdAndStudentQuizStatus(
-                        4L, StudentQuizStatus.OPENED);
+                        4L, StudentQuizStatus.PASSED);
 
         assertEquals(testQuizIds, quizIds);
     }
@@ -135,7 +139,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_students_number_by_authorId_and_groupId_and_quizId_with_studentQuizStatus() {
         Map<StudentQuizStatus, Integer> testResults = new HashMap<>();
-        testResults.put(StudentQuizStatus.OPENED, 1);
+        testResults.put(StudentQuizStatus.PASSED, 1);
         testResults.put(StudentQuizStatus.FINISHED, 1);
 
         Map<StudentQuizStatus, Integer> results
@@ -249,9 +253,9 @@ public class QuizDaoJdbcTest {
         assertThat(teacherQuizStatus, is(TeacherQuizStatus.UNPUBLISHED));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void test_delete_quiz() {
-        quizDao.deleteQuiz(4L);
-        quizDao.findQuizByQuizId(4L);
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void test_delete_unpublished_quiz() {
+        quizDao.deleteUnpublishedQuiz(5L);
+        quizDao.findQuizByQuizId(5L);
     }
 }

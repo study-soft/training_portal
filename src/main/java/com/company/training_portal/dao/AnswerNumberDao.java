@@ -10,5 +10,5 @@ public interface AnswerNumberDao {
 
     void editAnswerNumber(AnswerNumber answerNumber);
 
-    void deleteAnswerNumber(Long answerNumberId);
+    void deleteAnswerNumber(Long questionId);
 }

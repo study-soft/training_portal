@@ -1,6 +1,7 @@
 package com.company.training_portal.dao.impl;
 
-import com.company.training_portal.dao.QuestionDao;
+import com.company.training_portal.dao.*;
+import com.company.training_portal.model.AnswerAccordance;
 import com.company.training_portal.model.Question;
 import com.company.training_portal.model.enums.QuestionType;
 import org.apache.log4j.Logger;
@@ -28,11 +29,24 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     private JdbcTemplate template;
 
+    private AnswerSimpleDao answerSimpleDao;
+    private AnswerAccordanceDao answerAccordanceDao;
+    private AnswerSequenceDao answerSequenceDao;
+    private AnswerNumberDao answerNumberDao;
+
     private static final Logger logger = Logger.getLogger(QuestionDaoJdbc.class);
 
     @Autowired
-    public QuestionDaoJdbc(DataSource dataSource) {
+    public QuestionDaoJdbc(DataSource dataSource,
+                           AnswerSimpleDao answerSimpleDao,
+                           AnswerAccordanceDao answerAccordanceDao,
+                           AnswerSequenceDao answerSequenceDao,
+                           AnswerNumberDao answerNumberDao) {
         template = new JdbcTemplate(dataSource);
+        this.answerSimpleDao = answerSimpleDao;
+        this.answerAccordanceDao = answerAccordanceDao;
+        this.answerSequenceDao = answerSequenceDao;
+        this.answerNumberDao = answerNumberDao;
     }
 
     @Transactional(readOnly = true)
@@ -144,9 +158,30 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Transactional
     @Override
-    public void deleteQuestion(Long questionId) {
+    public void deleteQuestionByQuestionId(Long questionId) {
+        Question question = findQuestionByQuestionId(questionId);
+        if (question.getQuestionType().equals(QuestionType.ONE_ANSWER) ||
+                question.getQuestionType().equals(QuestionType.FEW_ANSWERS)) {
+            answerSimpleDao.deleteAnswersSimpleByQuestionId(questionId);
+        } else if (question.getQuestionType().equals(QuestionType.ACCORDANCE)) {
+            answerAccordanceDao.deleteAnswerAccordance(questionId);
+        } else if (question.getQuestionType().equals(QuestionType.SEQUENCE)) {
+            answerSequenceDao.deleteAnswerSequence(questionId);
+        } else if (question.getQuestionType().equals(QuestionType.NUMBER)) {
+            answerNumberDao.deleteAnswerNumber(questionId);
+        }
         template.update(DELETE_QUESTION, questionId);
-        logger.info("Deleted question with id: " + questionId);
+        logger.info("Deleted questions with questionId: " + questionId);
+    }
+
+    @Override
+    public void deleteQuestionsByQuizId(Long quizId) {
+        List<Question> questions = findQuestionsByQuizId(quizId);
+        for (Question question : questions) {
+            deleteQuestionByQuestionId(question.getQuestionId());
+        }
+//        template.update(DELETE_QUESTIONS_BY_QUIZ_ID, quizId);
+        logger.info("Deleted questions with quizId: " + quizId);
     }
 
     private Question mapQuestion(ResultSet rs, int rowNum) throws SQLException {
@@ -190,4 +225,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     private static final String DELETE_QUESTION =
     "DELETE FROM QUESTIONS WHERE QUESTION_ID = ?;";
+
+    private static final String DELETE_QUESTIONS_BY_QUIZ_ID =
+    "DELETE FROM QUESTIONS WHERE QUIZ_ID = ?;";
 }

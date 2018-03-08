@@ -70,9 +70,9 @@ public class AnswerNumberDaoJdbc implements AnswerNumberDao {
 
     @Transactional
     @Override
-    public void deleteAnswerNumber(Long answerNumberId) {
-        template.update(DELETE_ANSWER_NUMBER, answerNumberId);
-        logger.info("Deleted answerNumber with id: " + answerNumberId);
+    public void deleteAnswerNumber(Long questionId) {
+        template.update(DELETE_ANSWER_NUMBER, questionId);
+        logger.info("Deleted answerNumber with id: " + questionId);
     }
 
     private AnswerNumber mapAnswerNumber(ResultSet rs, int rowNum) throws SQLException {
@@ -93,5 +93,5 @@ public class AnswerNumberDaoJdbc implements AnswerNumberDao {
     "UPDATE ANSWERS_NUMBER SET QUESTION_ID = ?, CORRECT = ? WHERE ANSWER_NUMBER_ID = ?;";
 
     private static final String DELETE_ANSWER_NUMBER =
-    "DELETE FROM ANSWERS_NUMBER WHERE ANSWER_NUMBER_ID = ?;";
+    "DELETE FROM ANSWERS_NUMBER WHERE QUESTION_ID = ?;";
 }

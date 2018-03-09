@@ -4,6 +4,6 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1>Hello Training portal!</h1>
 </body>
 </html>

@@ -48,6 +48,8 @@ public interface QuizDao {
 
     LocalDateTime findSubmitDateByStudentIdAndQuizId(Long studentId, Long quizId);
 
+    LocalDateTime findStartDateByStudentIdAndQuizId(Long studentId, Long quizId);
+
     LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId);
 
     Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId);

@@ -252,6 +252,7 @@ public class UserDaoJdbcTest {
     public void test_add_student_info_about_quiz() {
         Long userQuizJunctionId = userDao.addStudentInfoAboutQuiz(4L, 3L, 56,
                 LocalDateTime.of(2018, 3, 7, 20, 48),
+                LocalDateTime.of(2018, 4, 8, 21, 40),
                 LocalDateTime.of(2018, 4, 8, 21, 49),
                 StudentQuizStatus.PASSED);
 
@@ -264,16 +265,19 @@ public class UserDaoJdbcTest {
     @Test
     public void test_update_student_info_about_quiz() {
         userDao.updateStudentInfoAboutQuiz(7L, 56,
+                LocalDateTime.of(2018, 1, 10, 10, 2),
                 LocalDateTime.of(2018, 1, 10, 10, 10),
                 1, StudentQuizStatus.PASSED);
 
         Integer result = quizDao.findResultByStudentIdAndQuizId(4L, 1L);
+        LocalDateTime startDate = quizDao.findStartDateByStudentIdAndQuizId(4L, 1L);
         LocalDateTime finishDate = quizDao.findFinishDateByStudentIdAndQuizId(4L, 1L);
         Integer reopenCounter = quizDao.findReopenCounterByStudentIdAndQuizId(4L, 1L);
         StudentQuizStatus studentQuizStatus =
                 quizDao.findStudentQuizStatusByStudentIdAndQuizId(4L, 1L);
 
         assertThat(result, is(56));
+        assertThat(startDate, is(LocalDateTime.of(2018, 1, 10, 10, 2)));
         assertThat(finishDate, is(LocalDateTime.of(2018, 1, 10, 10, 10)));
         assertThat(reopenCounter, is(1));
         assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));

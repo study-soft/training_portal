@@ -298,7 +298,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Long addStudentInfoAboutQuiz(
             Long studentId, Long quizId, Integer result, LocalDateTime submitDate,
-            LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
+            LocalDateTime startDate, LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(new PreparedStatementCreator() {
                     @Override
@@ -310,8 +310,9 @@ public class UserDaoJdbc implements UserDao {
                         stmt.setLong(2, quizId);
                         stmt.setInt(3, result);
                         stmt.setTimestamp(4, Timestamp.valueOf(submitDate));
-                        stmt.setTimestamp(5, Timestamp.valueOf(finishDate));
-                        stmt.setString(6, studentQuizStatus.getStudentQuizStatus());
+                        stmt.setTimestamp(5, Timestamp.valueOf(startDate));
+                        stmt.setTimestamp(6, Timestamp.valueOf(finishDate));
+                        stmt.setString(7, studentQuizStatus.getStudentQuizStatus());
                         return stmt;
                     }
                 }, keyHolder);
@@ -322,6 +323,7 @@ public class UserDaoJdbc implements UserDao {
                 ", quizId: " + quizId +
                 ", result: " + result +
                 ", submitDate: " + submitDate.toString() +
+                ", startDate: " + startDate.toString() +
                 ", finishDate: " + finishDate.toString() +
                 ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
         return userQuizJunctionId;
@@ -330,14 +332,15 @@ public class UserDaoJdbc implements UserDao {
     @Transactional
     @Override
     public void updateStudentInfoAboutQuiz(
-            Long userQuizJunctionId, Integer result, LocalDateTime finishDate,
-            Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
+            Long userQuizJunctionId, Integer result, LocalDateTime startDate,
+            LocalDateTime finishDate, Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
         template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
-                result, Timestamp.valueOf(finishDate), reopenCounter,
-                studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
+                result, Timestamp.valueOf(startDate), Timestamp.valueOf(finishDate),
+                reopenCounter, studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
         logger.info("Updated student info about quiz:");
         logger.info("userQuizJunctionId: " + userQuizJunctionId +
         ", result: " + result +
+        ", startDate: " + startDate +
         ", finishDate: " + finishDate.toString() +
         ", reopenCounter: " + reopenCounter +
         ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
@@ -457,12 +460,12 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String ADD_STUDENT_INFO_ABOUT_QUIZ =
     "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, " +
-    "FINISH_DATE, REOPEN_COUNTER, STUDENT_QUIZ_STATUS) " +
-    "VALUES (?, ?, ?, ?, ?, 0, ?);";
+    "START_DATE, FINISH_DATE, REOPEN_COUNTER, STUDENT_QUIZ_STATUS) " +
+    "VALUES (?, ?, ?, ?, ?, ?, 0, ?);";
 
     private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
     "UPDATE USER_QUIZ_JUNCTIONS " +
-    "SET RESULT = ?, FINISH_DATE = ?, REOPEN_COUNTER = ?, STUDENT_QUIZ_STATUS = ? " +
+    "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, REOPEN_COUNTER = ?, STUDENT_QUIZ_STATUS = ? " +
     "WHERE USER_QUIZ_JUNCTION_ID = ?;";
 
     private static final String EDIT_USER = "";

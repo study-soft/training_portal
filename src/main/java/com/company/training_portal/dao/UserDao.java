@@ -64,12 +64,12 @@ public interface UserDao {
     void addStudentsToGroup(Long groupId, List<Long> studentIds);
 
     Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
-                                 LocalDateTime submitDate, LocalDateTime finishDate,
-                                 StudentQuizStatus studentQuizStatus);
+                                 LocalDateTime submitDate, LocalDateTime startDate,
+                                 LocalDateTime finishDate, StudentQuizStatus studentQuizStatus);
 
     void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result,
-                                    LocalDateTime finishDate, Integer reopenCounter,
-                                    StudentQuizStatus studentQuizStatus);
+                                    LocalDateTime finishDate, LocalDateTime startDate,
+                                    Integer reopenCounter, StudentQuizStatus studentQuizStatus);
 
     //todo: make use cases of editUser(User user)
     void editUser(User user);

@@ -240,6 +240,15 @@ public class QuizDaoJdbc implements QuizDao {
         return submitDate;
     }
 
+    @Override
+    public LocalDateTime findStartDateByStudentIdAndQuizId(Long studentId, Long quizId) {
+        LocalDateTime startDate = template.queryForObject(
+                FIND_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, LocalDateTime.class);
+        logger.info("StartDate by studentId and quizId found: " + startDate);
+        return startDate;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId) {
@@ -399,6 +408,9 @@ public class QuizDaoJdbc implements QuizDao {
 
     private static final String FIND_SUBMIT_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT SUBMIT_DATE FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
+
+    private static final String FIND_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT START_DATE FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String FIND_FINISH_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT FINISH_DATE FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";

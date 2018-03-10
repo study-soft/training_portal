@@ -47,7 +47,7 @@ CREATE TABLE answers_simple (
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(255) UNIQUE NOT NULL,
+  name varchar(255) NOT NULL,
   description varchar(2048) NULL,
   creation_date date NOT NULL,
   author_id BIGINT NOT NULL,
@@ -106,6 +106,7 @@ CREATE TABLE user_quiz_junctions (
   quiz_id bigint NOT NULL,
   result int NULL,
   submit_date datetime NULL,
+  start_date datetime NULL,
   finish_date datetime NULL,
   reopen_counter int NOT NULL,
   student_quiz_status varchar(255) NOT NULL,

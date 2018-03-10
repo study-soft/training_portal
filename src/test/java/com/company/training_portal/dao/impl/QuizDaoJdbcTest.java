@@ -207,6 +207,15 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
+    public void test_find_startDate_by_studentId_and_quizId() {
+        LocalDateTime testStartDate
+                = LocalDateTime.of(2018, 3, 5, 0,0,12);
+        LocalDateTime startDate
+                = quizDao.findStartDateByStudentIdAndQuizId(3L, 1L);
+        assertThat(startDate, is(testStartDate));
+    }
+
+    @Test
     public void test_find_finishDate_by_studentId_and_quizId() {
         LocalDateTime testFinishDate
                 = LocalDateTime.of(2018, 3, 5, 0,0,15);

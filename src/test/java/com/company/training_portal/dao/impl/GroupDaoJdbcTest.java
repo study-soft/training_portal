@@ -1,6 +1,7 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.config.test.TestDaoConfig;
 import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.Group;
@@ -21,7 +22,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestDaoConfig.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class GroupDaoJdbcTest {

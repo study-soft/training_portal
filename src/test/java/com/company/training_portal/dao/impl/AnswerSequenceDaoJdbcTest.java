@@ -1,6 +1,7 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.config.test.TestDaoConfig;
 import com.company.training_portal.dao.AnswerSequenceDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.model.AnswerSequence;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestDaoConfig.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class AnswerSequenceDaoJdbcTest {

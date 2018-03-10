@@ -1,6 +1,7 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.config.test.TestDaoConfig;
 import com.company.training_portal.dao.AnswerSimpleDao;
 import com.company.training_portal.model.AnswerSimple;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestDaoConfig.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class AnswerSimpleDaoJdbcTest {

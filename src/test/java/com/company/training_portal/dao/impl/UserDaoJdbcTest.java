@@ -1,6 +1,6 @@
 package com.company.training_portal.dao.impl;
 
-import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.config.test.TestDaoConfig;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestDaoConfig.class)
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class UserDaoJdbcTest {
@@ -268,7 +268,8 @@ public class UserDaoJdbcTest {
         Integer result = quizDao.findResultByStudentIdAndQuizId(4L, 1L);
         LocalDateTime finishDate = quizDao.findFinishDateByStudentIdAndQuizId(4L, 1L);
         Integer reopenCounter = quizDao.findReopenCounterByStudentIdAndQuizId(4L, 1L);
-        StudentQuizStatus studentQuizStatus = quizDao.findStudentQuizStatusByStudentIdAndQuizId(4L, 1L);
+        StudentQuizStatus studentQuizStatus =
+                quizDao.findStudentQuizStatusByStudentIdAndQuizId(4L, 1L);
 
         assertThat(result, is(56));
         assertThat(finishDate, is(LocalDateTime.of(2018, 1, 10, 10, 10)));

@@ -263,9 +263,9 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public StudentQuizStatus findStudentQuizStatusByStudentIdAndQuizId(Long studentId, Long quizId) {
-        StudentQuizStatus studentQuizStatus = template.queryForObject(
+        StudentQuizStatus studentQuizStatus = StudentQuizStatus.valueOf(template.queryForObject(
                 FIND_STUDENT_QUIZ_STATUS_BY_STUDENT_ID_AND_QUIZ_ID,
-                new Object[]{studentId, quizId}, StudentQuizStatus.class);
+                new Object[]{studentId, quizId}, String.class));
         logger.info("StudentQuizStatus by studentId and quizId found: " + studentQuizStatus);
         return studentQuizStatus;
     }

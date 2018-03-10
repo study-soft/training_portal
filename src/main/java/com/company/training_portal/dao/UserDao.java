@@ -3,7 +3,6 @@ package com.company.training_portal.dao;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
-import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +55,6 @@ public interface UserDao {
      * @param password user password
      * @return instance of user if exists or null otherwise
      */
-    @Nullable
     User checkUserByLoginAndPassword(String login, String password);
 
     Long registerUser(User user);

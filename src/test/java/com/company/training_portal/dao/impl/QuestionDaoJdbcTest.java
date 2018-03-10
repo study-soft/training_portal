@@ -1,12 +1,9 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
-import com.company.training_portal.config.test.TestDaoConfig;
 import com.company.training_portal.dao.QuestionDao;
-import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.model.Question;
 import com.company.training_portal.model.enums.QuestionType;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +23,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestDaoConfig.class)
+@ContextConfiguration(classes = AppConfig.class)
+@WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
 public class QuestionDaoJdbcTest {

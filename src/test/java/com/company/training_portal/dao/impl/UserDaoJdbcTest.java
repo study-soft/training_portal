@@ -70,6 +70,12 @@ public class UserDaoJdbcTest {
     }
 
     @Test
+    public void test_find_userName_by_userId() {
+        String userName = userDao.findUserNameByUserId(4L);
+        assertThat(userName, is("Yakovenko Artem"));
+    }
+
+    @Test
     public void test_find_users_by_firstName_and_lastName_and_UserRole() {
         User testUser = userDao.findUserByUserId(4L);
         List<User> testUsersList = new ArrayList<>();

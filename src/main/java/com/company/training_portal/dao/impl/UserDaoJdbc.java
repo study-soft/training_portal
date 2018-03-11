@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -68,6 +69,21 @@ public class UserDaoJdbc implements UserDao {
                 new Object[]{phoneNumber}, this::mapUser);
         logger.info("User found by phoneNumber: " + user);
         return user;
+    }
+
+    @Override
+    public String findUserNameByUserId(Long userId) {
+        String name = template.queryForObject(FIND_USER_NAME_BY_USER_ID,
+                new Object[]{userId}, new RowMapper<String>() {
+                    @Override
+                    public String mapRow(ResultSet rs, int i) throws SQLException {
+                        String lastName = rs.getString("last_name");
+                        String firstName = rs.getString("first_name");
+                        return lastName + " " + firstName;
+                    }
+                });
+        logger.info("Found userName by userId: " + name);
+        return name;
     }
 
     @Transactional(readOnly = true)
@@ -388,6 +404,9 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_USER_BY_EMAIL = "SELECT * FROM USERS WHERE EMAIL = ?;";
 
     private static final String FIND_USER_BY_PHONE_NUMBER = "SELECT * FROM USERS WHERE PHONE_NUMBER = ?;";
+
+    private static final String FIND_USER_NAME_BY_USER_ID =
+    "SELECT FIRST_NAME, LAST_NAME FROM USERS WHERE USER_ID = ?;";
 
     private static final String FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE =
     "SELECT * FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ? AND USER_ROLE = ?";

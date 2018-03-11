@@ -18,6 +18,8 @@ public interface UserDao {
 
     User findUserByPhoneNumber(String phoneNumber);
 
+    String findUserNameByUserId(Long userId);
+
     List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName, String lastName, UserRole userRole);
 
     List<User> findStudentsByGroupId(Long groupId);
@@ -69,7 +71,7 @@ public interface UserDao {
 
     void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result,
                                     LocalDateTime finishDate, LocalDateTime startDate,
-                                    Integer reopenCounter, StudentQuizStatus studentQuizStatus);
+                                    Integer attempt, StudentQuizStatus studentQuizStatus);
 
     //todo: make use cases of editUser(User user)
     void editUser(User user);

@@ -68,6 +68,11 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuizByQuizId(3L));
         testQuizzes.add(quizDao.findQuizByQuizId(4L));
         testQuizzes.add(quizDao.findQuizByQuizId(5L));
+        testQuizzes.add(quizDao.findQuizByQuizId(6L));
+        testQuizzes.add(quizDao.findQuizByQuizId(7L));
+        testQuizzes.add(quizDao.findQuizByQuizId(8L));
+        testQuizzes.add(quizDao.findQuizByQuizId(9L));
+        testQuizzes.add(quizDao.findQuizByQuizId(10L));
 
         List<Quiz> quizzes = quizDao.findAllQuizzes();
 
@@ -76,7 +81,7 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_find_all_quiz_ids() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L));
+        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
         List<Long> quizIds = quizDao.findAllQuizIds();
         assertEquals(testQuizIds, quizIds);
     }
@@ -86,6 +91,9 @@ public class QuizDaoJdbcTest {
         List<Quiz> testQuizzes = new ArrayList<>();
         testQuizzes.add(quizDao.findQuizByQuizId(1L));
         testQuizzes.add(quizDao.findQuizByQuizId(2L));
+        testQuizzes.add(quizDao.findQuizByQuizId(5L));
+        testQuizzes.add(quizDao.findQuizByQuizId(9L));
+        testQuizzes.add(quizDao.findQuizByQuizId(10L));
 
         List<Quiz> quizzes = quizDao.findAllQuizzesByAuthorId(1L);
 
@@ -94,14 +102,14 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_find_all_quiz_ids_by_authorId() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L));
+        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 5L, 9L, 10L));
         List<Long> quizIds = quizDao.findAllQuizIdsByAuthorId(1L);
         assertEquals(testQuizIds, quizIds);
     }
 
     @Test
     public void test_find_all_quiz_ids_by_studentId() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L));
+        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
         List<Long> quizIds = quizDao.findAllQuizIdsByStudentId(4L);
         assertEquals(testQuizIds, quizIds);
     }
@@ -117,14 +125,14 @@ public class QuizDaoJdbcTest {
     // todo: no test data
     @Test
     public void test_find_all_notPublished_quiz_ids_by_author_id() {
-        List<Long> testQuizIds = new ArrayList<>();
+        List<Long> testQuizIds = new ArrayList<>(asList(9L, 10L));
         List<Long> quizIds = quizDao.findAllNotPublishedQuizIdsByAuthorId(1L);
         assertEquals(testQuizIds, quizIds);
     }
 
     @Test
     public void test_find_all_quiz_ids_by_studentId_and_studentQuizStatus() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L));
+        List<Long> testQuizIds = new ArrayList<>(asList(1L, 4L));
         List<Long> quizIds
                 = quizDao.findAllQuizIdsByStudentIdAndStudentQuizStatus(
                         4L, StudentQuizStatus.PASSED);
@@ -135,7 +143,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_quizzes_number_by_authorId() {
         Integer quizzesNumber = quizDao.findQuizzesNumberByAuthorId(1L);
-        assertThat(quizzesNumber, is(2));
+        assertThat(quizzesNumber, is(5));
     }
 
     @Test
@@ -154,7 +162,8 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_quizzes_number_by_AuthorId_with_teacherQuizStatus() {
         Map<TeacherQuizStatus, Integer> testResults = new HashMap<>();
-        testResults.put(TeacherQuizStatus.PUBLISHED, 2);
+        testResults.put(TeacherQuizStatus.PUBLISHED, 3);
+        testResults.put(TeacherQuizStatus.UNPUBLISHED, 2);
 
         Map<TeacherQuizStatus, Integer> results
                 = quizDao.FindQuizzesNumberByAuthorIdWithTeacherQuizStatus(1L);
@@ -176,10 +185,10 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_quiz_ids_by_studentId_and_reopenCounter() {
-        List<Long> testQuizIds = new ArrayList<>(asList(3L, 2L));
+    public void test_find_quiz_ids_by_studentId_and_attempt() {
+        List<Long> testQuizIds = new ArrayList<>(asList(3L, 2L, 1L));
         List<Long> quizIds
-                = quizDao.findQuizIdsByStudentIdAndReopenCounter(3L, 0);
+                = quizDao.findQuizIdsByStudentIdAndAttempt(3L, 1);
         assertEquals(testQuizIds, quizIds);
     }
 
@@ -225,8 +234,8 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_reopen_counter_by_studentId_and_quizId() {
-        Integer result = quizDao.findReopenCounterByStudentIdAndQuizId(3L, 1L);
+    public void test_find_attempt_by_studentId_and_quizId() {
+        Integer result = quizDao.findAttemptByStudentIdAndQuizId(3L, 1L);
         assertThat(result, is(1));
     }
 
@@ -266,7 +275,7 @@ public class QuizDaoJdbcTest {
 
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_unpublished_quiz() {
-        quizDao.deleteUnpublishedQuiz(5L);
-        quizDao.findQuizByQuizId(5L);
+        quizDao.deleteUnpublishedQuiz(9L);
+        quizDao.findQuizByQuizId(9L);
     }
 }

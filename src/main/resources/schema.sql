@@ -108,7 +108,7 @@ CREATE TABLE user_quiz_junctions (
   submit_date datetime NULL,
   start_date datetime NULL,
   finish_date datetime NULL,
-  reopen_counter int NOT NULL,
+  attempt int NOT NULL,
   student_quiz_status varchar(255) NOT NULL,
   CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_quiz_junction_id)
 );

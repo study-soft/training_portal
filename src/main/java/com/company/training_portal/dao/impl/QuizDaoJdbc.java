@@ -201,13 +201,12 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findQuizIdsByStudentIdAndReopenCounter(Long studentId,
-                                                                 Integer reopenCounter) {
+    public List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt) {
         List<Long> quizIds = template.queryForList(
-                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_REOPEN_COUNTER,
-                new Object[]{studentId, reopenCounter},
+                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_ATTEMPT,
+                new Object[]{studentId, attempt},
                 Long.class);
-        logger.info("All quiz ids by studentId and reopenCounter found: " + quizIds);
+        logger.info("All quiz ids by studentId and attempt found: " + quizIds);
         return quizIds;
     }
 
@@ -261,12 +260,12 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId) {
-        Integer reopenCounter = template.queryForObject(
-                FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID,
+    public Integer findAttemptByStudentIdAndQuizId(Long studentId, Long quizId) {
+        Integer attempt = template.queryForObject(
+                FIND_ATTEMPT_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, Integer.class);
-        logger.info("ReopenCounter by studentId and quizId found: " + reopenCounter);
-        return reopenCounter;
+        logger.info("Attempt by studentId and quizId found: " + attempt);
+        return attempt;
     }
 
     @Transactional(readOnly = true)
@@ -393,10 +392,10 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ?;";
 
-    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_REOPEN_COUNTER =
+    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_ATTEMPT =
     "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND J.REOPEN_COUNTER = ?;";
+    "WHERE J.USER_ID = ? AND J.ATTEMPT = ?;";
 
     private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_AUTHOR_ID =
     "SELECT QUIZZES.QUIZ_ID " +
@@ -415,8 +414,8 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String FIND_FINISH_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT FINISH_DATE FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
-    private static final String FIND_REOPEN_COUNTER_BY_STUDENT_ID_AND_QUIZ_ID =
-    "SELECT REOPEN_COUNTER FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
+    private static final String FIND_ATTEMPT_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT ATTEMPT FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String FIND_STUDENT_QUIZ_STATUS_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT STUDENT_QUIZ_STATUS FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";

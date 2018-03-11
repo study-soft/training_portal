@@ -333,16 +333,16 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public void updateStudentInfoAboutQuiz(
             Long userQuizJunctionId, Integer result, LocalDateTime startDate,
-            LocalDateTime finishDate, Integer reopenCounter, StudentQuizStatus studentQuizStatus) {
+            LocalDateTime finishDate, Integer attempt, StudentQuizStatus studentQuizStatus) {
         template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
                 result, Timestamp.valueOf(startDate), Timestamp.valueOf(finishDate),
-                reopenCounter, studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
+                attempt, studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
         logger.info("Updated student info about quiz:");
         logger.info("userQuizJunctionId: " + userQuizJunctionId +
         ", result: " + result +
         ", startDate: " + startDate +
         ", finishDate: " + finishDate.toString() +
-        ", reopenCounter: " + reopenCounter +
+        ", attempt: " + attempt +
         ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
     }
 
@@ -460,12 +460,12 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String ADD_STUDENT_INFO_ABOUT_QUIZ =
     "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, " +
-    "START_DATE, FINISH_DATE, REOPEN_COUNTER, STUDENT_QUIZ_STATUS) " +
+    "START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS) " +
     "VALUES (?, ?, ?, ?, ?, ?, 0, ?);";
 
     private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
     "UPDATE USER_QUIZ_JUNCTIONS " +
-    "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, REOPEN_COUNTER = ?, STUDENT_QUIZ_STATUS = ? " +
+    "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, ATTEMPT = ?, STUDENT_QUIZ_STATUS = ? " +
     "WHERE USER_QUIZ_JUNCTION_ID = ?;";
 
     private static final String EDIT_USER = "";

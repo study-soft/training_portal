@@ -40,7 +40,7 @@ public interface QuizDao {
     // key: quizId, value: result
     Map<Long, Integer> findAllStudentResults(Long studentId);
 
-    List<Long> findQuizIdsByStudentIdAndReopenCounter(Long studentId, Integer reopenCounter);
+    List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt);
 
     List<Long> findQuizIdsByStudentIdAndAuthorId(Long studentId, Long authorId);
 
@@ -52,7 +52,7 @@ public interface QuizDao {
 
     LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId);
 
-    Integer findReopenCounterByStudentIdAndQuizId(Long studentId, Long quizId);
+    Integer findAttemptByStudentIdAndQuizId(Long studentId, Long quizId);
 
     StudentQuizStatus findStudentQuizStatusByStudentIdAndQuizId(Long studentId, Long quizId);
 

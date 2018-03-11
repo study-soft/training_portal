@@ -108,10 +108,18 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_all_quiz_ids_by_studentId() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
-        List<Long> quizIds = quizDao.findAllQuizIdsByStudentId(4L);
-        assertEquals(testQuizIds, quizIds);
+    public void test_find_quizzes_by_studentId() {
+        List<Quiz> testQuizzes = new ArrayList<>();
+        testQuizzes.add(quizDao.findQuizByQuizId(1L));
+        testQuizzes.add(quizDao.findQuizByQuizId(2L));
+        testQuizzes.add(quizDao.findQuizByQuizId(3L));
+        testQuizzes.add(quizDao.findQuizByQuizId(4L));
+        testQuizzes.add(quizDao.findQuizByQuizId(5L));
+        testQuizzes.add(quizDao.findQuizByQuizId(6L));
+
+        List<Quiz> quizzes = quizDao.findQuizzesByStudentId(4L);
+
+        assertEquals(testQuizzes, quizzes);
     }
 
     // todo: no test data

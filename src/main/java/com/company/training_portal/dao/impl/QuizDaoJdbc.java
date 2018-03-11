@@ -88,12 +88,13 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findAllQuizIdsByStudentId(Long studentId) {
-        List<Long> quizIds = template.queryForList(
-                FIND_ALL_QUIZ_IDS_BY_STUDENT_ID,
-                new Object[]{studentId}, Long.class);
-        logger.info("All quiz ids by studentId found: " + quizIds);
-        return quizIds;
+    public List<Quiz> findQuizzesByStudentId(Long studentId) {
+        List<Quiz> quizzes = template.query(
+                FIND_QUIZZES_BY_STUDENT_ID,
+                new Object[]{studentId}, this::mapQuiz);
+        logger.info("Found quizzes by studentId: " + quizzes);
+        quizzes.forEach(logger::info);
+        return quizzes;
     }
 
     @Transactional(readOnly = true)
@@ -356,8 +357,9 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
     "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
 
-    private static final String FIND_ALL_QUIZ_IDS_BY_STUDENT_ID =
-    "SELECT QUIZZES.QUIZ_ID " +
+    private static final String FIND_QUIZZES_BY_STUDENT_ID =
+    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
+            "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ?;";
 

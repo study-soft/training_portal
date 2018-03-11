@@ -1,8 +1,10 @@
 package com.company.training_portal.controller;
 
+import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.model.Group;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
@@ -23,47 +25,43 @@ public class StudentController {
     private UserDao userDao;
     private QuizDao quizDao;
     private QuestionDao questionDao;
+    private GroupDao groupDao;
 
     private static final Logger logger = Logger.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(UserDao userDao,
                              QuizDao quizDao,
-                             QuestionDao questionDao) {
+                             QuestionDao questionDao,
+                             GroupDao groupDao) {
         this.userDao = userDao;
         this.quizDao = quizDao;
         this.questionDao = questionDao;
+        this.groupDao = groupDao;
     }
 
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String showStudentHome(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
-        User user = userDao.findUserByUserId(securityUser.getUserId());
-        model.addAttribute("user", user);
+        User student = userDao.findUserByUserId(securityUser.getUserId());
+        Group group = groupDao.findGroupByGroupId(student.getGroupId());
+        String authorName = userDao.findUserNameByUserId(group.getAuthorId());
+
+        model.addAttribute("student", student);
+        model.addAttribute("authorName", authorName);
+        model.addAttribute("group", group);
+
         return "student";
     }
 
-    @RequestMapping(value = "student/quizzes", method = RequestMethod.GET)
-    public String showStudentQuizzes(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
+    @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
+    public String showStudentTeachers(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
         Long studentId = securityUser.getUserId();
-        List<Long> quizIds = quizDao.findAllQuizIdsByStudentId(studentId);
-        List<Quiz> quizzes = new ArrayList<>();
-        for (Long quizId : quizIds) {
-            quizzes.add(quizDao.findQuizByQuizId(quizId));
-        }
-
-        List<String> authorNames = new ArrayList<>();
+        List<Quiz> quizzes = quizDao.findQuizzesByStudentId(studentId);
+        List<User> teachers = new ArrayList<>();
         for (Quiz quiz : quizzes) {
-            authorNames.add(userDao.findUserByUserId(quiz.getAuthorId()).getFirstName() + " " +
-            userDao.findUserByUserId(quiz.getAuthorId()).getLastName());
+            teachers.add(userDao.findUserByUserId(quiz.getAuthorId()));
         }
-        model.addAttribute("authorNames", authorNames);
-
-        List<Integer> quizScores = new ArrayList<>();
-        for (Long quizId : quizIds) {
-            quizScores.add(questionDao.findQuizScoreByQuizId(quizId));
-        }
-        model.addAttribute("quizScores", quizScores);
-
-        return "student-quizzes";
+        model.addAttribute("teachers", teachers);
+        return null;
     }
 }

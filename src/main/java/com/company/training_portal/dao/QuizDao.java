@@ -20,7 +20,7 @@ public interface QuizDao {
 
     List<Long> findAllQuizIdsByAuthorId(Long authorId);
 
-    List<Long> findAllQuizIdsByStudentId(Long studentId);
+    List<Quiz> findQuizzesByStudentId(Long studentId);
 
     List<Long> findAllClosedQuizIdsByAuthorId(Long authorId);
 

@@ -3,12 +3,13 @@
 <html>
 <head>
     <title>Login</title>
+    <link type="text/css" rel="stylesheet" href="/resources/main.css">
 </head>
 <body>
 <form action="/login" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <c:if test="${param.error ne null}">
-        <p style="color: red">Invalid login or password</p>
+        <p class="error">Invalid login or password</p>
     </c:if>
     <div>
         <label for="username">Login: </label>

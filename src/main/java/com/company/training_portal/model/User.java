@@ -1,6 +1,7 @@
 package com.company.training_portal.model;
 
 import com.company.training_portal.model.enums.UserRole;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -12,12 +13,16 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private byte[] photo;
     private String login;
     private String password;
     private UserRole userRole;
+
+    public User() {
+    }
 
     private User(UserBuilder builder) {
         this.userId = builder.userId;

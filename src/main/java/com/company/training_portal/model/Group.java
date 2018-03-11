@@ -18,6 +18,9 @@ public class Group {
         this.authorId = builder.authorId;
     }
 
+    public Group() {
+    }
+
     public Long getGroupId() {
         return groupId;
     }

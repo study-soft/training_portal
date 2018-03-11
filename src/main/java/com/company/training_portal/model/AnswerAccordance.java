@@ -12,6 +12,9 @@ public class AnswerAccordance {
         this.correctMap = builder.correctMap;
     }
 
+    public AnswerAccordance() {
+    }
+
     public Long getQuestionId() {
         return questionId;
     }

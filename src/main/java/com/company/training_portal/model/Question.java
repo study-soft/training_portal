@@ -12,6 +12,9 @@ public class Question {
     private QuestionType questionType;
     private Integer score;
 
+    public Question() {
+    }
+
     private Question(QuestionBuilder builder) {
         this.questionId = builder.questionId;
         this.quizId = builder.quizId;

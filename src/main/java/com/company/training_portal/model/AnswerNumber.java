@@ -10,6 +10,9 @@ public class AnswerNumber {
         this.correct = builder.correct;
     }
 
+    public AnswerNumber() {
+    }
+
     public Long getQuestionId() {
         return questionId;
     }

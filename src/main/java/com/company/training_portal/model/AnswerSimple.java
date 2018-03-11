@@ -14,6 +14,9 @@ public class AnswerSimple {
         this.correct = builder.correct;
     }
 
+    public AnswerSimple() {
+    }
+
     public Long getAnswerSimpleId() {
         return answerSimpleId;
     }

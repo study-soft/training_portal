@@ -12,6 +12,9 @@ public class AnswerSequence {
         this.correctList = builder.correctList;
     }
 
+    public AnswerSequence() {
+    }
+
     public Long getQuestionId() {
         return questionId;
     }

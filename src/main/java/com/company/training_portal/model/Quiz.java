@@ -16,6 +16,9 @@ public class Quiz {
     private Long authorId;
     private TeacherQuizStatus teacherQuizStatus;
 
+    public Quiz() {
+    }
+
     private Quiz(QuizBuilder builder) {
         this.quizId = builder.quizId;
         this.name = builder.name;

@@ -297,11 +297,12 @@ public class QuizDaoJdbc implements QuizDao {
                     @Override
                     public List<StudentOpenedQuiz> extractData(ResultSet rs) throws SQLException, DataAccessException {
                         while (rs.next()) {
-                            openedQuizzes.add(new StudentOpenedQuiz(rs.getString(1),
-                                    userDao.findUserNameByUserId(rs.getLong(2)),
-                                    rs.getInt(3),
+                            openedQuizzes.add(new StudentOpenedQuiz(rs.getLong(1),
+                                    rs.getString(2),
+                                    userDao.findUserNameByUserId(rs.getLong(3)),
                                     rs.getInt(4),
-                                    rs.getTimestamp(5).toLocalDateTime()));
+                                    rs.getInt(5),
+                                    rs.getTimestamp(6).toLocalDateTime()));
                         }
                         return openedQuizzes;
                     }
@@ -400,13 +401,14 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     private StudentPassedQuiz mapStudentPassedQuiz(ResultSet rs, int rowNum) throws SQLException {
-        return new StudentPassedQuiz(rs.getString(1),
-                userDao.findUserNameByUserId(rs.getLong(2)),
-                rs.getInt(3),
+        return new StudentPassedQuiz(rs.getLong(1),
+                rs.getString(2),
+                userDao.findUserNameByUserId(rs.getLong(3)),
                 rs.getInt(4),
                 rs.getInt(5),
-                rs.getTimestamp(6).toLocalDateTime(),
-                Duration.ofMinutes(rs.getLong(7)));
+                rs.getInt(6),
+                rs.getTimestamp(7).toLocalDateTime(),
+                Duration.ofMinutes(rs.getLong(8)));
     }
 
     private static final String FIND_QUIZ_BY_QUIZ_ID =
@@ -491,7 +493,7 @@ public class QuizDaoJdbc implements QuizDao {
     "SELECT STUDENT_QUIZ_STATUS FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String FIND_OPENED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.NAME, QUIZZES.AUTHOR_ID, " +
+    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, " +
     "COUNT(QUESTIONS.QUESTION_ID), SUM(QUESTIONS.SCORE), J.SUBMIT_DATE " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
@@ -501,7 +503,7 @@ public class QuizDaoJdbc implements QuizDao {
     "ORDER BY J.SUBMIT_DATE DESC;";
 
     private static final String FIND_PASSED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
+    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
     "SUM(QUESTIONS.SCORE), J.ATTEMPT, J.FINISH_DATE, " +
     "DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
@@ -512,7 +514,7 @@ public class QuizDaoJdbc implements QuizDao {
     "ORDER BY J.FINISH_DATE DESC;";
 
     private static final String FIND_FINISHED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
+    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
     "SUM(QUESTIONS.SCORE), J.ATTEMPT, J.FINISH_DATE, " +
     "DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +

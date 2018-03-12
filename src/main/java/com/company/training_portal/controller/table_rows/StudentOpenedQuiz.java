@@ -1,24 +1,36 @@
 package com.company.training_portal.controller.table_rows;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 public class StudentOpenedQuiz {
+    private Long quizId;
     private String quizName;
     private String authorName;
     private Integer questionsNumber;
     private Integer score;
     private LocalDateTime submitDate;
-
-    public StudentOpenedQuiz(String quizName,
+    public StudentOpenedQuiz(Long quizId,
+                             String quizName,
                              String authorName,
                              Integer questionsNumber,
                              Integer score,
                              LocalDateTime submitDate) {
+        this.quizId = quizId;
         this.quizName = quizName;
         this.authorName = authorName;
         this.questionsNumber = questionsNumber;
         this.score = score;
         this.submitDate = submitDate;
+    }
+
+    public Long getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
     }
 
     public String getQuizName() {
@@ -68,6 +80,7 @@ public class StudentOpenedQuiz {
 
         StudentOpenedQuiz that = (StudentOpenedQuiz) o;
 
+        if (!quizId.equals(that.quizId)) return false;
         if (!quizName.equals(that.quizName)) return false;
         if (!authorName.equals(that.authorName)) return false;
         if (!questionsNumber.equals(that.questionsNumber)) return false;
@@ -77,7 +90,8 @@ public class StudentOpenedQuiz {
 
     @Override
     public int hashCode() {
-        int result = quizName.hashCode();
+        int result = quizId.hashCode();
+        result = 31 * result + quizName.hashCode();
         result = 31 * result + authorName.hashCode();
         result = 31 * result + questionsNumber.hashCode();
         result = 31 * result + score.hashCode();
@@ -88,7 +102,8 @@ public class StudentOpenedQuiz {
     @Override
     public String toString() {
         return "StudentOpenedQuiz{" +
-                "quizName='" + quizName + '\'' +
+                "quizId=" + quizId +
+                ", quizName='" + quizName + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", questionsNumber=" + questionsNumber +
                 ", score=" + score +

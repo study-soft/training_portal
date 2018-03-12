@@ -1,15 +1,10 @@
 package com.company.training_portal.controller;
 
-import com.company.training_portal.controller.table_rows.StudentOpenedQuiz;
-import com.company.training_portal.controller.table_rows.StudentPassedQuiz;
 import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
-import com.company.training_portal.model.Group;
-import com.company.training_portal.model.Quiz;
-import com.company.training_portal.model.SecurityUser;
-import com.company.training_portal.model.User;
+import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +56,7 @@ public class StudentController {
     @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
     public String showStudentTeachers(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
         Long studentId = securityUser.getUserId();
-        List<Quiz> quizzes = quizDao.findQuizzesByStudentId(studentId);
+        List<Quiz> quizzes = quizDao.findStudentQuizzes(studentId);
         HashSet<User> teachers = new HashSet<>();
         for (Quiz quiz : quizzes) {
             teachers.add(userDao.findUserByUserId(quiz.getAuthorId()));
@@ -82,13 +75,13 @@ public class StudentController {
         User teacher = userDao.findUserByUserId(teacherId);
         model.addAttribute("teacher", teacher);
 
-        List<Quiz> quizzes = quizDao.findQuizzesByStudentIdAndAuthorId(studentId, teacherId);
+        List<Quiz> quizzes = quizDao.findQuizzes(studentId, teacherId);
         model.addAttribute("quizzes", quizzes);
 
         List<StudentQuizStatus> statusList = new ArrayList<>();
         for (Quiz quiz : quizzes) {
             StudentQuizStatus status =
-                    quizDao.findStudentQuizStatusByStudentIdAndQuizId(studentId, quiz.getQuizId());
+                    quizDao.findStudentQuizStatus(studentId, quiz.getQuizId());
             statusList.add(status);
         }
         model.addAttribute("statusList", statusList);
@@ -99,19 +92,27 @@ public class StudentController {
     @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
     public String showStudentQuizzes(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
         Long studentId = securityUser.getUserId();
-        List<StudentOpenedQuiz> openedQuizzes
-                = quizDao.findOpenedQuizzesInfoByStudentId(studentId);
+        List<OpenedQuiz> openedQuizzes
+                = quizDao.findOpenedQuizzes(studentId);
         model.addAttribute("openedQuizzes", openedQuizzes);
 
-        List<StudentPassedQuiz> passedQuizzes
-                = quizDao.findPassedQuizzesInfoByStudentId(studentId);
+        List<PassedQuiz> passedQuizzes
+                = quizDao.findPassedQuizzes(studentId);
         model.addAttribute("passedQuizzes", passedQuizzes);
 
-        List<StudentPassedQuiz> finishedQuizzes
-                = quizDao.findFinishedQuizzesInfoByStudentId(studentId);
+        List<PassedQuiz> finishedQuizzes
+                = quizDao.findFinishedQuizzes(studentId);
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
         return "student-quizzes";
+    }
+
+    @RequestMapping(value = "/student/quizzes/${quizId}", method = RequestMethod.GET)
+    public String showOpenedQuiz(@AuthenticationPrincipal SecurityUser securityUser,
+                                 @PathVariable("quizId") Long quizId, Model model) {
+        Long studentId = securityUser.getUserId();
+
+        return "opened-quiz";
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)

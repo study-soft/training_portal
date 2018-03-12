@@ -1,10 +1,10 @@
 package com.company.training_portal.dao.impl;
 
-import com.company.training_portal.controller.table_rows.StudentOpenedQuiz;
-import com.company.training_portal.controller.table_rows.StudentPassedQuiz;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.model.OpenedQuiz;
+import com.company.training_portal.model.PassedQuiz;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
@@ -14,7 +14,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -51,7 +50,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Quiz findQuizByQuizId(Long quizId) {
+    public Quiz findQuiz(Long quizId) {
         Quiz quiz = template.queryForObject(FIND_QUIZ_BY_QUIZ_ID,
                 new Object[]{quizId}, this::mapQuiz);
         logger.info("Quiz found by quizId: " + quiz);
@@ -78,7 +77,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findAllQuizzesByAuthorId(Long authorId) {
+    public List<Quiz> findTeacherQuizzes(Long authorId) {
         List<Quiz> quizzes = template.query(FIND_ALL_QUIZZES_BY_AUTHOR_ID,
                 new Object[]{authorId}, this::mapQuiz);
         logger.info("All quizzes by authorId found:");
@@ -97,7 +96,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findQuizzesByStudentId(Long studentId) {
+    public List<Quiz> findStudentQuizzes(Long studentId) {
         List<Quiz> quizzes = template.query(
                 FIND_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapQuiz);
@@ -139,7 +138,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findQuizzesNumberByAuthorId(Long authorId) {
+    public Integer findQuizzesNumber(Long authorId) {
         Integer quizzesNumber = template.queryForObject(FIND_QUIZZES_NUMBER_BY_AUTHOR_ID,
                 new Object[]{authorId}, Integer.class);
         logger.info("Quizzes number found: " + quizzesNumber);
@@ -222,7 +221,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findQuizzesByStudentIdAndAuthorId(Long studentId, Long authorId) {
+    public List<Quiz> findQuizzes(Long studentId, Long authorId) {
         List<Quiz> quizzes = template.query(
                 FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID,
                 new Object[]{studentId, authorId}, this::mapQuiz);
@@ -233,7 +232,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findResultByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public Integer findResult(Long studentId, Long quizId) {
         Integer result = template.queryForObject(FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, Integer.class);
         logger.info("Result by studentId and quizId found: " + result);
@@ -242,7 +241,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public LocalDateTime findSubmitDateByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public LocalDateTime findSubmitDate(Long studentId, Long quizId) {
         LocalDateTime submitDate = template.queryForObject(
                 FIND_SUBMIT_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, LocalDateTime.class);
@@ -251,7 +250,7 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public LocalDateTime findStartDateByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public LocalDateTime findStartDate(Long studentId, Long quizId) {
         LocalDateTime startDate = template.queryForObject(
                 FIND_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, LocalDateTime.class);
@@ -261,7 +260,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public LocalDateTime findFinishDate(Long studentId, Long quizId) {
         LocalDateTime finishDate = template.queryForObject(
                 FIND_FINISH_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, LocalDateTime.class);
@@ -271,7 +270,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findAttemptByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public Integer findAttempt(Long studentId, Long quizId) {
         Integer attempt = template.queryForObject(
                 FIND_ATTEMPT_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, Integer.class);
@@ -281,7 +280,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public StudentQuizStatus findStudentQuizStatusByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public StudentQuizStatus findStudentQuizStatus(Long studentId, Long quizId) {
         StudentQuizStatus studentQuizStatus = StudentQuizStatus.valueOf(template.queryForObject(
                 FIND_STUDENT_QUIZ_STATUS_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, String.class));
@@ -290,44 +289,58 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public List<StudentOpenedQuiz> findOpenedQuizzesInfoByStudentId(Long studentId) {
-        List<StudentOpenedQuiz> openedQuizzes = new ArrayList<>();
-        template.query(FIND_OPENED_QUIZZES_INFO_BY_STUDENT_ID,
-                new Object[]{studentId}, new ResultSetExtractor<List<StudentOpenedQuiz>>() {
-                    @Override
-                    public List<StudentOpenedQuiz> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        while (rs.next()) {
-                            openedQuizzes.add(new StudentOpenedQuiz(rs.getLong(1),
-                                    rs.getString(2),
-                                    userDao.findUserNameByUserId(rs.getLong(3)),
-                                    rs.getInt(4),
-                                    rs.getInt(5),
-                                    rs.getTimestamp(6).toLocalDateTime()));
-                        }
-                        return openedQuizzes;
-                    }
-                });
-        logger.info("Found opened quizzes info by studentId:");
+    public OpenedQuiz findOpenedQuiz(Long studentId, Long quizId) {
+        OpenedQuiz openedQuiz = template.queryForObject(
+                FIND_OPENED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, this::mapOpenedQuiz);
+        logger.info("Found opened quiz by studentId and quizId: " + openedQuiz);
+        return openedQuiz;
+    }
+
+    @Override
+    public PassedQuiz findPassedQuiz(Long studentId, Long quizId) {
+        PassedQuiz passedQuiz = template.queryForObject(
+                FIND_PASSED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, this::mapPassedQuiz);
+        logger.info("Found passed quiz by studentId and quizId: " + passedQuiz);
+        return passedQuiz;
+    }
+
+    @Override
+    public PassedQuiz findFinishedQuiz(Long studentId, Long quizId) {
+        PassedQuiz finishedQuiz = template.queryForObject(
+                FIND_FINISHED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID,
+                new Object[]{studentId, quizId}, this::mapPassedQuiz);
+        logger.info("Found finished quiz by studentId and quizId: " + finishedQuiz);
+        return finishedQuiz;
+    }
+
+    @Override
+    public List<OpenedQuiz> findOpenedQuizzes(Long studentId) {
+        List<OpenedQuiz> openedQuizzes = template.query(
+                FIND_OPENED_QUIZZES_BY_STUDENT_ID,
+                new Object[]{studentId}, this::mapOpenedQuiz);
+        logger.info("Found opened quizzes by studentId:");
         openedQuizzes.forEach(logger::info);
         return openedQuizzes;
     }
 
     @Override
-    public List<StudentPassedQuiz> findPassedQuizzesInfoByStudentId(Long studentId) {
-        List<StudentPassedQuiz> passedQuizzes = template.query(
-                FIND_PASSED_QUIZZES_INFO_BY_STUDENT_ID,
-                new Object[]{studentId}, this::mapStudentPassedQuiz);
-        logger.info("Found passed quizzes info by studentId:");
+    public List<PassedQuiz> findPassedQuizzes(Long studentId) {
+        List<PassedQuiz> passedQuizzes = template.query(
+                FIND_PASSED_QUIZZES_BY_STUDENT_ID,
+                new Object[]{studentId}, this::mapPassedQuiz);
+        logger.info("Found passed quizzes by studentId:");
         passedQuizzes.forEach(logger::info);
         return passedQuizzes;
     }
 
     @Override
-    public List<StudentPassedQuiz> findFinishedQuizzesInfoByStudentId(Long studentId) {
-        List<StudentPassedQuiz> finishedQuizzes = template.query(
-                FIND_FINISHED_QUIZZES_INFO_BY_STUDENT_ID,
-                new Object[]{studentId}, this::mapStudentPassedQuiz);
-        logger.info("Found finished quizzes info by studentId:");
+    public List<PassedQuiz> findFinishedQuizzes(Long studentId) {
+        List<PassedQuiz> finishedQuizzes = template.query(
+                FIND_FINISHED_QUIZZES_BY_STUDENT_ID,
+                new Object[]{studentId}, this::mapPassedQuiz);
+        logger.info("Found finished quizzes by studentId:");
         finishedQuizzes.forEach(logger::info);
         return finishedQuizzes;
     }
@@ -359,8 +372,8 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional
     @Override
-    public void editTeacherQuizStatusByQuizId(TeacherQuizStatus teacherQuizStatus,
-                                              Long quizId) {
+    public void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus,
+                                      Long quizId) {
         template.update(EDIT_TEACHER_QUIZ_STATUS_BY_QUIZ_ID,
                 teacherQuizStatus.getTeacherQuizStatus(), quizId);
         logger.info("Edit teacher status to " + teacherQuizStatus +
@@ -395,15 +408,37 @@ public class QuizDaoJdbc implements QuizDao {
                 .build();
     }
 
-    private StudentPassedQuiz mapStudentPassedQuiz(ResultSet rs, int rowNum) throws SQLException {
-        return new StudentPassedQuiz(rs.getLong(1),
-                rs.getString(2),
-                userDao.findUserNameByUserId(rs.getLong(3)),
-                rs.getInt(4),
-                rs.getInt(5),
-                rs.getInt(6),
-                rs.getTimestamp(7).toLocalDateTime(),
-                Duration.ofMinutes(rs.getLong(8)));
+    private OpenedQuiz mapOpenedQuiz(ResultSet rs, int rowNum) throws SQLException {
+        return new OpenedQuiz.OpenedQuizBuilder()
+                .quizId(rs.getLong("quiz_id"))
+                .quizName(rs.getString("quiz_name"))
+                .description(rs.getString("description"))
+                .passingTime(Duration.between(LocalTime.MIDNIGHT,
+                        rs.getTime("passing_time").toLocalTime()))
+                .authorName(userDao.findUserNameByUserId(rs.getLong("author_id")))
+                .questionsNumber(rs.getInt("questions_number"))
+                .score(rs.getInt("score"))
+                .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
+                .build();
+    }
+
+    private PassedQuiz mapPassedQuiz(ResultSet rs, int rowNum) throws SQLException {
+        return new PassedQuiz.PassedQuizBuilder()
+                .quizId(rs.getLong("quiz_id"))
+                .quizName(rs.getString("quiz_name"))
+                .description(rs.getString("description"))
+                .explanation(rs.getString("explanation"))
+                .authorName(userDao.findUserNameByUserId(rs.getLong("author_id")))
+                .result(rs.getInt("result"))
+                .score(rs.getInt("score"))
+                .questionsNumber(rs.getInt("questions_number"))
+                .attempt(rs.getInt("attempt"))
+                .passingTime(Duration.between(LocalTime.MIDNIGHT,
+                        rs.getTime("passing_time").toLocalTime()))
+                .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
+                .finishDate(rs.getTimestamp("finish_date").toLocalDateTime())
+                .timeSpent(Duration.ofMinutes(rs.getLong("time_spent")))
+                .build();
     }
 
     private static final String FIND_QUIZ_BY_QUIZ_ID =
@@ -487,9 +522,43 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String FIND_STUDENT_QUIZ_STATUS_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT STUDENT_QUIZ_STATUS FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
-    private static final String FIND_OPENED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, " +
-    "COUNT(QUESTIONS.QUESTION_ID), SUM(QUESTIONS.SCORE), J.SUBMIT_DATE " +
+    private static final String FIND_OPENED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.PASSING_TIME AS passing_time, QUIZZES.AUTHOR_ID AS author_id, " +
+    "COUNT(QUESTIONS.QUESTION_ID) AS questions_number, SUM(QUESTIONS.SCORE) AS score, " +
+    "J.SUBMIT_DATE AS submit_date " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'OPENED';";
+
+    private static final String FIND_PASSED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'PASSED';";
+
+    private static final String FIND_FINISHED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
+
+    private static final String FIND_OPENED_QUIZZES_BY_STUDENT_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.PASSING_TIME AS passing_time, QUIZZES.AUTHOR_ID AS author_id, " +
+    "COUNT(QUESTIONS.QUESTION_ID) AS questions_number, SUM(QUESTIONS.SCORE) AS score, " +
+    "J.SUBMIT_DATE AS submit_date " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -497,10 +566,12 @@ public class QuizDaoJdbc implements QuizDao {
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.SUBMIT_DATE DESC;";
 
-    private static final String FIND_PASSED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
-    "SUM(QUESTIONS.SCORE), J.ATTEMPT, J.FINISH_DATE, " +
-    "DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) " +
+    private static final String FIND_PASSED_QUIZZES_BY_STUDENT_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -508,10 +579,12 @@ public class QuizDaoJdbc implements QuizDao {
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.FINISH_DATE DESC;";
 
-    private static final String FIND_FINISHED_QUIZZES_INFO_BY_STUDENT_ID =
-    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.AUTHOR_ID, J.RESULT, " +
-    "SUM(QUESTIONS.SCORE), J.ATTEMPT, J.FINISH_DATE, " +
-    "DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) " +
+    private static final String FIND_FINISHED_QUIZZES_BY_STUDENT_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +

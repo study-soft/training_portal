@@ -1,7 +1,7 @@
 package com.company.training_portal.dao;
 
-import com.company.training_portal.controller.table_rows.StudentOpenedQuiz;
-import com.company.training_portal.controller.table_rows.StudentPassedQuiz;
+import com.company.training_portal.model.OpenedQuiz;
+import com.company.training_portal.model.PassedQuiz;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
@@ -12,17 +12,17 @@ import java.util.Map;
 
 public interface QuizDao {
 
-    Quiz findQuizByQuizId(Long quizId);
+    Quiz findQuiz(Long quizId);
 
     List<Quiz> findAllQuizzes();
 
     List<Long> findAllQuizIds();
 
-    List<Quiz> findAllQuizzesByAuthorId(Long authorId);
+    List<Quiz> findTeacherQuizzes(Long authorId);
 
     List<Long> findAllQuizIdsByAuthorId(Long authorId);
 
-    List<Quiz> findQuizzesByStudentId(Long studentId);
+    List<Quiz> findStudentQuizzes(Long studentId);
 
     List<Long> findAllClosedQuizIdsByAuthorId(Long authorId);
 
@@ -30,7 +30,7 @@ public interface QuizDao {
 
     List<Long> findAllQuizIdsByStudentIdAndStudentQuizStatus(Long studentId, StudentQuizStatus studentQuizStatus);
 
-    Integer findQuizzesNumberByAuthorId(Long authorId);
+    Integer findQuizzesNumber(Long authorId);
 
     // key: studentQuizStatus, value: number of students
     Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
@@ -44,29 +44,35 @@ public interface QuizDao {
 
     List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt);
 
-    List<Quiz> findQuizzesByStudentIdAndAuthorId(Long studentId, Long authorId);
+    List<Quiz> findQuizzes(Long studentId, Long authorId);
 
-    Integer findResultByStudentIdAndQuizId(Long studentId, Long quizId);
+    Integer findResult(Long studentId, Long quizId);
 
-    LocalDateTime findSubmitDateByStudentIdAndQuizId(Long studentId, Long quizId);
+    LocalDateTime findSubmitDate(Long studentId, Long quizId);
 
-    LocalDateTime findStartDateByStudentIdAndQuizId(Long studentId, Long quizId);
+    LocalDateTime findStartDate(Long studentId, Long quizId);
 
-    LocalDateTime findFinishDateByStudentIdAndQuizId(Long studentId, Long quizId);
+    LocalDateTime findFinishDate(Long studentId, Long quizId);
 
-    Integer findAttemptByStudentIdAndQuizId(Long studentId, Long quizId);
+    Integer findAttempt(Long studentId, Long quizId);
 
-    StudentQuizStatus findStudentQuizStatusByStudentIdAndQuizId(Long studentId, Long quizId);
+    StudentQuizStatus findStudentQuizStatus(Long studentId, Long quizId);
 
-    List<StudentOpenedQuiz> findOpenedQuizzesInfoByStudentId(Long studentId);
+    OpenedQuiz findOpenedQuiz(Long studentId, Long quizId);
 
-    List<StudentPassedQuiz> findPassedQuizzesInfoByStudentId(Long studentId);
+    PassedQuiz findPassedQuiz(Long studentId, Long quizId);
 
-    List<StudentPassedQuiz> findFinishedQuizzesInfoByStudentId(Long studentId);
+    PassedQuiz findFinishedQuiz(Long studentId, Long quizId);
+
+    List<OpenedQuiz> findOpenedQuizzes(Long studentId);
+
+    List<PassedQuiz> findPassedQuizzes(Long studentId);
+
+    List<PassedQuiz> findFinishedQuizzes(Long studentId);
 
     Long addQuiz(Quiz quiz);
 
-    void editTeacherQuizStatusByQuizId(TeacherQuizStatus teacherQuizStatus, Long quizId);
+    void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus, Long quizId);
 
     void editQuiz(Quiz quiz);
 

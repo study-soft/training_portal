@@ -275,12 +275,12 @@ public class UserDaoJdbcTest {
                 LocalDateTime.of(2018, 1, 10, 10, 10),
                 1, StudentQuizStatus.PASSED);
 
-        Integer result = quizDao.findResultByStudentIdAndQuizId(4L, 1L);
-        LocalDateTime startDate = quizDao.findStartDateByStudentIdAndQuizId(4L, 1L);
-        LocalDateTime finishDate = quizDao.findFinishDateByStudentIdAndQuizId(4L, 1L);
-        Integer reopenCounter = quizDao.findAttemptByStudentIdAndQuizId(4L, 1L);
+        Integer result = quizDao.findResult(4L, 1L);
+        LocalDateTime startDate = quizDao.findStartDate(4L, 1L);
+        LocalDateTime finishDate = quizDao.findFinishDate(4L, 1L);
+        Integer reopenCounter = quizDao.findAttempt(4L, 1L);
         StudentQuizStatus studentQuizStatus =
-                quizDao.findStudentQuizStatusByStudentIdAndQuizId(4L, 1L);
+                quizDao.findStudentQuizStatus(4L, 1L);
 
         assertThat(result, is(56));
         assertThat(startDate, is(LocalDateTime.of(2018, 1, 10, 10, 2)));

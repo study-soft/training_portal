@@ -201,11 +201,13 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_quiz_ids_by_studentId_and_authorId() {
-        List<Long> testQuizIds = new ArrayList<>(asList(2L, 1L));
-        List<Long> quizIds
-                = quizDao.findQuizIdsByStudentIdAndAuthorId(3L, 1L);
-        assertEquals(testQuizIds, quizIds);
+    public void test_find_quizzes_by_studentId_and_authorId() {
+        List<Quiz> testQuizzes = new ArrayList<>();
+        testQuizzes.add(quizDao.findQuizByQuizId(2L));
+        testQuizzes.add(quizDao.findQuizByQuizId(1L));
+
+        List<Quiz> quizzes = quizDao.findQuizzesByStudentIdAndAuthorId(3L, 1L);
+        assertEquals(testQuizzes, quizzes);
     }
 
     @Test

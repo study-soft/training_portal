@@ -42,7 +42,7 @@ public interface QuizDao {
 
     List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt);
 
-    List<Long> findQuizIdsByStudentIdAndAuthorId(Long studentId, Long authorId);
+    List<Quiz> findQuizzesByStudentIdAndAuthorId(Long studentId, Long authorId);
 
     Integer findResultByStudentIdAndQuizId(Long studentId, Long quizId);
 

@@ -213,12 +213,13 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findQuizIdsByStudentIdAndAuthorId(Long studentId, Long authorId) {
-        List<Long> quizIds = template.queryForList(
-                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_AUTHOR_ID,
-                new Object[]{studentId, authorId}, Long.class);
-        logger.info("All quiz ids by studentId and authorId found: " + quizIds);
-        return quizIds;
+    public List<Quiz> findQuizzesByStudentIdAndAuthorId(Long studentId, Long authorId) {
+        List<Quiz> quizzes = template.query(
+                FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID,
+                new Object[]{studentId, authorId}, this::mapQuiz);
+        logger.info("Found quizzes by studentId and authorId:");
+        quizzes.forEach(logger::info);
+        return quizzes;
     }
 
     @Transactional(readOnly = true)
@@ -399,8 +400,9 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND J.ATTEMPT = ?;";
 
-    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_AUTHOR_ID =
-    "SELECT QUIZZES.QUIZ_ID " +
+    private static final String FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID =
+    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
+            "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ?;";
 

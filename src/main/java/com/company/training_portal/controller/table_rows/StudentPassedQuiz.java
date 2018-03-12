@@ -1,9 +1,12 @@
 package com.company.training_portal.controller.table_rows;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class StudentPassedQuiz {
+    private Long quizId;
     private String quizName;
     private String authorName;
     private Integer result;
@@ -12,13 +15,15 @@ public class StudentPassedQuiz {
     private LocalDateTime finishDate;
     private Duration timeSpent;
 
-    public StudentPassedQuiz(String quizName,
+    public StudentPassedQuiz(Long quizId,
+                             String quizName,
                              String authorName,
                              Integer result,
                              Integer score,
                              Integer attempt,
                              LocalDateTime finishDate,
                              Duration timeSpent) {
+        this.quizId = quizId;
         this.quizName = quizName;
         this.authorName = authorName;
         this.result = result;
@@ -26,6 +31,14 @@ public class StudentPassedQuiz {
         this.attempt = attempt;
         this.finishDate = finishDate;
         this.timeSpent = timeSpent;
+    }
+
+    public Long getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
     }
 
     public String getQuizName() {
@@ -91,6 +104,7 @@ public class StudentPassedQuiz {
 
         StudentPassedQuiz that = (StudentPassedQuiz) o;
 
+        if (!quizId.equals(that.quizId)) return false;
         if (!quizName.equals(that.quizName)) return false;
         if (!authorName.equals(that.authorName)) return false;
         if (!result.equals(that.result)) return false;
@@ -102,7 +116,8 @@ public class StudentPassedQuiz {
 
     @Override
     public int hashCode() {
-        int result1 = quizName.hashCode();
+        int result1 = quizId.hashCode();
+        result1 = 31 * result1 + quizName.hashCode();
         result1 = 31 * result1 + authorName.hashCode();
         result1 = 31 * result1 + result.hashCode();
         result1 = 31 * result1 + score.hashCode();
@@ -115,7 +130,8 @@ public class StudentPassedQuiz {
     @Override
     public String toString() {
         return "StudentPassedQuiz{" +
-                "quizName='" + quizName + '\'' +
+                "quizId=" + quizId +
+                ", quizName='" + quizName + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", result=" + result +
                 ", score=" + score +

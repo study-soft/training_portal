@@ -70,5 +70,7 @@ public interface QuizDao {
 
     void editQuiz(Quiz quiz);
 
+    void finishQuiz(Long studentId, Long quizId);
+
     void deleteUnpublishedQuiz(Long quizId);
 }

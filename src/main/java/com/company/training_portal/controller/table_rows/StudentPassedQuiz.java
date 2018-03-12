@@ -1,5 +1,7 @@
 package com.company.training_portal.controller.table_rows;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 

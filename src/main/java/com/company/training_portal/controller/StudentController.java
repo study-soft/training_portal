@@ -75,7 +75,8 @@ public class StudentController {
         User teacher = userDao.findUserByUserId(teacherId);
         model.addAttribute("teacher", teacher);
 
-        List<Quiz> quizzes = quizDao.findQuizzes(studentId, teacherId);
+        List<Quiz> quizzes =
+                quizDao.findQuizzes(studentId, teacherId);
         model.addAttribute("quizzes", quizzes);
 
         List<StudentQuizStatus> statusList = new ArrayList<>();
@@ -119,6 +120,13 @@ public class StudentController {
     public String showStudentResults(@AuthenticationPrincipal SecurityUser securityUser,
                                      Model model) {
         Long studentId = securityUser.getUserId();
+        List<PassedQuiz> passedQuizzes =
+                quizDao.findPassedQuizzes(studentId);
+        model.addAttribute("passedQuizzes", passedQuizzes);
+
+        List<PassedQuiz> finishedQuizzes =
+                quizDao.findFinishedQuizzes(studentId);
+        model.addAttribute("finishedQuizzes", finishedQuizzes);
 
         return "student-results";
     }

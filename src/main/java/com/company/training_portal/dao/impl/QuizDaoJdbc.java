@@ -385,6 +385,11 @@ public class QuizDaoJdbc implements QuizDao {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void finishQuiz(Long studentId, Long quizId) {
+
+    }
+
     @Transactional
     @Override
     public void deleteUnpublishedQuiz(Long quizId) {

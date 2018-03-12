@@ -1,5 +1,7 @@
 package com.company.training_portal.controller;
 
+import com.company.training_portal.controller.table_rows.StudentOpenedQuiz;
+import com.company.training_portal.controller.table_rows.StudentPassedQuiz;
 import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,8 +52,6 @@ public class StudentController {
         User student = userDao.findUserByUserId(securityUser.getUserId());
         Group group = groupDao.findGroupByGroupId(student.getGroupId());
         String authorName = userDao.findUserNameByUserId(group.getAuthorId());
-
-
 
         model.addAttribute("student", student);
         model.addAttribute("authorName", authorName);
@@ -92,6 +94,24 @@ public class StudentController {
         model.addAttribute("statusList", statusList);
 
         return "teacher-info";
+    }
+
+    @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
+    public String showStudentQuizzes(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
+        Long studentId = securityUser.getUserId();
+        List<StudentOpenedQuiz> openedQuizzes
+                = quizDao.findOpenedQuizzesInfoByStudentId(studentId);
+        model.addAttribute("openedQuizzes", openedQuizzes);
+
+        List<StudentPassedQuiz> passedQuizzes
+                = quizDao.findPassedQuizzesInfoByStudentId(studentId);
+        model.addAttribute("passedQuizzes", passedQuizzes);
+
+        List<StudentPassedQuiz> finishedQuizzes
+                = quizDao.findFinishedQuizzesInfoByStudentId(studentId);
+        model.addAttribute("finishedQuizzes", finishedQuizzes);
+
+        return "student-quizzes";
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)

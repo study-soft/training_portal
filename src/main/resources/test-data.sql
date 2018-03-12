@@ -73,7 +73,7 @@ VALUES (5, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*9*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (6, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*10*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 2, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:00:04', 1, 'FINISHED');
+VALUES (4, 2, 5, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:03:04', 1, 'FINISHED');
 UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 19, START_DATE = '2018-03-05 00:00:09', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
 WHERE USER_QUIZ_JUNCTION_ID = 6;
@@ -81,43 +81,51 @@ UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 19, START_DATE = '2018-03-05 00:00:12', FINISH_DATE = '2018-03-05 00:00:15', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'FINISHED'
 WHERE USER_QUIZ_JUNCTION_ID = 6;
 UPDATE USER_QUIZ_JUNCTIONS
-SET RESULT = 24, START_DATE = '2018-03-05 00:00:08', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
+SET RESULT = 10, START_DATE = '2018-03-05 00:00:08', FINISH_DATE = '2018-03-05 00:04:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
 WHERE USER_QUIZ_JUNCTION_ID = 7;
 /*11*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 3, 20, '2018-03-05 00:00:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 1, 'FINISHED');
+VALUES (4, 3, 3, '2018-03-05 00:00:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 1, 'FINISHED');
 /*12*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 4, 25, '2018-03-05 00:08:00', '2018-03-11 00:10:00', '2018-03-11 00:16:04', 2, 'PASSED');
+VALUES (4, 4, 3, '2018-03-05 00:08:00', '2018-03-11 00:10:00', '2018-03-11 00:16:04', 2, 'PASSED');
 /*13*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (4, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
 /*14*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (4, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 
 -- Table: questions
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*1*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (1, 'Question #1.1', 'Question 1.1 body?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*2*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (1, 'Question #1.2', 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*3*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (1, 'Question #1.3', 'Question 1.3 body?', 'Question 1.3 explanation', 'ACCORDANCE', 3);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*4*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (1, 'Question #1.4', 'Question 1.4 body?', 'Question 1.4 explanation', 'SEQUENCE', 3);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*5*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (1, 'Question #1.5', 'Question 1.5 body?', 'Question 1.5 explanation', 'NUMBER', 5);
 
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*6*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (2, 'Question #2.1', 'Question 2.1 body?', 'Question 2.1 explanation', 'ONE_ANSWER', 1);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*7*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (2, 'Question #2.2', 'Question 2.2 body?', 'Question 2.2 explanation', 'FEW_ANSWERS', 2);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*8*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (2, 'Question #2.3', 'Question 2.3 body?', 'Question 2.3 explanation', 'NUMBER', 5);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 
+/*9*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (3, 'Question #3.1', 'Question 3.1 body?', 'Question 3.1 explanation', 'ONE_ANSWER', 1);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+/*10*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (3, 'Question #3.2', 'Question 3.2 body?', 'Question 3.2 explanation', 'FEW_ANSWERS', 2);
-INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 
+/*11*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
 VALUES (4, 'Question #4.1', 'Question 4.1 body?', 'Question 4.1 explanation', 'NUMBER', 4);
+
+/*12*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (5, 'Question #5.1', 'Question 5.1 body?', 'Question 5.1 explanation', 'ONE_ANSWER', 1);
+/*13*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (5, 'Question #5.2', 'Question 5.2 body?', 'Question 5.2 explanation', 'SEQUENCE', 4);
+
+/*14*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (6, 'Question #6.1', 'Question 6.1 body?', 'Question 6.1 explanation', 'NUMBER', 3);
 
 -- Table: answers_simple
 INSERT INTO answers_simple (question_id, body, correct) VALUES (1, 'incorrect answer', false);
@@ -147,6 +155,10 @@ INSERT INTO answers_simple (question_id, body, correct) VALUES (10, 'correct ans
 INSERT INTO answers_simple (question_id, body, correct) VALUES (10, 'incorrect answer', false);
 INSERT INTO answers_simple (question_id, body, correct) VALUES (10, 'correct answer', true);
 
+INSERT INTO answers_simple (question_id, body, correct) VALUES (12, 'incorrect answer', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (12, 'correct answer', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (12, 'incorrect answer', false);
+
 -- Table: answers_accordance
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
@@ -155,8 +167,11 @@ VALUES (3, 'SQL', 'database', 'Java', 'backend', 'HTML', 'frontend', 'Pascal', '
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (4, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
+INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
+VALUES (13, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);
 INSERT INTO answers_number (question_id, correct) VALUES (8, 3);
 INSERT INTO answers_number (question_id, correct) VALUES (11, 1);
+INSERT INTO answers_number (question_id, correct) VALUES (14, 1);

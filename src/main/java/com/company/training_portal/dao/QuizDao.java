@@ -1,5 +1,7 @@
 package com.company.training_portal.dao;
 
+import com.company.training_portal.controller.table_rows.StudentOpenedQuiz;
+import com.company.training_portal.controller.table_rows.StudentPassedQuiz;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
@@ -55,6 +57,12 @@ public interface QuizDao {
     Integer findAttemptByStudentIdAndQuizId(Long studentId, Long quizId);
 
     StudentQuizStatus findStudentQuizStatusByStudentIdAndQuizId(Long studentId, Long quizId);
+
+    List<StudentOpenedQuiz> findOpenedQuizzesInfoByStudentId(Long studentId);
+
+    List<StudentPassedQuiz> findPassedQuizzesInfoByStudentId(Long studentId);
+
+    List<StudentPassedQuiz> findFinishedQuizzesInfoByStudentId(Long studentId);
 
     Long addQuiz(Quiz quiz);
 

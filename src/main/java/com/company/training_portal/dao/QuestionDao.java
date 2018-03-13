@@ -8,26 +8,26 @@ import java.util.Map;
 
 public interface QuestionDao {
 
-    Question findQuestionByQuestionId(Long questionId);
+    Question findQuestion(Long questionId);
 
-    List<Question> findQuestionsByQuizId(Long quizId);
+    List<Question> findQuestions(Long quizId);
 
-    List<Question> findQuestionsByQuizIdAndQuestionType(Long quizId, QuestionType questionType);
+    List<Question> findQuestions(Long quizId, QuestionType questionType);
 
     // key: questionType, value: count of question type
-    Map<QuestionType, Integer> findQuestionTypesAndCountByQuizId(Long quizId);
+    Map<QuestionType, Integer> findQuestionTypesAndCount(Long quizId);
 
-    List<Question> findQuestionsByQuizIdAndScore(Long quizId, Integer score);
+    List<Question> findQuestions(Long quizId, Integer score);
 
-    Integer findQuestionsNumberByQuizId(Long quizId);
+    Integer findQuestionsNumber(Long quizId);
 
-    Integer findQuizScoreByQuizId(Long quizId);
+    Integer findQuizScore(Long quizId);
 
     Long addQuestion(Question question);
 
     void editQuestion(Question question);
 
-    void deleteQuestionByQuestionId(Long questionId);
+    void deleteQuestion(Long questionId);
 
-    void deleteQuestionsByQuizId(Long quizId);
+    void deleteQuestions(Long quizId);
 }

@@ -393,7 +393,7 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional
     @Override
     public void deleteUnpublishedQuiz(Long quizId) {
-        questionDao.deleteQuestionsByQuizId(quizId);
+        questionDao.deleteQuestions(quizId);
         template.update(DELETE_UNPUBLISHED_QUIZ, quizId);
         logger.info("Deleted quiz with quizId " + quizId);
     }

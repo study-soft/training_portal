@@ -11,6 +11,7 @@ public class Question {
     private String explanation;
     private QuestionType questionType;
     private Integer score;
+    private Integer serialNumber;
 
     public Question() {
     }
@@ -23,6 +24,7 @@ public class Question {
         this.explanation = builder.explanation;
         this.questionType = builder.questionType;
         this.score = builder.score;
+        this.serialNumber = builder.serialNumber;
     }
 
     public Long getQuestionId() {
@@ -81,6 +83,14 @@ public class Question {
         this.score = score;
     }
 
+    public Integer getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,7 +105,8 @@ public class Question {
         if (explanation != null ? !explanation.equals(question.explanation) : question.explanation != null)
             return false;
         if (questionType != question.questionType) return false;
-        return score != null ? score.equals(question.score) : question.score == null;
+        if (!score.equals(question.score)) return false;
+        return serialNumber.equals(question.serialNumber);
     }
 
     @Override
@@ -106,7 +117,8 @@ public class Question {
         result = 31 * result + body.hashCode();
         result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
         result = 31 * result + questionType.hashCode();
-        result = 31 * result + (score != null ? score.hashCode() : 0);
+        result = 31 * result + score.hashCode();
+        result = 31 * result + serialNumber.hashCode();
         return result;
     }
 
@@ -120,6 +132,7 @@ public class Question {
                 ", explanation='" + explanation + '\'' +
                 ", questionType=" + questionType +
                 ", score=" + score +
+                ", serialNumber=" + serialNumber +
                 '}';
     }
 
@@ -132,6 +145,7 @@ public class Question {
         private String explanation;
         private QuestionType questionType;
         private Integer score;
+        private Integer serialNumber;
 
         public QuestionBuilder() {
         }
@@ -168,6 +182,11 @@ public class Question {
 
         public QuestionBuilder score(Integer score) {
             this.score = score;
+            return this;
+        }
+
+        public QuestionBuilder serialNumber(Integer serialNumber) {
+            this.serialNumber = serialNumber;
             return this;
         }
 

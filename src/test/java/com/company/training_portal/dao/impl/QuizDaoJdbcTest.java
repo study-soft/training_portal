@@ -185,10 +185,10 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_all_student_results() {
         Map<Long, Integer> testResults = new HashMap<>();
-        testResults.put(1L, 19);
-        testResults.put(2L, 20);
-        testResults.put(3L, 20);
-        testResults.put(4L, 35);
+        testResults.put(1L, 10);
+        testResults.put(2L, 5);
+        testResults.put(3L, 3);
+        testResults.put(4L, 3);
 
         Map<Long, Integer> results = quizDao.findAllStudentResults(3L);
 
@@ -216,7 +216,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_result_by_studentId_and_quizId() {
         Integer result = quizDao.findResult(3L, 1L);
-        assertThat(result, is(19));
+        assertThat(result, is(10));
     }
 
     @Test
@@ -378,8 +378,8 @@ public class QuizDaoJdbcTest {
                 .explanation("Hope you had procedural fun :)")
                 .authorName("Bronson Andrew")
                 .result(10)
-                .score(14)
-                .questionsNumber(5)
+                .score(30)
+                .questionsNumber(12)
                 .attempt(1)
                 .passingTime(Duration.of(20, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))

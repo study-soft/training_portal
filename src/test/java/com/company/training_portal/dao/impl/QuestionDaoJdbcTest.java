@@ -48,7 +48,7 @@ public class QuestionDaoJdbcTest {
                 .score(1)
                 .build();
 
-        Question question = questionDao.findQuestionByQuestionId(1L);
+        Question question = questionDao.findQuestion(1L);
 
         assertEquals(testQuestion, question);
     }
@@ -56,13 +56,13 @@ public class QuestionDaoJdbcTest {
     @Test
     public void test_find_questions_by_quiId() {
         List<Question> testQuestions = new ArrayList<>();
-        testQuestions.add(questionDao.findQuestionByQuestionId(1L));
-        testQuestions.add(questionDao.findQuestionByQuestionId(2L));
-        testQuestions.add(questionDao.findQuestionByQuestionId(3L));
-        testQuestions.add(questionDao.findQuestionByQuestionId(4L));
-        testQuestions.add(questionDao.findQuestionByQuestionId(5L));
+        testQuestions.add(questionDao.findQuestion(1L));
+        testQuestions.add(questionDao.findQuestion(2L));
+        testQuestions.add(questionDao.findQuestion(3L));
+        testQuestions.add(questionDao.findQuestion(4L));
+        testQuestions.add(questionDao.findQuestion(5L));
 
-        List<Question> questions = questionDao.findQuestionsByQuizId(1L);
+        List<Question> questions = questionDao.findQuestions(1L);
 
         assertEquals(testQuestions, questions);
     }
@@ -70,10 +70,10 @@ public class QuestionDaoJdbcTest {
     @Test
     public void test_find_questions_by_quizId_and_questionType() {
         List<Question> testQuestions = new ArrayList<>();
-        testQuestions.add(questionDao.findQuestionByQuestionId(1L));
+        testQuestions.add(questionDao.findQuestion(1L));
 
         List<Question> questions
-                = questionDao.findQuestionsByQuizIdAndQuestionType(
+                = questionDao.findQuestions(
                         1L, QuestionType.ONE_ANSWER);
 
         assertEquals(testQuestions, questions);
@@ -88,7 +88,7 @@ public class QuestionDaoJdbcTest {
         testResults.put(QuestionType.SEQUENCE, 1);
         testResults.put(QuestionType.NUMBER, 1);
 
-        Map<QuestionType, Integer> results = questionDao.findQuestionTypesAndCountByQuizId(1L);
+        Map<QuestionType, Integer> results = questionDao.findQuestionTypesAndCount(1L);
 
         assertEquals(testResults, results);
     }
@@ -96,27 +96,27 @@ public class QuestionDaoJdbcTest {
     @Test
     public void test_find_questions_by_quizId_and_score() {
         List<Question> testQuestions = new ArrayList<>();
-        testQuestions.add(questionDao.findQuestionByQuestionId(1L));
+        testQuestions.add(questionDao.findQuestion(1L));
 
-        List<Question> questions = questionDao.findQuestionsByQuizIdAndScore(1L, 1);
+        List<Question> questions = questionDao.findQuestions(1L, 1);
 
         assertEquals(testQuestions, questions);
     }
 
     @Test
     public void test_find_questions_number_by_quizId() {
-        Integer number = questionDao.findQuestionsNumberByQuizId(1L);
+        Integer number = questionDao.findQuestionsNumber(1L);
         assertThat(number, is(5));
     }
 
     @Test
     public void test_find_quiz_score_by_quiz_id() {
         Integer testScore = 0;
-        List<Question> questions = questionDao.findQuestionsByQuizId(1L);
+        List<Question> questions = questionDao.findQuestions(1L);
         for(Question question : questions) {
             testScore += question.getScore();
         }
-        assertThat(testScore, is(questionDao.findQuizScoreByQuizId(1L)));
+        assertThat(testScore, is(questionDao.findQuizScore(1L)));
     }
 
     @Test
@@ -131,14 +131,14 @@ public class QuestionDaoJdbcTest {
                 .build();
         Long questionId = questionDao.addQuestion(testQuestion);
 
-        Question question = questionDao.findQuestionByQuestionId(questionId);
+        Question question = questionDao.findQuestion(questionId);
 
         assertEquals(testQuestion, question);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_question_by_questionId() {
-        questionDao.deleteQuestionByQuestionId(1L);
-        questionDao.findQuestionByQuestionId(1L);
+        questionDao.deleteQuestion(1L);
+        questionDao.findQuestion(1L);
     }
 }

@@ -64,6 +64,7 @@ CREATE TABLE questions (
   explanation varchar(2048) NULL,
   question_type varchar(255) NOT NULL,
   score int NOT NULL,
+  serial_number int NOT NULL,
   CONSTRAINT question_pk PRIMARY KEY (question_id)
 );
 

@@ -11,15 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 @Controller
+@SessionAttributes("studentId")
 public class StudentController {
 
     private UserDao userDao;
@@ -40,11 +39,20 @@ public class StudentController {
         this.groupDao = groupDao;
     }
 
+    @ModelAttribute("studentId")
+    public Long getStudentId(@AuthenticationPrincipal SecurityUser securityUser) {
+        return securityUser.getUserId();
+    }
+
     @RequestMapping(value = "/student", method = RequestMethod.GET)
-    public String showStudentHome(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
-        User student = userDao.findUserByUserId(securityUser.getUserId());
-        Group group = groupDao.findGroupByGroupId(student.getGroupId());
-        String authorName = userDao.findUserNameByUserId(group.getAuthorId());
+    public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUserByUserId(studentId);
+        Group group = null;
+        String authorName = null;
+        if (student.getGroupId() != 0) {
+            group = groupDao.findGroupByGroupId(student.getGroupId());
+            authorName = userDao.findUserNameByUserId(group.getAuthorId());
+        }
 
         model.addAttribute("student", student);
         model.addAttribute("authorName", authorName);
@@ -54,8 +62,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
-    public String showStudentTeachers(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
-        Long studentId = securityUser.getUserId();
+    public String showStudentTeachers(@ModelAttribute("studentId") Long studentId, Model model) {
         List<Quiz> quizzes = quizDao.findStudentQuizzes(studentId);
         HashSet<User> teachers = new HashSet<>();
         for (Quiz quiz : quizzes) {
@@ -68,10 +75,8 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/teachers/{teacherId}", method = RequestMethod.GET)
-    public String showTeacherDetails(@AuthenticationPrincipal SecurityUser securityUser,
+    public String showTeacherDetails(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("teacherId") Long teacherId, Model model) {
-        Long studentId = securityUser.getUserId();
-
         User teacher = userDao.findUserByUserId(teacherId);
         model.addAttribute("teacher", teacher);
 
@@ -91,8 +96,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
-    public String showStudentQuizzes(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
-        Long studentId = securityUser.getUserId();
+    public String showStudentQuizzes(@ModelAttribute("studentId") Long studentId, Model model) {
         List<OpenedQuiz> openedQuizzes
                 = quizDao.findOpenedQuizzes(studentId);
         model.addAttribute("openedQuizzes", openedQuizzes);
@@ -117,9 +121,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)
-    public String showStudentResults(@AuthenticationPrincipal SecurityUser securityUser,
-                                     Model model) {
-        Long studentId = securityUser.getUserId();
+    public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         List<PassedQuiz> passedQuizzes =
                 quizDao.findPassedQuizzes(studentId);
         model.addAttribute("passedQuizzes", passedQuizzes);
@@ -129,5 +131,15 @@ public class StudentController {
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
         return "student-results";
+    }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/finished", method = RequestMethod.POST)
+    public String finishQuiz(@ModelAttribute("studentId") Long studentId,
+                             @PathVariable("quizId") Long quizId,
+                             Model model) {
+        quizDao.finishQuiz(studentId, quizId);
+        PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
+        model.addAttribute("finishedQuiz", finishedQuiz);
+        return "quiz-finished";
     }
 }

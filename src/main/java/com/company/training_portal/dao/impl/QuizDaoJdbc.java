@@ -387,7 +387,8 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Override
     public void finishQuiz(Long studentId, Long quizId) {
-
+        template.update(FINISH_QUIZ, studentId, quizId);
+        logger.info("Finished quiz by studentId = " + studentId + " and quizId = " + quizId);
     }
 
     @Transactional
@@ -608,6 +609,11 @@ public class QuizDaoJdbc implements QuizDao {
     "UPDATE QUIZZES " +
     "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, CREATION_DATE = ?, PASSING_TIME = ?, AUTHOR_ID = ?, TEACHER_QUIZ_STATUS = ? " +
     "WHERE QUIZ_ID = ?;";
+
+    private static final String FINISH_QUIZ =
+    "UPDATE USER_QUIZ_JUNCTIONS " +
+    "SET STUDENT_QUIZ_STATUS = 'FINISHED' " +
+    "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String DELETE_UNPUBLISHED_QUIZ =
     "DELETE FROM QUIZZES WHERE QUIZ_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED';";

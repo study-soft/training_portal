@@ -460,6 +460,14 @@ public class QuizDaoJdbcTest {
         assertThat(teacherQuizStatus, is(TeacherQuizStatus.UNPUBLISHED));
     }
 
+    @Test
+    public void test_finish_quiz() {
+        quizDao.finishQuiz(4L, 4L);
+        StudentQuizStatus studentQuizStatus =
+                quizDao.findStudentQuizStatus(4L, 4L);
+        assertThat(studentQuizStatus, is(StudentQuizStatus.FINISHED));
+    }
+
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_unpublished_quiz() {
         quizDao.deleteUnpublishedQuiz(9L);

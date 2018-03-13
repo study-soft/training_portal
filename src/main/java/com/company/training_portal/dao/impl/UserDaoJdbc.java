@@ -223,21 +223,64 @@ public class UserDaoJdbc implements UserDao {
         return id;
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public boolean userExists(String login, String email, String phoneNumber) {
-        List<User> users = template.query(
-                FIND_USER_BY_LOGIN_EMAIL_PHONE_NUMBER,
-                new Object[]{login, email, phoneNumber}, this::mapUser);
-        boolean exists = !users.isEmpty();
-        if (exists) {
-            logger.info("User with login '" + login + "', email '" + email + "' " +
-                    "and phoneNumber '" + phoneNumber + "' exists");
-        } else {
-            logger.info("User with login '" + login + "', email '" + email + "' " +
-                    "and phoneNumber '" + phoneNumber + "' does not exists");
+    public boolean userExistsByLogin(String login) {
+        User user = template.query(FIND_USER_BY_LOGIN, new Object[]{login},
+                new ResultSetExtractor<User>() {
+                    @Override
+                    public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapUser(rs, 0);
+                    }
+                });
+        if (user == null) {
+            logger.info("No user exists by login: " + login);
+            return false;
         }
-        return exists;
+        logger.info("User exists by login: " + login);
+        return true;
+    }
+
+    @Override
+    public boolean userExistsByEmail(String email) {
+        User user = template.query(FIND_USER_BY_EMAIL, new Object[]{email},
+                new ResultSetExtractor<User>() {
+                    @Override
+                    public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapUser(rs, 0);
+                    }
+                });
+        if (user == null) {
+            logger.info("No user exists by email: " + email);
+            return false;
+        }
+        logger.info("User exists by email: " + email);
+        return true;
+    }
+
+    @Override
+    public boolean userExistsByPhoneNumber(String phoneNumber) {
+        User user = template.query(FIND_USER_BY_PHONE_NUMBER, new Object[]{phoneNumber},
+                new ResultSetExtractor<User>() {
+                    @Override
+                    public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapUser(rs, 0);
+                    }
+                });
+        if (user == null) {
+            logger.info("No user exists by phoneNumber: " + phoneNumber);
+            return false;
+        }
+        logger.info("User exists by phoneNumber: " + phoneNumber);
+        return true;
     }
 
     @Transactional(readOnly = true)
@@ -449,9 +492,6 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT J.USER_QUIZ_JUNCTION_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
-
-    private static final String FIND_USER_BY_LOGIN_EMAIL_PHONE_NUMBER =
-    "SELECT * FROM USERS WHERE LOGIN = ? AND EMAIL = ? AND PHONE_NUMBER = ?;";
 
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD =
     "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;";

@@ -2,6 +2,10 @@
     color: red;
 }
 
+.success {
+    color:lime
+}
+
 table {
     border-collapse: collapse;
     width: 75%;

@@ -193,11 +193,21 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void test_user_exists() {
-        assertTrue(userDao.userExists("Artem", "artem@example.com",
-                "095-98-76-54"));
-        assertFalse(userDao.userExists("User", "user@example.com",
-                "050-123-45-67"));
+    public void test_user_exists_by_login() {
+        assertTrue(userDao.userExistsByLogin("Artem"));
+        assertFalse(userDao.userExistsByLogin("Login"));
+    }
+
+    @Test
+    public void test_user_exists_by_email() {
+        assertTrue(userDao.userExistsByEmail("artem@example.com"));
+        assertFalse(userDao.userExistsByEmail("email@example.com"));
+    }
+
+    @Test
+    public void test_user_exists_by_phoneNumber() {
+        assertTrue(userDao.userExistsByPhoneNumber("095-98-76-54"));
+        assertFalse(userDao.userExistsByPhoneNumber("000-00-00-00"));
     }
 
     @Test

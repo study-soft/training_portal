@@ -11,6 +11,7 @@
     <c:if test="${param.error ne null}">
         <p class="error">Invalid login or password</p>
     </c:if>
+    <span class="success">${registrationSuccess}</span>
     <div>
         <label for="username">Login: </label>
     </div>
@@ -25,5 +26,6 @@
     </div>
     <input type="submit" value="Log in">
 </form>
+<div>Do not have an account? <a href="/register">Register</a></div>
 </body>
 </html>

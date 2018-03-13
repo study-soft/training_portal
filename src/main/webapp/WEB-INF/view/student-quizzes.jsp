@@ -8,72 +8,90 @@
 <body>
 <h2>Student quizzes</h2>
 <div>Search...</div>
-<c:if test="${not empty openedQuizzes}"><h3>Opened</h3>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Author</th>
-            <th>Questions</th>
-            <th>Score</th>
-            <th>Submit date</th>
-            <th></th>
-        </tr>
-        <c:forEach items="${openedQuizzes}" var="openedQuiz">
+<h3>Opened quizzes</h3>
+<c:choose>
+    <c:when test="${empty openedQuizzes}">
+        <div>You do not have any quizzes. Say your teachers to add you.</div>
+    </c:when>
+    <c:otherwise>
+        <table>
             <tr>
-                <td>${openedQuiz.quizName}</td>
-                <td>${openedQuiz.authorName}</td>
-                <td>${openedQuiz.questionsNumber}</td>
-                <td>${openedQuiz.score}</td>
-                <td>${openedQuiz.submitDate}</td>
-                <td><a href="/student/quizzes/${openedQuiz.quizId}">Details</a></td>
+                <th>Name</th>
+                <th>Questions</th>
+                <th>Score</th>
+                <th>Submit date</th>
+                <th>Author</th>
+                <th></th>
             </tr>
-        </c:forEach>
-    </table>
-</c:if>
-<c:if test="${not empty passedQuizzes}"><h3>Passed</h3>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Author</th>
-            <th>Result</th>
-            <th>Attempt</th>
-            <th>Time spent</th>
-            <th></th>
-        </tr>
-        <c:forEach items="${passedQuizzes}" var="passedQuiz">
+            <c:forEach items="${openedQuizzes}" var="openedQuiz">
+                <tr>
+                    <td>${openedQuiz.quizName}</td>
+                    <td>${openedQuiz.questionsNumber}</td>
+                    <td>${openedQuiz.score}</td>
+                    <td>${openedQuiz.submitDate}</td>
+                    <td>${openedQuiz.authorName}</td>
+                    <td><a href="/student/quizzes/${openedQuiz.quizId}">Details</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:otherwise>
+</c:choose>
+<h3>Passed quizzes</h3>
+<c:choose>
+    <c:when test="${empty passedQuizzes}">
+        <div>You do not have any passed quizzes</div>
+    </c:when>
+    <c:otherwise>
+        <table>
             <tr>
-                <td>${passedQuiz.quizName}</td>
-                <td>${passedQuiz.authorName}</td>
-                <td>${passedQuiz.result}/${passedQuiz.score}</td>
-                <td>${passedQuiz.attempt}</td>
-                <td>${passedQuiz.timeSpent.toMinutes()} mins</td>
-                <td><a href="/student/quizzes/${passedQuiz.quizId}">Details</a></td>
+                <th>Name</th>
+                <th>Questions</th>
+                <th>Score</th>
+                <th>Submit date</th>
+                <th>Author</th>
+                <th></th>
             </tr>
-        </c:forEach>
-    </table>
-</c:if>
-<c:if test="${not empty finishedQuizzes}"><h3>Finished</h3>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Author</th>
-            <th>Result</th>
-            <th>Attempt</th>
-            <th>Time spent</th>
-            <th></th>
-        </tr>
-        <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
+            <c:forEach items="${passedQuizzes}" var="passedQuiz">
+                <tr>
+                    <td>${passedQuiz.quizName}</td>
+                    <td>${passedQuiz.questionsNumber}</td>
+                    <td>${passedQuiz.score}</td>
+                    <td>${passedQuiz.submitDate}</td>
+                    <td>${passedQuiz.authorName}</td>
+                    <td><a href="/student/quizzes/${passedQuiz.quizId}">Details</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:otherwise>
+</c:choose>
+<h3>Finished quizzes</h3>
+<c:choose>
+    <c:when test="${empty finishedQuizzes}">
+        <div>You do not have finished quizzes</div>
+    </c:when>
+    <c:otherwise>
+        <table>
             <tr>
-                <td>${finishedQuiz.quizName}</td>
-                <td>${finishedQuiz.authorName}</td>
-                <td>${finishedQuiz.result}/${finishedQuiz.score}</td>
-                <td>${finishedQuiz.attempt}</td>
-                <td>${finishedQuiz.timeSpent.toMinutes()} mins</td>
-                <td><a href="/student/quizzes/${finishedQuiz.quizId}">Details</a></td>
+                <th>Name</th>
+                <th>Questions</th>
+                <th>Score</th>
+                <th>Submit date</th>
+                <th>Author</th>
+                <th></th>
             </tr>
-        </c:forEach>
-    </table>
-</c:if>
+            <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
+                <tr>
+                    <td>${finishedQuiz.quizName}</td>
+                    <td>${finishedQuiz.questionsNumber}</td>
+                    <td>${finishedQuiz.score}</td>
+                    <td>${finishedQuiz.submitDate}</td>
+                    <td>${finishedQuiz.authorName}</td>
+                    <td><a href="/student/quizzes/${finishedQuiz.quizId}">Details</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:otherwise>
+</c:choose>
 <div>
     <a href="/student">Back</a>
 </div>

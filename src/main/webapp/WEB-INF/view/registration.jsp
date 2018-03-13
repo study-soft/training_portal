@@ -55,5 +55,8 @@
         <input type="submit" value="Register">
     </div>
 </form:form>
+<div>
+    <a href="/login">Login page</a>
+</div>
 </body>
 </html>

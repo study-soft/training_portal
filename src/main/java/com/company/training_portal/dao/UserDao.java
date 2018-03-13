@@ -47,7 +47,11 @@ public interface UserDao {
 
     Long findUserQuizJunctionId(Long studentId, Long quizId);
 
-    boolean userExists(String login, String email, String phoneNumber);
+    boolean userExistsByLogin(String login);
+
+    boolean userExistsByEmail(String email);
+
+    boolean userExistsByPhoneNumber(String phoneNumber);
 
     /**
      * Returns instance of user if user exists. Otherwise returns null.

@@ -113,11 +113,25 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/quizzes/${quizId}", method = RequestMethod.GET)
-    public String showOpenedQuiz(@AuthenticationPrincipal SecurityUser securityUser,
-                                 @PathVariable("quizId") Long quizId, Model model) {
-        Long studentId = securityUser.getUserId();
-
-        return "opened-quiz";
+    public String showStudentQuiz(@ModelAttribute("studentId") Long studentId,
+                           @PathVariable("quizId") Long quizId, Model model) {
+        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+        if (status.equals(StudentQuizStatus.OPENED)) {
+            OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
+            model.addAttribute("openedQuiz", openedQuiz);
+            return "opened-quiz";
+        }
+        if (status.equals(StudentQuizStatus.PASSED)) {
+            PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+            model.addAttribute("passedQuiz", passedQuiz);
+            return "passed-quiz";
+        }
+        if (status.equals(StudentQuizStatus.FINISHED)) {
+            PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
+            model.addAttribute("finishedQuiz", finishedQuiz);
+            return "finished-quiz";
+        }
+        return "hello"; // todo: add error-page
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)

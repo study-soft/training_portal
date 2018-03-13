@@ -21,7 +21,7 @@ public class PassedQuiz {
     public PassedQuiz() {
     }
 
-    public PassedQuiz(PassedQuizBuilder builder) {
+    private PassedQuiz(PassedQuizBuilder builder) {
         this.quizId = builder.quizId;
         this.quizName = builder.quizName;
         this.description = builder.description;

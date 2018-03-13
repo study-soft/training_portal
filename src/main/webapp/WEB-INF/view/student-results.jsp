@@ -71,7 +71,7 @@
     </c:otherwise>
 </c:choose>
 <div>
-    <a href="#">Compare results</a>
+    <a href="/student/compare-results">Compare results</a>
 </div>
 <div>
     <a href="/student">Back</a>

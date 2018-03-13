@@ -223,6 +223,7 @@ public class UserDaoJdbc implements UserDao {
         return id;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean userExistsByLogin(String login) {
         User user = template.query(FIND_USER_BY_LOGIN, new Object[]{login},
@@ -243,6 +244,7 @@ public class UserDaoJdbc implements UserDao {
         return true;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean userExistsByEmail(String email) {
         User user = template.query(FIND_USER_BY_EMAIL, new Object[]{email},
@@ -263,6 +265,7 @@ public class UserDaoJdbc implements UserDao {
         return true;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean userExistsByPhoneNumber(String phoneNumber) {
         User user = template.query(FIND_USER_BY_PHONE_NUMBER, new Object[]{phoneNumber},

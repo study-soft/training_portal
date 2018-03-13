@@ -169,7 +169,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<TeacherQuizStatus, Integer> FindQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId) {
+    public Map<TeacherQuizStatus, Integer> findQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId) {
         Map<TeacherQuizStatus, Integer> results = new HashMap<>();
         template.query(FIND_QUIZZES_NUMBER_BY_AUTHOR_ID_WITH_TEACHER_QUIZ_STATUS,
                 new Object[]{authorId},
@@ -225,6 +225,15 @@ public class QuizDaoJdbc implements QuizDao {
                 FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID,
                 new Object[]{studentId, authorId}, this::mapQuiz);
         logger.info("Found quizzes by studentId and authorId:");
+        quizzes.forEach(logger::info);
+        return quizzes;
+    }
+
+    @Override
+    public List<Quiz> findPassedAndFinishedGroupQuizzes(Long groupId) {
+        List<Quiz> quizzes = template.query(FIND_PASSED_AND_FINISHED_QUIZZES_BY_GROUP_ID,
+                new Object[]{groupId}, this::mapQuiz);
+        logger.info("Found passed and finished quizzes by groupId:");
         quizzes.forEach(logger::info);
         return quizzes;
     }
@@ -508,6 +517,14 @@ public class QuizDaoJdbc implements QuizDao {
             "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ?;";
+
+    private static final String FIND_PASSED_AND_FINISHED_QUIZZES_BY_GROUP_ID =
+    "SELECT DISTINCT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
+    "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
+    "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
+    "WHERE GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'FINISHED') " +
+    "ORDER BY QUIZZES.NAME;";
 
     private static final String FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT RESULT FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";

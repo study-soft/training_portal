@@ -195,4 +195,46 @@ public class StudentController {
         model.addAttribute("finishedQuiz", finishedQuiz);
         return "quiz-finished";
     }
+
+
+    @RequestMapping(value = "/student/compare-results", method = RequestMethod.GET)
+    public String showCompareResults(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+        List<Quiz> groupQuizzes = quizDao.findPassedAndFinishedGroupQuizzes(student.getGroupId());
+        model.addAttribute("groupQuizzes", groupQuizzes);
+        return "compare-results";
+    }
+
+    @RequestMapping(value = "/student/compare-results/{quizId}")
+    public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
+                                     @PathVariable("quizId") Long quizId,
+                                     Model model) {
+
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        User student = userDao.findUser(studentId);
+        List<User> studentsInGroup = userDao.findStudents(student.getGroupId());
+        model.addAttribute("studentsInGroup", studentsInGroup);
+
+        List<PassedQuiz> studentsQuizzes = new ArrayList<>();
+        List<StudentQuizStatus> statusList = new ArrayList<>();
+        for (User currentStudent : studentsInGroup) {
+            Long currentStudentId = currentStudent.getUserId();
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(currentStudentId, quizId);
+            statusList.add(status);
+            if (status.equals(StudentQuizStatus.PASSED)) {
+                PassedQuiz passedQuiz = quizDao.findPassedQuiz(currentStudentId, quizId);
+                studentsQuizzes.add(passedQuiz);
+            }
+            if (status.equals(StudentQuizStatus.FINISHED)) {
+                PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(currentStudentId, quizId);
+                studentsQuizzes.add(finishedQuiz);
+            }
+        }
+        model.addAttribute("studentsQuizzes", studentsQuizzes);
+        model.addAttribute("statusList", statusList);
+
+        return "compare-quiz-results";
+    }
 }

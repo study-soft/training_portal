@@ -177,7 +177,7 @@ public class QuizDaoJdbcTest {
         testResults.put(TeacherQuizStatus.UNPUBLISHED, 2);
 
         Map<TeacherQuizStatus, Integer> results
-                = quizDao.FindQuizzesNumberByAuthorIdWithTeacherQuizStatus(1L);
+                = quizDao.findQuizzesNumberByAuthorIdWithTeacherQuizStatus(1L);
 
         assertEquals(testResults, results);
     }
@@ -210,6 +210,19 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuiz(1L));
 
         List<Quiz> quizzes = quizDao.findQuizzes(3L, 1L);
+        assertEquals(testQuizzes, quizzes);
+    }
+
+    @Test
+    public void test_find_group_quizzes() {
+        List<Quiz> testQuizzes = new ArrayList<>();
+        testQuizzes.add(quizDao.findQuiz(3L));
+        testQuizzes.add(quizDao.findQuiz(2L));
+        testQuizzes.add(quizDao.findQuiz(4L));
+        testQuizzes.add(quizDao.findQuiz(1L));
+
+        List<Quiz> quizzes = quizDao.findPassedAndFinishedGroupQuizzes(1L);
+
         assertEquals(testQuizzes, quizzes);
     }
 

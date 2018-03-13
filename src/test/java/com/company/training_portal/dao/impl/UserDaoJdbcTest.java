@@ -58,7 +58,7 @@ public class UserDaoJdbcTest {
                 .userRole(UserRole.STUDENT)
                 .build();
 
-        User userByUserId = userDao.findUserByUserId(4L);
+        User userByUserId = userDao.findUser(4L);
         User userByLogin = userDao.findUserByLogin("Artem");
         User userByEmail = userDao.findUserByEmail("artem@example.com");
         User userByPhoneNumber = userDao.findUserByPhoneNumber("095-98-76-54");
@@ -71,17 +71,17 @@ public class UserDaoJdbcTest {
 
     @Test
     public void test_find_userName_by_userId() {
-        String userName = userDao.findUserNameByUserId(4L);
+        String userName = userDao.findUserName(4L);
         assertThat(userName, is("Yakovenko Artem"));
     }
 
     @Test
     public void test_find_users_by_firstName_and_lastName_and_UserRole() {
-        User testUser = userDao.findUserByUserId(4L);
+        User testUser = userDao.findUser(4L);
         List<User> testUsersList = new ArrayList<>();
         testUsersList.add(testUser);
 
-        List<User> userList = userDao.findUsersByFirstNameAndLastNameAndUserRole("Artem",
+        List<User> userList = userDao.findUsers("Artem",
                 "Yakovenko", UserRole.STUDENT);
 
         assertEquals(testUsersList, userList);
@@ -90,10 +90,10 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_students_by_groupGroupId() {
         List<User> testStudents = new ArrayList<>();
-        testStudents.add(userDao.findUserByUserId(3L));
-        testStudents.add(userDao.findUserByUserId(4L));
+        testStudents.add(userDao.findUser(3L));
+        testStudents.add(userDao.findUser(4L));
 
-        List<User> students = userDao.findStudentsByGroupId(1L);
+        List<User> students = userDao.findStudents(1L);
 
         assertEquals(testStudents, students);
     }
@@ -101,12 +101,12 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_all_students() {
         List<User> testStudents = new ArrayList<>();
-        testStudents.add(userDao.findUserByUserId(3L));
-        testStudents.add(userDao.findUserByUserId(4L));
-        testStudents.add(userDao.findUserByUserId(5L));
-        testStudents.add(userDao.findUserByUserId(6L));
-        testStudents.add(userDao.findUserByUserId(7L));
-        testStudents.add(userDao.findUserByUserId(8L));
+        testStudents.add(userDao.findUser(3L));
+        testStudents.add(userDao.findUser(4L));
+        testStudents.add(userDao.findUser(5L));
+        testStudents.add(userDao.findUser(6L));
+        testStudents.add(userDao.findUser(7L));
+        testStudents.add(userDao.findUser(8L));
 
         List<User> students = userDao.findAllStudents();
 
@@ -116,8 +116,8 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_all_teachers() {
         List<User> testTeachers = new ArrayList<>();
-        testTeachers.add(userDao.findUserByUserId(1L));
-        testTeachers.add(userDao.findUserByUserId(2L));
+        testTeachers.add(userDao.findUser(1L));
+        testTeachers.add(userDao.findUser(2L));
 
         List<User> teachers = userDao.findAllTeachers();
 
@@ -147,12 +147,6 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void test_find_students_number_in_group() {
-        Integer studentsNumberInGroup = userDao.findStudentsNumberInGroup(2L);
-        assertThat(studentsNumberInGroup, is(2));
-    }
-
-    @Test
     public void test_find_students_number_in_group_with_finished_quiz() {
         Integer studentsNumber =
                 userDao.findStudentsNumberInGroupWithFinishedQuiz(1L, 1L);
@@ -162,14 +156,14 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_results_number_by_groupId_and_quizId() {
         Integer resultsNumber =
-                userDao.findResultsNumberByGroupIdAndQuizId(null, 1L);
+                userDao.findResultsNumber(null, 1L);
         assertThat(resultsNumber, is(1));
     }
 
     @Test
     public void test_find_final_results_number_by_groupId_and_quizId() {
         Integer finalResultsNumber =
-                userDao.findFinalResultsNumberByGroupIdAndQuizId(1L, 1L);
+                userDao.findFinalResultsNumber(1L, 1L);
         assertThat(finalResultsNumber, is(1));
     }
 
@@ -194,7 +188,7 @@ public class UserDaoJdbcTest {
 
     @Test
     public void test_find_userQuizJunctionId_by_studentId_and_quizId() {
-        Long id = userDao.findUserQuizJunctionIdByStudentIdAndQuizId(4L, 1L);
+        Long id = userDao.findUserQuizJunctionId(4L, 1L);
         assertThat(id, is(7L));
     }
 
@@ -208,7 +202,7 @@ public class UserDaoJdbcTest {
 
     @Test
     public void test_check_user_by_login_and_password() {
-        User testUser = userDao.findUserByUserId(4L);
+        User testUser = userDao.findUser(4L);
         User user = userDao.checkUserByLoginAndPassword("Artem", "123");
         assertEquals(testUser, user);
 
@@ -230,14 +224,14 @@ public class UserDaoJdbcTest {
                 .build();
         Long testUserId = userDao.registerUser(testUser);
 
-        assertEquals(testUser, userDao.findUserByUserId(testUserId));
+        assertEquals(testUser, userDao.findUser(testUserId));
     }
 
     @Test
     public void test_add_student_to_group_by_groupId_and_userId() {
-        userDao.addStudentToGroupByGroupIdAndUserId(1L, 7L);
+        userDao.addStudentToGroup(1L, 7L);
 
-        User user = userDao.findUserByUserId(7L);
+        User user = userDao.findUser(7L);
         Long groupId = user.getGroupId();
 
         assertThat(groupId, is(1L));
@@ -247,8 +241,8 @@ public class UserDaoJdbcTest {
     public void test_add_students_to_group() {
         userDao.addStudentsToGroup(1L, Arrays.asList(7L, 8L));
 
-        Long jasonGroupId = userDao.findUserByUserId(7L).getGroupId();
-        Long williamGroupId = userDao.findUserByUserId(8L).getGroupId();
+        Long jasonGroupId = userDao.findUser(7L).getGroupId();
+        Long williamGroupId = userDao.findUser(8L).getGroupId();
 
         assertThat(jasonGroupId, is(1L));
         assertThat(williamGroupId, is(1L));
@@ -263,7 +257,7 @@ public class UserDaoJdbcTest {
                 StudentQuizStatus.PASSED);
 
         Long testUserQuizJunctionId =
-                userDao.findUserQuizJunctionIdByStudentIdAndQuizId(3L, 5L);
+                userDao.findUserQuizJunctionId(3L, 5L);
 
         assertEquals(userQuizJunctionId, testUserQuizJunctionId);
     }
@@ -292,7 +286,7 @@ public class UserDaoJdbcTest {
     @Test
     public void test_delete_student_from_group_by_userId() {
         userDao.deleteStudentFromGroupByUserId(4L);
-        Long groupId = userDao.findUserByUserId(4L).getGroupId();
+        Long groupId = userDao.findUser(4L).getGroupId();
         assertThat(groupId, is(0L));
     }
 
@@ -300,8 +294,8 @@ public class UserDaoJdbcTest {
     public void test_delete_students_form_group_by_groupId() {
         userDao.deleteStudentsFromGroupByGroupId(2L);
 
-        Long mikeGroupId = userDao.findUserByUserId(5L).getGroupId();
-        Long saraGroupId = userDao.findUserByUserId(6L).getGroupId();
+        Long mikeGroupId = userDao.findUser(5L).getGroupId();
+        Long saraGroupId = userDao.findUser(6L).getGroupId();
 
         assertThat(mikeGroupId, is(0L));
         assertThat(saraGroupId, is(0L));

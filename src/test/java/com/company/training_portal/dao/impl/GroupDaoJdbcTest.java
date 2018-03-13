@@ -46,7 +46,7 @@ public class GroupDaoJdbcTest {
                 .authorId(1L)
                 .build();
 
-        Group group = groupDao.findGroupByGroupId(1L);
+        Group group = groupDao.findGroup(1L);
 
         assertEquals(testGroup, group);
     }
@@ -54,9 +54,9 @@ public class GroupDaoJdbcTest {
     @Test
     public void test_find_groups_by_authorId() {
         List<Group> testGroups = new ArrayList<>();
-        testGroups.add(groupDao.findGroupByGroupId(1L));
+        testGroups.add(groupDao.findGroup(1L));
 
-        List<Group> groups = groupDao.findGroupsByAuthorId(1L);
+        List<Group> groups = groupDao.findGroups(1L);
 
         assertEquals(testGroups, groups);
     }
@@ -64,8 +64,8 @@ public class GroupDaoJdbcTest {
     @Test
     public void test_find_all_groups() {
         List<Group> testGroups = new ArrayList<>();
-        testGroups.add(groupDao.findGroupByGroupId(1L));
-        testGroups.add(groupDao.findGroupByGroupId(2L));
+        testGroups.add(groupDao.findGroup(1L));
+        testGroups.add(groupDao.findGroup(2L));
 
         List<Group> groups = groupDao.findAllGroups();
 
@@ -74,15 +74,21 @@ public class GroupDaoJdbcTest {
 
     @Test
     public void test_find_groups_number_by_authorId() {
-        Integer groupsNumber = groupDao.findGroupsNumberByAuthorId(1L);
+        Integer groupsNumber = groupDao.findGroupsNumber(1L);
         assertThat(groupsNumber, is(1));
+    }
+
+    @Test
+    public void test_find_students_number_in_group() {
+        Integer studentsNumberInGroup = groupDao.findStudentsNumberInGroup(2L);
+        assertThat(studentsNumberInGroup, is(2));
     }
 
     @Test
     public void test_find_all_groups_and_students_number_in_them() {
         Map<Group, Integer> testGroups = new HashMap<>();
-        testGroups.put(groupDao.findGroupByGroupId(1L), 2);
-        testGroups.put(groupDao.findGroupByGroupId(2L), 2);
+        testGroups.put(groupDao.findGroup(1L), 2);
+        testGroups.put(groupDao.findGroup(2L), 2);
 
         Map<Group, Integer> groups = groupDao.findAllGroupsAndStudentsNumberInThem();
 
@@ -100,7 +106,7 @@ public class GroupDaoJdbcTest {
 
         Long testGroupId = groupDao.addGroup(testGroup);
 
-        Group group = groupDao.findGroupByGroupId(testGroupId);
+        Group group = groupDao.findGroup(testGroupId);
 
         assertEquals(testGroup, group);
     }
@@ -113,6 +119,6 @@ public class GroupDaoJdbcTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void delete_group() {
         groupDao.deleteGroup(1L);
-        groupDao.findGroupByGroupId(1L);
+        groupDao.findGroup(1L);
     }
 }

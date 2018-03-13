@@ -1,16 +1,29 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 3/12/2018
-  Time: 4:04 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Finished quiz</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
-
+<h2>Finished quiz</h2>
+<h3>${finishedQuiz.quizName}</h3>
+<div>Finish date: ${finishedQuiz.finishDate}</div>
+<div>Result: ${finishedQuiz.result}/${finishedQuiz.score}</div>
+<div>Attempt: ${finishedQuiz.attempt}</div>
+<div>Time spent: ${finishedQuiz.timeSpent.toMinutes()}</div>
+<div>
+    <a href="#">Answers</a>
+    <a href="#">Compare results</a>
+</div>
+<div>Passing time: ${finishedQuiz.passingTime}</div>
+<div>Score: ${finishedQuiz.score}</div>
+<div>Questions: ${finishedQuiz.questionsNumber}</div>
+<div>Author: ${finishedQuiz.authorName}</div>
+<div>Submit date: ${finishedQuiz.submitDate}</div>
+<div>Description: ${finishedQuiz.description}</div>
+<div>Explanation: ${finishedQuiz.explanation}</div>
+<div>
+    <a href="/student/quizzes">Quizzes</a>
+</div>
 </body>
 </html>

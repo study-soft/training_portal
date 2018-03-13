@@ -7,13 +7,15 @@ import java.util.Map;
 
 public interface GroupDao {
 
-    Group findGroupByGroupId(Long groupId);
+    Group findGroup(Long groupId);
 
-    List<Group> findGroupsByAuthorId(Long authorId);
+    List<Group> findGroups(Long authorId);
 
     List<Group> findAllGroups();
 
-    Integer findGroupsNumberByAuthorId(Long authorId);
+    Integer findGroupsNumber(Long authorId);
+
+    Integer findStudentsNumberInGroup(Long groupId);
 
     //key: Group, value: numberOfStudents
     Map<Group, Integer> findAllGroupsAndStudentsNumberInThem();

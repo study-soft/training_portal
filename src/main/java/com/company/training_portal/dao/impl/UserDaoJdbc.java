@@ -37,7 +37,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public User findUserByUserId(Long userId) {
+    public User findUser(Long userId) {
         User user = template.queryForObject(FIND_USER_BY_USER_ID,
                 new Object[]{userId}, this::mapUser);
         logger.info("User found by userId: " + user);
@@ -72,7 +72,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public String findUserNameByUserId(Long userId) {
+    public String findUserName(Long userId) {
         String name = template.queryForObject(FIND_USER_NAME_BY_USER_ID,
                 new Object[]{userId}, new RowMapper<String>() {
                     @Override
@@ -88,9 +88,9 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName,
-                                                                 String lastName,
-                                                                 UserRole userRole) {
+    public List<User> findUsers(String firstName,
+                                String lastName,
+                                UserRole userRole) {
         List<User> users = template.query(FIND_USERS_BY_FIRST_NAME_AND_LAST_NAME_AND_USER_ROLE,
                 new Object[]{firstName, lastName, userRole.getRole()}, this::mapUser);
         logger.info("Users found by firstName, lastName, userRole:");
@@ -100,7 +100,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findStudentsByGroupId(Long groupId) {
+    public List<User> findStudents(Long groupId) {
         List<User> students = template.query(FIND_STUDENTS_BY_GROUP_ID,
                 new Object[]{groupId}, this::mapUser);
         logger.info("Students found by groupId:");
@@ -161,15 +161,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findStudentsNumberInGroup(Long groupId) {
-        Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER_IN_GROUP,
-                new Object[]{groupId}, Integer.class);
-        logger.info("Students number in group found: " + studentsNumber);
-        return studentsNumber;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId) {
         Integer studentsNumber = template.queryForObject(
                 FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ,
@@ -180,7 +171,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
+    public Integer findResultsNumber(Long groupId, Long quizId) {
         Integer resultsNumber = template.queryForObject(
                 FIND_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID,
                 new Object[]{groupId, quizId}, Integer.class);
@@ -190,7 +181,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId) {
+    public Integer findFinalResultsNumber(Long groupId, Long quizId) {
         Integer resultsNumber = template.queryForObject(
                 FIND_FINAL_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID,
                 new Object[]{groupId, quizId}, Integer.class);
@@ -224,7 +215,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Long findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId) {
+    public Long findUserQuizJunctionId(Long studentId, Long quizId) {
         Long id = template.queryForObject(
                 FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, Long.class);
@@ -294,7 +285,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional
     @Override
-    public void addStudentToGroupByGroupIdAndUserId(Long groupId, Long studentId) {
+    public void addStudentToGroup(Long groupId, Long studentId) {
         template.update(ADD_STUDENT_TO_GROUP_BY_GROUP_ID_AND_USER_ID, groupId, studentId);
         logger.info("Student with id = " + studentId +
                 " added to group with id = '" + groupId + "'");
@@ -414,7 +405,8 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_STUDENTS_BY_GROUP_ID =
     "SELECT * " +
     "FROM USERS " +
-    "WHERE GROUP_ID IS ? AND USER_ROLE = 'STUDENT';";
+    "WHERE GROUP_ID IS ? AND USER_ROLE = 'STUDENT' " +
+    "ORDER BY LAST_NAME;";
 
     private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
@@ -433,9 +425,6 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String FIND_TEACHERS_NUMBER =
     "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'TEACHER';";
-
-    private static final String FIND_STUDENTS_NUMBER_IN_GROUP =
-    "SELECT COUNT(USER_ID) FROM USERS WHERE GROUP_ID IS ?;";
 
     private static final String FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ =
     "SELECT COUNT(USERS.USER_ID) " +

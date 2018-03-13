@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Results</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Results</h2>

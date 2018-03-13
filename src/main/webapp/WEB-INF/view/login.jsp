@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Login</title>
-    <link type="text/css" rel="stylesheet" href="/resources/main.css">
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <form action="/login" method="post">

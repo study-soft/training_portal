@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h1>Hello Training portal!</h1>

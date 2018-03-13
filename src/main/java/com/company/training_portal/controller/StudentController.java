@@ -46,12 +46,12 @@ public class StudentController {
 
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
-        User student = userDao.findUserByUserId(studentId);
+        User student = userDao.findUser(studentId);
         Group group = null;
         String authorName = null;
         if (student.getGroupId() != 0) {
-            group = groupDao.findGroupByGroupId(student.getGroupId());
-            authorName = userDao.findUserNameByUserId(group.getAuthorId());
+            group = groupDao.findGroup(student.getGroupId());
+            authorName = userDao.findUserName(group.getAuthorId());
         }
 
         model.addAttribute("student", student);
@@ -61,12 +61,50 @@ public class StudentController {
         return "student";
     }
 
+    @RequestMapping(value = "/student/{studentId}", method = RequestMethod.GET)
+    public String showStudentInfo(@PathVariable("studentId") Long studentId,
+                                  Model model) {
+        User student = userDao.findUser(studentId);
+        model.addAttribute("student", student);
+
+        Group group = groupDao.findGroup(student.getGroupId());
+        model.addAttribute("group", group);
+
+        List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
+        List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);
+        List<PassedQuiz> finishedQuizzes = quizDao.findFinishedQuizzes(studentId);
+        model.addAttribute("openedQuizzes", openedQuizzes);
+        model.addAttribute("passedQuizzes", passedQuizzes);
+        model.addAttribute("finishedQuizzes", finishedQuizzes);
+
+        return "student-info";
+    }
+
+    @RequestMapping(value = "/student/group", method = RequestMethod.GET)
+    public String showGroup(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+        Long groupId = student.getGroupId();
+        Group group = groupDao.findGroup(groupId);
+        model.addAttribute("group", group);
+
+        String authorName = userDao.findUserName(group.getAuthorId());
+        model.addAttribute("authorName", authorName);
+
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        model.addAttribute("studentsNumber", studentsNumber);
+
+        List<User> students = userDao.findStudents(groupId);
+        model.addAttribute("students", students);
+
+        return "group";
+    }
+
     @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
     public String showStudentTeachers(@ModelAttribute("studentId") Long studentId, Model model) {
         List<Quiz> quizzes = quizDao.findStudentQuizzes(studentId);
         HashSet<User> teachers = new HashSet<>();
         for (Quiz quiz : quizzes) {
-            teachers.add(userDao.findUserByUserId(quiz.getAuthorId()));
+            teachers.add(userDao.findUser(quiz.getAuthorId()));
         }
 
         model.addAttribute("teachers", teachers);
@@ -77,7 +115,7 @@ public class StudentController {
     @RequestMapping(value = "/student/teachers/{teacherId}", method = RequestMethod.GET)
     public String showTeacherDetails(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("teacherId") Long teacherId, Model model) {
-        User teacher = userDao.findUserByUserId(teacherId);
+        User teacher = userDao.findUser(teacherId);
         model.addAttribute("teacher", teacher);
 
         List<Quiz> quizzes =
@@ -112,9 +150,10 @@ public class StudentController {
         return "student-quizzes";
     }
 
-    @RequestMapping(value = "/student/quizzes/${quizId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.GET)
     public String showStudentQuiz(@ModelAttribute("studentId") Long studentId,
-                           @PathVariable("quizId") Long quizId, Model model) {
+                                  @PathVariable("quizId") Long quizId,
+                                  Model model) {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         if (status.equals(StudentQuizStatus.OPENED)) {
             OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);

@@ -1,15 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 3/11/2018
-  Time: 5:50 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Quizzes</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Student quizzes</h2>
@@ -58,7 +52,7 @@
         </c:forEach>
     </table>
 </c:if>
-<c:if test="${not empty finishedQuizzes}"><h3>Closed</h3>
+<c:if test="${not empty finishedQuizzes}"><h3>Finished</h3>
     <table>
         <tr>
             <th>Name</th>

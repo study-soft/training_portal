@@ -37,7 +37,7 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Group findGroupByGroupId(Long groupId) {
+    public Group findGroup(Long groupId) {
         Group group = template.queryForObject(FIND_GROUP_BY_GROUP_ID,
                 new Object[]{groupId}, this::mapGroup);
         logger.info("Group found by groupId: " + group);
@@ -46,7 +46,7 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Group> findGroupsByAuthorId(Long authorId) {
+    public List<Group> findGroups(Long authorId) {
         List<Group> groups = template.query(FIND_GROUPS_BY_AUTHOR_ID,
                 new Object[]{authorId}, this::mapGroup);
         logger.info("All groups by authorId found:");
@@ -65,11 +65,20 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findGroupsNumberByAuthorId(Long authorId) {
+    public Integer findGroupsNumber(Long authorId) {
         Integer groupsNumber = template.queryForObject(FIND_GROUPS_NUMBER_BY_AUTHOR_ID,
                 new Object[]{authorId}, Integer.class);
         logger.info("Groups number by authorId found: " + groupsNumber);
         return groupsNumber;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Integer findStudentsNumberInGroup(Long groupId) {
+        Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER_IN_GROUP,
+                new Object[]{groupId}, Integer.class);
+        logger.info("Students number in group found: " + studentsNumber);
+        return studentsNumber;
     }
 
     @Transactional(readOnly = true)
@@ -145,6 +154,9 @@ public class GroupDaoJdbc implements GroupDao {
 
     private static final String FIND_GROUPS_NUMBER_BY_AUTHOR_ID =
     "SELECT COUNT(GROUP_ID) FROM GROUPS WHERE AUTHOR_ID = ?;";
+
+    private static final String FIND_STUDENTS_NUMBER_IN_GROUP =
+    "SELECT COUNT(USER_ID) FROM USERS WHERE GROUP_ID IS ?;";
 
     private static final String FIND_ALL_GROUPS_AND_STUDENTS_NUMBER_IN_THEM =
     "SELECT GROUPS.GROUP_ID, GROUPS.NAME, GROUPS.DESCRIPTION, " +

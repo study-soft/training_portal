@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface UserDao {
 
-    User findUserByUserId(Long userId);
+    User findUser(Long userId);
 
     User findUserByLogin(String login);
 
@@ -18,11 +18,11 @@ public interface UserDao {
 
     User findUserByPhoneNumber(String phoneNumber);
 
-    String findUserNameByUserId(Long userId);
+    String findUserName(Long userId);
 
-    List<User> findUsersByFirstNameAndLastNameAndUserRole(String firstName, String lastName, UserRole userRole);
+    List<User> findUsers(String firstName, String lastName, UserRole userRole);
 
-    List<User> findStudentsByGroupId(Long groupId);
+    List<User> findStudents(Long groupId);
 
     List<User> findAllStudents();
 
@@ -36,18 +36,16 @@ public interface UserDao {
 
     Integer findTeachersNumber();
 
-    Integer findStudentsNumberInGroup(Long groupId);
-
     Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId);
 
-    Integer findResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
+    Integer findResultsNumber(Long groupId, Long quizId);
 
-    Integer findFinalResultsNumberByGroupIdAndQuizId(Long groupId, Long quizId);
+    Integer findFinalResultsNumber(Long groupId, Long quizId);
 
     // key: studentId, value: result
     Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId, Long quizId);
 
-    Long findUserQuizJunctionIdByStudentIdAndQuizId(Long studentId, Long quizId);
+    Long findUserQuizJunctionId(Long studentId, Long quizId);
 
     boolean userExists(String login, String email, String phoneNumber);
 
@@ -61,7 +59,7 @@ public interface UserDao {
 
     Long registerUser(User user);
 
-    void addStudentToGroupByGroupIdAndUserId(Long groupId, Long studentId);
+    void addStudentToGroup(Long groupId, Long studentId);
 
     void addStudentsToGroup(Long groupId, List<Long> studentIds);
 

@@ -2,16 +2,18 @@
 <html>
 <head>
     <title>Quiz finished</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Quiz finished</h2>
 <div>You have finished quiz with name ${finishedQuiz.quizName} at the ${finishedQuiz.attempt} attempt.</div>
 <div>Your result: ${finishedQuiz.result}/${finishedQuiz.score}</div>
-<div>Time spent: ${finishedQuiz.timeSpent}</div>
+<div>Time spent: ${finishedQuiz.timeSpent.toMinutes()}</div>
 <div>Finish date: ${finishedQuiz.finishDate}</div>
 <div>More information about this quiz <a href="/student/quizzes/${finishedQuiz.quizId}">here</a></div>
 <div>
-    <a href="/student/results">Back</a>
+    <a href="/student/results">Results</a>
+    <a href="/student/quizzes">Quizzes</a>
 </div>
 </body>
 </html>

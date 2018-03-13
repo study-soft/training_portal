@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Teacher info</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Teacher information:</h2>

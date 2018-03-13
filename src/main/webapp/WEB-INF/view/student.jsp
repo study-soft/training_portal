@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Home</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Hello, student! Welcome to the training portal!</h2>
@@ -42,9 +43,11 @@
     <c:otherwise>
         <div>Name: ${group.name}</div>
         <div>Creation date: ${group.creationDate}</div>
+        <div>Number of students: </div>
         <div>Author: ${authorName}</div>
-        <div>Description:</div>
-        <div>${group.description}</div>
+        <div>
+            <a href="/student/group">More info</a>
+        </div>
     </c:otherwise>
 </c:choose>
 </body>

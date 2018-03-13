@@ -24,7 +24,6 @@ import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -421,7 +420,7 @@ public class QuizDaoJdbc implements QuizDao {
                 .description(rs.getString("description"))
                 .passingTime(Duration.between(LocalTime.MIDNIGHT,
                         rs.getTime("passing_time").toLocalTime()))
-                .authorName(userDao.findUserNameByUserId(rs.getLong("author_id")))
+                .authorName(userDao.findUserName(rs.getLong("author_id")))
                 .questionsNumber(rs.getInt("questions_number"))
                 .score(rs.getInt("score"))
                 .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
@@ -434,7 +433,7 @@ public class QuizDaoJdbc implements QuizDao {
                 .quizName(rs.getString("quiz_name"))
                 .description(rs.getString("description"))
                 .explanation(rs.getString("explanation"))
-                .authorName(userDao.findUserNameByUserId(rs.getLong("author_id")))
+                .authorName(userDao.findUserName(rs.getLong("author_id")))
                 .result(rs.getInt("result"))
                 .score(rs.getInt("score"))
                 .questionsNumber(rs.getInt("questions_number"))

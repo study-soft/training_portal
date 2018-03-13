@@ -49,7 +49,7 @@ public class AnswerSequenceDaoJdbcTest {
                 .build();
 
         AnswerSequence answerSequence =
-                answerSequenceDao.findAnswerSequenceByQuestionId(4L);
+                answerSequenceDao.findAnswerSequence(4L);
 
         assertEquals(testAnswerSequence, answerSequence);
     }
@@ -73,7 +73,7 @@ public class AnswerSequenceDaoJdbcTest {
         answerSequenceDao.addAnswerSequence(testAnswerSequence);
 
         AnswerSequence answerSequence =
-                answerSequenceDao.findAnswerSequenceByQuestionId(questionId);
+                answerSequenceDao.findAnswerSequence(questionId);
 
         assertEquals(testAnswerSequence, answerSequence);
     }
@@ -87,7 +87,7 @@ public class AnswerSequenceDaoJdbcTest {
         answerSequenceDao.editAnswerSequence(testAnswerSequence);
 
         AnswerSequence answerSequence =
-                answerSequenceDao.findAnswerSequenceByQuestionId(4L);
+                answerSequenceDao.findAnswerSequence(4L);
 
         assertEquals(testAnswerSequence, answerSequence);
     }
@@ -95,6 +95,6 @@ public class AnswerSequenceDaoJdbcTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void deleteAnswerSequence() {
         answerSequenceDao.deleteAnswerSequence(4L);
-        answerSequenceDao.findAnswerSequenceByQuestionId(4L);
+        answerSequenceDao.findAnswerSequence(4L);
     }
 }

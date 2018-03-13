@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AnswerSimpleDao {
 
-    AnswerSimple findAnswerSimpleByAnswerSimpleId(Long answerSimpleId);
+    AnswerSimple findAnswerSimple(Long answerSimpleId);
 
-    List<AnswerSimple> findAllAnswersSimpleByQuestionId(Long questionId);
+    List<AnswerSimple> findAnswersSimple(Long questionId);
 
     Long addAnswerSimple(AnswerSimple answerSimple);
 
@@ -16,5 +16,5 @@ public interface AnswerSimpleDao {
 
     void deleteAnswerSimple(Long answerSimpleId);
 
-    void deleteAnswersSimpleByQuestionId(Long questionId);
+    void deleteAnswersSimple(Long questionId);
 }

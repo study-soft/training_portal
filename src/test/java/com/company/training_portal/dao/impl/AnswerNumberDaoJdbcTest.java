@@ -45,7 +45,7 @@ public class AnswerNumberDaoJdbcTest {
                 .correct(5)
                 .build();
 
-        AnswerNumber answerNumber = answerNumberDao.findAnswerNumberByQuestionId(5L);
+        AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(5L);
 
         assertEquals(testAnswerNumber, answerNumber);
     }
@@ -68,7 +68,7 @@ public class AnswerNumberDaoJdbcTest {
                 .build();
         answerNumberDao.addAnswerNumber(testAnswerNumber);
 
-        AnswerNumber answerNumber = answerNumberDao.findAnswerNumberByQuestionId(questionId);
+        AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
 
         assertEquals(testAnswerNumber, answerNumber);
     }
@@ -81,7 +81,7 @@ public class AnswerNumberDaoJdbcTest {
                 .build();
         answerNumberDao.editAnswerNumber(testAnswerNumber);
 
-        AnswerNumber answerNumber = answerNumberDao.findAnswerNumberByQuestionId(5L);
+        AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(5L);
 
         assertEquals(testAnswerNumber, answerNumber);
     }
@@ -89,6 +89,6 @@ public class AnswerNumberDaoJdbcTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void deleteAnswerNumber() {
         answerNumberDao.deleteAnswerNumber(5L);
-        answerNumberDao.findAnswerNumberByQuestionId(5L);
+        answerNumberDao.findAnswerNumber(5L);
     }
 }

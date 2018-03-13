@@ -4,7 +4,7 @@ import com.company.training_portal.model.AnswerNumber;
 
 public interface AnswerNumberDao {
 
-    AnswerNumber findAnswerNumberByQuestionId(Long questionId);
+    AnswerNumber findAnswerNumber(Long questionId);
 
     void addAnswerNumber(AnswerNumber answerNumber);
 

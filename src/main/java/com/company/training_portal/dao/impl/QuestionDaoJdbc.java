@@ -69,8 +69,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Question> findQuestions(Long quizId,
-                                        QuestionType questionType) {
+    public List<Question> findQuestions(Long quizId, QuestionType questionType) {
         List<Question> questions = template.query(FIND_QUESTIONS_BY_QUIZ_ID_AND_QUESTION_TYPE,
                 new Object[]{quizId, questionType.getQuestionType()}, this::mapQuestion);
         logger.info("Questions found by quizId and questionType:");
@@ -161,7 +160,7 @@ public class QuestionDaoJdbc implements QuestionDao {
         Question question = findQuestion(questionId);
         if (question.getQuestionType().equals(QuestionType.ONE_ANSWER) ||
                 question.getQuestionType().equals(QuestionType.FEW_ANSWERS)) {
-            answerSimpleDao.deleteAnswersSimpleByQuestionId(questionId);
+            answerSimpleDao.deleteAnswersSimple(questionId);
         } else if (question.getQuestionType().equals(QuestionType.ACCORDANCE)) {
             answerAccordanceDao.deleteAnswerAccordance(questionId);
         } else if (question.getQuestionType().equals(QuestionType.SEQUENCE)) {

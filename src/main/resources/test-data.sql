@@ -93,53 +93,53 @@ VALUES (4, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
 VALUES (4, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 
 -- Table: questions
-/*1*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.1', 'Question 1.1 body?', 'Question 1.1 explanation', 'ONE_ANSWER', 1, 1);
-/*2*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.2', 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2, 2);
-/*3*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.3', 'Question 1.3 body?', 'Question 1.3 explanation', 'ACCORDANCE', 3, 3);
-/*4*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.4', 'Question 1.4 body?', 'Question 1.4 explanation', 'SEQUENCE', 3, 4);
-/*5*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.5', 'Question 1.5 body?', 'Question 1.5 explanation', 'NUMBER', 5, 5);
-/*6*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.6', 'Question 1.6 body?', 'Question 1.6 explanation', 'ONE_ANSWER', 1, 6);
-/*7*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.7', 'Question 1.7 body?', 'Question 1.7 explanation', 'FEW_ANSWERS', 2, 7);
-/*8*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.8', 'Question 1.8 body?', 'Question 1.8 explanation', 'ACCORDANCE', 4, 8);
-/*9*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.9', 'Question 1.9 body?', 'Question 1.9 explanation', 'SEQUENCE', 4, 9);
-/*10*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.10', 'Question 1.10 body?', 'Question 1.10 explanation', 'NUMBER', 3, 10);
-/*11*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.11', 'Question 1.11 body?', 'Question 1.11 explanation', 'ONE_ANSWER', 1, 11);
-/*12*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (1, 'Question #1.12', 'Question 1.12 body?', 'Question 1.12 explanation', 'ONE_ANSWER', 1, 12);
+/*1*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.1', 'Question 1.1 body?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
+/*2*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.2', 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2);
+/*3*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.3', 'Question 1.3 body?', 'Question 1.3 explanation', 'ACCORDANCE', 3);
+/*4*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.4', 'Question 1.4 body?', 'Question 1.4 explanation', 'SEQUENCE', 3);
+/*5*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.5', 'Question 1.5 body?', 'Question 1.5 explanation', 'NUMBER', 5);
+/*6*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.6', 'Question 1.6 body?', 'Question 1.6 explanation', 'ONE_ANSWER', 1);
+/*7*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.7', 'Question 1.7 body?', 'Question 1.7 explanation', 'FEW_ANSWERS', 2);
+/*8*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.8', 'Question 1.8 body?', 'Question 1.8 explanation', 'ACCORDANCE', 4);
+/*9*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.9', 'Question 1.9 body?', 'Question 1.9 explanation', 'SEQUENCE', 4);
+/*10*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.10', 'Question 1.10 body?', 'Question 1.10 explanation', 'NUMBER', 3);
+/*11*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.11', 'Question 1.11 body?', 'Question 1.11 explanation', 'ONE_ANSWER', 1);
+/*12*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (1, 'Question #1.12', 'Question 1.12 body?', 'Question 1.12 explanation', 'ONE_ANSWER', 1);
 
-/*13*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (2, 'Question #2.1', 'Question 2.1 body?', 'Question 2.1 explanation', 'ONE_ANSWER', 1, 1);
-/*14*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (2, 'Question #2.2', 'Question 2.2 body?', 'Question 2.2 explanation', 'FEW_ANSWERS', 2, 2);
-/*15*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (2, 'Question #2.3', 'Question 2.3 body?', 'Question 2.3 explanation', 'NUMBER', 5, 3);
+/*13*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (2, 'Question #2.1', 'Question 2.1 body?', 'Question 2.1 explanation', 'ONE_ANSWER', 1);
+/*14*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (2, 'Question #2.2', 'Question 2.2 body?', 'Question 2.2 explanation', 'FEW_ANSWERS', 2);
+/*15*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (2, 'Question #2.3', 'Question 2.3 body?', 'Question 2.3 explanation', 'NUMBER', 5);
 
-/*16*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (3, 'Question #3.1', 'Question 3.1 body?', 'Question 3.1 explanation', 'ONE_ANSWER', 1, 1);
-/*17*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (3, 'Question #3.2', 'Question 3.2 body?', 'Question 3.2 explanation', 'FEW_ANSWERS', 2, 2);
+/*16*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (3, 'Question #3.1', 'Question 3.1 body?', 'Question 3.1 explanation', 'ONE_ANSWER', 1);
+/*17*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (3, 'Question #3.2', 'Question 3.2 body?', 'Question 3.2 explanation', 'FEW_ANSWERS', 2);
 
-/*18*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (4, 'Question #4.1', 'Question 4.1 body?', 'Question 4.1 explanation', 'NUMBER', 4, 1);
+/*18*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (4, 'Question #4.1', 'Question 4.1 body?', 'Question 4.1 explanation', 'NUMBER', 4);
 
-/*19*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (5, 'Question #5.1', 'Question 5.1 body?', 'Question 5.1 explanation', 'ONE_ANSWER', 1, 1);
-/*20*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (5, 'Question #5.2', 'Question 5.2 body?', 'Question 5.2 explanation', 'SEQUENCE', 4, 2);
+/*19*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (5, 'Question #5.1', 'Question 5.1 body?', 'Question 5.1 explanation', 'ONE_ANSWER', 1);
+/*20*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (5, 'Question #5.2', 'Question 5.2 body?', 'Question 5.2 explanation', 'SEQUENCE', 4);
 
-/*21*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score, serial_number)
-VALUES (6, 'Question #6.1', 'Question 6.1 body?', 'Question 6.1 explanation', 'NUMBER', 3, 1);
+/*21*/INSERT INTO questions (quiz_id, name, body, explanation, question_type, score)
+VALUES (6, 'Question #6.1', 'Question 6.1 body?', 'Question 6.1 explanation', 'NUMBER', 3);
 
 -- Table: answers_simple
 INSERT INTO answers_simple (question_id, body, correct) VALUES (1, 'incorrect answer', false);

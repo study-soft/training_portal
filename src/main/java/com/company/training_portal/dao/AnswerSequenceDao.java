@@ -4,7 +4,7 @@ import com.company.training_portal.model.AnswerSequence;
 
 public interface AnswerSequenceDao {
 
-    AnswerSequence findAnswerSequenceByQuestionId(Long questionId);
+    AnswerSequence findAnswerSequence(Long questionId);
 
     void addAnswerSequence(AnswerSequence answerSequence);
 

@@ -26,7 +26,7 @@ public class AnswerNumberDaoJdbc implements AnswerNumberDao {
 
     @Transactional(readOnly = true)
     @Override
-    public AnswerNumber findAnswerNumberByQuestionId(Long questionId) {
+    public AnswerNumber findAnswerNumber(Long questionId) {
         AnswerNumber answerNumber = template.queryForObject(FIND_ANSWER_NUMBER_BY_QUESTION_ID,
                 new Object[]{questionId}, this::mapAnswerNumber);
         logger.info("Found answerNumber by questionId: " + answerNumber);

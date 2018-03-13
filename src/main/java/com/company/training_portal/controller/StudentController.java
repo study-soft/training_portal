@@ -1,10 +1,8 @@
 package com.company.training_portal.controller;
 
-import com.company.training_portal.dao.GroupDao;
-import com.company.training_portal.dao.QuestionDao;
-import com.company.training_portal.dao.QuizDao;
-import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
+import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,30 +11,40 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @SessionAttributes("studentId")
 public class StudentController {
 
     private UserDao userDao;
+    private GroupDao groupDao;
     private QuizDao quizDao;
     private QuestionDao questionDao;
-    private GroupDao groupDao;
+    private AnswerSimpleDao answerSimpleDao;
+    private AnswerAccordanceDao answerAccordanceDao;
+    private AnswerSequenceDao answerSequenceDao;
+    private AnswerNumberDao answerNumberDao;
 
     private static final Logger logger = Logger.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(UserDao userDao,
+                             GroupDao groupDao,
                              QuizDao quizDao,
                              QuestionDao questionDao,
-                             GroupDao groupDao) {
+                             AnswerSimpleDao answerSimpleDao,
+                             AnswerAccordanceDao answerAccordanceDao,
+                             AnswerSequenceDao answerSequenceDao,
+                             AnswerNumberDao answerNumberDao) {
         this.userDao = userDao;
+        this.groupDao = groupDao;
         this.quizDao = quizDao;
         this.questionDao = questionDao;
-        this.groupDao = groupDao;
+        this.answerSimpleDao = answerSimpleDao;
+        this.answerAccordanceDao = answerAccordanceDao;
+        this.answerSequenceDao = answerSequenceDao;
+        this.answerNumberDao = answerNumberDao;
     }
 
     @ModelAttribute("studentId")
@@ -171,6 +179,52 @@ public class StudentController {
             return "finished-quiz";
         }
         return "hello"; // todo: add error-page
+    }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/questions", method = RequestMethod.GET)
+    public String showQuestions(@PathVariable("quizId") Long quizId, Model model) {
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
+        List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
+        model.addAttribute("questionsOneAnswer", questionsOneAnswer);
+        model.addAttribute("questionsFewAnswers", questionsFewAnswers);
+        model.addAttribute("questionsAccordance", questionsAccordance);
+        model.addAttribute("questionsSequence", questionsSequence);
+        model.addAttribute("questionsNumber", questionsNumber);
+
+        Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
+        Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
+        Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
+        Map<Long, AnswerNumber> quizAnswersNumber = new HashMap<>();
+        List<Question> quizQuestions = questionDao.findQuestions(quizId);
+        for (Question question : quizQuestions) {
+            Long questionId = question.getQuestionId();
+            QuestionType type = question.getQuestionType();
+            if (type.equals(QuestionType.ONE_ANSWER) || type.equals(QuestionType.FEW_ANSWERS)) {
+                List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
+                quizAnswersSimple.put(questionId, answersSimple);
+            }
+            if (type.equals(QuestionType.ACCORDANCE)) {
+                AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
+                quizAnswersAccordance.put(questionId, answerAccordance);
+            }
+            if (type.equals(QuestionType.SEQUENCE)) {
+                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
+                quizAnswersSequence.put(questionId, answerSequence);
+            }
+            if (type.equals(QuestionType.NUMBER)) {
+                AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
+                quizAnswersNumber.put(questionId, answerNumber);
+            }
+        }
+        model.addAttribute("quizAnswersSimple", quizAnswersSimple);
+        model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
+        model.addAttribute("quizAnswersSequence", quizAnswersSequence);
+        model.addAttribute("quizAnswersNumber", quizAnswersNumber);
+
+        return "questions";
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)

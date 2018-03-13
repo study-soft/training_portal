@@ -4,7 +4,7 @@ import com.company.training_portal.model.AnswerAccordance;
 
 public interface AnswerAccordanceDao {
 
-    AnswerAccordance findAnswerAccordanceByQuestionId(Long questionId);
+    AnswerAccordance findAnswerAccordance(Long questionId);
 
     void addAnswerAccordance(AnswerAccordance answerAccordance);
 

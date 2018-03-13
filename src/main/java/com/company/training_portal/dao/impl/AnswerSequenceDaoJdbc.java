@@ -34,7 +34,7 @@ public class AnswerSequenceDaoJdbc implements AnswerSequenceDao {
 
     @Transactional(readOnly = true)
     @Override
-    public AnswerSequence findAnswerSequenceByQuestionId(Long questionId) {
+    public AnswerSequence findAnswerSequence(Long questionId) {
         AnswerSequence answerSequence = template.queryForObject(FIND_ANSWER_SEQUENCE_BY_QUESTION_ID,
                 this::mapAnswerSequence, questionId);
         logger.info("Found answerSequence by questionId: " + answerSequence);

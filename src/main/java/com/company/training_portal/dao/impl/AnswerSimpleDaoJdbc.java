@@ -33,7 +33,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
 
     @Transactional(readOnly = true)
     @Override
-    public AnswerSimple findAnswerSimpleByAnswerSimpleId(Long answerSimpleId) {
+    public AnswerSimple findAnswerSimple(Long answerSimpleId) {
         AnswerSimple answerSimple = template.queryForObject(FIND_ANSWER_SIMPLE_BY_ANSWER_SIMPLE_ID,
                 new Object[]{answerSimpleId}, this::mapAnswerSimple);
         logger.info("Found answerSimple by answerSimpleId: " + answerSimple);
@@ -42,7 +42,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AnswerSimple> findAllAnswersSimpleByQuestionId(Long questionId) {
+    public List<AnswerSimple> findAnswersSimple(Long questionId) {
         List<AnswerSimple> answers = template.query(FIND_ALL_ANSWERS_SIMPLE_BY_QUESTION_ID,
                 new Object[]{questionId}, this::mapAnswerSimple);
         logger.info("Found all answers simple by questionId:");
@@ -90,7 +90,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
     }
 
     @Override
-    public void deleteAnswersSimpleByQuestionId(Long questionId) {
+    public void deleteAnswersSimple(Long questionId) {
         template.update(DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID, questionId);
         logger.info("Deleted answerSimple with questionId: " + questionId);
     }

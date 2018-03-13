@@ -51,7 +51,7 @@ public class AnswerAccordanceDaoJdbcTest {
                 .build();
 
         AnswerAccordance answerAccordance
-                = answerAccordanceDao.findAnswerAccordanceByQuestionId(3L);
+                = answerAccordanceDao.findAnswerAccordance(3L);
 
         assertEquals(testAnswerAccordance, answerAccordance);
     }
@@ -81,7 +81,7 @@ public class AnswerAccordanceDaoJdbcTest {
         answerAccordanceDao.addAnswerAccordance(testAnswerAccordance);
 
         AnswerAccordance answerAccordance =
-                answerAccordanceDao.findAnswerAccordanceByQuestionId(questionId);
+                answerAccordanceDao.findAnswerAccordance(questionId);
 
         assertEquals(testAnswerAccordance, answerAccordance);
     }
@@ -101,7 +101,7 @@ public class AnswerAccordanceDaoJdbcTest {
         answerAccordanceDao.editAnswerAccordance(testAnswerAccordance);
 
         AnswerAccordance answerAccordance
-                = answerAccordanceDao.findAnswerAccordanceByQuestionId(3L);
+                = answerAccordanceDao.findAnswerAccordance(3L);
 
         assertEquals(testAnswerAccordance, answerAccordance);
     }
@@ -109,6 +109,6 @@ public class AnswerAccordanceDaoJdbcTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void delete_answerAccordance() {
         answerAccordanceDao.deleteAnswerAccordance(3L);
-        answerAccordanceDao.findAnswerAccordanceByQuestionId(3L);
+        answerAccordanceDao.findAnswerAccordance(3L);
     }
 }

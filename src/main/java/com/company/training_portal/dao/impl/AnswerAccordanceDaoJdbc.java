@@ -35,7 +35,7 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
 
     @Transactional(readOnly = true)
     @Override
-    public AnswerAccordance findAnswerAccordanceByQuestionId(Long questionId) {
+    public AnswerAccordance findAnswerAccordance(Long questionId) {
         AnswerAccordance answerAccordance = template.queryForObject(
                 FIND_ANSWER_ACCORDANCE_BY_QUESTION_ID,
                 new Object[]{questionId}, this::mapAnswerAccordance);

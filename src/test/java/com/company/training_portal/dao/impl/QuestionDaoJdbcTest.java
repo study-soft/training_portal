@@ -54,13 +54,20 @@ public class QuestionDaoJdbcTest {
     }
 
     @Test
-    public void test_find_questions_by_quiId() {
+    public void test_find_questions_by_quizId() {
         List<Question> testQuestions = new ArrayList<>();
         testQuestions.add(questionDao.findQuestion(1L));
         testQuestions.add(questionDao.findQuestion(2L));
         testQuestions.add(questionDao.findQuestion(3L));
         testQuestions.add(questionDao.findQuestion(4L));
         testQuestions.add(questionDao.findQuestion(5L));
+        testQuestions.add(questionDao.findQuestion(6L));
+        testQuestions.add(questionDao.findQuestion(7L));
+        testQuestions.add(questionDao.findQuestion(8L));
+        testQuestions.add(questionDao.findQuestion(9L));
+        testQuestions.add(questionDao.findQuestion(10L));
+        testQuestions.add(questionDao.findQuestion(11L));
+        testQuestions.add(questionDao.findQuestion(12L));
 
         List<Question> questions = questionDao.findQuestions(1L);
 
@@ -71,6 +78,9 @@ public class QuestionDaoJdbcTest {
     public void test_find_questions_by_quizId_and_questionType() {
         List<Question> testQuestions = new ArrayList<>();
         testQuestions.add(questionDao.findQuestion(1L));
+        testQuestions.add(questionDao.findQuestion(6L));
+        testQuestions.add(questionDao.findQuestion(11L));
+        testQuestions.add(questionDao.findQuestion(12L));
 
         List<Question> questions
                 = questionDao.findQuestions(
@@ -82,11 +92,11 @@ public class QuestionDaoJdbcTest {
     @Test
     public void test_find_questionTypes_and_count_by_quizId() {
         Map<QuestionType, Integer> testResults = new HashMap<>();
-        testResults.put(QuestionType.ONE_ANSWER, 1);
-        testResults.put(QuestionType.FEW_ANSWERS, 1);
-        testResults.put(QuestionType.ACCORDANCE, 1);
-        testResults.put(QuestionType.SEQUENCE, 1);
-        testResults.put(QuestionType.NUMBER, 1);
+        testResults.put(QuestionType.ONE_ANSWER, 4);
+        testResults.put(QuestionType.FEW_ANSWERS, 2);
+        testResults.put(QuestionType.ACCORDANCE, 2);
+        testResults.put(QuestionType.SEQUENCE, 2);
+        testResults.put(QuestionType.NUMBER, 2);
 
         Map<QuestionType, Integer> results = questionDao.findQuestionTypesAndCount(1L);
 
@@ -97,6 +107,9 @@ public class QuestionDaoJdbcTest {
     public void test_find_questions_by_quizId_and_score() {
         List<Question> testQuestions = new ArrayList<>();
         testQuestions.add(questionDao.findQuestion(1L));
+        testQuestions.add(questionDao.findQuestion(6L));
+        testQuestions.add(questionDao.findQuestion(11L));
+        testQuestions.add(questionDao.findQuestion(12L));
 
         List<Question> questions = questionDao.findQuestions(1L, 1);
 
@@ -105,8 +118,8 @@ public class QuestionDaoJdbcTest {
 
     @Test
     public void test_find_questions_number_by_quizId() {
-        Integer number = questionDao.findQuestionsNumber(1L);
-        assertThat(number, is(5));
+        List<Question> questions = questionDao.findQuestions(1L);
+        assertThat(questions.size(), is(questionDao.findQuestionsNumber(1L)));
     }
 
     @Test

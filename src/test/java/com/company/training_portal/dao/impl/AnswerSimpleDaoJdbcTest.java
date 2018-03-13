@@ -40,7 +40,7 @@ public class AnswerSimpleDaoJdbcTest {
                 .correct(false)
                 .build();
 
-        AnswerSimple answerSimple = answerSimpleDao.findAnswerSimpleByAnswerSimpleId(1L);
+        AnswerSimple answerSimple = answerSimpleDao.findAnswerSimple(1L);
 
         assertEquals(testAnswerSimple, answerSimple);
     }
@@ -48,11 +48,11 @@ public class AnswerSimpleDaoJdbcTest {
     @Test
     public void test_find_all_answers_simple_by_questionId() {
         List<AnswerSimple> testAnswersSimple = new ArrayList<>();
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimpleByAnswerSimpleId(1L));
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimpleByAnswerSimpleId(2L));
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimpleByAnswerSimpleId(3L));
+        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(1L));
+        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(2L));
+        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(3L));
 
-        List<AnswerSimple> answersSimple = answerSimpleDao.findAllAnswersSimpleByQuestionId(1L);
+        List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(1L);
 
         assertEquals(testAnswersSimple, answersSimple);
     }
@@ -67,7 +67,7 @@ public class AnswerSimpleDaoJdbcTest {
         Long testAnswerSimpleId = answerSimpleDao.addAnswerSimple(testAnswerSimple);
 
         AnswerSimple answerSimple =
-                answerSimpleDao.findAnswerSimpleByAnswerSimpleId(testAnswerSimpleId);
+                answerSimpleDao.findAnswerSimple(testAnswerSimpleId);
 
         assertEquals(testAnswerSimple, answerSimple);
     }
@@ -83,7 +83,7 @@ public class AnswerSimpleDaoJdbcTest {
         answerSimpleDao.editAnswerSimple(testAnswerSimple);
 
         AnswerSimple answerSimple =
-                answerSimpleDao.findAnswerSimpleByAnswerSimpleId(3L);
+                answerSimpleDao.findAnswerSimple(3L);
 
         assertEquals(testAnswerSimple, answerSimple);
     }
@@ -91,6 +91,6 @@ public class AnswerSimpleDaoJdbcTest {
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_answer_simple() {
         answerSimpleDao.deleteAnswerSimple(10L);
-        answerSimpleDao.findAnswerSimpleByAnswerSimpleId(10L);
+        answerSimpleDao.findAnswerSimple(10L);
     }
 }

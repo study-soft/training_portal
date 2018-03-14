@@ -210,5 +210,5 @@ VALUES (20, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);
 INSERT INTO answers_number (question_id, correct) VALUES (10, 3);
-INSERT INTO answers_number (question_id, correct) VALUES (15, 1);
+INSERT INTO answers_number (question_id, correct) VALUES (18, 1);
 INSERT INTO answers_number (question_id, correct) VALUES (21, 1);

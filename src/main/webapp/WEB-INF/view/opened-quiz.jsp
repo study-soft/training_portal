@@ -14,7 +14,7 @@
 <div>Questions: ${openedQuiz.questionsNumber}</div>
 <div>Author: ${openedQuiz.authorName}</div>
 <div>
-    <a href="#">Start</a> <a href="#">Back</a>
+    <a href="#">Start</a> <a href="/student/quizzes">Quizzes</a>
 </div>
 </body>
 </html>

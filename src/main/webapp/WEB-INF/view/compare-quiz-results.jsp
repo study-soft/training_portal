@@ -18,14 +18,26 @@
         <th>Status</th>
     </tr>
     <c:forEach items="${studentsInGroup}" var="student" varStatus="status">
-        <tr>
-            <td>${student.lastName} ${student.firstName}</td>
-            <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
-            <td>${studentsQuizzes[status.index].attempt}</td>
-            <td>${studentsQuizzes[status.index].timeSpent}</td>
-            <td>${statusList[status.index]}</td>
-            <td></td>
-        </tr>
+        <c:choose>
+            <c:when test="${student.userId eq studentId}">
+                <tr>
+                    <td><b>${student.lastName} ${student.firstName}</b></td>
+                    <td><b>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</b></td>
+                    <td><b>${studentsQuizzes[status.index].attempt}</b></td>
+                    <td><b>${studentsQuizzes[status.index].timeSpent}</b></td>
+                    <td><b>${statusList[status.index]}</b></td>
+                </tr>
+            </c:when>
+            <c:otherwise>
+                <tr>
+                    <td>${student.lastName} ${student.firstName}</td>
+                    <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
+                    <td>${studentsQuizzes[status.index].attempt}</td>
+                    <td>${studentsQuizzes[status.index].timeSpent}</td>
+                    <td>${statusList[status.index]}</td>
+                </tr>
+            </c:otherwise>
+        </c:choose>
     </c:forEach>
 </table>
 <div>

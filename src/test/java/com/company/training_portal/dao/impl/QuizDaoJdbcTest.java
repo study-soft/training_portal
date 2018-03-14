@@ -214,7 +214,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_group_quizzes() {
+    public void test_find_passed_and_finished_group_quizzes() {
         List<Quiz> testQuizzes = new ArrayList<>();
         testQuizzes.add(quizDao.findQuiz(3L));
         testQuizzes.add(quizDao.findQuiz(2L));

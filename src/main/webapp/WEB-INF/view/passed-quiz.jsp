@@ -12,7 +12,7 @@
 <div>Attempt: ${passedQuiz.attempt}</div>
 <div>Time spent: ${passedQuiz.timeSpent.toMinutes()} mins</div>
 <div>
-    <a href="/student/quizzes/${passedQuiz.quizId}/questions">Answers</a>
+    <a href="/student/quizzes/${passedQuiz.quizId}/answers">Answers</a>
     <a href="#">Compare results</a>
 </div>
 <div>Passing time: ${passedQuiz.passingTime.toMinutes()}</div>

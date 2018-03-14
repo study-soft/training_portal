@@ -181,7 +181,7 @@ public class StudentController {
         return "hello"; // todo: add error-page
     }
 
-    @RequestMapping(value = "/student/quizzes/{quizId}/questions", method = RequestMethod.GET)
+    @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
     public String showQuestions(@PathVariable("quizId") Long quizId, Model model) {
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
@@ -198,33 +198,35 @@ public class StudentController {
         Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
         Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
         Map<Long, AnswerNumber> quizAnswersNumber = new HashMap<>();
-        List<Question> quizQuestions = questionDao.findQuestions(quizId);
-        for (Question question : quizQuestions) {
+        List<Question> tests = new ArrayList<>();
+        tests.addAll(questionsOneAnswer);
+        tests.addAll(questionsFewAnswers);
+        for (Question question : tests) {
             Long questionId = question.getQuestionId();
-            QuestionType type = question.getQuestionType();
-            if (type.equals(QuestionType.ONE_ANSWER) || type.equals(QuestionType.FEW_ANSWERS)) {
-                List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
-                quizAnswersSimple.put(questionId, answersSimple);
-            }
-            if (type.equals(QuestionType.ACCORDANCE)) {
-                AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
-                quizAnswersAccordance.put(questionId, answerAccordance);
-            }
-            if (type.equals(QuestionType.SEQUENCE)) {
-                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
-                quizAnswersSequence.put(questionId, answerSequence);
-            }
-            if (type.equals(QuestionType.NUMBER)) {
-                AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
-                quizAnswersNumber.put(questionId, answerNumber);
-            }
+            List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
+            quizAnswersSimple.put(questionId, answersSimple);
+        }
+        for (Question question : questionsAccordance) {
+            Long questionId = question.getQuestionId();
+            AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
+            quizAnswersAccordance.put(questionId, answerAccordance);
+        }
+        for (Question question : questionsSequence) {
+            Long questionId = question.getQuestionId();
+            AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
+            quizAnswersSequence.put(questionId, answerSequence);
+        }
+        for (Question question : questionsNumber) {
+            Long questionId = question.getQuestionId();
+            AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
+            quizAnswersNumber.put(questionId, answerNumber);
         }
         model.addAttribute("quizAnswersSimple", quizAnswersSimple);
         model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
         model.addAttribute("quizAnswersSequence", quizAnswersSequence);
         model.addAttribute("quizAnswersNumber", quizAnswersNumber);
 
-        return "questions";
+        return "answers";
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)

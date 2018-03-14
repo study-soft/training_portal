@@ -215,16 +215,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Long findUserQuizJunctionId(Long studentId, Long quizId) {
-        Long id = template.queryForObject(
-                FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID,
-                new Object[]{studentId, quizId}, Long.class);
-        logger.info("userQuizJunctionId by studentId, quizId found: " + id);
-        return id;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public boolean userExistsByLogin(String login) {
         User user = template.query(FIND_USER_BY_LOGIN, new Object[]{login},
                 new ResultSetExtractor<User>() {
@@ -349,49 +339,33 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional
     @Override
-    public Long addStudentInfoAboutQuiz(
+    public void addStudentInfoAboutQuiz(
             Long studentId, Long quizId, Integer result, LocalDateTime submitDate,
             LocalDateTime startDate, LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(new PreparedStatementCreator() {
-                    @Override
-                    public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                        PreparedStatement stmt = con.prepareStatement(
-                                ADD_STUDENT_INFO_ABOUT_QUIZ,
-                                Statement.RETURN_GENERATED_KEYS);
-                        stmt.setLong(1, studentId);
-                        stmt.setLong(2, quizId);
-                        stmt.setInt(3, result);
-                        stmt.setTimestamp(4, Timestamp.valueOf(submitDate));
-                        stmt.setTimestamp(5, Timestamp.valueOf(startDate));
-                        stmt.setTimestamp(6, Timestamp.valueOf(finishDate));
-                        stmt.setString(7, studentQuizStatus.getStudentQuizStatus());
-                        return stmt;
-                    }
-                }, keyHolder);
-        long userQuizJunctionId = keyHolder.getKey().longValue();
+        template.update(ADD_STUDENT_INFO_ABOUT_QUIZ, studentId, quizId, result,
+                Timestamp.valueOf(submitDate), Timestamp.valueOf(startDate),
+                Timestamp.valueOf(finishDate), studentQuizStatus.getStudentQuizStatus());
         logger.info("Added student info about quiz:");
-        logger.info("userQuizJunctionId: " + userQuizJunctionId +
-                ", studentId: " + studentId +
+        logger.info("studentId: " + studentId +
                 ", quizId: " + quizId +
                 ", result: " + result +
                 ", submitDate: " + submitDate.toString() +
                 ", startDate: " + startDate.toString() +
                 ", finishDate: " + finishDate.toString() +
                 ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
-        return userQuizJunctionId;
     }
 
     @Transactional
     @Override
     public void updateStudentInfoAboutQuiz(
-            Long userQuizJunctionId, Integer result, LocalDateTime startDate,
+            Long studentId, Long quizId, Integer result, LocalDateTime startDate,
             LocalDateTime finishDate, Integer attempt, StudentQuizStatus studentQuizStatus) {
         template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
                 result, Timestamp.valueOf(startDate), Timestamp.valueOf(finishDate),
-                attempt, studentQuizStatus.getStudentQuizStatus(), userQuizJunctionId);
+                attempt, studentQuizStatus.getStudentQuizStatus(), studentId, quizId);
         logger.info("Updated student info about quiz:");
-        logger.info("userQuizJunctionId: " + userQuizJunctionId +
+        logger.info("studentId: " + studentId +
+        ", quizId: " + quizId +
         ", result: " + result +
         ", startDate: " + startDate +
         ", finishDate: " + finishDate.toString() +
@@ -517,7 +491,7 @@ public class UserDaoJdbc implements UserDao {
     private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
     "UPDATE USER_QUIZ_JUNCTIONS " +
     "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, ATTEMPT = ?, STUDENT_QUIZ_STATUS = ? " +
-    "WHERE USER_QUIZ_JUNCTION_ID = ?;";
+    "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String EDIT_USER = "";
 

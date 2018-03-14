@@ -101,7 +101,6 @@ CREATE TABLE users (
 -- Table: user_quiz_junctions
 DROP TABLE IF EXISTS user_quiz_junctions;
 CREATE TABLE user_quiz_junctions (
-  user_quiz_junction_id bigint NOT NULL AUTO_INCREMENT,
   user_id bigint NOT NULL,
   quiz_id bigint NOT NULL,
   result int NULL,
@@ -110,7 +109,7 @@ CREATE TABLE user_quiz_junctions (
   finish_date datetime NULL,
   attempt int NOT NULL,
   student_quiz_status varchar(255) NOT NULL,
-  CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_quiz_junction_id)
+  CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_id, quiz_id)
 );
 
 -- foreign keys

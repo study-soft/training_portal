@@ -45,8 +45,6 @@ public interface UserDao {
     // key: studentId, value: result
     Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId, Long quizId);
 
-    Long findUserQuizJunctionId(Long studentId, Long quizId);
-
     boolean userExistsByLogin(String login);
 
     boolean userExistsByEmail(String email);
@@ -67,11 +65,11 @@ public interface UserDao {
 
     void addStudentsToGroup(Long groupId, List<Long> studentIds);
 
-    Long addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
+    void addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                  LocalDateTime submitDate, LocalDateTime startDate,
                                  LocalDateTime finishDate, StudentQuizStatus studentQuizStatus);
 
-    void updateStudentInfoAboutQuiz(Long userQuizJunctionId, Integer result,
+    void updateStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                     LocalDateTime finishDate, LocalDateTime startDate,
                                     Integer attempt, StudentQuizStatus studentQuizStatus);
 

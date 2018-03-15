@@ -201,9 +201,9 @@ VALUES (8, '(a == 1)', 'expression', 'a = b + 1;', 'statement', '{a = 0; b = a +
 
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
-VALUES (4, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
+VALUES (4, 'Pascal', 'C++', 'Java', 'Angular JS');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
-VALUES (9, '1-st item', '2-nd item', '3-rd item', '4-th item');
+VALUES (9, 'Object', 'Collection', 'List', 'ArrayList');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (20, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 

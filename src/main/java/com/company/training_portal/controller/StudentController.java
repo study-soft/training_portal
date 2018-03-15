@@ -10,10 +10,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+
+import static com.company.training_portal.controller.SessionAttributes.*;
+import static com.company.training_portal.model.enums.QuestionType.*;
 
 @Controller
 @SessionAttributes("studentId")
@@ -194,39 +198,19 @@ public class StudentController {
         Integer quizScore = questionDao.findQuizScore(quizId);
         model.addAttribute("quizScore", quizScore);
 
-//        List<Question> questions = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
-//        if (questions.isEmpty()) {
-//            questions = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
-//            if (questions.isEmpty()) {
-//                questions = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
-//                if (questions.isEmpty()) {
-//                    questions = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
-//                    if (questions.isEmpty()) {
-//                        questions = questionDao.findQuestions(quizId, QuestionType.NUMBER);
-//                    }
-//                }
-//            }
-//        }
-//        List<Long> questionIds = questions.stream()
-//                .map(Question::getQuestionId)
-//                .collect(Collectors.toList());
-//        int index = new Random().nextInt(questionIds.size());
-//        Long firstQuestionId = questionIds.get(index);
-//        model.addAttribute("firstQuestionId", firstQuestionId);
-
         return "start-quiz";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.GET)
-    public String showQuestion(@PathVariable("quizId") Long quizId,
-                               @PathVariable("currentQuestion") Integer currentQuestion,
-                               HttpSession session, Model model) {
+    public String showFirstQuestion(@PathVariable("quizId") Long quizId,
+                                    @PathVariable("currentQuestion") Integer currentQuestion,
+                                    HttpSession session, Model model) {
         model.addAttribute("currentQuestion", currentQuestion);
 
-        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
-        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
-        List<Question> questionsAccordance = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
-        List<Question> questionsSequence = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, SEQUENCE);
         List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
 
         Collections.shuffle(questionsOneAnswer);
@@ -241,46 +225,110 @@ public class StudentController {
         questions.addAll(questionsSequence);
         questions.addAll(questionsNumber);
 
-        session.setAttribute("questions", questions);
+        session.setAttribute(QUESTIONS, questions);
+        session.setAttribute(RESULT, 0D);
+        session.setAttribute(QUESTIONS_NUMBER, questions.size());
 
         Question firstQuestion = questions.get(currentQuestion);
         QuestionType firstQuestionType = firstQuestion.getQuestionType();
         Long firstQuestionId = firstQuestion.getQuestionId();
-        switch (firstQuestionType) {
+
+        setAnswers(firstQuestionType, firstQuestionId, session, model);
+
+        return "question";
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.POST)
+    public String showCurrentQuestion(@RequestParam Map<String, String> studentAnswers,
+                                      @PathVariable("quizId") Long quizId,
+                                      @PathVariable("currentQuestion") Integer currentQuestion,
+                                      @SessionAttribute(QUESTIONS) List<Question> questions,
+                                      @SessionAttribute(RESULT) Double result,
+                                      HttpSession session, Model model) {
+        Question prevQuestion = questions.get(currentQuestion - 1);
+        QuestionType prevQuestionType = prevQuestion.getQuestionType();
+        Integer prevQuestionScore = prevQuestion.getScore();
+        Long prevQuestionId = prevQuestion.getQuestionId();
+
+        logger.info("Student answers map: " + studentAnswers);
+
+        switch (prevQuestionType) {
             case ONE_ANSWER:
-                List<AnswerSimple> oneAnswer = answerSimpleDao.findAnswersSimple(firstQuestionId);
-                model.addAttribute("answers", oneAnswer);
+                boolean oneAnswer = Boolean.valueOf(studentAnswers.get("oneAnswer"));
+                if (oneAnswer) {
+                    result += prevQuestionScore;
+                    session.setAttribute(RESULT, result);
+                }
                 break;
             case FEW_ANSWERS:
-                List<AnswerSimple> fewAnswers = answerSimpleDao.findAnswersSimple(firstQuestionId);
-                model.addAttribute("answers", fewAnswers);
+                List<AnswerSimple> fewAnswers = answerSimpleDao.findAnswersSimple(prevQuestionId);
+                long countOfCorrect = fewAnswers.stream()
+                        .filter(AnswerSimple::isCorrect)
+                        .count();
+                Collection<String> answers = studentAnswers.values();
+                if (answers.size() == countOfCorrect) {
+                    for (String answer : answers) {
+                        if (answer.equals("true")) {
+                            result += prevQuestionScore / countOfCorrect;
+                        }
+                    }
+                    session.setAttribute(RESULT, result);
+                }
                 break;
             case ACCORDANCE:
-                AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(firstQuestionId);
-                Collections.shuffle(answerAccordance.getLeftSide());
-                Collections.shuffle(answerAccordance.getRightSide());
-                model.addAttribute("answers", answerAccordance);
+                List<String> rightSide = (List<String>) session.getAttribute(ACCORDANCE_LIST);
+                for (int i = 0; i < 4; i++) {
+                    if (studentAnswers.get("accordance" + i).equals(rightSide.get(i))) {
+                        result += ((double) prevQuestionScore) / 4;
+                    }
+                }
+                session.setAttribute(RESULT, result);
+                session.removeAttribute(ACCORDANCE_LIST);
                 break;
             case SEQUENCE:
-                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(firstQuestionId);
-                Collections.shuffle(answerSequence.getCorrectList());
-                model.addAttribute("answers", answerSequence);
+                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(prevQuestionId);
+                List<String> correctList = answerSequence.getCorrectList();
+                logger.info("get session attribute SEQUENCE_LIST: " + correctList);
+                for (int i = 0; i < 4; i++) {
+                    if (studentAnswers.get("sequence" + i).equals(correctList.get(i))) {
+                        result += ((double) prevQuestionScore) / 4;
+                    }
+                }
+                session.setAttribute(RESULT, result);
                 break;
             case NUMBER:
-                AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(firstQuestionId);
-                model.addAttribute("answers", answerNumber);
+                AnswerNumber answerNumber =
+                        answerNumberDao.findAnswerNumber(prevQuestionId);
+                String correct = answerNumber.getCorrect().toString();
+                if (studentAnswers.get("number").equals(correct)) {
+                    result += prevQuestionScore;
+                    session.setAttribute(RESULT, result);
+                }
                 break;
         }
+
+        if (currentQuestion == questions.size()) {
+            Integer score = questionDao.findQuizScore(quizId);
+            model.addAttribute("score", score);
+            return "quiz-congratulations";
+        }
+
+        Question question = questions.get(currentQuestion);
+        QuestionType questionType = question.getQuestionType();
+        Long questionId = question.getQuestionId();
+
+        setAnswers(questionType, questionId, session, model);
 
         return "question";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
     public String showAnswers(@PathVariable("quizId") Long quizId, Model model) {
-        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
-        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
-        List<Question> questionsAccordance = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
-        List<Question> questionsSequence = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, SEQUENCE);
         List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
         model.addAttribute("questionsOneAnswer", questionsOneAnswer);
         model.addAttribute("questionsFewAnswers", questionsFewAnswers);
@@ -387,5 +435,37 @@ public class StudentController {
         model.addAttribute("statusList", statusList);
 
         return "compare-quiz-results";
+    }
+
+//    INTERNALS===================================================================
+
+    private void setAnswers(QuestionType questionType, Long questionId, HttpSession session, Model model) {
+        switch (questionType) {
+            case ONE_ANSWER:
+                List<AnswerSimple> oneAnswer = answerSimpleDao.findAnswersSimple(questionId);
+                model.addAttribute("answers", oneAnswer);
+                break;
+            case FEW_ANSWERS:
+                List<AnswerSimple> fewAnswers = answerSimpleDao.findAnswersSimple(questionId);
+                model.addAttribute("answers", fewAnswers);
+                break;
+            case ACCORDANCE:
+                AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
+                int seed = new Random().nextInt();
+                Collections.shuffle(answerAccordance.getLeftSide(), new Random(seed));
+                Collections.shuffle(answerAccordance.getRightSide(), new Random(seed));
+                session.setAttribute(ACCORDANCE_LIST, answerAccordance.getRightSide());
+                model.addAttribute("answers", answerAccordance);
+                break;
+            case SEQUENCE:
+                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
+                Collections.shuffle(answerSequence.getCorrectList());
+                model.addAttribute("answers", answerSequence);
+                break;
+            case NUMBER:
+                AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
+                model.addAttribute("answers", answerNumber);
+                break;
+        }
     }
 }

@@ -44,8 +44,8 @@ public class AnswerSequenceDaoJdbcTest {
     public void find_answerSequence_by_questionId() {
         AnswerSequence testAnswerSequence = new AnswerSequence.AnswerSequenceBuilder()
                 .questionId(4L)
-                .correctList(Arrays.asList("First answer", "Second answer",
-                        "Third answer", "Fourth answer"))
+                .correctList(Arrays.asList("Pascal", "C++",
+                        "Java", "Angular JS"))
                 .build();
 
         AnswerSequence answerSequence =

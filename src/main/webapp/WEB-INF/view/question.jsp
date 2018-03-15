@@ -18,9 +18,19 @@
                     <label for="answer${answer.answerSimpleId}"> ${answer.body}</label>
                 </div>
             </c:forEach>
-            <div>
-                <input type="submit" value="Next">
-            </div>
+            <c:choose>
+                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                    <div>
+                        <input type="submit" value="Finish">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <input type="submit" value="Next">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div>Result: ${sessionScope.result}</div>
         </c:when>
         <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
             <c:forEach items="${answers}" var="answer" varStatus="status">
@@ -30,45 +40,87 @@
                     <label for="answer${answer.answerSimpleId}"> ${answer.body}</label>
                 </div>
             </c:forEach>
-            <div>
-                <input type="submit" value="Next">
-            </div>
+            <c:choose>
+                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                    <div>
+                        <input type="submit" value="Finish">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <input type="submit" value="Next">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div>Result: ${sessionScope.result}</div>
         </c:when>
         <c:when test="${question.questionType eq 'ACCORDANCE'}">
             <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
                 <div>
                         ${left} <select name="accordance${status.index}">
+                            <option selected>select...</option>
                     <c:forEach items="${answers.rightSide}" var="right">
                         <option value="${right}">${right}</option>
                     </c:forEach>
                 </select>
                 </div>
             </c:forEach>
-            <div>
-                <input type="submit" value="Next">
-            </div>
+            <c:choose>
+                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                    <div>
+                        <input type="submit" value="Finish">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <input type="submit" value="Next">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div>Result: ${sessionScope.result}</div>
         </c:when>
         <c:when test="${question.questionType eq 'SEQUENCE'}">
             <div style="display: inline">
                 <c:forEach begin="0" end="3" varStatus="status">
                     ${status.index + 1}. <select name="sequence${status.index}">
+                    <option selected>select...</option>
                     <c:forEach items="${answers.correctList}" var="item">
                         <option value="${item}">${item}</option>
                     </c:forEach>
                 </select>
                 </c:forEach>
             </div>
-            <div>
-                <input type="submit" value="Next">
-            </div>
+            <c:choose>
+                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                    <div>
+                        <input type="submit" value="Finish">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <input type="submit" value="Next">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div>Result: ${sessionScope.result}</div>
         </c:when>
         <c:when test="${question.questionType eq 'NUMBER'}">
             <div>
                 <input type="text" name="number" placeholder="Enter number">
             </div>
-            <div>
-                <input type="submit" value="Next">
-            </div>
+            <c:choose>
+                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                    <div>
+                        <input type="submit" value="Finish">
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <input type="submit" value="Next">
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div>Result: ${sessionScope.result}</div>
         </c:when>
         <c:otherwise>
             <strong class="error">SOME ERROR</strong>

@@ -6,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <form action="/login" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <c:if test="${param.error ne null}">

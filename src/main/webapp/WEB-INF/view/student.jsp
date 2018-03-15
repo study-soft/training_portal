@@ -6,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <h2>Hello, student! Welcome to the training portal!</h2>
 <div>
     <a href="/student/quizzes">Quizzes</a>

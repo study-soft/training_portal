@@ -6,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <h2>Questions</h2>
 <c:if test="${not empty questionsOneAnswer}">
     <h3>Questions with one correct answer</h3>

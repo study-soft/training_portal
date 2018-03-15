@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -5,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <h2>Opened quiz</h2>
 <h3>${openedQuiz.quizName}</h3>
 <div>Submitted: ${openedQuiz.submitDate}</div>

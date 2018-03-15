@@ -6,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <c:set var="question" value="${sessionScope.questions[currentQuestion]}" scope="page"/>
 <h3 style="display: inline">${question.body}</h3>
 <form action="/student/quizzes/${question.quizId}/${currentQuestion + 1}" method="post">

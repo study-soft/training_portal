@@ -6,6 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
+<c:import url="navbar.jsp"/>
 <h2>Compare results</h2>
 <h3>Quizzes in group</h3>
 <table>

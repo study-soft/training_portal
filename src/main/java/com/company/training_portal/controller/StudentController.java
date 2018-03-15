@@ -188,17 +188,19 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
-    public String showQuizStart(@PathVariable("quizId") Long quizId, Model model) {
-        Quiz quiz = quizDao.findQuiz(quizId);
-        model.addAttribute("quiz", quiz);
-
-        Integer questionsNumber = questionDao.findQuestionsNumber(quizId);
-        model.addAttribute("questionsNumber", questionsNumber);
-
-        Integer quizScore = questionDao.findQuizScore(quizId);
-        model.addAttribute("quizScore", quizScore);
-
+    public String showQuizStart(@ModelAttribute("studentId") Long studentId,
+                                @PathVariable("quizId") Long quizId, Model model) {
+        OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
+        model.addAttribute("openedQuiz", openedQuiz);
         return "start-quiz";
+    }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
+    public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
+                                 @PathVariable("quizId") Long quizId, Model model) {
+        PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+        model.addAttribute("passedQuiz", passedQuiz);
+        return "repass-quiz";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.GET)

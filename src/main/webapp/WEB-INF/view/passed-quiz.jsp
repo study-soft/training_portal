@@ -28,7 +28,7 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="submit" value="Finish">
     </form>
-    <a href="/student/quizzes/${passedQuiz.quizId}/start"">Repass</a>
+    <a href="/student/quizzes/${passedQuiz.quizId}/repass">Repass</a>
     <a href="/student/quizzes">Quizzes</a>
 </div>
 </body>

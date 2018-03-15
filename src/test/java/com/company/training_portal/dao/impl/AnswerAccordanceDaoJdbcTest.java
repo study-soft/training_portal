@@ -61,7 +61,6 @@ public class AnswerAccordanceDaoJdbcTest {
     public void test_add_answerAccordance() {
         Question testQuestion = new Question.QuestionBuilder()
                 .quizId(1L)
-                .name("Question #1.6")
                 .body("Question 1.6 body?")
                 .explanation("Question 1.6 explanation")
                 .questionType(QuestionType.ACCORDANCE)

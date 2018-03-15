@@ -451,7 +451,7 @@ public class QuizDaoJdbc implements QuizDao {
                         rs.getTime("passing_time").toLocalTime()))
                 .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
                 .finishDate(rs.getTimestamp("finish_date").toLocalDateTime())
-                .timeSpent(Duration.ofMinutes(rs.getLong("time_spent")))
+                .timeSpent(Duration.ofSeconds(rs.getLong("time_spent")))
                 .build();
     }
 
@@ -559,7 +559,7 @@ public class QuizDaoJdbc implements QuizDao {
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
     "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
-    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -570,7 +570,7 @@ public class QuizDaoJdbc implements QuizDao {
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
     "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
-    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -593,7 +593,7 @@ public class QuizDaoJdbc implements QuizDao {
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
     "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
-    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -606,7 +606,7 @@ public class QuizDaoJdbc implements QuizDao {
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
     "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
-    "J.FINISH_DATE AS finish_date, DATEDIFF('MINUTE', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +

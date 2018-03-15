@@ -6,12 +6,14 @@
 </head>
 <body>
 <h2>${passedQuiz.quizName}</h2>
-<div>Passing time: ${passedQuiz.passingTime}</div>
+<%--<div>Passing time: ${passedQuiz.passingTime}</div>--%>
+<div>Passing time: ${passingTime}</div>
 <div>Score: ${passedQuiz.score}</div>
 <div>Number of questions: ${passedQuiz.questionsNumber}</div>
 <h4>Your current result</h4>
 <div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>
-<div>Time spent: ${passedQuiz.timeSpent}</div>
+<%--<div>Time spent: ${passedQuiz.timeSpent}</div>--%>
+<div>Time spent: ${timeSpent}</div>
 <div>Current attempt: ${passedQuiz.attempt}</div>
 <br>
 <div>If you press "Repass" you will begin repassing the quiz</div>

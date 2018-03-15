@@ -10,12 +10,14 @@
 <div>Passed: ${passedQuiz.finishDate}</div>
 <div>Result: ${passedQuiz.result}/${passedQuiz.score}</div>
 <div>Attempt: ${passedQuiz.attempt}</div>
-<div>Time spent: ${passedQuiz.timeSpent.toMinutes()} mins</div>
+<%--<div>Time spent: ${passedQuiz.timeSpent.toMinutes()} mins</div>--%>
+<div>Time spent: ${timeSpent}</div>
 <div>
     <a href="/student/quizzes/${passedQuiz.quizId}/answers">Answers</a>
     <a href="#">Compare results</a>
 </div>
-<div>Passing time: ${passedQuiz.passingTime.toMinutes()}</div>
+<%--<div>Passing time: ${passedQuiz.passingTime.toMinutes()}</div>--%>
+<div>Passing time: ${passingTime}</div>
 <div>Score: ${passedQuiz.score}</div>
 <div>Questions: ${passedQuiz.questionsNumber}</div>
 <div>Submit date: ${passedQuiz.submitDate}</div>

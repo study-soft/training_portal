@@ -7,7 +7,7 @@
 </head>
 <body>
 <c:set var="question" value="${sessionScope.questions[currentQuestion]}" scope="page"/>
-<h3 style="display: inline">${question.name}. </h3><h4 style="display: inline">${question.body}</h4>
+<h3 style="display: inline">${question.body}</h3>
 <form action="/student/quizzes/${question.quizId}/${currentQuestion + 1}" method="post">
     <c:choose>
         <c:when test="${question.questionType eq 'ONE_ANSWER'}">

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.Duration;
 import java.util.*;
 import java.util.List;
 
@@ -176,7 +177,11 @@ public class StudentController {
         }
         if (status.equals(StudentQuizStatus.PASSED)) {
             PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+            String passingTime = formatDuration(passedQuiz.getPassingTime());
+            String timeSpent = formatDuration(passedQuiz.getTimeSpent());
             model.addAttribute("passedQuiz", passedQuiz);
+            model.addAttribute("passingTime", passingTime);
+            model.addAttribute("timeSpent", timeSpent);
             return "passed-quiz";
         }
         if (status.equals(StudentQuizStatus.FINISHED)) {
@@ -199,7 +204,11 @@ public class StudentController {
     public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
                                  @PathVariable("quizId") Long quizId, Model model) {
         PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+        String passingTime = formatDuration(passedQuiz.getPassingTime());
+        String timeSpent = formatDuration(passedQuiz.getTimeSpent());
         model.addAttribute("passedQuiz", passedQuiz);
+        model.addAttribute("passingTime", passingTime);
+        model.addAttribute("timeSpent", timeSpent);
         return "repass-quiz";
     }
 
@@ -469,5 +478,21 @@ public class StudentController {
                 model.addAttribute("answers", answerNumber);
                 break;
         }
+    }
+
+    private String formatDuration(Duration duration) {
+        StringBuilder result = new StringBuilder();
+        long totalSeconds = duration.toSeconds();
+        int seconds = (int) totalSeconds % 60;
+        int totalMinutes = (int) totalSeconds / 60;
+        int minutes = totalMinutes % 60;
+        int hours = totalMinutes / 60;
+        result.append(hours < 10 ? "0" : "")
+                .append(hours)
+                .append(minutes < 10 ? ":0" : ":")
+                .append(minutes)
+                .append(seconds < 10 ? ":0" : ":")
+                .append(seconds);
+        return result.toString();
     }
 }

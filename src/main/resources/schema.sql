@@ -59,7 +59,6 @@ DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
   question_id bigint NOT NULL AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
-  name varchar(255) NOT NULL,
   body varchar(2048) NOT NULL,
   explanation varchar(2048) NULL,
   question_type varchar(255) NOT NULL,

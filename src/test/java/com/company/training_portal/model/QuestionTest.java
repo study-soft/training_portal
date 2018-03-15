@@ -15,7 +15,6 @@ public class QuestionTest {
         question = new Question.QuestionBuilder().build();
         question.setQuestionId(1L);
         question.setQuizId(2L);
-        question.setName("name");
         question.setBody("body");
         question.setExplanation("explanation");
         question.setQuestionType(QuestionType.ACCORDANCE);
@@ -27,7 +26,6 @@ public class QuestionTest {
         Question questionBuilt = new Question.QuestionBuilder()
                 .questionId(1L)
                 .quizId(2L)
-                .name("name")
                 .body("body")
                 .explanation("explanation")
                 .questionType(QuestionType.ACCORDANCE)

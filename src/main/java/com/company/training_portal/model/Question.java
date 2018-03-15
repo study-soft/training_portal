@@ -6,7 +6,6 @@ public class Question {
 
     private Long questionId;
     private Long quizId;
-    private String name;
     private String body;
     private String explanation;
     private QuestionType questionType;
@@ -18,7 +17,6 @@ public class Question {
     private Question(QuestionBuilder builder) {
         this.questionId = builder.questionId;
         this.quizId = builder.quizId;
-        this.name = builder.name;
         this.body = builder.body;
         this.explanation = builder.explanation;
         this.questionType = builder.questionType;
@@ -39,14 +37,6 @@ public class Question {
 
     public void setQuizId(Long quizId) {
         this.quizId = quizId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getBody() {
@@ -90,7 +80,6 @@ public class Question {
 
         if (!questionId.equals(question.questionId)) return false;
         if (!quizId.equals(question.quizId)) return false;
-        if (!name.equals(question.name)) return false;
         if (!body.equals(question.body)) return false;
         if (explanation != null ? !explanation.equals(question.explanation) : question.explanation != null)
             return false;
@@ -102,7 +91,6 @@ public class Question {
     public int hashCode() {
         int result = questionId.hashCode();
         result = 31 * result + quizId.hashCode();
-        result = 31 * result + name.hashCode();
         result = 31 * result + body.hashCode();
         result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
         result = 31 * result + questionType.hashCode();
@@ -115,7 +103,6 @@ public class Question {
         return "Question{" +
                 "questionId=" + questionId +
                 ", quizId=" + quizId +
-                ", name='" + name + '\'' +
                 ", body='" + body + '\'' +
                 ", explanation='" + explanation + '\'' +
                 ", questionType=" + questionType +
@@ -127,7 +114,6 @@ public class Question {
 
         private Long questionId;
         private Long quizId;
-        private String name;
         private String body;
         private String explanation;
         private QuestionType questionType;
@@ -143,11 +129,6 @@ public class Question {
 
         public QuestionBuilder quizId(Long quizId) {
             this.quizId = quizId;
-            return this;
-        }
-
-        public QuestionBuilder name(String name) {
-            this.name = name;
             return this;
         }
 

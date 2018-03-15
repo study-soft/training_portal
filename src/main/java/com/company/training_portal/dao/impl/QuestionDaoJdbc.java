@@ -135,11 +135,10 @@ public class QuestionDaoJdbc implements QuestionDao {
                 PreparedStatement stmt = con.prepareStatement(ADD_QUESTION,
                         new String[]{"question_id"});
                 stmt.setLong(1, question.getQuizId());
-                stmt.setString(2, question.getName());
-                stmt.setString(3, question.getBody());
-                stmt.setString(4, question.getExplanation());
-                stmt.setString(5, question.getQuestionType().getQuestionType());
-                stmt.setInt(6, question.getScore());
+                stmt.setString(2, question.getBody());
+                stmt.setString(3, question.getExplanation());
+                stmt.setString(4, question.getQuestionType().getQuestionType());
+                stmt.setInt(5, question.getScore());
                 return stmt;
             }
         }, keyHolder);
@@ -187,7 +186,6 @@ public class QuestionDaoJdbc implements QuestionDao {
         return new Question.QuestionBuilder()
                 .questionId(rs.getLong("question_id"))
                 .quizId(rs.getLong("quiz_id"))
-                .name(rs.getString("name"))
                 .body(rs.getString("body"))
                 .explanation(rs.getString("explanation"))
                 .questionType(QuestionType.valueOf(rs.getString("question_type")))
@@ -219,8 +217,8 @@ public class QuestionDaoJdbc implements QuestionDao {
     "SELECT SUM(SCORE) FROM QUESTIONS WHERE QUIZ_ID = ?;";
 
     private static final String ADD_QUESTION =
-    "INSERT INTO QUESTIONS (QUIZ_ID, NAME, BODY, EXPLANATION, QUESTION_TYPE, SCORE) " +
-    "VALUES (?, ?, ?, ?, ?, ?);";
+    "INSERT INTO QUESTIONS (QUIZ_ID, BODY, EXPLANATION, QUESTION_TYPE, SCORE) " +
+    "VALUES (?, ?, ?, ?, ?);";
 
     private static final String DELETE_QUESTION =
     "DELETE FROM QUESTIONS WHERE QUESTION_ID = ?;";

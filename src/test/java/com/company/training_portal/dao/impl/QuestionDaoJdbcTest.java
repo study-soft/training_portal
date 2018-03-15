@@ -41,7 +41,6 @@ public class QuestionDaoJdbcTest {
         Question testQuestion = new Question.QuestionBuilder()
                 .questionId(1L)
                 .quizId(1L)
-                .name("Question #1.1")
                 .body("Question 1.1 body?")
                 .explanation("Question 1.1 explanation")
                 .questionType(QuestionType.ONE_ANSWER)
@@ -136,7 +135,6 @@ public class QuestionDaoJdbcTest {
     public void test_add_question() {
         Question testQuestion = new Question.QuestionBuilder()
                 .quizId(1L)
-                .name("Question #1.6")
                 .body("Question 1.6 body?")
                 .explanation("Question 1.6 explanation")
                 .questionType(QuestionType.ONE_ANSWER)

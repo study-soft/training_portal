@@ -46,12 +46,8 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
     @Transactional
     @Override
     public void addAnswerAccordance(AnswerAccordance answerAccordance) {
-        Map<String, String> correctMap = answerAccordance.getCorrectMap();
-        List<String> leftSide = new ArrayList<>(correctMap.keySet());
-        List<String> rightSide = new ArrayList<>();
-        for (String key : leftSide) {
-            rightSide.add(correctMap.get(key));
-        }
+        List<String> leftSide = answerAccordance.getLeftSide();
+        List<String> rightSide = answerAccordance.getRightSide();
         template.update(ADD_ANSWER_ACCORDANCE, answerAccordance.getQuestionId(),
                 leftSide.get(0), rightSide.get(0),
                 leftSide.get(1), rightSide.get(1),
@@ -63,12 +59,8 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
     @Transactional
     @Override
     public void editAnswerAccordance(AnswerAccordance answerAccordance) {
-        Map<String, String> correctMap = answerAccordance.getCorrectMap();
-        List<String> leftSide = new ArrayList<>(correctMap.keySet());
-        List<String> rightSide = new ArrayList<>();
-        for (String key : leftSide) {
-            rightSide.add(correctMap.get(key));
-        }
+        List<String> leftSide = answerAccordance.getLeftSide();
+        List<String> rightSide = answerAccordance.getRightSide();
         template.update(EDIT_ANSWER_ACCORDANCE,
                 leftSide.get(0), rightSide.get(0),
                 leftSide.get(1), rightSide.get(1),
@@ -86,15 +78,20 @@ public class AnswerAccordanceDaoJdbc implements AnswerAccordanceDao {
     }
 
     private AnswerAccordance mapAnswerAccordance(ResultSet rs, int rowNum) throws SQLException {
-        Map<String, String> correctMap = new HashMap<>();
-        correctMap.put(rs.getString("left_side_1"), rs.getString("right_side_1"));
-        correctMap.put(rs.getString("left_side_2"), rs.getString("right_side_2"));
-        correctMap.put(rs.getString("left_side_3"), rs.getString("right_side_3"));
-        correctMap.put(rs.getString("left_side_4"), rs.getString("right_side_4"));
-
+        List<String> leftSide = new ArrayList<>();
+        List<String> rightSide = new ArrayList<>();
+        leftSide.add(rs.getString("left_side_1"));
+        leftSide.add(rs.getString("left_side_2"));
+        leftSide.add(rs.getString("left_side_3"));
+        leftSide.add(rs.getString("left_side_4"));
+        rightSide.add(rs.getString("right_side_1"));
+        rightSide.add(rs.getString("right_side_2"));
+        rightSide.add(rs.getString("right_side_3"));
+        rightSide.add(rs.getString("right_side_4"));
         return new AnswerAccordance.AnswerAccordanceBuilder()
                 .questionId(rs.getLong("question_id"))
-                .correctMap(correctMap)
+                .leftSide(leftSide)
+                .rightSide(rightSide)
                 .build();
     }
 

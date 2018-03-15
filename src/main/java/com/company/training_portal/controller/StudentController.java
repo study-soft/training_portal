@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @SessionAttributes("studentId")
@@ -181,8 +183,100 @@ public class StudentController {
         return "hello"; // todo: add error-page
     }
 
+    @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
+    public String showQuizStart(@PathVariable("quizId") Long quizId, Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        Integer questionsNumber = questionDao.findQuestionsNumber(quizId);
+        model.addAttribute("questionsNumber", questionsNumber);
+
+        Integer quizScore = questionDao.findQuizScore(quizId);
+        model.addAttribute("quizScore", quizScore);
+
+//        List<Question> questions = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
+//        if (questions.isEmpty()) {
+//            questions = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
+//            if (questions.isEmpty()) {
+//                questions = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
+//                if (questions.isEmpty()) {
+//                    questions = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
+//                    if (questions.isEmpty()) {
+//                        questions = questionDao.findQuestions(quizId, QuestionType.NUMBER);
+//                    }
+//                }
+//            }
+//        }
+//        List<Long> questionIds = questions.stream()
+//                .map(Question::getQuestionId)
+//                .collect(Collectors.toList());
+//        int index = new Random().nextInt(questionIds.size());
+//        Long firstQuestionId = questionIds.get(index);
+//        model.addAttribute("firstQuestionId", firstQuestionId);
+
+        return "start-quiz";
+    }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.GET)
+    public String showQuestion(@PathVariable("quizId") Long quizId,
+                               @PathVariable("currentQuestion") Integer currentQuestion,
+                               HttpSession session, Model model) {
+        model.addAttribute("currentQuestion", currentQuestion);
+
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, QuestionType.SEQUENCE);
+        List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
+
+        Collections.shuffle(questionsOneAnswer);
+        Collections.shuffle(questionsFewAnswers);
+        Collections.shuffle(questionsAccordance);
+        Collections.shuffle(questionsSequence);
+        Collections.shuffle(questionsNumber);
+
+        List<Question> questions = new ArrayList<>(questionsOneAnswer);
+        questions.addAll(questionsFewAnswers);
+        questions.addAll(questionsAccordance);
+        questions.addAll(questionsSequence);
+        questions.addAll(questionsNumber);
+
+        session.setAttribute("questions", questions);
+
+        Question firstQuestion = questions.get(currentQuestion);
+        QuestionType firstQuestionType = firstQuestion.getQuestionType();
+        Long firstQuestionId = firstQuestion.getQuestionId();
+        switch (firstQuestionType) {
+            case ONE_ANSWER:
+                List<AnswerSimple> oneAnswer = answerSimpleDao.findAnswersSimple(firstQuestionId);
+                model.addAttribute("answers", oneAnswer);
+                break;
+            case FEW_ANSWERS:
+                List<AnswerSimple> fewAnswers = answerSimpleDao.findAnswersSimple(firstQuestionId);
+                model.addAttribute("answers", fewAnswers);
+                break;
+            case ACCORDANCE:
+                AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(firstQuestionId);
+                Collections.shuffle(answerAccordance.getLeftSide());
+                Collections.shuffle(answerAccordance.getRightSide());
+                model.addAttribute("answers", answerAccordance);
+                break;
+            case SEQUENCE:
+                AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(firstQuestionId);
+                Collections.shuffle(answerSequence.getCorrectList());
+                model.addAttribute("answers", answerSequence);
+                break;
+            case NUMBER:
+                AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(firstQuestionId);
+                model.addAttribute("answers", answerNumber);
+                break;
+        }
+
+        return "question";
+    }
+
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
-    public String showQuestions(@PathVariable("quizId") Long quizId, Model model) {
+    public String showAnswers(@PathVariable("quizId") Long quizId, Model model) {
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, QuestionType.ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, QuestionType.FEW_ANSWERS);
         List<Question> questionsAccordance = questionDao.findQuestions(quizId, QuestionType.ACCORDANCE);
@@ -221,6 +315,7 @@ public class StudentController {
             AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
             quizAnswersNumber.put(questionId, answerNumber);
         }
+
         model.addAttribute("quizAnswersSimple", quizAnswersSimple);
         model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
         model.addAttribute("quizAnswersSequence", quizAnswersSequence);

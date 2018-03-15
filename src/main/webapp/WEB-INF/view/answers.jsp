@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Questions</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <h2>Questions</h2>
@@ -48,9 +49,10 @@
     <h3>Accordance questions</h3>
     <c:forEach items="${questionsAccordance}" var="question">
         <div><h4 style="display: inline">${question.name}. ${question.body}</h4> ${question.score} points</div>
-        <c:set var="correctMap" value="${quizAnswersAccordance[question.questionId].correctMap}" scope="page"/>
-        <c:forEach items="${correctMap}" var="entry">
-            <div>${entry.key} -> ${entry.value}</div>
+        <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
+        <c:set var="rightSide" value="${quizAnswersAccordance[question.questionId].rightSide}" scope="page"/>
+        <c:forEach items="${leftSide}" var="item" varStatus="status">
+            <div>${item} -> ${rightSide[status.index]}</div>
         </c:forEach>
         <div>${question.explanation}</div>
     </c:forEach>
@@ -60,10 +62,8 @@
     <c:forEach items="${questionsSequence}" var="question">
         <div><h4 style="display: inline">${question.name}. ${question.body}</h4> ${question.score} points</div>
         <c:set var="correctList" value="${quizAnswersSequence[question.questionId].correctList}" scope="page"/>
-        <c:set var="index" value="1" scope="page"/>
-        <c:forEach items="${correctList}" var="item">
-            <div>${index}. ${item}</div>
-            <c:set var="index" value="${index + 1}"/>
+        <c:forEach items="${correctList}" var="item" varStatus="status">
+            <div>${status.index}. ${item}</div>
         </c:forEach>
         <div>${question.explanation}</div>
     </c:forEach>

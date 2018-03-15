@@ -21,7 +21,7 @@ public class AnswerAccordanceTest {
         correctMap.put("leftPart1", "rightPart1");
         correctMap.put("leftPart2", "rightPart2");
         correctMap.put("leftPart3", "rightPart3");
-        answerAccordance.setCorrectMap(correctMap);
+//        answerAccordance.setCorrectMap(correctMap);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class AnswerAccordanceTest {
         correctMap.put("leftPart3", "rightPart3");
         AnswerAccordance answerAccordanceBuilt = new AnswerAccordance.AnswerAccordanceBuilder()
                 .questionId(1L)
-                .correctMap(correctMap)
+//                .correctMap(correctMap)
                 .build();
         assertEquals(answerAccordance, answerAccordanceBuilt);
     }

@@ -15,9 +15,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -39,15 +42,13 @@ public class AnswerAccordanceDaoJdbcTest {
 
     @Test
     public void test_find_answerAccordance_by_questionId() {
-        Map<String, String> correctMap = new HashMap<>();
-        correctMap.put("SQL", "database");
-        correctMap.put("Java", "backend");
-        correctMap.put("HTML", "frontend");
-        correctMap.put("Pascal", "Dead");
+        List<String> leftSide = new ArrayList<>(asList("SQL", "Java", "HTML", "Pascal"));
+        List<String> rightSide = new ArrayList<>(asList("database", "backend", "frontend", "Dead"));
         AnswerAccordance testAnswerAccordance
                 = new AnswerAccordance.AnswerAccordanceBuilder()
                 .questionId(3L)
-                .correctMap(correctMap)
+                .leftSide(leftSide)
+                .rightSide(rightSide)
                 .build();
 
         AnswerAccordance answerAccordance
@@ -68,15 +69,14 @@ public class AnswerAccordanceDaoJdbcTest {
                 .build();
         Long questionId = questionDao.addQuestion(testQuestion);
 
-        Map<String, String> correctMap = new HashMap<>();
-        correctMap.put("Model", "Dao");
-        correctMap.put("View", "Pages");
-        correctMap.put("Controller", "Request handler");
-        correctMap.put("Spring", "Business logic container");
+        List<String> leftSide = new ArrayList<>(asList("Model", "View", "Controller", "Spring"));
+        List<String> rightSide = new ArrayList<>(asList("Dao", "Pages", "Request handler",
+                "Business logic container"));
         AnswerAccordance testAnswerAccordance
                 = new AnswerAccordance.AnswerAccordanceBuilder()
                 .questionId(questionId)
-                .correctMap(correctMap)
+                .leftSide(leftSide)
+                .rightSide(rightSide)
                 .build();
         answerAccordanceDao.addAnswerAccordance(testAnswerAccordance);
 
@@ -88,15 +88,14 @@ public class AnswerAccordanceDaoJdbcTest {
 
     @Test
     public void edit_answerAccordance() {
-        Map<String, String> correctMap = new HashMap<>();
-        correctMap.put("Model", "Dao");
-        correctMap.put("View", "Pages");
-        correctMap.put("Controller", "Class-handler");
-        correctMap.put("Spring", "Business logic container");
+        List<String> leftSide = new ArrayList<>(asList("Model", "View", "Controller", "Spring"));
+        List<String> rightSide = new ArrayList<>(asList("Dao", "Pages", "Request handler",
+                "Business logic container"));
         AnswerAccordance testAnswerAccordance
                 = new AnswerAccordance.AnswerAccordanceBuilder()
                 .questionId(3L)
-                .correctMap(correctMap)
+                .leftSide(leftSide)
+                .rightSide(rightSide)
                 .build();
         answerAccordanceDao.editAnswerAccordance(testAnswerAccordance);
 

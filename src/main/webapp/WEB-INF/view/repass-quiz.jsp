@@ -23,7 +23,7 @@
 <div>If you press "Finish" you will finish quiz with current result</div>
 <div>If you do not want to repass it than press "Back"</div>
 <div>
-    <a href="/student/quizzes/${passedQuiz.quizId}/0">Repass</a>
+    <a href="/student/quizzes/${passedQuiz.quizId}/initialize">Repass</a>
     <form style="display: inline" action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="submit" value="Finish"/>

@@ -5,4 +5,5 @@ public class SessionAttributes {
     public static final String RESULT = "result";
     public static final String QUESTIONS_NUMBER = "questionsNumber";
     public static final String ACCORDANCE_LIST = "accordanceRightSide";
+    public static final String CURRENT_QUESTION = "currentQuestion";
 }

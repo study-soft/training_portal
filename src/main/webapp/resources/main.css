@@ -6,6 +6,10 @@
     color:lime
 }
 
+body {
+    background-color: #ccfcf5;
+}
+
 table {
     border-collapse: collapse;
     width: 75%;
@@ -17,6 +21,9 @@ th, td {
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(odd){background-color: #ffffff}
+
+tr:hover {background-color: #ddd;}
 
 th {
     background-color: #0380ff;
@@ -24,7 +31,7 @@ th {
 }
 
 .active {
-    background-color: #2663d8;
+    background-color: #2b6ad8;
 }
 
 ul {
@@ -32,7 +39,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #444343;
 }
 
 li {

@@ -14,7 +14,7 @@
 <div>If you press "Start" you will begin passing the quiz</div>
 <div>If you do not want to pass it than press "Back"</div>
 <div>
-    <a href="/student/quizzes/${openedQuiz.quizId}/0">Start</a>
+    <a href="/student/quizzes/${openedQuiz.quizId}/initialize">Start</a>
     <a href="/student/quizzes/${openedQuiz.quizId}">Back</a>
 </div>
 </body>

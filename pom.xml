@@ -103,6 +103,13 @@
             <version>${h2.version}</version>
             <!--<scope>test</scope>-->
         </dependency>
+
+        <!--format date-time tags jstl-->
+        <dependency>
+            <groupId>net.sargue</groupId>
+            <artifactId>java-time-jsptags</artifactId>
+            <version>1.1.4</version>
+        </dependency>
     </dependencies>
 
     <build>

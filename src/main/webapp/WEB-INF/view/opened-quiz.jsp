@@ -9,9 +9,9 @@
 <c:import url="navbar.jsp"/>
 <h2>Opened quiz</h2>
 <h3>${openedQuiz.quizName}</h3>
-<div>Submitted: ${openedQuiz.submitDate}</div>
+<div>Submitted: ${submitDate}</div>
 <div>${openedQuiz.description}</div>
-<div>Passing time: ${openedQuiz.passingTime.toMinutes()}</div>
+<div>Passing time: ${passingTime}</div>
 <div>Score: ${openedQuiz.score}</div>
 <div>Questions: ${openedQuiz.questionsNumber}</div>
 <div>Author: ${openedQuiz.authorName}</div>

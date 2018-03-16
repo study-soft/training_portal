@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -353,6 +354,19 @@ public class QuizDaoJdbc implements QuizDao {
         return finishedQuizzes;
     }
 
+    @Override
+    public void addPublishedQuizInfo(Long studentId, Long quizId, LocalDate submitDate,
+                                     Integer attempt, StudentQuizStatus status) {
+        template.update(ADD_PUBLISHED_QUIZ_INFO,
+                studentId, quizId, submitDate, attempt, status);
+        logger.info("Added published quiz info:");
+        logger.info("userId: " + studentId +
+                "quizId: " + quizId +
+                "submitDate: " + submitDate +
+                "attempt: " + attempt +
+                "studentQuizStatus: " + status);
+    }
+
     @Transactional
     @Override
     public Long addQuiz(Quiz quiz) {
@@ -378,13 +392,21 @@ public class QuizDaoJdbc implements QuizDao {
         return quizId;
     }
 
+    @Override
+    public void editStartDate(LocalDateTime startDate, Long studentId, Long quizId) {
+        template.update(EDIT_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
+                startDate, studentId, quizId);
+        logger.info("Edited startDate to '" + startDate +
+                "' where studentId=" + studentId + ", quizId=" + quizId);
+    }
+
     @Transactional
     @Override
     public void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus,
                                       Long quizId) {
         template.update(EDIT_TEACHER_QUIZ_STATUS_BY_QUIZ_ID,
                 teacherQuizStatus.getTeacherQuizStatus(), quizId);
-        logger.info("Edit teacher status to " + teacherQuizStatus +
+        logger.info("Edited teacher status to " + teacherQuizStatus +
                 " in quiz with quizId " + quizId);
     }
 
@@ -614,9 +636,16 @@ public class QuizDaoJdbc implements QuizDao {
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.FINISH_DATE DESC;";
 
+    private static final String ADD_PUBLISHED_QUIZ_INFO =
+    "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, SUBMIT_DATE, ATTEMPT, STUDENT_QUIZ_STATUS) " +
+    "VALUES (?, ?, ?, ?, ?);";
+
     private static final String ADD_QUIZ =
     "INSERT INTO QUIZZES (NAME, DESCRIPTION, EXPLANATION, CREATION_DATE, PASSING_TIME, AUTHOR_ID, TEACHER_QUIZ_STATUS) " +
     "VALUES (?, ?, ?, ?, ?, ?, ?);";
+
+    private static final String EDIT_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
+    "UPDATE USER_QUIZ_JUNCTIONS SET START_DATE = ? WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String EDIT_TEACHER_QUIZ_STATUS_BY_QUIZ_ID =
     "UPDATE QUIZZES SET TEACHER_QUIZ_STATUS = ? WHERE QUIZ_ID = ?;";

@@ -8,6 +8,7 @@
 <body>
 <c:import url="navbar.jsp"/>
 <c:set var="question" value="${sessionScope.questions[currentQuestion]}" scope="page"/>
+<h2>${quiz.name}</h2>
 <h3 style="display: inline">${question.body}</h3>
 <form action="/student/quizzes/${question.quizId}/${currentQuestion + 1}" method="post">
     <c:choose>
@@ -129,5 +130,13 @@
     </c:choose>
 </form>
 <div>${question.score} points</div>
+<c:choose>
+    <c:when test="${currentQuestion eq 0}">
+        <div>Time left: ${passingTime}</div>
+    </c:when>
+    <c:otherwise>
+        <div>Time left: ${timeLeft}</div>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>

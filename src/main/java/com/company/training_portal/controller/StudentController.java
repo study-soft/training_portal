@@ -14,11 +14,18 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.model.enums.QuestionType.*;
+import static com.company.training_portal.util.Formatter.formatDate;
+import static com.company.training_portal.util.Formatter.formatDateTime;
+import static com.company.training_portal.util.Formatter.formatDuration;
+import static java.time.format.FormatStyle.MEDIUM;
+import static java.time.format.FormatStyle.SHORT;
 
 @Controller
 @SessionAttributes("studentId")
@@ -172,20 +179,19 @@ public class StudentController {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         if (status.equals(StudentQuizStatus.OPENED)) {
             OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
+            setDateTimeFormat(openedQuiz, model);
             model.addAttribute("openedQuiz", openedQuiz);
             return "opened-quiz";
         }
         if (status.equals(StudentQuizStatus.PASSED)) {
             PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
-            String passingTime = formatDuration(passedQuiz.getPassingTime());
-            String timeSpent = formatDuration(passedQuiz.getTimeSpent());
+            setDateTimeFormat(passedQuiz, model);
             model.addAttribute("passedQuiz", passedQuiz);
-            model.addAttribute("passingTime", passingTime);
-            model.addAttribute("timeSpent", timeSpent);
             return "passed-quiz";
         }
         if (status.equals(StudentQuizStatus.FINISHED)) {
             PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
+            setDateTimeFormat(finishedQuiz, model);
             model.addAttribute("finishedQuiz", finishedQuiz);
             return "finished-quiz";
         }
@@ -213,10 +219,17 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.GET)
-    public String showFirstQuestion(@PathVariable("quizId") Long quizId,
+    public String showFirstQuestion(@ModelAttribute("studentId") Long studentId,
+                                    @PathVariable("quizId") Long quizId,
                                     @PathVariable("currentQuestion") Integer currentQuestion,
                                     HttpSession session, Model model) {
         model.addAttribute("currentQuestion", currentQuestion);
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+        setDateTimeFormat(quiz, model);
+
+        LocalDateTime startDate = LocalDateTime.now();
+        quizDao.editStartDate(startDate, studentId, quizId);
 
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
@@ -251,12 +264,22 @@ public class StudentController {
 
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.POST)
-    public String showCurrentQuestion(@RequestParam Map<String, String> studentAnswers,
+    public String showCurrentQuestion(@ModelAttribute("studentId") Long studentId,
+                                      @RequestParam Map<String, String> studentAnswers,
                                       @PathVariable("quizId") Long quizId,
                                       @PathVariable("currentQuestion") Integer currentQuestion,
                                       @SessionAttribute(QUESTIONS) List<Question> questions,
                                       @SessionAttribute(RESULT) Double result,
                                       HttpSession session, Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        String timeLeft =
+                formatDuration(quiz.getPassingTime().minus(Duration.between(startTime, currentTime)));
+        model.addAttribute("timeLeft", timeLeft);
+
         Question prevQuestion = questions.get(currentQuestion - 1);
         QuestionType prevQuestionType = prevQuestion.getQuestionType();
         Integer prevQuestionScore = prevQuestion.getScore();
@@ -480,19 +503,28 @@ public class StudentController {
         }
     }
 
-    private String formatDuration(Duration duration) {
-        StringBuilder result = new StringBuilder();
-        long totalSeconds = duration.toSeconds();
-        int seconds = (int) totalSeconds % 60;
-        int totalMinutes = (int) totalSeconds / 60;
-        int minutes = totalMinutes % 60;
-        int hours = totalMinutes / 60;
-        result.append(hours < 10 ? "0" : "")
-                .append(hours)
-                .append(minutes < 10 ? ":0" : ":")
-                .append(minutes)
-                .append(seconds < 10 ? ":0" : ":")
-                .append(seconds);
-        return result.toString();
+    private void setDateTimeFormat(Quiz quiz, Model model) {
+        String creationDate = formatDate(quiz.getCreationDate());
+        String passingTime = formatDuration(quiz.getPassingTime());
+        model.addAttribute("creationDate", creationDate);
+        model.addAttribute("passingTime", passingTime);
+    }
+
+    private void setDateTimeFormat(OpenedQuiz quiz, Model model) {
+        String submitDate = formatDateTime(quiz.getSubmitDate());
+        String passingTime = formatDuration(quiz.getPassingTime());
+        model.addAttribute("submitDate", submitDate);
+        model.addAttribute("passingTime", passingTime);
+    }
+
+    private void setDateTimeFormat(PassedQuiz quiz, Model model) {
+        String submitDate = formatDateTime(quiz.getSubmitDate());
+        String finishDate = formatDateTime(quiz.getFinishDate());
+        String passingTime = formatDuration(quiz.getPassingTime());
+        String timeSpent = formatDuration(quiz.getTimeSpent());
+        model.addAttribute("submitDate", submitDate);
+        model.addAttribute("finishDate", finishDate);
+        model.addAttribute("passingTime", passingTime);
+        model.addAttribute("timeSpent", timeSpent);
     }
 }

@@ -9,20 +9,18 @@
 <c:import url="navbar.jsp"/>
 <h2>Passed quiz</h2>
 <h3>${passedQuiz.quizName}</h3>
-<div>Passed: ${passedQuiz.finishDate}</div>
+<div>Finish date: ${finishDate}</div>
 <div>Result: ${passedQuiz.result}/${passedQuiz.score}</div>
 <div>Attempt: ${passedQuiz.attempt}</div>
-<%--<div>Time spent: ${passedQuiz.timeSpent.toMinutes()} mins</div>--%>
 <div>Time spent: ${timeSpent}</div>
 <div>
     <a href="/student/quizzes/${passedQuiz.quizId}/answers">Answers</a>
     <a href="#">Compare results</a>
 </div>
-<%--<div>Passing time: ${passedQuiz.passingTime.toMinutes()}</div>--%>
 <div>Passing time: ${passingTime}</div>
 <div>Score: ${passedQuiz.score}</div>
 <div>Questions: ${passedQuiz.questionsNumber}</div>
-<div>Submit date: ${passedQuiz.submitDate}</div>
+<div>Submit date: ${submitDate}</div>
 <div>Author: ${passedQuiz.authorName}</div>
 <div>Description: ${passedQuiz.description}</div>
 <div>If you are satisfied with your result, you need to finish quiz</div>

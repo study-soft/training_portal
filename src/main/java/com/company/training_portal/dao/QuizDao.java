@@ -6,6 +6,7 @@ import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,12 @@ public interface QuizDao {
 
     List<PassedQuiz> findFinishedQuizzes(Long studentId);
 
+    void addPublishedQuizInfo(Long studentId, Long quizId, LocalDate submitDate,
+                              Integer attempt, StudentQuizStatus status);
+
     Long addQuiz(Quiz quiz);
+
+    void editStartDate(LocalDateTime startDate, Long studentId, Long quizId);
 
     void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus, Long quizId);
 

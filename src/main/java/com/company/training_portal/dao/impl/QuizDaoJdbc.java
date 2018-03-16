@@ -400,6 +400,20 @@ public class QuizDaoJdbc implements QuizDao {
                 "' where studentId=" + studentId + ", quizId=" + quizId);
     }
 
+    @Override
+    public void editStudentInfoAboutOpenedQuiz(Long studentId, Long quizId, Integer result,
+                                               LocalDateTime finishDate, Integer attempt,
+                                               StudentQuizStatus studentQuizStatus) {
+        template.update(EDIT_STUDENT_INFO_ABOUT_OPENED_QUIZ,
+                result, Timestamp.valueOf(finishDate),
+                attempt, studentQuizStatus.getStudentQuizStatus(),
+                studentId, quizId);
+        logger.info("Edited student info about quiz by studentId = " +
+                studentId + " and quizId = " + quizId + ": result: " + result +
+        ", finishDate: " + finishDate + ", attempt: " + attempt +
+                ", studentQuizStatus: " + studentQuizStatus);
+    }
+
     @Transactional
     @Override
     public void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus,
@@ -646,6 +660,11 @@ public class QuizDaoJdbc implements QuizDao {
 
     private static final String EDIT_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID =
     "UPDATE USER_QUIZ_JUNCTIONS SET START_DATE = ? WHERE USER_ID = ? AND QUIZ_ID = ?;";
+
+    private static final String EDIT_STUDENT_INFO_ABOUT_OPENED_QUIZ =
+    "UPDATE USER_QUIZ_JUNCTIONS " +
+    "SET RESULT = ?, FINISH_DATE = ?, ATTEMPT = ?, STUDENT_QUIZ_STATUS = ? " +
+    "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String EDIT_TEACHER_QUIZ_STATUS_BY_QUIZ_ID =
     "UPDATE QUIZZES SET TEACHER_QUIZ_STATUS = ? WHERE QUIZ_ID = ?;";

@@ -7,5 +7,5 @@ public class SessionAttributes {
     public static final String ACCORDANCE_LIST = "accordanceRightSide";
     public static final String CURRENT_QUESTION_SERIAL = "currentQuestionSerial";
     public static final String CURRENT_QUIZ = "currentQuiz";
-//    public static final String CURRENT_QUIZ_ID = "currentQuizId";
+    public static final String TIME_LEFT = "timeLeft";
 }

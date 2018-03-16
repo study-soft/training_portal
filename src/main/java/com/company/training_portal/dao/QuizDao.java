@@ -80,6 +80,10 @@ public interface QuizDao {
 
     void editStartDate(LocalDateTime startDate, Long studentId, Long quizId);
 
+    void editStudentInfoAboutOpenedQuiz(Long studentId, Long quizId,
+                                        Integer result, LocalDateTime finishDate,
+                                        Integer attempt, StudentQuizStatus studentQuizStatus);
+
     void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus, Long quizId);
 
     void editQuiz(Quiz quiz);

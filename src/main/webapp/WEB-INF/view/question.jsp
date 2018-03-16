@@ -136,7 +136,7 @@
         <div>Time left: <duration:format value="${sessionScope.currentQuiz.passingTime}"/></div>
     </c:when>
     <c:otherwise>
-        <div>Time left: <duration:format value="${timeLeft}"/></div>
+        <div>Time left: <duration:format value="${sessionScope.timeLeft}"/></div>
     </c:otherwise>
 </c:choose>
 </body>

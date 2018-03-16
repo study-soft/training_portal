@@ -465,6 +465,24 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
+    public void test_edit_student_info_about_opened_quiz() {
+        quizDao.editStudentInfoAboutOpenedQuiz(4L, 1L, 56,
+                LocalDateTime.of(2018, 1, 10, 10, 2),
+                1, StudentQuizStatus.PASSED);
+
+        Integer result = quizDao.findResult(4L, 1L);
+        LocalDateTime finishDate = quizDao.findFinishDate(4L, 1L);
+        Integer attempt = quizDao.findAttempt(4L, 1L);
+        StudentQuizStatus studentQuizStatus =
+                quizDao.findStudentQuizStatus(4L, 1L);
+
+        assertThat(result, is(56));
+        assertThat(finishDate, is(LocalDateTime.of(2018, 1, 10, 10, 2)));
+        assertThat(attempt, is(1));
+        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
+    }
+
+    @Test
     public void test_edit_teacherQuizStatus_by_quizId() {
         quizDao.editTeacherQuizStatus(TeacherQuizStatus.UNPUBLISHED, 4L);
         TeacherQuizStatus teacherQuizStatus = quizDao

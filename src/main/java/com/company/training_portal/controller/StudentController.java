@@ -20,6 +20,7 @@ import java.util.*;
 
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.model.enums.QuestionType.*;
+import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.util.Formatter.*;
 
 @Controller
@@ -172,7 +173,7 @@ public class StudentController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-        if (status.equals(StudentQuizStatus.OPENED)) {
+        if (status.equals(OPENED)) {
             OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
             setDateTimeFormat(openedQuiz, model);
             model.addAttribute("openedQuiz", openedQuiz);
@@ -195,17 +196,36 @@ public class StudentController {
 
     @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
     public String showQuizStart(@ModelAttribute("studentId") Long studentId,
-                                @PathVariable("quizId") Long quizId, Model model) {
+                                @PathVariable("quizId") Long quizId,
+                                @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                        Integer currentQuestionSerial,
+                                ModelMap model) {
+        if (currentQuestionSerial != null) {
+            model.clear();
+            return "redirect:/student/quizzes/continue";
+        }
         OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
         model.addAttribute("openedQuiz", openedQuiz);
         return "start-quiz";
     }
 
+    @RequestMapping("/student/quizzes/continue")
+    public String continuePassing(Model model) {
+        return "quiz-continue";
+    }
+
     @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
     public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
-                                 @PathVariable("quizId") Long quizId, Model model) {
+                                 @PathVariable("quizId") Long quizId,
+                                 @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                         Integer currentQuestionSerial,
+                                 ModelMap model) {
+        if (currentQuestionSerial != null) {
+            model.clear();
+            return "redirect:/student/quizzes/continue";
+        }
         PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
-        setDateTimeFormat(passedQuiz, model);
+//        setDateTimeFormat(passedQuiz, model);
         model.addAttribute("passedQuiz", passedQuiz);
         return "repass-quiz";
     }
@@ -215,6 +235,18 @@ public class StudentController {
                                  @PathVariable("quizId") Long quizId,
                                  HttpSession session,
                                  ModelMap model) {
+//        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+//        switch (status) {
+//            case OPENED:
+//                OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
+//                session.setAttribute(CURRENT_QUIZ, openedQuiz);
+//                break;
+//            case FINISHED:
+//                PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+//                session.setAttribute(CURRENT_QUIZ, passedQuiz);
+//                break;
+//        }
+
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
         List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
@@ -233,47 +265,49 @@ public class StudentController {
         questions.addAll(questionsSequence);
         questions.addAll(questionsNumber);
 
+        session.setAttribute(CURRENT_QUIZ, quizDao.findQuiz(quizId));
         session.setAttribute(QUESTIONS, questions);
         session.setAttribute(RESULT, 0D);
         session.setAttribute(QUESTIONS_NUMBER, questions.size());
+        session.setAttribute(CURRENT_QUESTION_SERIAL, 0);
 
         LocalDateTime startDate = LocalDateTime.now();
         quizDao.editStartDate(startDate, studentId, quizId);
 
         model.clear();
 
-        return "redirect:/student/quizzes/" + quizId + "/0";
+        return "redirect:/student/quizzes/" + quizId + "/passing";
     }
 
-    @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.GET)
+    @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.GET)
     public String showCurrentQuestionGet(@ModelAttribute("studentId") Long studentId,
                                          @PathVariable("quizId") Long quizId,
-                                         @PathVariable("currentQuestion") Integer currentQuestion,
+                                         @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
                                          @SessionAttribute(QUESTIONS) List<Question> questions,
-                                         HttpSession session, Model model) {
-        model.addAttribute("currentQuestion", currentQuestion);
-        Quiz quiz = quizDao.findQuiz(quizId);
-        model.addAttribute("quiz", quiz);
-        setDateTimeFormat(quiz, model);
+                                         HttpSession session, ModelMap model) {
+//        Quiz quiz = quizDao.findQuiz(quizId);
+//        model.addAttribute("quiz", quiz);
+//        setDateTimeFormat(quiz, model);
 
-        Question firstQuestion = questions.get(currentQuestion);
-        QuestionType firstQuestionType = firstQuestion.getQuestionType();
-        Long firstQuestionId = firstQuestion.getQuestionId();
+        Question currentQuestion = questions.get(currentQuestionSerial);
+        QuestionType currentQuestionType = currentQuestion.getQuestionType();
+        Long currentQuestionId = currentQuestion.getQuestionId();
 
-        setAnswers(firstQuestionType, firstQuestionId, session, model);
+        setAnswers(currentQuestionType, currentQuestionId, session, model);
 
         return "question";
     }
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/student/quizzes/{quizId}/{currentQuestion}", method = RequestMethod.POST)
+    @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.POST)
     public String showCurrentQuestionPost(@ModelAttribute("studentId") Long studentId,
                                           @RequestParam Map<String, String> studentAnswers,
                                           @PathVariable("quizId") Long quizId,
-                                          @PathVariable("currentQuestion") Integer currentQuestion,
+                                          @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
                                           @SessionAttribute(QUESTIONS) List<Question> questions,
                                           @SessionAttribute(RESULT) Double result,
-                                          HttpSession session, Model model) {
+                                          HttpSession session, ModelMap model) {
+        session.setAttribute(CURRENT_QUESTION_SERIAL, ++currentQuestionSerial);
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
 
@@ -283,7 +317,7 @@ public class StudentController {
                 formatDuration(quiz.getPassingTime().minus(Duration.between(startTime, currentTime)));
         model.addAttribute("timeLeft", timeLeft);
 
-        Question prevQuestion = questions.get(currentQuestion - 1);
+        Question prevQuestion = questions.get(currentQuestionSerial - 1);
         QuestionType prevQuestionType = prevQuestion.getQuestionType();
         Integer prevQuestionScore = prevQuestion.getScore();
         Long prevQuestionId = prevQuestion.getQuestionId();
@@ -304,7 +338,7 @@ public class StudentController {
                         .filter(AnswerSimple::isCorrect)
                         .count();
                 Collection<String> answers = studentAnswers.values();
-                if (answers.size() == countOfCorrect) {
+                if (answers.size() <= countOfCorrect) {
                     for (String answer : answers) {
                         if (answer.equals("true")) {
                             result += prevQuestionScore / countOfCorrect;
@@ -344,27 +378,31 @@ public class StudentController {
                 }
                 break;
         }
-        if (currentQuestion == questions.size()) {
-            Integer score = questionDao.findQuizScore(quizId);
-            model.addAttribute("score", score);
-            session.removeAttribute(CURRENT_QUESTION);
-            return "quiz-congratulations";
+
+        if (currentQuestionSerial == questions.size()) {
+            model.clear();
+            return "redirect:/student/quizzes/" + quizId + "/congratulations";
         }
 
-        Question question = questions.get(currentQuestion);
+        Question question = questions.get(currentQuestionSerial);
         QuestionType questionType = question.getQuestionType();
         Long questionId = question.getQuestionId();
 
         setAnswers(questionType, questionId, session, model);
 
-        session.setAttribute(CURRENT_QUESTION, currentQuestion);
+        session.setAttribute(CURRENT_QUESTION_SERIAL, currentQuestionSerial);
 
         return "question";
     }
 
-    @RequestMapping("/student/quizzes/{quizId}/continue")
-    public String showContinueWarning(@PathVariable("quizId") Long quizId, Model model) {
-        return "quiz-continue";
+    @RequestMapping("/student/quizzes/{quizId}/congratulations")
+    public String showResult(@PathVariable("quizId") Long quizId,
+                             HttpSession session,
+                             Model model) {
+        Integer score = questionDao.findQuizScore(quizId);
+        model.addAttribute("score", score);
+        session.removeAttribute(CURRENT_QUESTION_SERIAL);
+        return "quiz-congratulations";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
@@ -483,7 +521,7 @@ public class StudentController {
 
 //    INTERNALS===================================================================
 
-    private void setAnswers(QuestionType questionType, Long questionId, HttpSession session, Model model) {
+    private void setAnswers(QuestionType questionType, Long questionId, HttpSession session, ModelMap model) {
         switch (questionType) {
             case ONE_ANSWER:
                 List<AnswerSimple> oneAnswer = answerSimpleDao.findAnswersSimple(questionId);

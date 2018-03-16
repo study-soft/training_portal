@@ -7,10 +7,10 @@
 </head>
 <body>
 <c:import url="navbar.jsp"/>
-<c:set var="question" value="${sessionScope.questions[currentQuestion]}" scope="page"/>
-<h2>${quiz.name}</h2>
+<c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
+<h2>${sessionScope.currentQuiz.name}</h2>
 <h3 style="display: inline">${question.body}</h3>
-<form action="/student/quizzes/${question.quizId}/${currentQuestion + 1}" method="post">
+<form action="/student/quizzes/${question.quizId}/passing" method="post">
     <c:choose>
         <c:when test="${question.questionType eq 'ONE_ANSWER'}">
             <c:forEach items="${answers}" var="answer">
@@ -21,7 +21,7 @@
                 </div>
             </c:forEach>
             <c:choose>
-                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
                     <div>
                         <input type="submit" value="Finish">
                     </div>
@@ -43,7 +43,7 @@
                 </div>
             </c:forEach>
             <c:choose>
-                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
                     <div>
                         <input type="submit" value="Finish">
                     </div>
@@ -68,7 +68,7 @@
                 </div>
             </c:forEach>
             <c:choose>
-                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
                     <div>
                         <input type="submit" value="Finish">
                     </div>
@@ -93,7 +93,7 @@
                 </c:forEach>
             </div>
             <c:choose>
-                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
                     <div>
                         <input type="submit" value="Finish">
                     </div>
@@ -111,7 +111,7 @@
                 <input type="text" name="number" placeholder="Enter number">
             </div>
             <c:choose>
-                <c:when test="${currentQuestion eq sessionScope.questionsNumber - 1}">
+                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
                     <div>
                         <input type="submit" value="Finish">
                     </div>
@@ -131,8 +131,8 @@
 </form>
 <div>${question.score} points</div>
 <c:choose>
-    <c:when test="${currentQuestion eq 0}">
-        <div>Time left: ${passingTime}</div>
+    <c:when test="${sessionScope.currentQuestionSerial eq 0}">
+        <div>Time left: ${sessionScope.currentQuiz.passingTime}</div>
     </c:when>
     <c:otherwise>
         <div>Time left: ${timeLeft}</div>

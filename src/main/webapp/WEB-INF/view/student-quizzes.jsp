@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -29,7 +30,7 @@
                     <td>${openedQuiz.quizName}</td>
                     <td>${openedQuiz.questionsNumber}</td>
                     <td>${openedQuiz.score}</td>
-                    <td>${openedQuiz.submitDate}</td>
+                    <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
                     <td>${openedQuiz.authorName}</td>
                     <td><a href="/student/quizzes/${openedQuiz.quizId}">Details</a></td>
                 </tr>
@@ -57,7 +58,7 @@
                     <td>${passedQuiz.quizName}</td>
                     <td>${passedQuiz.questionsNumber}</td>
                     <td>${passedQuiz.score}</td>
-                    <td>${passedQuiz.submitDate}</td>
+                    <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
                     <td>${passedQuiz.authorName}</td>
                     <td><a href="/student/quizzes/${passedQuiz.quizId}">Details</a></td>
                 </tr>
@@ -85,7 +86,7 @@
                     <td>${finishedQuiz.quizName}</td>
                     <td>${finishedQuiz.questionsNumber}</td>
                     <td>${finishedQuiz.score}</td>
-                    <td>${finishedQuiz.submitDate}</td>
+                    <td><localDateTime:format value="${finishedQuiz.submitDate}"/></td>
                     <td>${finishedQuiz.authorName}</td>
                     <td><a href="/student/quizzes/${finishedQuiz.quizId}">Details</a></td>
                 </tr>

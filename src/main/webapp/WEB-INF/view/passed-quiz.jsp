@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -9,18 +11,18 @@
 <c:import url="navbar.jsp"/>
 <h2>Passed quiz</h2>
 <h3>${passedQuiz.quizName}</h3>
-<div>Finish date: ${finishDate}</div>
+<div>Finish date: <localDateTime:format value="${passedQuiz.finishDate}"/></div>
 <div>Result: ${passedQuiz.result}/${passedQuiz.score}</div>
 <div>Attempt: ${passedQuiz.attempt}</div>
-<div>Time spent: ${timeSpent}</div>
+<div>Time spent: <duration:format value="${passedQuiz.timeSpent}"/></div>
 <div>
     <a href="/student/quizzes/${passedQuiz.quizId}/answers">Answers</a>
     <a href="#">Compare results</a>
 </div>
-<div>Passing time: ${passingTime}</div>
+<div>Passing time: <duration:format value="${passedQuiz.passingTime}"/></div>
 <div>Score: ${passedQuiz.score}</div>
 <div>Questions: ${passedQuiz.questionsNumber}</div>
-<div>Submit date: ${submitDate}</div>
+<div>Submit date: <localDateTime:format value="${passedQuiz.submitDate}"/></div>
 <div>Author: ${passedQuiz.authorName}</div>
 <div>Description: ${passedQuiz.description}</div>
 <div>If you are satisfied with your result, you need to finish quiz</div>

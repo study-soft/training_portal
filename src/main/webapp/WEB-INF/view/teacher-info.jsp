@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -11,7 +12,7 @@
 <div>Name: ${teacher.lastName} ${teacher.firstName}</div>
 <div>E-mail: ${teacher.email}</div>
 <div>Phone number: ${teacher.phoneNumber}</div>
-<div>Date of birth: ${teacher.dateOfBirth}</div>
+<div>Date of birth: <localDate:format value="${teacher.dateOfBirth}"/></div>
 <h4>This teacher gave you next quizzes:</h4>
 <table>
     <tr>

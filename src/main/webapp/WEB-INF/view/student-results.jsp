@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -30,7 +31,7 @@
                     <td>${passedQuiz.quizName}</td>
                     <td>${passedQuiz.result}/${passedQuiz.score}</td>
                     <td>${passedQuiz.attempt}</td>
-                    <td>${passedQuiz.timeSpent.toMinutes()} mins</td>
+                    <td><duration:format value="${passedQuiz.timeSpent}"/></td>
                     <td>${passedQuiz.finishDate}</td>
                     <td><a href="#">Repass</a></td>
                     <td>
@@ -64,7 +65,7 @@
                     <td>${finishedQuiz.quizName}</td>
                     <td>${finishedQuiz.result}</td>
                     <td>${finishedQuiz.attempt}</td>
-                    <td>${finishedQuiz.timeSpent.toMinutes()} mins</td>
+                    <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
                     <td>${finishedQuiz.finishDate}</td>
                 </tr>
             </c:forEach>

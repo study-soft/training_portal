@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -28,7 +29,7 @@
 <div>Last name: ${student.lastName}</div>
 <div>E-mail: ${student.email}</div>
 <div>Phone number: ${student.phoneNumber}</div>
-<div>Date of birth: ${student.dateOfBirth}</div>
+<div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
 <div>---------Login and password---------</div>
 <div>Login: ${student.login}</div>
 <div>Password: ${student.password}</div>
@@ -43,7 +44,7 @@
     </c:when>
     <c:otherwise>
         <div>Name: ${group.name}</div>
-        <div>Creation date: ${group.creationDate}</div>
+        <div>Creation date: <localDate:format value="${group.creationDate}"/></div>
         <div>Number of students: </div>
         <div>Author: ${authorName}</div>
         <div>

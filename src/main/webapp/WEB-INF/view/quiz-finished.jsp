@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -10,8 +12,8 @@
 <h2>Quiz finished</h2>
 <div>You have finished quiz with name ${finishedQuiz.quizName} at the ${finishedQuiz.attempt} attempt.</div>
 <div>Your result: ${finishedQuiz.result}/${finishedQuiz.score}</div>
-<div>Time spent: ${finishedQuiz.timeSpent.toMinutes()}</div>
-<div>Finish date: ${finishedQuiz.finishDate}</div>
+<div>Time spent: <duration:format value="${finishedQuiz.timeSpent}"/></div>
+<div>Finish date: <localDateTime:format value="${finishedQuiz.finishDate}"/></div>
 <div>More information about this quiz <a href="/student/quizzes/${finishedQuiz.quizId}">here</a></div>
 <div>
     <a href="/student/results">Results</a>

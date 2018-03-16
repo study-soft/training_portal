@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -9,7 +10,7 @@
 <c:import url="navbar.jsp"/>
 <h2>Group information</h2>
 <h3>${group.name}</h3>
-<div>Created: ${group.creationDate}</div>
+<div>Created: <localDate:format value="${group.creationDate}"/></div>
 <div>Author: ${authorName}</div>
 <div>Number of students: ${studentsNumber}</div>
 <div>Description: ${group.description}</div>

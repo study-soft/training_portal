@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -132,10 +133,10 @@
 <div>${question.score} points</div>
 <c:choose>
     <c:when test="${sessionScope.currentQuestionSerial eq 0}">
-        <div>Time left: ${sessionScope.currentQuiz.passingTime}</div>
+        <div>Time left: <duration:format value="${sessionScope.currentQuiz.passingTime}"/></div>
     </c:when>
     <c:otherwise>
-        <div>Time left: ${timeLeft}</div>
+        <div>Time left: <duration:format value="${timeLeft}"/></div>
     </c:otherwise>
 </c:choose>
 </body>

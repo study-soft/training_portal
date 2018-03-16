@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -25,7 +26,7 @@
                     <td><b>${student.lastName} ${student.firstName}</b></td>
                     <td><b>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</b></td>
                     <td><b>${studentsQuizzes[status.index].attempt}</b></td>
-                    <td><b>${studentsQuizzes[status.index].timeSpent}</b></td>
+                    <td><b><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></b></td>
                     <td><b>${statusList[status.index]}</b></td>
                 </tr>
             </c:when>
@@ -34,7 +35,7 @@
                     <td>${student.lastName} ${student.firstName}</td>
                     <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
                     <td>${studentsQuizzes[status.index].attempt}</td>
-                    <td>${studentsQuizzes[status.index].timeSpent}</td>
+                    <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>
                     <td>${statusList[status.index]}</td>
                 </tr>
             </c:otherwise>

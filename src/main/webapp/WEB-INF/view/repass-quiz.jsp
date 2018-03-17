@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Repass quiz</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
 <c:import url="navbar.jsp"/>
@@ -17,7 +17,7 @@
 <div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>
 <%--<div>Time spent: ${passedQuiz.timeSpent}</div>--%>
 <div>Time spent: <duration:format value="${passedQuiz.passingTime}"/></div>
-<div>Current attempt: ${passedQuiz.attempt}</div>
+<div>Attempts: ${passedQuiz.attempt}</div>
 <br>
 <div>If you press "Repass" you will begin repassing the quiz</div>
 <div>Your total score will be less on ${passedQuiz.attempt * 10}%</div>

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -32,8 +33,8 @@
                     <td>${passedQuiz.result}/${passedQuiz.score}</td>
                     <td>${passedQuiz.attempt}</td>
                     <td><duration:format value="${passedQuiz.timeSpent}"/></td>
-                    <td>${passedQuiz.finishDate}</td>
-                    <td><a href="#">Repass</a></td>
+                    <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
+                    <td><a href="/student/quizzes/${passedQuiz.quizId}/initialize">Repass</a></td>
                     <td>
                         <form action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -66,7 +67,7 @@
                     <td>${finishedQuiz.result}</td>
                     <td>${finishedQuiz.attempt}</td>
                     <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
-                    <td>${finishedQuiz.finishDate}</td>
+                    <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>
                 </tr>
             </c:forEach>
         </table>

@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Continue</title>
+    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
 <c:import url="navbar.jsp"/>

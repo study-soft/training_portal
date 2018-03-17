@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Start quiz</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
 <c:import url="navbar.jsp"/>

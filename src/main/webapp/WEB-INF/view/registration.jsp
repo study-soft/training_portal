@@ -44,12 +44,12 @@
         <form:errors path="firstName" cssClass="error"/>
     </div>
     <div>
-        <div>Last name:</div>
+        <div>Last name*:</div>
         <form:input path="lastName"/>
         <form:errors path="lastName" cssClass="error"/>
     </div>
     <div>
-        <div>Date of birth:</div>
+        <div>Date of birth*:</div>
         <input type="date" name="dateOfBirth">
         <form:errors path="dateOfBirth" cssClass="error"/>
     </div>

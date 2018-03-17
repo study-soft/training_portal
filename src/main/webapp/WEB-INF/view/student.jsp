@@ -10,15 +10,6 @@
 <c:import url="navbar.jsp"/>
 <h2>Hello, student! Welcome to the training portal!</h2>
 <div>
-    <a href="/student/quizzes">Quizzes</a>
-</div>
-<div>
-    <a href="/student/teachers">Teachers</a>
-</div>
-<div>
-    <a href="/student/results">Results</a>
-</div>
-<div>
     <form action="/logout" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
         <input type="submit" value="Logout">
@@ -29,7 +20,9 @@
 <div>Last name: ${student.lastName}</div>
 <div>E-mail: ${student.email}</div>
 <div>Phone number: ${student.phoneNumber}</div>
-<div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
+<c:if test="${student.dateOfBirth ne null}">
+    <div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
+</c:if>
 <div>---------Login and password---------</div>
 <div>Login: ${student.login}</div>
 <div>Password: ${student.password}</div>
@@ -45,7 +38,7 @@
     <c:otherwise>
         <div>Name: ${group.name}</div>
         <div>Creation date: <localDate:format value="${group.creationDate}"/></div>
-        <div>Number of students: </div>
+        <div>Number of students: ${numberOfStudents}</div>
         <div>Author: ${authorName}</div>
         <div>
             <a href="/student/group">More info</a>

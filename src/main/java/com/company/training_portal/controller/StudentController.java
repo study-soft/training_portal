@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,8 @@ public class StudentController {
         if (student.getGroupId() != 0) {
             group = groupDao.findGroup(student.getGroupId());
             authorName = userDao.findUserName(group.getAuthorId());
+            Integer numberOfStudents = groupDao.findStudentsNumberInGroup(student.getGroupId());
+            model.addAttribute("numberOfStudents", numberOfStudents);
         }
 
         model.addAttribute("student", student);

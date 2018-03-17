@@ -23,16 +23,16 @@
         <c:choose>
             <c:when test="${student.userId eq studentId}">
                 <tr>
-                    <td><b>${student.lastName} ${student.firstName}</b></td>
-                    <td><b>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</b></td>
-                    <td><b>${studentsQuizzes[status.index].attempt}</b></td>
-                    <td><b><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></b></td>
-                    <td><b>${statusList[status.index]}</b></td>
+                    <td><strong><a href="/student">${student.lastName} ${student.firstName}</a></strong></td>
+                    <td><strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong></td>
+                    <td><strong>${studentsQuizzes[status.index].attempt}</strong></td>
+                    <td><strong><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></strong></td>
+                    <td><strong>${statusList[status.index]}</strong></td>
                 </tr>
             </c:when>
             <c:otherwise>
                 <tr>
-                    <td>${student.lastName} ${student.firstName}</td>
+                    <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                     <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
                     <td>${studentsQuizzes[status.index].attempt}</td>
                     <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>

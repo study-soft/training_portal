@@ -24,7 +24,7 @@
         <c:choose>
             <c:when test="${student.userId eq studentId}">
                 <tr>
-                    <td><b>${student.lastName} ${student.firstName}</b></td>
+                    <td><strong>${student.lastName} ${student.firstName}</strong></td>
                     <td><a href="/student">Home</a></td>
                 </tr>
             </c:when>

@@ -12,7 +12,9 @@
 <h3>${student.lastName} ${student.firstName}</h3>
 <div>E-mail: ${student.email}</div>
 <div>Phone number: ${student.phoneNumber}</div>
-<div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
+<c:if test="${student.dateOfBirth ne null}">
+    <div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
+</c:if>
 <div>Group: ${group.name}</div>
 <h4>This student passes next quizzes:</h4>
 <table>

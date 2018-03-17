@@ -17,7 +17,7 @@
 <div>Time spent: <duration:format value="${finishedQuiz.timeSpent}"/></div>
 <div>
     <a href="/student/quizzes/${finishedQuiz.quizId}/answers">Answers</a>
-    <a href="#">Compare results</a>
+    <a href="/student/compare-results/${finishedQuiz.quizId}">Compare results</a>
 </div>
 <div>Passing time: <duration:format value="${finishedQuiz.passingTime}"/></div>
 <div>Score: ${finishedQuiz.score}</div>

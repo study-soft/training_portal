@@ -12,7 +12,9 @@
 <div>Name: ${teacher.lastName} ${teacher.firstName}</div>
 <div>E-mail: ${teacher.email}</div>
 <div>Phone number: ${teacher.phoneNumber}</div>
-<div>Date of birth: <localDate:format value="${teacher.dateOfBirth}"/></div>
+<c:if test="${teacher.dateOfBirth ne null}">
+    <div>Date of birth: <localDate:format value="${teacher.dateOfBirth}"/></div>
+</c:if>
 <h4>This teacher gave you next quizzes:</h4>
 <table>
     <tr>

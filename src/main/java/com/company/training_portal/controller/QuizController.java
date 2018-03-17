@@ -115,6 +115,7 @@ public class QuizController {
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.GET)
     public String showCurrentQuestionGet(@ModelAttribute("studentId") Long studentId,
                                          @PathVariable("quizId") Long quizId,
+                                         @SessionAttribute(CURRENT_QUIZ) Quiz quiz,
                                          @SessionAttribute(CURRENT_QUESTION_SERIAL)
                                                  Integer currentQuestionSerial,
                                          @SessionAttribute(QUESTIONS) List<Question> questions,
@@ -125,6 +126,17 @@ public class QuizController {
         Long currentQuestionId = currentQuestion.getQuestionId();
 
         setAnswers(currentQuestionType, currentQuestionId, session, model);
+
+        LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        Duration studentPassingTime = Duration.between(startTime, currentTime);
+        Duration passingTime = quiz.getPassingTime();
+        if (studentPassingTime.compareTo(passingTime) > 0) {
+            model.clear();
+            return "redirect:/student/quizzes/" + quizId + "/time-up";
+        }
+        Duration timeLeft = passingTime.minus(studentPassingTime);
+        session.setAttribute(TIME_LEFT, timeLeft);
 
         return "question";
     }
@@ -267,8 +279,9 @@ public class QuizController {
                              @SessionAttribute(RESULT) Double result,
                              @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
                              HttpSession session, Model model) {
-        Integer roundedResult = roundOff(result);
-        Integer attempt = quizDao.findAttempt(studentId, quizId) + 1;
+        Integer attempt = quizDao.findAttempt(studentId, quizId);
+        Integer roundedResult = roundOff(result * (1 - result * attempt * 0.1));
+        attempt += 1;
         LocalDateTime finishDate = LocalDateTime.now();
         quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
                 finishDate, attempt, PASSED);

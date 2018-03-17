@@ -1,5 +1,6 @@
 package com.company.training_portal.config.security;
 
+import com.company.training_portal.service.CustomAuthenticationSuccessHandler;
 import com.company.training_portal.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler successHandler;
+
     public void setUserDetailsService(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -39,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .formLogin()
+                .successHandler(successHandler)
                 .loginPage("/login")
                 .permitAll()
                 .and()

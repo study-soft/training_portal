@@ -2,12 +2,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Questions</title>
+    <title>Answers</title>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
 <c:import url="navbar.jsp"/>
-<h2>Questions</h2>
+<h2>${quiz.name}. Answers</h2>
 <c:if test="${not empty questionsOneAnswer}">
     <h3>Questions with one correct answer</h3>
     <c:forEach items="${questionsOneAnswer}" var="question">
@@ -76,6 +76,6 @@
         <div>Answer: ${quizAnswersNumber[question.questionId].correct}</div>
     </c:forEach>
 </c:if>
-<a href="/student/quizzes/${questionsNumber[0].quizId}">Back</a>
+<a href="/student/quizzes/${quiz.quizId}">Back</a>
 </body>
 </html>

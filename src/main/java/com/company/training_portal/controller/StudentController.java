@@ -1,6 +1,8 @@
 package com.company.training_portal.controller;
 
-import com.company.training_portal.dao.*;
+import com.company.training_portal.dao.GroupDao;
+import com.company.training_portal.dao.QuizDao;
+import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
@@ -11,10 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import static com.company.training_portal.model.enums.StudentQuizStatus.FINISHED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 
 @Controller
 @SessionAttributes("studentId")
@@ -220,11 +224,11 @@ public class StudentController {
             Long currentStudentId = currentStudent.getUserId();
             StudentQuizStatus status = quizDao.findStudentQuizStatus(currentStudentId, quizId);
             statusList.add(status);
-            if (status.equals(StudentQuizStatus.PASSED)) {
+            if (status.equals(PASSED)) {
                 PassedQuiz passedQuiz = quizDao.findPassedQuiz(currentStudentId, quizId);
                 studentsQuizzes.add(passedQuiz);
             }
-            if (status.equals(StudentQuizStatus.FINISHED)) {
+            if (status.equals(FINISHED)) {
                 PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(currentStudentId, quizId);
                 studentsQuizzes.add(finishedQuiz);
             }

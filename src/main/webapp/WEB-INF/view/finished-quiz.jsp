@@ -9,16 +9,13 @@
 </head>
 <body>
 <c:import url="navbar.jsp"/>
-<h2>Finished quiz</h2>
-<h3>${finishedQuiz.quizName}</h3>
+<h2>${finishedQuiz.quizName}</h2>
+<h3>Information about result</h3>
 <div>Finish date: <localDateTime:format value="${finishedQuiz.finishDate}"/></div>
 <div>Result: ${finishedQuiz.result}/${finishedQuiz.score}</div>
 <div>Attempt: ${finishedQuiz.attempt}</div>
 <div>Time spent: <duration:format value="${finishedQuiz.timeSpent}"/></div>
-<div>
-    <a href="/student/quizzes/${finishedQuiz.quizId}/answers">Answers</a>
-    <a href="/student/compare-results/${finishedQuiz.quizId}">Compare results</a>
-</div>
+<h3>Information about quiz</h3>
 <div>Passing time: <duration:format value="${finishedQuiz.passingTime}"/></div>
 <div>Score: ${finishedQuiz.score}</div>
 <div>Questions: ${finishedQuiz.questionsNumber}</div>
@@ -28,6 +25,8 @@
 <div>Explanation: ${finishedQuiz.explanation}</div>
 <div>
     <a href="/student/quizzes">Quizzes</a>
+    <a href="/student/quizzes/${finishedQuiz.quizId}/answers">Answers</a>
+    <a href="/student/compare-results/${finishedQuiz.quizId}">Compare results</a>
 </div>
 </body>
 </html>

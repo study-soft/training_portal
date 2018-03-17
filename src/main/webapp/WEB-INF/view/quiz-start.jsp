@@ -9,9 +9,11 @@
 <body>
 <c:import url="navbar.jsp"/>
 <h2>${openedQuiz.quizName}</h2>
+<h3>Information about passing</h3>
 <div>Passing time: <duration:format value="${openedQuiz.passingTime}"/></div>
 <div>Score: ${openedQuiz.score}</div>
 <div>Number of questions: ${openedQuiz.questionsNumber}</div>
+<br>
 <div>If you press "Start" you will begin passing the quiz</div>
 <div>If you do not want to pass it than press "Back"</div>
 <div>

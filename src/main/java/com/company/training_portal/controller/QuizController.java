@@ -3,11 +3,11 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
-import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,7 @@ import java.util.*;
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
+import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 
 @Controller
 public class QuizController {
@@ -30,6 +31,8 @@ public class QuizController {
     private AnswerAccordanceDao answerAccordanceDao;
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
+    private GroupDao groupDao;
+    private UserDao userDao;
 
     private Logger logger = Logger.getLogger(QuizController.class);
 
@@ -39,13 +42,17 @@ public class QuizController {
                           AnswerSimpleDao answerSimpleDao,
                           AnswerAccordanceDao answerAccordanceDao,
                           AnswerSequenceDao answerSequenceDao,
-                          AnswerNumberDao answerNumberDao) {
+                          AnswerNumberDao answerNumberDao,
+                          GroupDao groupDao,
+                          UserDao userDao) {
         this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.answerSimpleDao = answerSimpleDao;
         this.answerAccordanceDao = answerAccordanceDao;
         this.answerSequenceDao = answerSequenceDao;
         this.answerNumberDao = answerNumberDao;
+        this.groupDao = groupDao;
+        this.userDao = userDao;
     }
 
     @ModelAttribute("studentId")
@@ -65,7 +72,7 @@ public class QuizController {
         }
         OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
         model.addAttribute("openedQuiz", openedQuiz);
-        return "start-quiz";
+        return "quiz-start";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/initialize", method = RequestMethod.GET)
@@ -241,7 +248,7 @@ public class QuizController {
         }
         PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
         model.addAttribute("passedQuiz", passedQuiz);
-        return "repass-quiz";
+        return "quiz-repass";
     }
 
     @RequestMapping("/student/quizzes/{quizId}/time-up")
@@ -251,7 +258,7 @@ public class QuizController {
                              @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
                              HttpSession session, Model model) {
         showResult(studentId, quizId, result, currentQuestionSerial, session, model);
-        return "time-up";
+        return "quiz-time-up";
     }
 
     @RequestMapping("/student/quizzes/{quizId}/congratulations")
@@ -264,7 +271,7 @@ public class QuizController {
         Integer attempt = quizDao.findAttempt(studentId, quizId) + 1;
         LocalDateTime finishDate = LocalDateTime.now();
         quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
-                finishDate, attempt, StudentQuizStatus.PASSED);
+                finishDate, attempt, PASSED);
         PassedQuiz quiz = quizDao.findPassedQuiz(studentId, quizId);
         model.addAttribute("quiz", quiz);
         model.addAttribute("currentQuestionSerial", currentQuestionSerial);
@@ -278,7 +285,22 @@ public class QuizController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
-    public String showAnswers(@PathVariable("quizId") Long quizId, Model model) {
+    public String showAnswers(@ModelAttribute("studentId") Long studentId,
+                              @PathVariable("quizId") Long quizId, Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        User student = userDao.findUser(studentId);
+        Long groupId = student.getGroupId();
+        Integer finishedStudents =
+                userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
+        Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
+        if (!finishedStudents.equals(allStudents)) {
+            model.addAttribute("finishedStudents", finishedStudents);
+            model.addAttribute("allStudents", allStudents);
+            return "quiz-not-completed";
+        }
+
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
         List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);

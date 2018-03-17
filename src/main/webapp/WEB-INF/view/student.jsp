@@ -15,7 +15,7 @@
         <input type="submit" value="Logout">
     </form>
 </div>
-<div>----------Student information---------</div>
+<h3>Student information</h3>
 <div>First name: ${student.firstName}</div>
 <div>Last name: ${student.lastName}</div>
 <div>E-mail: ${student.email}</div>
@@ -23,14 +23,13 @@
 <c:if test="${student.dateOfBirth ne null}">
     <div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
 </c:if>
-<div>---------Login and password---------</div>
+<h4>Login and password</h4>
 <div>Login: ${student.login}</div>
 <div>Password: ${student.password}</div>
 <div>
     <a href="/student/edit-profile">Edit profile</a>
 </div>
-<br>
-<div>---------Group information---------</div>
+<h3>Group information</h3>
 <c:choose>
     <c:when test="${group eq null}">
         <div>You do not belong to any group</div>

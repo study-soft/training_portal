@@ -64,7 +64,7 @@
             <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
                 <tr>
                     <td>${finishedQuiz.quizName}</td>
-                    <td>${finishedQuiz.result}</td>
+                    <td>${finishedQuiz.result}/${finishedQuiz.score}</td>
                     <td>${finishedQuiz.attempt}</td>
                     <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
                     <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>

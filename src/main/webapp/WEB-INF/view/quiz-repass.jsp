@@ -9,15 +9,14 @@
 <body>
 <c:import url="navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
-<%--<div>Passing time: ${passedQuiz.passingTime}</div>--%>
+<h3>Information about result</h3>
+<div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>
+<div>Time spent: <duration:format value="${passedQuiz.passingTime}"/></div>
+<div>Attempts: ${passedQuiz.attempt}</div>
+<h3>Information about passing</h3>
 <div>Passing time: <duration:format value="${passedQuiz.passingTime}"/></div>
 <div>Score: ${passedQuiz.score}</div>
 <div>Number of questions: ${passedQuiz.questionsNumber}</div>
-<h4>Your current result</h4>
-<div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>
-<%--<div>Time spent: ${passedQuiz.timeSpent}</div>--%>
-<div>Time spent: <duration:format value="${passedQuiz.passingTime}"/></div>
-<div>Attempts: ${passedQuiz.attempt}</div>
 <br>
 <div>If you press "Repass" you will begin repassing the quiz</div>
 <div>Your total score will be less on ${passedQuiz.attempt * 10}%</div>

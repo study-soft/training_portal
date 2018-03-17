@@ -61,7 +61,7 @@
             <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
                 <div>
                         ${left} <select name="accordance${status.index}">
-                            <option selected>select...</option>
+                    <option selected>select...</option>
                     <c:forEach items="${answers.rightSide}" var="right">
                         <option value="${right}">${right}</option>
                     </c:forEach>
@@ -131,13 +131,11 @@
     </c:choose>
 </form>
 <div>${question.score} points</div>
-<c:choose>
-    <c:when test="${sessionScope.currentQuestionSerial eq 0}">
-        <div>Time left: <duration:format value="${sessionScope.currentQuiz.passingTime}"/></div>
-    </c:when>
-    <c:otherwise>
-        <div>Time left: <duration:format value="${sessionScope.timeLeft}"/></div>
-    </c:otherwise>
-</c:choose>
+<div>Time left: <duration:format value="${sessionScope.timeLeft}"/></div>
+<c:if test="${sessionScope.currentQuestionSerial ne sessionScope.questionsNumber - 1}">
+    <div>
+        <a href="/student/quizzes/continue">Finish</a>
+    </div>
+</c:if>
 </body>
 </html>

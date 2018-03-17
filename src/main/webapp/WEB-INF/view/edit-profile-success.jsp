@@ -13,7 +13,9 @@
 <div>Phone number: ${student.phoneNumber}</div>
 <div>First name: ${student.firstName}</div>
 <div>Last name: ${student.lastName}</div>
-<div>Date of birth: ${student.dateOfBirth}</div>
+<c:if test="${student.dateOfBirth ne null}">
+    <div>Date of birth: ${student.dateOfBirth}</div>
+</c:if>
 <div>
     <a href="/student">Home</a>
 </div>

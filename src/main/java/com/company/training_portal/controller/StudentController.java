@@ -259,30 +259,31 @@ public class StudentController {
                               @ModelAttribute("student") User editedStudent,
                               BindingResult bindingResult, ModelMap model) {
         logger.info("Receiving student from model attribute: " + editedStudent);
-        User student = userDao.findUser(studentId);
-        model.addAttribute("student", student);
+        User oldStudent = userDao.findUser(studentId);
+        model.addAttribute("oldStudent", oldStudent);
 
-        editedStudent.setLogin(student.getLogin());
-        editedStudent.setUserRole(student.getUserRole());
+        editedStudent.setLogin(oldStudent.getLogin());
+        editedStudent.setUserRole(oldStudent.getUserRole());
 
         userValidator.validate(editedStudent, bindingResult);
 
         String editedEmail = editedStudent.getEmail();
-        String email = student.getEmail();
+        String email = oldStudent.getEmail();
         if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
             bindingResult.rejectValue("email", "user.exists.email");
         }
         String editedPhoneNumber = editedStudent.getPhoneNumber();
-        String phoneNumber = student.getPhoneNumber();
+        String phoneNumber = oldStudent.getPhoneNumber();
         if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
             bindingResult.rejectValue("phoneNumber", "user.exists.phoneNumber");
         }
         if (bindingResult.hasErrors()) {
-            logger.info(">>>>> ERROR_MAP: " + bindingResult);
+            model.addAttribute("org.springframework.validation.BindingResult.register", bindingResult);
+            model.addAttribute("student", editedStudent);
             return "edit-profile";
         }
 
-        userDao.editUser(student.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
+        userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
                 editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
                 editedStudent.getPassword());
         model.clear();

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -373,9 +374,23 @@ public class UserDaoJdbc implements UserDao {
         ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
     }
 
+    @Transactional
     @Override
-    public void editUser(User user) {
-        throw new UnsupportedOperationException();
+    public void editUser(Long userId, String firstName, String lastName, String email,
+                         LocalDate dateOfBirth, String phoneNumber, String password) {
+        Date birthDate = null;
+        if (dateOfBirth != null) {
+            birthDate = Date.valueOf(dateOfBirth);
+        }
+        template.update(EDIT_USER, firstName, lastName, email, birthDate,
+                phoneNumber, password, userId);
+        logger.info("Edited user by userId = " + userId +
+                ": firstName: " + firstName +
+        ", lastName: " + lastName +
+        ", email: " + email +
+        ", dateOfBirth: " + dateOfBirth +
+        ", phoneNumber: " + phoneNumber +
+        ", password: " + password);
     }
 
     @Transactional
@@ -393,13 +408,18 @@ public class UserDaoJdbc implements UserDao {
     }
 
     private User mapUser(ResultSet rs, int rowNum) throws SQLException {
+        Date DbBirthDate = rs.getDate("date_of_birth");
+        LocalDate birthDate = null;
+        if (DbBirthDate != null) {
+            birthDate = DbBirthDate.toLocalDate();
+        }
         return new User.UserBuilder()
                 .userId(rs.getLong("user_id"))
                 .groupId(rs.getLong("group_id"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
                 .email(rs.getString("email"))
-                .dateOfBirth(rs.getDate("date_of_birth").toLocalDate())
+                .dateOfBirth(birthDate)
                 .phoneNumber(rs.getString("phone_number"))
                 .photo(null)
                 .login(rs.getString("login"))
@@ -467,9 +487,6 @@ public class UserDaoJdbc implements UserDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
 
-    private static final String FIND_USER_QUIZ_JUNCTION_ID_BY_STUDENT_ID_AND_QUIZ_ID =
-    "SELECT J.USER_QUIZ_JUNCTION_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.USER_ID = ? AND J.QUIZ_ID = ?;";
-
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD =
     "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;";
 
@@ -493,7 +510,10 @@ public class UserDaoJdbc implements UserDao {
     "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, ATTEMPT = ?, STUDENT_QUIZ_STATUS = ? " +
     "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
-    private static final String EDIT_USER = "";
+    private static final String EDIT_USER =
+    "UPDATE USERS " +
+    "SET FIRST_NAME = ?, LAST_NAME = ?, EMAIL = ?, DATE_OF_BIRTH = ?, PHONE_NUMBER = ?, PASSWORD = ? " +
+    "WHERE USER_ID = ?;";
 
     private static final String DELETE_STUDENT_FROM_GROUP_BY_USER_ID =
     "UPDATE USERS SET GROUP_ID = NULL WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";

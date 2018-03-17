@@ -297,6 +297,22 @@ public class UserDaoJdbcTest {
     }
 
     @Test
+    public void test_edit_user() {
+        userDao.editUser(4L, "firstName", "lastName",
+                "email@example.com", LocalDate.of(2000, 3, 25),
+                "095-000-00-00", "password");
+
+        User user = userDao.findUser(4L);
+
+        assertThat(user.getFirstName(), is("firstName"));
+        assertThat(user.getLastName(), is("lastName"));
+        assertThat(user.getEmail(), is("email@example.com"));
+        assertThat(user.getDateOfBirth(), is(LocalDate.of(2000, 3, 25)));
+        assertThat(user.getPhoneNumber(), is("095-000-00-00"));
+        assertThat(user.getPassword(), is("password"));
+    }
+
+    @Test
     public void test_delete_student_from_group_by_userId() {
         userDao.deleteStudentFromGroupByUserId(4L);
         Long groupId = userDao.findUser(4L).getGroupId();

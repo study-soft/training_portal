@@ -7,9 +7,13 @@ import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -27,16 +31,19 @@ public class StudentController {
     private UserDao userDao;
     private GroupDao groupDao;
     private QuizDao quizDao;
+    private Validator userValidator;
 
     private static final Logger logger = Logger.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(UserDao userDao,
                              GroupDao groupDao,
-                             QuizDao quizDao) {
+                             QuizDao quizDao,
+                             @Qualifier("userValidator") Validator userValidator) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
+        this.userValidator = userValidator;
     }
 
     @ModelAttribute("studentId")
@@ -237,5 +244,56 @@ public class StudentController {
         model.addAttribute("statusList", statusList);
 
         return "compare-quiz-results";
+    }
+
+    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
+    public String showEditProfile(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+        model.addAttribute("student", student);
+        model.addAttribute("birthDate", student.getDateOfBirth());
+        return "edit-profile";
+    }
+
+    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
+    public String editProfile(@ModelAttribute("studentId") Long studentId,
+                              @ModelAttribute("student") User editedStudent,
+                              BindingResult bindingResult, ModelMap model) {
+        logger.info("Receiving student from model attribute: " + editedStudent);
+        User student = userDao.findUser(studentId);
+        model.addAttribute("student", student);
+
+        editedStudent.setLogin(student.getLogin());
+        editedStudent.setUserRole(student.getUserRole());
+
+        userValidator.validate(editedStudent, bindingResult);
+
+        String editedEmail = editedStudent.getEmail();
+        String email = student.getEmail();
+        if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
+            bindingResult.rejectValue("email", "user.exists.email");
+        }
+        String editedPhoneNumber = editedStudent.getPhoneNumber();
+        String phoneNumber = student.getPhoneNumber();
+        if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
+            bindingResult.rejectValue("phoneNumber", "user.exists.phoneNumber");
+        }
+        if (bindingResult.hasErrors()) {
+            logger.info(">>>>> ERROR_MAP: " + bindingResult);
+            return "edit-profile";
+        }
+
+        userDao.editUser(student.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
+                editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
+                editedStudent.getPassword());
+        model.clear();
+        return "redirect:/student/edit-profile/success";
+    }
+
+    @RequestMapping("/student/edit-profile/success")
+    public String showEditProfileSuccess(@ModelAttribute("studentId") Long studentId,
+                                         Model model) {
+        User student = userDao.findUser(studentId);
+        model.addAttribute("student", student);
+        return "edit-profile-success";
     }
 }

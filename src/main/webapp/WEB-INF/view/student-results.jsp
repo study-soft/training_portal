@@ -34,7 +34,7 @@
                     <td>${passedQuiz.attempt}</td>
                     <td><duration:format value="${passedQuiz.timeSpent}"/></td>
                     <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                    <td><a href="/student/quizzes/${passedQuiz.quizId}/initialize">Repass</a></td>
+                    <td><a href="/student/quizzes/${passedQuiz.quizId}/repass">Repass</a></td>
                     <td>
                         <form action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

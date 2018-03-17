@@ -4,6 +4,7 @@ import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,8 @@ public interface UserDao {
                                     Integer attempt, StudentQuizStatus studentQuizStatus);
 
     //todo: make use cases of editUser(User user)
-    void editUser(User user);
+    void editUser(Long userId, String firstName, String lastName, String email, LocalDate dateOfBirth,
+                  String phoneNumber, String password);
 
     void deleteStudentFromGroupByUserId(Long userId);
 

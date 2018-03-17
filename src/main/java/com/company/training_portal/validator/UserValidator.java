@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 @Service
 public class UserValidator implements Validator {
 
-    private UserDao userDao;
-
-    public UserValidator(UserDao userDao) {
-        this.userDao = userDao;
-    }
+//    private UserDao userDao;
+//
+//    public UserValidator(UserDao userDao) {
+//        this.userDao = userDao;
+//    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -38,6 +38,10 @@ public class UserValidator implements Validator {
         validateDateOfBirth(user.getDateOfBirth(), errors);
     }
 
+    private void checkIfExists(User user, Errors errors) {
+
+    }
+
     private boolean contains(String string, String regex) {
         return Pattern.compile(regex).matcher(string).find();
     }
@@ -51,8 +55,9 @@ public class UserValidator implements Validator {
             errors.rejectValue("login", "user.login.size");
         } else if (!login.matches("\\w+")) {
             errors.rejectValue("login", "user.login.format");
-        } else if (userDao.userExistsByLogin(login)) {
-            errors.rejectValue("login", "user.exists.login");
+//        } else if (userDao.userExistsByLogin(login)) {
+//            errors.rejectValue("login", "user.exists.login");
+//        }
         }
     }
 
@@ -73,8 +78,9 @@ public class UserValidator implements Validator {
             errors.rejectValue("email", "user.email.empty");
         } else if (!email.matches("^[\\w\\d._-]+@[\\w\\d.-]+\\.[\\w\\d]{2,6}$")) {
             errors.rejectValue("email", "user.email.format");
-        } else  if (userDao.userExistsByEmail(email)) {
-            errors.rejectValue("email", "user.exists.email");
+//        } else  if (userDao.userExistsByEmail(email)) {
+//            errors.rejectValue("email", "user.exists.email");
+//        }
         }
     }
 
@@ -83,8 +89,9 @@ public class UserValidator implements Validator {
             errors.rejectValue("phoneNumber", "user.phoneNumber.empty");
         } else if (!phoneNumber.matches("\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{2})\\2([0-9]{2})")) {
             errors.rejectValue("phoneNumber", "user.phoneNumber.format");
-        } else if (userDao.userExistsByPhoneNumber(phoneNumber)) {
-            errors.rejectValue("phoneNumber", "user.exists.phoneNumber");
+//        } else if (userDao.userExistsByPhoneNumber(phoneNumber)) {
+//            errors.rejectValue("phoneNumber", "user.exists.phoneNumber");
+//        }
         }
     }
 

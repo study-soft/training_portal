@@ -8,7 +8,7 @@
 </head>
 <body>
 <c:import url="teacher-navbar.jsp"/>
-<h2>Group '${group.name}'</h2>
+<h2>${group.name}</h2>
 <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
 <div>Number of students: ${studentsNumber}</div>
 <div>Description:</div>
@@ -25,7 +25,7 @@
     <c:forEach items="${students}" var="student">
         <tr>
             <td>${student.lastName} ${student.firstName}</td>
-            <td><a href="#">More</a></td>
+            <td><a href="/student/${student.userId}">More</a></td>
             <td><a href="#">Delete</a></td>
         </tr>
     </c:forEach>

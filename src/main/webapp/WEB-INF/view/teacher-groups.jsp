@@ -9,7 +9,7 @@
 <body>
 <c:import url="teacher-navbar.jsp"/>
 <h2>Groups</h2>
-<div>Search... <a href="#">+ Create</a></div>
+<div>Search... <a href="/teacher/groups/create">+ Create</a></div>
 <br>
 <table>
     <tr>

@@ -6,16 +6,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<ul>
+<ul class="nav">
     <li><a href="/student">Home</a></li>
     <li><a href="/student/quizzes">Quizzes</a></li>
     <li><a href="/student/teachers">Teachers</a></li>
     <li><a href="/student/results">Results</a></li>
     <c:if test="${studentId ne null}">
-        <li style="float: right;">
-            <form action="/logout" method="post">
+        <li class="right">
+            <%--<form action="/logout" method="post">--%>
+                <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">--%>
+                <%--<input type="submit" value="Logout">--%>
+            <%--</form>--%>
+            <form action="/logout" method="post" id="logout">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                <input type="submit" value="Logout">
+                <a onclick="document.getElementById('logout').submit();">Logout</a>
             </form>
         </li>
     </c:if>

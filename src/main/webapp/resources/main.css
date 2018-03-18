@@ -3,7 +3,7 @@
 }
 
 .success {
-    color:lime
+    color: lime
 }
 
 .highlight {
@@ -27,10 +27,17 @@ th, td {
     padding: 8px;
 }
 
-tr:nth-child(even){background-color: #f2f2f2}
-tr:nth-child(odd){background-color: #ffffff}
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
 
-tr:hover {background-color: #ddd;}
+tr:nth-child(odd) {
+    background-color: #ffffff
+}
+
+tr:hover {
+    background-color: #ddd;
+}
 
 th {
     background-color: #0380ff;
@@ -41,6 +48,10 @@ th {
     background-color: #2b6ad8;
 }
 
+.right {
+    float: right;
+}
+
 input[type="submit"], input[type="button"] {
     color: white;
     background-color: #1751b5;
@@ -48,17 +59,42 @@ input[type="submit"], input[type="button"] {
     margin: 8px;
     padding: 8px 12px;
     border-radius: 7px;
-    text-decoration:none;
+    text-decoration: none;
     transition-duration: 0.4s;
 }
 
 input[type="submit"]:hover, input[type="button"]:hover {
     background-color: #002875;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),
-    0 17px 50px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
-ul {
+/*ul.nav {*/
+    /*list-style-type: none;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+    /*overflow: hidden;*/
+    /*background-color: #444343;*/
+/*}*/
+
+/*li.nav {*/
+    /*float: left;*/
+/*}*/
+
+/*li.nav a {*/
+    /*display: block;*/
+    /*color: white;*/
+    /*text-align: center;*/
+    /*padding: 14px 16px;*/
+    /*text-decoration: none;*/
+/*}*/
+
+/*li.nav a:hover:not(.active) {*/
+    /*background-color: #2355b4;*/
+/*}*/
+
+/************************************/
+ul.nav {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -66,11 +102,11 @@ ul {
     background-color: #444343;
 }
 
-li {
+ul.nav li {
     float: left;
 }
 
-li a {
+ul.nav li a {
     display: block;
     color: white;
     text-align: center;
@@ -78,6 +114,14 @@ li a {
     text-decoration: none;
 }
 
-li a:hover:not(.active) {
+ul.nav li a:hover:not(.active) {
     background-color: #2355b4;
+}
+
+ul.nav li a.active {
+    background-color: #2b6ad8;
+}
+
+ul.nav li.right {
+    float: right;
 }

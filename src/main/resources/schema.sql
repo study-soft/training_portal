@@ -47,7 +47,7 @@ CREATE TABLE answers_simple (
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
-  name varchar(255) NOT NULL,
+  name varchar(255) UNIQUE NOT NULL,
   description varchar(2048) NULL,
   creation_date date NOT NULL,
   author_id BIGINT NOT NULL,

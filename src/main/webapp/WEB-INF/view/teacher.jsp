@@ -10,7 +10,7 @@
 <c:import url="teacher-navbar.jsp"/>
 <h2>Hello, teacher! Welcome to the training portal!</h2>
 <div>
-    <a href="#">+ Create group</a>
+    <a href="/teacher/groups/create">+ Create group</a>
     <a href="#">+ Create quiz</a>
 </div>
 <h3>Teacher information</h3>

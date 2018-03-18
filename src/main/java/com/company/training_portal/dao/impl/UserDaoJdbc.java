@@ -120,6 +120,15 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<User> findStudentWithoutGroup() {
+        List<User> students = template.query(FIND_STUDENTS_WITHOUT_GROUP, this::mapUser);
+        logger.info("Found students without group:");
+        students.forEach(logger::info);
+        return students;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<User> findAllTeachers() {
         List<User> teachers = template.query(FIND_ALL_TEACHERS, this::mapUser);
         logger.info("All teachers found:");
@@ -448,9 +457,14 @@ public class UserDaoJdbc implements UserDao {
     "WHERE GROUP_ID IS ? AND USER_ROLE = 'STUDENT' " +
     "ORDER BY LAST_NAME;";
 
-    private static final String FIND_ALL_STUDENTS = "SELECT * FROM USERS WHERE USER_ROLE = 'STUDENT';";
+    private static final String FIND_ALL_STUDENTS =
+    "SELECT * FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
-    private static final String FIND_ALL_TEACHERS = "SELECT * FROM USERS WHERE USER_ROLE = 'TEACHER';";
+    private static final String FIND_ALL_TEACHERS =
+    "SELECT * FROM USERS WHERE USER_ROLE = 'TEACHER';";
+
+    private static final String FIND_STUDENTS_WITHOUT_GROUP =
+    "SELECT * FROM USERS WHERE GROUP_ID IS NULL AND USER_ROLE = 'STUDENT' ORDER BY LAST_NAME;";
 
     private static final String FIND_STUDENT_IDS_WITHOUT_GROUP =
     "SELECT USER_ID FROM USERS WHERE USER_ROLE = 'STUDENT' AND GROUP_ID IS NULL;";

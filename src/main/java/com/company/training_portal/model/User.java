@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class User {
+public class User implements Comparable<User> {
 
     private Long userId;
     private Long groupId;
@@ -177,6 +177,15 @@ public class User {
                 ", password='" + password + '\'' +
                 ", userRole=" + userRole +
                 '}';
+    }
+
+    @Override
+    public int compareTo(User user) {
+        int compareResult = this.lastName.compareTo(user.getLastName());
+        if (compareResult == 0) {
+            return this.firstName.compareTo(user.getLastName());
+        }
+        return compareResult;
     }
 
     public static final class UserBuilder {

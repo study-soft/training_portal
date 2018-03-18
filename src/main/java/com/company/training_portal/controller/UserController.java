@@ -2,8 +2,6 @@ package com.company.training_portal.controller;
 
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
-import com.company.training_portal.model.enums.UserRole;
-import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,9 +12,6 @@ import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.HashMap;
 
 @Controller
 public class UserController {
@@ -44,13 +39,13 @@ public class UserController {
         logger.info("Bind request parameter to User backing object: " + user);
         userValidator.validate(user, bindingResult);
         if (userDao.userExistsByLogin(user.getLogin())) {
-            bindingResult.rejectValue("login", "user.exists.login");
+            bindingResult.rejectValue("login", "user.login.exists");
         }
         if (userDao.userExistsByEmail(user.getEmail())) {
-            bindingResult.rejectValue("email", "user.exists.email");
+            bindingResult.rejectValue("email", "user.email.exists");
         }
         if (userDao.userExistsByPhoneNumber(user.getPhoneNumber())) {
-            bindingResult.rejectValue("phoneNumber", "user.exists.phoneNumber");
+            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
         }
         if (bindingResult.hasErrors()) {
             return "registration";

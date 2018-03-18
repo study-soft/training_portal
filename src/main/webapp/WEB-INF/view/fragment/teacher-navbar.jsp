@@ -5,14 +5,14 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<ul>
+<ul class="nav">
     <li><a href="/teacher">Home</a></li>
     <li><a href="/teacher/quizzes">Quizzes</a></li>
     <li><a href="/teacher/groups">Groups</a></li>
     <li><a href="/teacher/students">Students</a></li>
     <li><a href="/student/results">Results</a></li>
     <c:if test="${teacherId ne null}">
-        <li style="float: right;">
+        <li class="right">
                 <%--<form action="/logout" method="post">--%>
                 <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">--%>
                 <%--<input type="submit" value="Logout">--%>

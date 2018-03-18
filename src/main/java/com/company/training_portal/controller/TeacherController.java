@@ -7,26 +7,34 @@ import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 
 @Controller
+@PropertySource("classpath:validationMessages.properties")
 public class TeacherController {
 
     private UserDao userDao;
     private GroupDao groupDao;
     private QuizDao quizDao;
+    private Environment environment;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
 
@@ -34,8 +42,11 @@ public class TeacherController {
     public TeacherController(UserDao userDao,
                              GroupDao groupDao,
                              QuizDao quizDao) {
+                             GroupDao groupDao,
+                             Environment environment) {
         this.userDao = userDao;
         this.groupDao = groupDao;
+        this.environment = environment;
         this.quizDao = quizDao;
     }
 
@@ -85,5 +96,70 @@ public class TeacherController {
                               Model model) {
 
         return "teacher/teacher-quizzes";
+    }
+
+    @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
+    public String showCreateGroup(@ModelAttribute("teacherId") Long teacherId, Model model) {
+        List<User> students = userDao.findStudentWithoutGroup();
+        model.addAttribute("students", students);
+        return "create-group";
+    }
+
+    @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.POST)
+    public String createGroup(@RequestParam("name") String name,
+                              @RequestParam("description") String description,
+                              @RequestParam Map<String, String> studentIdsMap,
+                              @ModelAttribute("teacherId") Long teacherId,
+                              RedirectAttributes redirectAttributes, ModelMap model) {
+        logger.info("request param 'name' = " + name);
+        logger.info("request param 'description' = " + description);
+        logger.info("request param 'studentIdsMap' = " + studentIdsMap);
+        name = name.trim();
+        if (name == null || name.isEmpty()) {
+            String emptyName = environment.getProperty("group.name.empty");
+            logger.info("Get property 'group.name.empty': " + emptyName);
+            List<User> students = userDao.findStudentWithoutGroup();
+            model.addAttribute("emptyName", emptyName);
+            model.addAttribute("students", students);
+            return "create-group";
+        } else {
+//            List<User> students = userDao.findStudentWithoutGroup();
+//            model.addAttribute("students", students);
+        }
+
+        studentIdsMap.remove("name");
+        studentIdsMap.remove("description");
+
+        LocalDate creationDate = LocalDate.now();
+        Group group = new Group.GroupBuilder()
+                .name(name)
+                .description(description)
+                .creationDate(creationDate)
+                .authorId(teacherId)
+                .build();
+        Long groupId = groupDao.addGroup(group);
+
+        List<Long> studentIds = studentIdsMap.values().stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        userDao.addStudentsToGroup(groupId, studentIds);
+
+        List<User> students = new ArrayList<>();
+        for (Long studentId : studentIds) {
+            User student = userDao.findUser(studentId);
+            students.add(student);
+        }
+        Collections.sort(students);
+
+        redirectAttributes.addFlashAttribute("group", group);
+        redirectAttributes.addFlashAttribute("students", students);
+        model.clear();
+
+        return "redirect:/teacher/groups/create/success";
+    }
+
+    @RequestMapping("/teacher/groups/create/success")
+    public String showCreateGroupSuccess() {
+        return "group-create-success";
     }
 }

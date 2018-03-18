@@ -274,12 +274,12 @@ public class StudentController {
         String editedEmail = editedStudent.getEmail();
         String email = oldStudent.getEmail();
         if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
-            bindingResult.rejectValue("email", "user.exists.email");
+            bindingResult.rejectValue("email", "user.email.exists");
         }
         String editedPhoneNumber = editedStudent.getPhoneNumber();
         String phoneNumber = oldStudent.getPhoneNumber();
         if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
-            bindingResult.rejectValue("phoneNumber", "user.exists.phoneNumber");
+            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.register", bindingResult);

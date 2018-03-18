@@ -2,7 +2,6 @@
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <html>
 <head>
     <title>Congratulations</title>

@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${finishedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Finish date: <localDateTime:format value="${finishedQuiz.finishDate}"/></div>

@@ -1,10 +1,10 @@
 package com.company.training_portal.controller;
 
 import com.company.training_portal.dao.GroupDao;
+import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
-import com.company.training_portal.model.Group;
-import com.company.training_portal.model.SecurityUser;
-import com.company.training_portal.model.User;
+import com.company.training_portal.model.*;
+import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,20 +16,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 
 @Controller
 public class TeacherController {
 
     private UserDao userDao;
     private GroupDao groupDao;
+    private QuizDao quizDao;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
 
     @Autowired
     public TeacherController(UserDao userDao,
-                             GroupDao groupDao) {
+                             GroupDao groupDao,
+                             QuizDao quizDao) {
         this.userDao = userDao;
         this.groupDao = groupDao;
+        this.quizDao = quizDao;
     }
 
     @ModelAttribute("teacherId")
@@ -41,11 +48,11 @@ public class TeacherController {
     public String showTeacherHome(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
         model.addAttribute("teacher", teacher);
-        return "teacher";
+        return "teacher/teacher";
     }
 
     @RequestMapping("/teacher/groups")
-    public String showGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
+    public String showTeacherGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<Group> groups = groupDao.findGroups(teacherId);
         List<Integer> studentsNumber = new ArrayList<>();
         for (Group group : groups) {
@@ -56,7 +63,7 @@ public class TeacherController {
         model.addAttribute("groups", groups);
         model.addAttribute("studentsNumber", studentsNumber);
 
-        return "teacher-groups";
+        return "teacher/teacher-groups";
     }
 
     @RequestMapping("/teacher/groups/{groupId}")
@@ -70,6 +77,13 @@ public class TeacherController {
         model.addAttribute("studentsNumber", studentsNumber);
         model.addAttribute("students", students);
 
-        return "group-info";
+        return "teacher/group-info";
+    }
+
+    @RequestMapping("/teacher/quizzes")
+    public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
+                              Model model) {
+
+        return "teacher/teacher-quizzes";
     }
 }

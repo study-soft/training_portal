@@ -1,10 +1,13 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.model.OpenedQuiz;
 import com.company.training_portal.model.PassedQuiz;
+import com.company.training_portal.model.Question;
 import com.company.training_portal.model.Quiz;
+import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.junit.Test;
@@ -24,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
@@ -41,8 +46,15 @@ public class QuizDaoJdbcTest {
     @Autowired
     private QuizDao quizDao;
 
+    @Autowired
+    private QuestionDao questionDao;
+
     public void setQuizDao(QuizDao quizDao) {
         this.quizDao = quizDao;
+    }
+
+    public void setQuestionDao(QuestionDao questionDao) {
+        this.questionDao = questionDao;
     }
 
     @Test
@@ -53,9 +65,11 @@ public class QuizDaoJdbcTest {
                 .description("Try your procedural skills")
                 .explanation("Hope you had procedural fun :)")
                 .creationDate(LocalDate.of(2018, 3, 1))
-                .passingTime(Duration.of(20, MINUTES))
+                .passingTime(Duration.of(30, SECONDS))
                 .authorId(1L)
-                .teacherQuizStatus(TeacherQuizStatus.PUBLISHED)
+                .questionsNumber(12)
+                .score(30)
+                .teacherQuizStatus(PUBLISHED)
                 .build();
 
         Quiz quizByQuizId = quizDao.findQuiz(1L);
@@ -83,20 +97,13 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_all_quiz_ids() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L));
-        List<Long> quizIds = quizDao.findAllQuizIds();
-        assertEquals(testQuizIds, quizIds);
-    }
-
-    @Test
     public void test_find_all_quizzes_by_authorId() {
         List<Quiz> testQuizzes = new ArrayList<>();
         testQuizzes.add(quizDao.findQuiz(1L));
         testQuizzes.add(quizDao.findQuiz(2L));
-        testQuizzes.add(quizDao.findQuiz(5L));
-        testQuizzes.add(quizDao.findQuiz(9L));
         testQuizzes.add(quizDao.findQuiz(10L));
+        testQuizzes.add(quizDao.findQuiz(9L));
+        testQuizzes.add(quizDao.findQuiz(5L));
 
         List<Quiz> quizzes = quizDao.findTeacherQuizzes(1L);
 
@@ -104,10 +111,15 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_all_quiz_ids_by_authorId() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 2L, 5L, 9L, 10L));
-        List<Long> quizIds = quizDao.findAllQuizIdsByAuthorId(1L);
-        assertEquals(testQuizIds, quizIds);
+    public void test_find_all_quizzes_by_author_id_and_teacher_quiz_status() {
+        List<Quiz> testQuizzes = new ArrayList<>();
+        testQuizzes.add(quizDao.findQuiz(1L));
+        testQuizzes.add(quizDao.findQuiz(2L));
+        testQuizzes.add(quizDao.findQuiz(5L));
+
+        List<Quiz> quizzes = quizDao.findTeacherQuizzes(1L, PUBLISHED);
+
+        assertEquals(testQuizzes, quizzes);
     }
 
     @Test
@@ -123,32 +135,6 @@ public class QuizDaoJdbcTest {
         List<Quiz> quizzes = quizDao.findStudentQuizzes(4L);
 
         assertEquals(testQuizzes, quizzes);
-    }
-
-    // todo: no test data
-    @Test
-    public void test_find_all_closed_quiz_ids_by_author_id() {
-        List<Long> testQuizIds = new ArrayList<>();
-        List<Long> quizIds = quizDao.findAllClosedQuizIdsByAuthorId(1L);
-        assertEquals(testQuizIds, quizIds);
-    }
-
-    // todo: no test data
-    @Test
-    public void test_find_all_notPublished_quiz_ids_by_author_id() {
-        List<Long> testQuizIds = new ArrayList<>(asList(9L, 10L));
-        List<Long> quizIds = quizDao.findAllNotPublishedQuizIdsByAuthorId(1L);
-        assertEquals(testQuizIds, quizIds);
-    }
-
-    @Test
-    public void test_find_all_quiz_ids_by_studentId_and_studentQuizStatus() {
-        List<Long> testQuizIds = new ArrayList<>(asList(1L, 4L));
-        List<Long> quizIds
-                = quizDao.findAllQuizIdsByStudentIdAndStudentQuizStatus(
-                        4L, StudentQuizStatus.PASSED);
-
-        assertEquals(testQuizIds, quizIds);
     }
 
     @Test
@@ -173,7 +159,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_quizzes_number_by_AuthorId_with_teacherQuizStatus() {
         Map<TeacherQuizStatus, Integer> testResults = new HashMap<>();
-        testResults.put(TeacherQuizStatus.PUBLISHED, 3);
+        testResults.put(PUBLISHED, 3);
         testResults.put(TeacherQuizStatus.UNPUBLISHED, 2);
 
         Map<TeacherQuizStatus, Integer> results
@@ -185,10 +171,12 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_all_student_results() {
         Map<Long, Integer> testResults = new HashMap<>();
-        testResults.put(1L, 10);
-        testResults.put(2L, 5);
-        testResults.put(3L, 3);
-        testResults.put(4L, 3);
+        testResults.put(1L, 20);
+        testResults.put(2L, 8);
+        testResults.put(3L, 1);
+        testResults.put(4L, 2);
+        testResults.put(5L, 0);
+        testResults.put(6L, 0);
 
         Map<Long, Integer> results = quizDao.findAllStudentResults(3L);
 
@@ -196,18 +184,11 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_quiz_ids_by_studentId_and_attempt() {
-        List<Long> testQuizIds = new ArrayList<>(asList(3L, 2L, 1L));
-        List<Long> quizIds
-                = quizDao.findQuizIdsByStudentIdAndAttempt(3L, 1);
-        assertEquals(testQuizIds, quizIds);
-    }
-
-    @Test
     public void test_find_quizzes_by_studentId_and_authorId() {
         List<Quiz> testQuizzes = new ArrayList<>();
-        testQuizzes.add(quizDao.findQuiz(2L));
         testQuizzes.add(quizDao.findQuiz(1L));
+        testQuizzes.add(quizDao.findQuiz(2L));
+        testQuizzes.add(quizDao.findQuiz(5L));
 
         List<Quiz> quizzes = quizDao.findQuizzes(3L, 1L);
         assertEquals(testQuizzes, quizzes);
@@ -229,7 +210,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_result_by_studentId_and_quizId() {
         Integer result = quizDao.findResult(3L, 1L);
-        assertThat(result, is(10));
+        assertThat(result, is(20));
     }
 
     @Test
@@ -262,7 +243,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_attempt_by_studentId_and_quizId() {
         Integer result = quizDao.findAttempt(3L, 1L);
-        assertThat(result, is(1));
+        assertThat(result, is(2));
     }
 
     @Test
@@ -305,7 +286,7 @@ public class QuizDaoJdbcTest {
                 .passingTime(Duration.of(5, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 8, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 16, 4))
-                .timeSpent(Duration.ofMinutes(6L))
+                .timeSpent(Duration.ofSeconds(364))
                 .build();
 
         PassedQuiz passedQuiz = quizDao.findPassedQuiz(4L, 4L);
@@ -321,10 +302,10 @@ public class QuizDaoJdbcTest {
                 .description("Try your collections skills")
                 .explanation("Hope you had fun with collections :)")
                 .authorName("Peterson Angel")
-                .result(3)
+                .result(2)
                 .score(3)
                 .questionsNumber(2)
-                .attempt(1)
+                .attempt(2)
                 .passingTime(Duration.of(15, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 5, 0))
@@ -382,7 +363,7 @@ public class QuizDaoJdbcTest {
                 .passingTime(Duration.of(5, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 8, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 16, 4))
-                .timeSpent(Duration.ofMinutes(6L))
+                .timeSpent(Duration.ofSeconds(364))
                 .build());
         testPassedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
                 .quizId(1L)
@@ -394,10 +375,10 @@ public class QuizDaoJdbcTest {
                 .score(30)
                 .questionsNumber(12)
                 .attempt(1)
-                .passingTime(Duration.of(20, MINUTES))
+                .passingTime(Duration.of(30, SECONDS))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 5, 0, 4, 10))
-                .timeSpent(Duration.ofMinutes(4L))
+                .timeSpent(Duration.ofSeconds(242))
                 .build());
 
         List<PassedQuiz> passedQuizzes
@@ -415,10 +396,10 @@ public class QuizDaoJdbcTest {
                 .description("Try your collections skills")
                 .explanation("Hope you had fun with collections :)")
                 .authorName("Peterson Angel")
-                .result(3)
+                .result(2)
                 .score(3)
                 .questionsNumber(2)
-                .attempt(1)
+                .attempt(2)
                 .passingTime(Duration.of(15, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 5, 0))
@@ -437,7 +418,7 @@ public class QuizDaoJdbcTest {
                 .passingTime(Duration.of(10, MINUTES))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 5, 0, 3, 4))
-                .timeSpent(Duration.ofMinutes(3L))
+                .timeSpent(Duration.ofSeconds(183))
                 .build());
 
         List<PassedQuiz> finishedQuizzes
@@ -455,9 +436,21 @@ public class QuizDaoJdbcTest {
                 .creationDate(LocalDate.of(2018, 3, 7))
                 .passingTime(Duration.of(10, MINUTES))
                 .authorId(1L)
+                .questionsNumber(1)
+                .score(1)
                 .teacherQuizStatus(TeacherQuizStatus.UNPUBLISHED)
                 .build();
         Long quizId = quizDao.addQuiz(testQuiz);
+        System.out.println(">>>>>quizId: " + quizId);
+        Question question = new Question.QuestionBuilder()
+                .questionId(100_000L)
+                .quizId(quizId)
+                .body("Question body")
+                .explanation("Question explanation")
+                .score(1)
+                .questionType(ONE_ANSWER)
+                .build();
+        questionDao.addQuestion(question);
 
         Quiz quiz = quizDao.findQuiz(quizId);
 

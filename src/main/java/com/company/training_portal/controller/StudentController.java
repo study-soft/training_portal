@@ -222,13 +222,11 @@ public class StudentController {
         User student = userDao.findUser(studentId);
         List<User> studentsInGroup = userDao.findStudents(student.getGroupId());
         model.addAttribute("studentsInGroup", studentsInGroup);
-        logger.info(">>>>>Set attribute 'studentsInGroup': " + studentsInGroup);
 
         List<PassedQuiz> studentsQuizzes = new ArrayList<>();
         List<StudentQuizStatus> statusList = new ArrayList<>();
         for (User currentStudent : studentsInGroup) {
             Long currentStudentId = currentStudent.getUserId();
-            logger.info(">>>currentStudentId: " + currentStudentId);
             StudentQuizStatus status = quizDao.findStudentQuizStatus(currentStudentId, quizId);
             statusList.add(status);
             switch (status) {
@@ -248,8 +246,6 @@ public class StudentController {
         }
         model.addAttribute("studentsQuizzes", studentsQuizzes);
         model.addAttribute("statusList", statusList);
-        logger.info(">>>>>Set attribute 'studentQuizzes': " + studentsQuizzes);
-        logger.info(">>>>>Set attribute 'statusList': " + statusList);
 
         return "student_general/compare-quiz-results";
     }

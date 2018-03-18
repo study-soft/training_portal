@@ -23,25 +23,25 @@ INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_
 VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
 
 -- Table: quizzes
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:00:30', 1, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*2*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*3*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*4*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*5*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('IO', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*6*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Generics', 'Try your generics skills', 'Hope you had generic fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*7*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*8*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Pascal advanced', 'Try your senior pascal skills', 'Hope you had pascal fun :)', '2018-03-11', '00:05:00', 2, 'UNPUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*9*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('HTML basics', 'Try your HTML skills', 'Hope you had HTML fun :)', '2018-03-11', '00:10:00', 1, 'UNPUBLISHED');
-INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+/*10*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('HTML forms', 'Try your HTML skills with forms', 'Hope you had HTML fun :)', '2018-03-11', '00:09:00', 1, 'UNPUBLISHED');
 
 -- Table: user_quiz_junctions
@@ -102,9 +102,9 @@ VALUES (1, 'Question 1.1 body?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
 /*2*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2);
 /*3*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.3 body?', 'Question 1.3 explanation', 'ACCORDANCE', 3);
+VALUES (1, 'Set accordance between programming languages and their application area', 'Question 1.3 explanation', 'ACCORDANCE', 3);
 /*4*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.4 body?', 'Question 1.4 explanation', 'SEQUENCE', 3);
+VALUES (1, 'Arrange programming languages in order to their appearance', 'Pascal - 1970, C++ - 1983, Java - 1996, Angular JS - 2009', 'SEQUENCE', 3);
 /*5*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.5 body?', 'Question 1.5 explanation', 'NUMBER', 5);
 /*6*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
@@ -112,9 +112,9 @@ VALUES (1, 'Question 1.6 body?', 'Question 1.6 explanation', 'ONE_ANSWER', 1);
 /*7*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.7 body?', 'Question 1.7 explanation', 'FEW_ANSWERS', 2);
 /*8*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.8 body?', 'Question 1.8 explanation', 'ACCORDANCE', 4);
+VALUES (1, 'Set accordance between code fragments and their description?', 'Question 1.8 explanation', 'ACCORDANCE', 4);
 /*9*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.9 body?', 'Question 1.9 explanation', 'SEQUENCE', 4);
+VALUES (1, 'Arrange classes and interfaces from parent to child', 'Question 1.9 explanation', 'SEQUENCE', 4);
 /*10*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.10 body?', 'Question 1.10 explanation', 'NUMBER', 3);
 /*11*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
@@ -144,6 +144,28 @@ VALUES (5, 'Question 5.2 body?', 'Question 5.2 explanation', 'SEQUENCE', 4);
 
 /*21*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (6, 'Question 6.1 body?', 'Question 6.1 explanation', 'NUMBER', 3);
+
+/*22*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (7, 'Question 7.1 body?', 'Question 7.1 explanation', 'ONE_ANSWER', 1);
+
+/*23*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (8, 'Question 8.1 body?', 'Question 8.1 explanation', 'FEW_ANSWERS', 3);
+
+/*24*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (9, 'Question 9.1 body?', 'Question 9.1 explanation', 'NUMBER', 4);
+
+/*25*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Which element DOESN''T BELONGS TO HTML forms?', '''Name'' is input type element, NOT form', 'ONE_ANSWER', 1);
+/*26*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Set accordance between HTML form elements and their description', 'Question 6.1 explanation', 'ACCORDANCE', 4);
+/*27*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Enter the year when Berners-Lee wrote HTML', 'End of 1990', 'NUMBER', 5);
+/*28*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Which input restriction specifies a regular expression to check the input value against', 'It is ''pattern'' restriction', 'ONE_ANSWER', 3);
+/*29*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Set correct sequence of tags in HTML document', '<html> -> <form action=\"handler.php\"> -> <input type=\"checkbox\"> -> </body>', 'SEQUENCE', 3);
+/*30*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
+VALUES (10, 'Select ALL correct HTML form input types', '''style'' and ''value'' are NOT input types', 'FEW_ANSWERS', 3);
 
 -- Table: answers_simple
 INSERT INTO answers_simple (question_id, body, correct) VALUES (1, 'incorrect answer', false);
@@ -194,6 +216,34 @@ INSERT INTO answers_simple (question_id, body, correct) VALUES (19, 'incorrect a
 INSERT INTO answers_simple (question_id, body, correct) VALUES (19, 'correct answer', true);
 INSERT INTO answers_simple (question_id, body, correct) VALUES (19, 'incorrect answer', false);
 
+INSERT INTO answers_simple (question_id, body, correct) VALUES (22, 'incorrect answer', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (22, 'correct answer', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (22, 'incorrect answer', false);
+
+INSERT INTO answers_simple (question_id, body, correct) VALUES (23, 'correct answer', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (23, 'incorrect answer', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (23, 'correct answer', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (23, 'incorrect answer', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (23, 'correct answer', true);
+
+INSERT INTO answers_simple (question_id, body, correct) VALUES (25, 'text', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (25, 'select', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (25, 'name', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (25, 'input', false);
+
+INSERT INTO answers_simple (question_id, body, correct) VALUES (28, 'value', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (28, 'step', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (28, 'size', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (28, 'pattern', true);
+
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'radio', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'submit', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'style', false);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'button', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'reset', true);
+INSERT INTO answers_simple (question_id, body, correct) VALUES (30, 'value', false);
+
+
 -- Table: answers_accordance
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
@@ -201,7 +251,10 @@ VALUES (3, 'SQL', 'database', 'Java', 'backend', 'HTML', 'frontend', 'Pascal', '
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
 VALUES (8, '(a == 1)', 'expression', 'a = b + 1;', 'statement', '{a = 0; b = a + 1;}', 'block', '[a-zA-Z]+', 'regExp');
-
+INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
+left_side_3, right_side_3, left_side_4, right_side_4)
+VALUES (26, '<textarea>', 'Defines a multiline input control', '<select>', '	Defines a drop-down list',
+'<option>', 'Defines an option in a drop-down list', '<input>', '	Defines an input control');
 
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
@@ -210,9 +263,13 @@ INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (9, 'Object', 'Collection', 'List', 'ArrayList');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (20, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
+INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
+VALUES (29, '<html>', '<form action=\"handler.php\">', '<input type=\"checkbox\">', '</body');
 
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);
 INSERT INTO answers_number (question_id, correct) VALUES (10, 3);
 INSERT INTO answers_number (question_id, correct) VALUES (18, 1);
 INSERT INTO answers_number (question_id, correct) VALUES (21, 1);
+INSERT INTO answers_number (question_id, correct) VALUES (24, 1);
+INSERT INTO answers_number (question_id, correct) VALUES (27, 1990);

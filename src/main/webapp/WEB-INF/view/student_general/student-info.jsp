@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Student information</h2>
 <h3>${student.lastName} ${student.firstName}</h3>
 <div>E-mail: ${student.email}</div>

@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Group information</h2>
 <h3>${group.name}</h3>
 <div>Created: <localDate:format value="${group.creationDate}"/></div>

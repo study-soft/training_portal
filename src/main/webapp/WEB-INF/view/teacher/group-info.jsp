@@ -7,7 +7,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="teacher-navbar.jsp"/>
+<c:import url="../fragment/teacher-navbar.jsp"/>
 <h2>Group '${group.name}'</h2>
 <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
 <div>Number of students: ${studentsNumber}</div>

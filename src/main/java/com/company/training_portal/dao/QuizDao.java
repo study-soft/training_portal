@@ -17,19 +17,11 @@ public interface QuizDao {
 
     List<Quiz> findAllQuizzes();
 
-    List<Long> findAllQuizIds();
-
     List<Quiz> findTeacherQuizzes(Long authorId);
 
-    List<Long> findAllQuizIdsByAuthorId(Long authorId);
+    List<Quiz> findTeacherQuizzes(Long authorId, TeacherQuizStatus status);
 
     List<Quiz> findStudentQuizzes(Long studentId);
-
-    List<Long> findAllClosedQuizIdsByAuthorId(Long authorId);
-
-    List<Long> findAllNotPublishedQuizIdsByAuthorId(Long authorId);
-
-    List<Long> findAllQuizIdsByStudentIdAndStudentQuizStatus(Long studentId, StudentQuizStatus studentQuizStatus);
 
     Integer findQuizzesNumber(Long authorId);
 
@@ -42,8 +34,6 @@ public interface QuizDao {
 
     // key: quizId, value: result
     Map<Long, Integer> findAllStudentResults(Long studentId);
-
-    List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt);
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 

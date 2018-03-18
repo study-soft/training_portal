@@ -7,7 +7,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Student teachers</h2>
 <div>Search...</div>
 <table>

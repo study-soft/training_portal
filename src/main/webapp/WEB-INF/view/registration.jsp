@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
-<c:import url="fragment/navbar.jsp"/>
+<c:import url="fragment/student-navbar.jsp"/>
 <form:form action="/register" method="post" modelAttribute="user">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <div>

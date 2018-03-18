@@ -7,7 +7,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="teacher-navbar.jsp"/>
+<c:import url="../fragment/teacher-navbar.jsp"/>
 <h2>Groups</h2>
 <div>Search... <a href="#">+ Create</a></div>
 <br>

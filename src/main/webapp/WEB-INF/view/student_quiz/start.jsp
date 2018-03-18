@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${openedQuiz.quizName}</h2>
 <h3>Information about passing</h3>
 <div>Passing time: <duration:format value="${openedQuiz.passingTime}"/></div>

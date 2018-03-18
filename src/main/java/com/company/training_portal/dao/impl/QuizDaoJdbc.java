@@ -68,15 +68,6 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findAllQuizIds() {
-        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS,
-                Long.class);
-        logger.info("All quiz ids found: " + quizIds);
-        return quizIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public List<Quiz> findTeacherQuizzes(Long authorId) {
         List<Quiz> quizzes = template.query(FIND_ALL_QUIZZES_BY_AUTHOR_ID,
                 new Object[]{authorId}, this::mapQuiz);
@@ -85,13 +76,15 @@ public class QuizDaoJdbc implements QuizDao {
         return quizzes;
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public List<Long> findAllQuizIdsByAuthorId(Long authorId) {
-        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID,
-                new Object[]{authorId}, Long.class);
-        logger.info("All quiz ids by authorId found: " + quizIds);
-        return quizIds;
+    public List<Quiz> findTeacherQuizzes(Long authorId, TeacherQuizStatus status) {
+        List<Quiz> quizzes = template.query(
+                FIND_QUIZZES_BY_AUTHOR_ID_AND_TEACHER_QUIZ_STATUS,
+                new Object[]{authorId, status.getTeacherQuizStatus()},
+                this::mapQuiz);
+        logger.info("All " + status + " quizzes by authorId found: ");
+        quizzes.forEach(logger::info);
+        return quizzes;
     }
 
     @Transactional(readOnly = true)
@@ -103,37 +96,6 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("Found quizzes by studentId: " + quizzes);
         quizzes.forEach(logger::info);
         return quizzes;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> findAllClosedQuizIdsByAuthorId(Long authorId) {
-        List<Long> quizIds = template.queryForList(
-                FIND_ALL_CLOSED_QUIZ_IDS_BY_AUTHOR_ID,
-                new Object[]{authorId}, Long.class);
-        logger.info("All closed quiz ids by authorId found: " + quizIds);
-        return quizIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> findAllNotPublishedQuizIdsByAuthorId(Long authorId) {
-        List<Long> quizIds = template.queryForList(FIND_ALL_NOT_PUBLISHED_QUIZ_IDS_BY_AUTHOR_ID,
-                new Object[]{authorId}, Long.class);
-        logger.info("All not published quiz ids by authorId found: " + quizIds);
-        return quizIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> findAllQuizIdsByStudentIdAndStudentQuizStatus(
-            Long studentId, StudentQuizStatus studentQuizStatus) {
-        List<Long> quizIds = template.queryForList(
-                FIND_ALL_QUIZ_IDS_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS,
-                new Object[]{studentId, studentQuizStatus.getStudentQuizStatus()},
-                Long.class);
-        logger.info("All quiz ids by studentId and studentQuizStatus: " + quizIds);
-        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -206,17 +168,6 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("All student results by studentId found:");
         results.forEach((k, v) -> logger.info("quizId: " + k + ", result: " + v));
         return results;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> findQuizIdsByStudentIdAndAttempt(Long studentId, Integer attempt) {
-        List<Long> quizIds = template.queryForList(
-                FIND_QUIZ_IDS_BY_STUDENT_ID_AND_ATTEMPT,
-                new Object[]{studentId, attempt},
-                Long.class);
-        logger.info("All quiz ids by studentId and attempt found: " + quizIds);
-        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -453,6 +404,8 @@ public class QuizDaoJdbc implements QuizDao {
                 .passingTime(Duration.between(LocalTime.MIDNIGHT,
                         rs.getTime("passing_time").toLocalTime()))
                 .authorId(rs.getLong("author_id"))
+                .score(rs.getInt("score"))
+                .questionsNumber(rs.getInt("questions_number"))
                 .teacherQuizStatus(TeacherQuizStatus
                         .valueOf(rs.getString("teacher_quiz_status")))
                 .build();
@@ -492,36 +445,54 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     private static final String FIND_QUIZ_BY_QUIZ_ID =
-    "SELECT * FROM QUIZZES WHERE QUIZ_ID = ?;";
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE QUIZZES.QUIZ_ID = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;"; // Need group by for case when no quiz for such quizId
 
     private static final String FIND_ALL_QUIZZES =
-    "SELECT * FROM QUIZZES;";
-
-    private static final String FIND_ALL_QUIZ_IDS =
-    "SELECT QUIZ_ID FROM QUIZZES;";
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_ALL_QUIZZES_BY_AUTHOR_ID =
-    "SELECT * FROM QUIZZES WHERE AUTHOR_ID = ?;";
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE QUIZZES.AUTHOR_ID = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
-    "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
+    private static final String FIND_QUIZZES_BY_AUTHOR_ID_AND_TEACHER_QUIZ_STATUS =
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE QUIZZES.AUTHOR_ID = ? AND QUIZZES.TEACHER_QUIZ_STATUS = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_QUIZZES_BY_STUDENT_ID =
-    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
-            "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ?;";
-
-    private static final String FIND_ALL_CLOSED_QUIZ_IDS_BY_AUTHOR_ID =
-    "SELECT QUIZ_ID FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'CLOSED' AND AUTHOR_ID = ?;";
-
-    private static final String FIND_ALL_NOT_PUBLISHED_QUIZ_IDS_BY_AUTHOR_ID =
-    "SELECT QUIZ_ID FROM QUIZZES WHERE TEACHER_QUIZ_STATUS = 'UNPUBLISHED' AND AUTHOR_ID = ?;";
-
-    private static final String FIND_ALL_QUIZ_IDS_BY_STUDENT_ID_AND_STUDENT_QUIZ_STATUS =
-    "SELECT QUIZZES.QUIZ_ID " +
-    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND STUDENT_QUIZ_STATUS = ?;";
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_QUIZZES_NUMBER_BY_AUTHOR_ID =
     "SELECT COUNT(QUIZ_ID) FROM QUIZZES WHERE AUTHOR_ID = ?;";
@@ -543,23 +514,28 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "WHERE J.USER_ID = ?;";
 
-    private static final String FIND_QUIZ_IDS_BY_STUDENT_ID_AND_ATTEMPT =
-    "SELECT QUIZZES.QUIZ_ID " +
-    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND J.ATTEMPT = ?;";
-
     private static final String FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID =
-    "SELECT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
-            "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ?;";
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_PASSED_AND_FINISHED_QUIZZES_BY_GROUP_ID =
-    "SELECT DISTINCT QUIZZES.QUIZ_ID, QUIZZES.NAME, QUIZZES.DESCRIPTION, QUIZZES.EXPLANATION, " +
-    "QUIZZES.CREATION_DATE, QUIZZES.PASSING_TIME, QUIZZES.AUTHOR_ID, QUIZZES.TEACHER_QUIZ_STATUS " +
+    "SELECT DISTINCT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'FINISHED') " +
+    "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
     private static final String FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID =

@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Results</h2>
 <div>Search...</div>
 <h3>Passed quizzes</h3>

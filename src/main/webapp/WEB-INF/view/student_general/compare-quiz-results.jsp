@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Compare quiz results</h2>
 <h3>${quiz.name}</h3>
 <table>

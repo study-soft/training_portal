@@ -7,7 +7,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Profile information successfully changed</h2>
 <div>Password: ${student.password}</div>
 <div>Email: ${student.email}</div>

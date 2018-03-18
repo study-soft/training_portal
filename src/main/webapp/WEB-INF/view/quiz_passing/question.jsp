@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
 <h2>${sessionScope.currentQuiz.name}</h2>
 <h3 style="display: inline">${question.body}</h3>

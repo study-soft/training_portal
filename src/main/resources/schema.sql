@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (
   group_id bigint NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
-  description varchar(2048) NULL,
+  description varchar(65535) NULL,
   creation_date date NOT NULL,
   author_id BIGINT NOT NULL,
   CONSTRAINT group_pk PRIMARY KEY (group_id)
@@ -59,8 +59,8 @@ DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
   question_id bigint NOT NULL AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
-  body varchar(2048) NOT NULL,
-  explanation varchar(2048) NULL,
+  body varchar(65535) NOT NULL,
+  explanation varchar(65535) NULL,
   question_type varchar(255) NOT NULL,
   score int NOT NULL,
   CONSTRAINT question_pk PRIMARY KEY (question_id)
@@ -71,8 +71,8 @@ DROP TABLE IF EXISTS quizzes;
 CREATE TABLE quizzes (
   quiz_id bigint NOT NULL AUTO_INCREMENT,
   name varchar(255) UNIQUE NOT NULL,
-  description varchar(2048) NULL,
-  explanation varchar(2048) NULL,
+  description varchar(65535) NULL,
+  explanation varchar(65535) NULL,
   creation_date date NOT NULL,
   passing_time time NULL,
   author_id bigint NOT NULL,

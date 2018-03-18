@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Attention</h2>
 <div>
     You should continue <strong>${sessionScope.currentQuiz.name}</strong> quiz.

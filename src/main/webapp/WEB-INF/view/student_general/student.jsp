@@ -8,14 +8,14 @@
     <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Hello, student! Welcome to the training portal!</h2>
-<div>
-    <form action="/logout" method="post">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-        <input type="submit" value="Logout">
-    </form>
-</div>
+<%--<div>--%>
+    <%--<form action="/logout" method="post">--%>
+        <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">--%>
+        <%--<input type="submit" value="Logout">--%>
+    <%--</form>--%>
+<%--</div>--%>
 <h3>Student information</h3>
 <div>First name: ${student.firstName}</div>
 <div>Last name: ${student.lastName}</div>

@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Quiz finished</h2>
 <div>You have finished <strong>${finishedQuiz.quizName}</strong> quiz from ${finishedQuiz.attempt} attempt.</div>
 <div>Your result: ${finishedQuiz.result}/${finishedQuiz.score}</div>

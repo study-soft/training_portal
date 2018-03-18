@@ -8,7 +8,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Edit profile: ${oldStudent.login}</h2>
 <form:form action="/student/edit-profile" method="post" modelAttribute="student">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

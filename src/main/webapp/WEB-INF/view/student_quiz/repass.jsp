@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>

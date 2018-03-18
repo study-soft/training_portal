@@ -14,6 +14,8 @@ public class Quiz {
     private LocalDate creationDate;
     private Duration passingTime;
     private Long authorId;
+    private Integer questionsNumber;
+    private Integer score;
     private TeacherQuizStatus teacherQuizStatus;
 
     public Quiz() {
@@ -27,6 +29,8 @@ public class Quiz {
         this.creationDate = builder.creationDate;
         this.passingTime = builder.passingTime;
         this.authorId = builder.authorId;
+        this.questionsNumber = builder.questionsNumber;
+        this.score = builder.score;
         this.teacherQuizStatus = builder.teacherQuizStatus;
     }
 
@@ -86,6 +90,22 @@ public class Quiz {
         this.authorId = authorId;
     }
 
+    public Integer getQuestionsNumber() {
+        return questionsNumber;
+    }
+
+    public void setQuestionsNumber(Integer questionsNumber) {
+        this.questionsNumber = questionsNumber;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
     public TeacherQuizStatus getTeacherQuizStatus() {
         return teacherQuizStatus;
     }
@@ -108,6 +128,8 @@ public class Quiz {
         if (!creationDate.equals(quiz.creationDate)) return false;
         if (!passingTime.equals(quiz.passingTime)) return false;
         if (!authorId.equals(quiz.authorId)) return false;
+        if (questionsNumber != null ? !questionsNumber.equals(quiz.questionsNumber) : quiz.questionsNumber!= null) return false;
+        if (score != null ? !score.equals(quiz.score) : quiz.score != null) return false;
         return teacherQuizStatus.equals(quiz.teacherQuizStatus);
     }
 
@@ -120,6 +142,8 @@ public class Quiz {
         result = 31 * result + creationDate.hashCode();
         result = 31 * result + passingTime.hashCode();
         result = 31 * result + authorId.hashCode();
+        result = 31 * result + questionsNumber.hashCode();
+        result = 31 * result + score.hashCode();
         result = 31 * result + teacherQuizStatus.hashCode();
         return result;
     }
@@ -134,6 +158,8 @@ public class Quiz {
                 ", creationDate=" + creationDate +
                 ", passingTime=" + passingTime +
                 ", authorId=" + authorId +
+                ", questionsNumber=" + questionsNumber +
+                ", score=" + score +
                 ", teacherQuizStatus=" + teacherQuizStatus +
                 '}';
     }
@@ -147,6 +173,8 @@ public class Quiz {
         private LocalDate creationDate;
         private Duration passingTime;
         private Long authorId;
+        private Integer questionsNumber;
+        private Integer score;
         private TeacherQuizStatus teacherQuizStatus;
 
         public QuizBuilder() {
@@ -184,6 +212,16 @@ public class Quiz {
 
         public QuizBuilder authorId(Long authorId) {
             this.authorId = authorId;
+            return this;
+        }
+
+        public QuizBuilder questionsNumber(Integer questionsNumber) {
+            this.questionsNumber = questionsNumber;
+            return this;
+        }
+
+        public QuizBuilder score(Integer score) {
+            this.score = score;
             return this;
         }
 

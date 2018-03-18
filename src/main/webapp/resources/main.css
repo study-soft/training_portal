@@ -6,6 +6,13 @@
     color:lime
 }
 
+.highlight {
+    border-left: 5px solid green;
+    width: fit-content;
+    background-color: #a7f9aa;
+    padding: 10px;
+}
+
 body {
     background-color: #ccfcf5;
 }
@@ -32,6 +39,23 @@ th {
 
 .active {
     background-color: #2b6ad8;
+}
+
+input[type="submit"], input[type="button"] {
+    color: white;
+    background-color: #1751b5;
+    border: 0;
+    margin: 8px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    text-decoration:none;
+    transition-duration: 0.4s;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #002875;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),
+    0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 ul {

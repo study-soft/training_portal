@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Home</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Hello, student! Welcome to the training portal!</h2>
 <div>
     <form action="/logout" method="post">

@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.company.training_portal.model.enums.StudentQuizStatus.FINISHED;
-import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
-
 @Controller
 @SessionAttributes("studentId")
 public class StudentController {
@@ -67,7 +64,7 @@ public class StudentController {
         model.addAttribute("authorName", authorName);
         model.addAttribute("group", group);
 
-        return "student";
+        return "student_general/student";
     }
 
     @RequestMapping(value = "/student/{studentId}", method = RequestMethod.GET)
@@ -86,7 +83,7 @@ public class StudentController {
         model.addAttribute("passedQuizzes", passedQuizzes);
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
-        return "student-info";
+        return "student_general/student-info";
     }
 
     @RequestMapping(value = "/student/group", method = RequestMethod.GET)
@@ -105,7 +102,7 @@ public class StudentController {
         List<User> students = userDao.findStudents(groupId);
         model.addAttribute("students", students);
 
-        return "group";
+        return "student_general/group";
     }
 
     @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
@@ -118,7 +115,7 @@ public class StudentController {
 
         model.addAttribute("teachers", teachers);
 
-        return "student-teachers";
+        return "student_general/teachers";
     }
 
     @RequestMapping(value = "/student/teachers/{teacherId}", method = RequestMethod.GET)
@@ -139,7 +136,7 @@ public class StudentController {
         }
         model.addAttribute("statusList", statusList);
 
-        return "teacher-info";
+        return "student_general/teacher-info";
     }
 
     @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
@@ -156,7 +153,7 @@ public class StudentController {
                 = quizDao.findFinishedQuizzes(studentId);
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
-        return "student-quizzes";
+        return "student_general/quizzes";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.GET)
@@ -168,15 +165,15 @@ public class StudentController {
             case OPENED:
                 OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
                 model.addAttribute("openedQuiz", openedQuiz);
-                return "opened-quiz";
+                return "student_quiz/opened";
             case PASSED:
                 PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
                 model.addAttribute("passedQuiz", passedQuiz);
-                return "passed-quiz";
+                return "student_quiz/passed";
             case FINISHED:
                 PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
                 model.addAttribute("finishedQuiz", finishedQuiz);
-                return "finished-quiz";
+                return "student_quiz/finished";
         }
         return "hello";
     }
@@ -191,7 +188,7 @@ public class StudentController {
                 quizDao.findFinishedQuizzes(studentId);
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
-        return "student-results";
+        return "student_general/results";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/finished", method = RequestMethod.POST)
@@ -201,7 +198,7 @@ public class StudentController {
         quizDao.finishQuiz(studentId, quizId);
         PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
         model.addAttribute("finishedQuiz", finishedQuiz);
-        return "quiz-finished";
+        return "student_quiz/quiz-finishing";
     }
 
 
@@ -210,7 +207,7 @@ public class StudentController {
         User student = userDao.findUser(studentId);
         List<Quiz> groupQuizzes = quizDao.findPassedAndFinishedGroupQuizzes(student.getGroupId());
         model.addAttribute("groupQuizzes", groupQuizzes);
-        return "compare-results";
+        return "student_general/compare-results";
     }
 
     @RequestMapping(value = "/student/compare-results/{quizId}")
@@ -220,30 +217,41 @@ public class StudentController {
 
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
+        logger.info(">>>>>Set attribute 'quiz': " + quiz);
 
         User student = userDao.findUser(studentId);
         List<User> studentsInGroup = userDao.findStudents(student.getGroupId());
         model.addAttribute("studentsInGroup", studentsInGroup);
+        logger.info(">>>>>Set attribute 'studentsInGroup': " + studentsInGroup);
 
         List<PassedQuiz> studentsQuizzes = new ArrayList<>();
         List<StudentQuizStatus> statusList = new ArrayList<>();
         for (User currentStudent : studentsInGroup) {
             Long currentStudentId = currentStudent.getUserId();
+            logger.info(">>>currentStudentId: " + currentStudentId);
             StudentQuizStatus status = quizDao.findStudentQuizStatus(currentStudentId, quizId);
             statusList.add(status);
-            if (status.equals(PASSED)) {
-                PassedQuiz passedQuiz = quizDao.findPassedQuiz(currentStudentId, quizId);
-                studentsQuizzes.add(passedQuiz);
-            }
-            if (status.equals(FINISHED)) {
-                PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(currentStudentId, quizId);
-                studentsQuizzes.add(finishedQuiz);
+            switch (status) {
+                case OPENED:
+                    PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder().build();
+                    studentsQuizzes.add(openedQuiz);
+                    break;
+                case PASSED:
+                    PassedQuiz passedQuiz = quizDao.findPassedQuiz(currentStudentId, quizId);
+                    studentsQuizzes.add(passedQuiz);
+                    break;
+                case FINISHED:
+                    PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(currentStudentId, quizId);
+                    studentsQuizzes.add(finishedQuiz);
+                    break;
             }
         }
         model.addAttribute("studentsQuizzes", studentsQuizzes);
         model.addAttribute("statusList", statusList);
+        logger.info(">>>>>Set attribute 'studentQuizzes': " + studentsQuizzes);
+        logger.info(">>>>>Set attribute 'statusList': " + statusList);
 
-        return "compare-quiz-results";
+        return "student_general/compare-quiz-results";
     }
 
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
@@ -251,7 +259,7 @@ public class StudentController {
         User student = userDao.findUser(studentId);
         model.addAttribute("student", student);
         model.addAttribute("birthDate", student.getDateOfBirth());
-        return "edit-profile";
+        return "student_general/edit-profile";
     }
 
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
@@ -280,7 +288,7 @@ public class StudentController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.register", bindingResult);
             model.addAttribute("student", editedStudent);
-            return "edit-profile";
+            return "student_general/edit-profile";
         }
 
         userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
@@ -295,6 +303,6 @@ public class StudentController {
                                          Model model) {
         User student = userDao.findUser(studentId);
         model.addAttribute("student", student);
-        return "edit-profile-success";
+        return "student_general/edit-profile-success";
     }
 }

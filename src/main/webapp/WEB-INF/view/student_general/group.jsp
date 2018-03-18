@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Group</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Group information</h2>
 <h3>${group.name}</h3>
 <div>Created: <localDate:format value="${group.creationDate}"/></div>
@@ -38,7 +39,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

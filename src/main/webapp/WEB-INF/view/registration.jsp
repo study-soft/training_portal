@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Registration</title>
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="fragment/navbar.jsp"/>
 <form:form action="/register" method="post" modelAttribute="user">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <div>
@@ -55,6 +56,7 @@
     </div>
     <div>
         <input type="submit" value="Register">
+        <input type="reset" value="Reset">
     </div>
 </form:form>
 <div>

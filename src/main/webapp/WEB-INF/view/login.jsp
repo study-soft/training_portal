@@ -3,10 +3,11 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="fragment/navbar.jsp"/>
 <form action="/login" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <c:if test="${param.error ne null}">

@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +71,7 @@ public class QuizController {
         }
         OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
         model.addAttribute("openedQuiz", openedQuiz);
-        return "quiz-start";
+        return "student_quiz/start";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/initialize", method = RequestMethod.GET)
@@ -138,7 +137,7 @@ public class QuizController {
         Duration timeLeft = passingTime.minus(studentPassingTime);
         session.setAttribute(TIME_LEFT, timeLeft);
 
-        return "question";
+        return "quiz_passing/question";
     }
 
     @SuppressWarnings("unchecked")
@@ -240,12 +239,12 @@ public class QuizController {
 
         session.setAttribute(CURRENT_QUESTION_SERIAL, currentQuestionSerial);
 
-        return "question";
+        return "quiz_passing/question";
     }
 
     @RequestMapping("/student/quizzes/continue")
     public String continuePassing(Model model) {
-        return "quiz-continue";
+        return "quiz_passing/continue";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
@@ -260,7 +259,7 @@ public class QuizController {
         }
         PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
         model.addAttribute("passedQuiz", passedQuiz);
-        return "quiz-repass";
+        return "student_quiz/repass";
     }
 
     @RequestMapping("/student/quizzes/{quizId}/time-up")
@@ -270,7 +269,7 @@ public class QuizController {
                              @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
                              HttpSession session, Model model) {
         showResult(studentId, quizId, result, currentQuestionSerial, session, model);
-        return "quiz-time-up";
+        return "quiz_passing/time-up";
     }
 
     @RequestMapping("/student/quizzes/{quizId}/congratulations")
@@ -294,12 +293,29 @@ public class QuizController {
         session.removeAttribute(CURRENT_QUIZ);
         session.removeAttribute(CURRENT_QUESTION_SERIAL);
         session.removeAttribute(TIME_LEFT);
-        return "quiz-congratulations";
+        return "quiz_passing/congratulations";
+    }
+
+    @RequestMapping("/student/quizzes/{quizId}/not-completed")
+    public String showQuizNotCompleted(@ModelAttribute("studentId") Long studentId,
+                                       @PathVariable("quizId") Long quizId,
+                                       Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        User student = userDao.findUser(studentId);
+        Long groupId = student.getGroupId();
+        Integer finishedStudents =
+                userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
+        Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
+        model.addAttribute("finishedStudents", finishedStudents);
+        model.addAttribute("allStudents", allStudents);
+        return "student_quiz/not-completed";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
     public String showAnswers(@ModelAttribute("studentId") Long studentId,
-                              @PathVariable("quizId") Long quizId, Model model) {
+                              @PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
 
@@ -311,7 +327,8 @@ public class QuizController {
         if (!finishedStudents.equals(allStudents)) {
             model.addAttribute("finishedStudents", finishedStudents);
             model.addAttribute("allStudents", allStudents);
-            return "quiz-not-completed";
+            model.clear();
+            return "redirect:/student/quizzes/" + quizId + "/not-completed";
         }
 
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
@@ -358,7 +375,7 @@ public class QuizController {
         model.addAttribute("quizAnswersSequence", quizAnswersSequence);
         model.addAttribute("quizAnswersNumber", quizAnswersNumber);
 
-        return "answers";
+        return "student_quiz/answers";
     }
 
     //    INTERNALS===================================================================

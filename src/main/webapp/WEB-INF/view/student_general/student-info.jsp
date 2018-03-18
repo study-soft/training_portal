@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Student info</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Student information</h2>
 <h3>${student.lastName} ${student.firstName}</h3>
 <div>E-mail: ${student.email}</div>
@@ -16,7 +17,7 @@
     <div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
 </c:if>
 <div>Group: ${group.name}</div>
-<h4>This student passes next quizzes:</h4>
+<h3>${student.firstName} passes next quizzes:</h3>
 <table>
     <tr>
         <th>Name</th>
@@ -50,7 +51,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student/group">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

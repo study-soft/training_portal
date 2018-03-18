@@ -3,10 +3,11 @@
 <html>
 <head>
     <title>Teachers</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Student teachers</h2>
 <div>Search...</div>
 <table>
@@ -26,7 +27,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

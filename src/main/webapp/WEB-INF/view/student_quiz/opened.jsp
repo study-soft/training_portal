@@ -5,10 +5,11 @@
 <html>
 <head>
     <title>Opened quiz</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${openedQuiz.quizName}</h2>
 <h3>Information about quiz</h3>
 <div>Submitted: <localDateTime:format value="${openedQuiz.submitDate}"/></div>
@@ -19,7 +20,7 @@
 <div>Author: ${openedQuiz.authorName}</div>
 <div>
     <a href="/student/quizzes/${openedQuiz.quizId}/start">Start</a>
-    <a href="/student/quizzes">Quizzes</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

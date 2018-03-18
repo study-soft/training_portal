@@ -3,10 +3,11 @@
 <html>
 <head>
     <title>Answers</title>
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${quiz.name}. Answers</h2>
 <c:if test="${not empty questionsOneAnswer}">
     <h3>Questions with one correct answer</h3>
@@ -76,6 +77,6 @@
         <div>Answer: ${quizAnswersNumber[question.questionId].correct}</div>
     </c:forEach>
 </c:if>
-<a href="/student/quizzes/${quiz.quizId}">Back</a>
+<input onclick="window.history.go(-1);" type="button" value="Back"/>
 </body>
 </html>

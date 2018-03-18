@@ -4,10 +4,12 @@
 <html>
 <head>
     <title>Repass quiz</title>
+    <link rel="shortcut icon" type="image/png"
+          href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>
@@ -18,17 +20,19 @@
 <div>Score: ${passedQuiz.score}</div>
 <div>Number of questions: ${passedQuiz.questionsNumber}</div>
 <br>
-<div>If you press "Repass" you will begin repassing the quiz</div>
-<div>Your total score will be less on ${passedQuiz.attempt * 10}%</div>
-<div>If you press "Finish" you will finish quiz with current result</div>
-<div>If you do not want to repass it than press "Back"</div>
+<div class="highlight">
+    <div>If you press "Repass" you will begin repassing the quiz</div>
+    <div>Your total score will be less on ${passedQuiz.attempt * 10}%</div>
+    <div>If you press "Finish" you will finish quiz with current result</div>
+    <div>If you do not want to repass it than press "Back"</div>
+</div>
 <div>
-    <a href="/student/quizzes/${passedQuiz.quizId}/initialize">Repass</a>
+    <a href="/student/quizzes/${passedQuiz.quizId}/initialize" class="btn-custom">Repass</a>
     <form style="display: inline" action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <input type="submit" value="Finish"/>
+        <input type="submit" class="btn-custom" value="Finish"/>
     </form>
-    <a href="/student/quizzes/${passedQuiz.quizId}">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

@@ -5,10 +5,11 @@
 <html>
 <head>
     <title>Finished quiz</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${finishedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Finish date: <localDateTime:format value="${finishedQuiz.finishDate}"/></div>
@@ -24,9 +25,9 @@
 <div>Description: ${finishedQuiz.description}</div>
 <div>Explanation: ${finishedQuiz.explanation}</div>
 <div>
-    <a href="/student/quizzes">Quizzes</a>
     <a href="/student/quizzes/${finishedQuiz.quizId}/answers">Answers</a>
     <a href="/student/compare-results/${finishedQuiz.quizId}">Compare results</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

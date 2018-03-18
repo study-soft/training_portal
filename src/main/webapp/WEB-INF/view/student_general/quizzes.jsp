@@ -4,16 +4,17 @@
 <html>
 <head>
     <title>Quizzes</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
-<h2>Student quizzes</h2>
+<c:import url="../fragment/navbar.jsp"/>
+<h2>Quizzes</h2>
 <div>Search...</div>
 <h3>Opened quizzes</h3>
 <c:choose>
     <c:when test="${empty openedQuizzes}">
-        <div>You do not have any quizzes. Say your teachers to add you.</div>
+        <div>You do not have any opened quizzes. Say your teachers to give you some</div>
     </c:when>
     <c:otherwise>
         <table>
@@ -95,7 +96,7 @@
     </c:otherwise>
 </c:choose>
 <div>
-    <a href="/student">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

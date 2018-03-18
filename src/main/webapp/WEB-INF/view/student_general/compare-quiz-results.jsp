@@ -4,13 +4,13 @@
 <html>
 <head>
     <title>Compare quiz results</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Compare quiz results</h2>
 <h3>${quiz.name}</h3>
-<h4>Quiz results</h4>
 <table>
     <tr>
         <th>Name</th>
@@ -24,7 +24,14 @@
             <c:when test="${student.userId eq studentId}">
                 <tr>
                     <td><strong><a href="/student">${student.lastName} ${student.firstName}</a></strong></td>
-                    <td><strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong></td>
+                    <c:choose>
+                        <c:when test="${statusList[status.index] ne 'OPENED'}">
+                            <td><strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong></td>
+                        </c:when>
+                        <c:otherwise>
+                            <td></td>
+                        </c:otherwise>
+                    </c:choose>
                     <td><strong>${studentsQuizzes[status.index].attempt}</strong></td>
                     <td><strong><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></strong></td>
                     <td><strong>${statusList[status.index]}</strong></td>
@@ -33,7 +40,14 @@
             <c:otherwise>
                 <tr>
                     <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                    <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
+                    <c:choose>
+                        <c:when test="${statusList[status.index] ne 'OPENED'}">
+                            <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td></td>
+                        </c:otherwise>
+                    </c:choose>
                     <td>${studentsQuizzes[status.index].attempt}</td>
                     <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>
                     <td>${statusList[status.index]}</td>
@@ -43,7 +57,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student/compare-results">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

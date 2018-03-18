@@ -5,13 +5,14 @@
 <html>
 <head>
     <title>Results</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Results</h2>
 <div>Search...</div>
-<div>Passed quizzes</div>
+<h3>Passed quizzes</h3>
 <c:choose>
     <c:when test="${empty passedQuizzes}">
         <div>You have finally completed all your quizzes</div>
@@ -47,7 +48,7 @@
     </c:otherwise>
 </c:choose>
 <br>
-<div>Finished quizzes</div>
+<h3>Finished quizzes</h3>
 <c:choose>
     <c:when test="${empty finishedQuizzes}">
         <div>You do not have finished quizzes.</div>
@@ -75,9 +76,7 @@
 </c:choose>
 <div>
     <a href="/student/compare-results">Compare results</a>
-</div>
-<div>
-    <a href="/student">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

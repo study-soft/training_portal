@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Question</title>
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
 <h2>${sessionScope.currentQuiz.name}</h2>
 <h3 style="display: inline">${question.body}</h3>

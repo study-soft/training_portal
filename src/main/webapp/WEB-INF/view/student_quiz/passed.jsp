@@ -5,10 +5,12 @@
 <html>
 <head>
     <title>Passed quiz</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png"
+          href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Finish date: <localDateTime:format value="${passedQuiz.finishDate}"/></div>
@@ -23,17 +25,19 @@
 <div>Author: ${passedQuiz.authorName}</div>
 <div>Description: ${passedQuiz.description}</div>
 <br>
-<div>If you are satisfied with your result, you need to finish quiz</div>
-<div>Also you can try again but score will be less</div>
+<div class="highlight">
+    <div>If you are satisfied with your result, you need to finish quiz</div>
+    <div>Also you can try again but score will be less</div>
+</div>
 <div>
     <form style="display: inline" action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="submit" value="Finish">
     </form>
     <a href="/student/quizzes/${passedQuiz.quizId}/repass">Repass</a>
-    <a href="/student/quizzes">Quizzes</a>
     <a href="/student/quizzes/${passedQuiz.quizId}/answers">Answers</a>
     <a href="/student/compare-results/${passedQuiz.quizId}">Compare results</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

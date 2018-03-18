@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Continue</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Attention</h2>
 <div>
     You should continue <strong>${sessionScope.currentQuiz.name}</strong> quiz.

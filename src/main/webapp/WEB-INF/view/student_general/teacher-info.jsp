@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Teacher info</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Teacher information:</h2>
 <div>Name: ${teacher.lastName} ${teacher.firstName}</div>
 <div>E-mail: ${teacher.email}</div>
@@ -15,7 +16,7 @@
 <c:if test="${teacher.dateOfBirth ne null}">
     <div>Date of birth: <localDate:format value="${teacher.dateOfBirth}"/></div>
 </c:if>
-<h4>This teacher gave you next quizzes:</h4>
+<h3>${teacher.firstName} gave you next quizzes:</h3>
 <table>
     <tr>
         <th>Name</th>
@@ -31,7 +32,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student/teachers">Back</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

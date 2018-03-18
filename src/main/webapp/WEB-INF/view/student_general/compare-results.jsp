@@ -3,10 +3,11 @@
 <html>
 <head>
     <title>Compare results</title>
-    <link type="text/css" rel="stylesheet" href="../../resources/main.css">
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Compare results</h2>
 <h3>Quizzes in group</h3>
 <table>
@@ -22,8 +23,7 @@
     </c:forEach>
 </table>
 <div>
-    <a href="/student/results">Results</a>
-    <a href="/student/quizzes">Quizzes</a>
+    <input onclick="window.history.go(-1);" type="button" value="Back"/>
 </div>
 </body>
 </html>

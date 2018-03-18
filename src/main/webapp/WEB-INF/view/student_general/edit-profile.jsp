@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Edit profile</title>
+    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
     <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<c:import url="navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Edit profile: ${oldStudent.login}</h2>
 <form:form action="/student/edit-profile" method="post" modelAttribute="student">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -43,7 +44,10 @@
     </div>
     <div>
         <input type="submit" value="Save">
+        <input type="reset" value="Reset">
+        <input onclick="window.history.go(-1);" type="button" value="Back"/>
     </div>
 </form:form>
+
 </body>
 </html>

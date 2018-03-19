@@ -3,3 +3,4 @@
 target/
 out/
 *iml
+src/main/webapp/resources/bootstrap/

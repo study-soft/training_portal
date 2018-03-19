@@ -1,10 +1,14 @@
 package com.company.training_portal.controller;
 
 import com.company.training_portal.dao.GroupDao;
+import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
-import com.company.training_portal.model.*;
-import com.company.training_portal.model.enums.TeacherQuizStatus;
+import com.company.training_portal.model.Group;
+import com.company.training_portal.model.Quiz;
+import com.company.training_portal.model.SecurityUser;
+import com.company.training_portal.model.User;
+import com.company.training_portal.model.enums.QuestionType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -22,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
@@ -34,6 +37,7 @@ public class TeacherController {
     private UserDao userDao;
     private GroupDao groupDao;
     private QuizDao quizDao;
+    private QuestionDao questionDao;
     private Environment environment;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
@@ -41,11 +45,12 @@ public class TeacherController {
     @Autowired
     public TeacherController(UserDao userDao,
                              GroupDao groupDao,
-                             QuizDao quizDao) {
-                             GroupDao groupDao,
+                             QuizDao quizDao,
+                             QuestionDao questionDao,
                              Environment environment) {
         this.userDao = userDao;
         this.groupDao = groupDao;
+        this.questionDao = questionDao;
         this.environment = environment;
         this.quizDao = quizDao;
     }
@@ -94,12 +99,35 @@ public class TeacherController {
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
                               Model model) {
+        List<Quiz> unpublishedQuizzes = quizDao.findTeacherQuizzes(teacherId, UNPUBLISHED);
+        List<Quiz> publishedQuizzes = quizDao.findTeacherQuizzes(teacherId, PUBLISHED);
+        model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
+        model.addAttribute("publishedQuizzes", publishedQuizzes);
 
         return "teacher/teacher-quizzes";
     }
 
+    @RequestMapping("/teacher/quizzes/{quizId}")
+    public String showTeacherQuiz(/*@ModelAttribute("teacherId") Long teacherId,*/
+                                  @PathVariable("quizId") Long quizId,
+                                  Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
+        model.addAttribute("questions", questions);
+
+        switch (quiz.getTeacherQuizStatus()) {
+            case UNPUBLISHED:
+                model.addAttribute("unpublishedQuiz", quiz);
+                return "teacher/unpublished-quiz";
+            case PUBLISHED:
+                model.addAttribute("publishedQuiz", quiz);
+                return "teacher/published-quiz";
+        }
+        return "teacher/teacher";
+    }
+
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
-    public String showCreateGroup(@ModelAttribute("teacherId") Long teacherId, Model model) {
+    public String showCreateGroup(/*@ModelAttribute("teacherId") Long teacherId,*/ Model model) {
         List<User> students = userDao.findStudentWithoutGroup();
         model.addAttribute("students", students);
         return "create-group";

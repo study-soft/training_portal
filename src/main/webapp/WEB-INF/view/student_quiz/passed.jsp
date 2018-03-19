@@ -25,7 +25,7 @@
 <div>Author: ${passedQuiz.authorName}</div>
 <div>Description: ${passedQuiz.description}</div>
 <br>
-<div class="highlight">
+<div class="highlight-green">
     <div>If you are satisfied with your result, you need to finish quiz</div>
     <div>Also you can try again but score will be less</div>
 </div>

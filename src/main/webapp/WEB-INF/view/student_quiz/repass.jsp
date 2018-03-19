@@ -20,7 +20,7 @@
 <div>Score: ${passedQuiz.score}</div>
 <div>Number of questions: ${passedQuiz.questionsNumber}</div>
 <br>
-<div class="highlight">
+<div class="highlight-green">
     <div>If you press "Repass" you will begin repassing the quiz</div>
     <div>Your total score will be less on ${passedQuiz.attempt * 10}%</div>
     <div>If you press "Finish" you will finish quiz with current result</div>

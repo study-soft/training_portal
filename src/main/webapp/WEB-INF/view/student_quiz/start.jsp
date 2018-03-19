@@ -16,7 +16,7 @@
 <div>Score: ${openedQuiz.score}</div>
 <div>Number of questions: ${openedQuiz.questionsNumber}</div>
 <br>
-<div class="highlight">
+<div class="highlight-green">
     <div>If you press "Start" you will begin passing the quiz</div>
     <div>If you do not want to pass it than press "Back"</div>
 </div>

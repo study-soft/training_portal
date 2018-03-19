@@ -175,7 +175,7 @@ public class StudentController {
                 model.addAttribute("finishedQuiz", finishedQuiz);
                 return "student_quiz/finished";
         }
-        return "hello";
+        return "student_general/student";
     }
 
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)
@@ -217,7 +217,6 @@ public class StudentController {
 
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
-        logger.info(">>>>>Set attribute 'quiz': " + quiz);
 
         User student = userDao.findUser(studentId);
         List<User> studentsInGroup = userDao.findStudents(student.getGroupId());

@@ -4,10 +4,9 @@
 <html>
 <head>
     <title>Groups</title>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/teacher-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/teacher-navbar.jsp"/>
 <h2>Groups</h2>
 <div>Search... <a href="/teacher/groups/create">+ Create</a></div>
 <br>

@@ -4,11 +4,9 @@
 <html>
 <head>
     <title>Teacher info</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Teacher information:</h2>
 <div>Name: ${teacher.lastName} ${teacher.firstName}</div>
 <div>E-mail: ${teacher.email}</div>

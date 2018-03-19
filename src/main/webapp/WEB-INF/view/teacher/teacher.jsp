@@ -4,10 +4,9 @@
 <html>
 <head>
     <title>Home</title>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <c:import url="../fragment/teacher-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/teacher-navbar.jsp"/>
 <h2>Hello, teacher! Welcome to the training portal!</h2>
 <div>
     <a href="/teacher/groups/create">+ Create group</a>

@@ -4,11 +4,9 @@
 <html>
 <head>
     <title>Edit profile</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Edit profile: ${oldStudent.login}</h2>
 <form:form action="/student/edit-profile" method="post" modelAttribute="student">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

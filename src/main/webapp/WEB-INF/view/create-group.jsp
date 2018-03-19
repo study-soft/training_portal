@@ -4,10 +4,9 @@
 <html>
 <head>
     <title>Create group</title>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="fragment/teacher-navbar.jsp"/>
 </head>
 <body>
-<c:import url="teacher-navbar.jsp"/>
 <h2>Create group</h2>
 <form action="/teacher/groups/create" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

@@ -4,12 +4,9 @@
 <html>
 <head>
     <title>Repass quiz</title>
-    <link rel="shortcut icon" type="image/png"
-          href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Score: ${passedQuiz.result}/${passedQuiz.score}</div>

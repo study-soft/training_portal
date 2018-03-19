@@ -4,10 +4,9 @@
 <html>
 <head>
     <title>Group info</title>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/teacher-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/teacher-navbar.jsp"/>
 <h2>${group.name}</h2>
 <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
 <div>Number of students: ${studentsNumber}</div>

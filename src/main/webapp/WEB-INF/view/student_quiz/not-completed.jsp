@@ -3,11 +3,9 @@
 <html>
 <head>
     <title>Not completed</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Wait, please</h2>
 <div>You must wait for all students in your group finish <strong>${quiz.name}</strong> quiz </div>
 <div>Finished students: ${finishedStudents}/${allStudents}</div>

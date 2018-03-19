@@ -3,11 +3,9 @@
 <html>
 <head>
     <title>Teachers</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Student teachers</h2>
 <div>Search...</div>
 <table>

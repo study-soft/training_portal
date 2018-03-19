@@ -3,11 +3,9 @@
 <html>
 <head>
     <title>Edit profile success</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Profile information successfully changed</h2>
 <div>Password: ${student.password}</div>
 <div>Email: ${student.email}</div>

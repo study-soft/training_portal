@@ -4,10 +4,8 @@
 <html>
 <head>
     <title>Group created</title>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
-</head>
+    <c:import url="fragment/teacher-navbar.jsp"/></head>
 <body>
-<c:import url="teacher-navbar.jsp"/>
 <h2>Group '${group.name}' successfully created</h2>
 <div>Creation date: <localDate:format value="${group.creationDate}"/></div>
 <c:if test="${group.description ne null or group.description eq ''}">

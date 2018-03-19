@@ -5,11 +5,9 @@
 <html>
 <head>
     <title>Results</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Results</h2>
 <div>Search...</div>
 <h3>Passed quizzes</h3>

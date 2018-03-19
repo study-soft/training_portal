@@ -4,11 +4,9 @@
 <html>
 <head>
     <title>Group</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>Group information</h2>
 <h3>${group.name}</h3>
 <div>Created: <localDate:format value="${group.creationDate}"/></div>

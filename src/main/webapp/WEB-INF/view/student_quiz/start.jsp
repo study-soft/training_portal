@@ -4,12 +4,9 @@
 <html>
 <head>
     <title>Start quiz</title>
-    <link rel="shortcut icon" type="image/png"
-          href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${openedQuiz.quizName}</h2>
 <h3>Information about passing</h3>
 <div>Passing time: <duration:format value="${openedQuiz.passingTime}"/></div>

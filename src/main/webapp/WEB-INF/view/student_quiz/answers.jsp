@@ -3,11 +3,9 @@
 <html>
 <head>
     <title>Answers</title>
-    <link rel="shortcut icon" type="image/png" href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/student-navbar.jsp"/>
 <h2>${quiz.name}. Answers</h2>
 <c:if test="${not empty questionsOneAnswer}">
     <h3>Questions with one correct answer</h3>

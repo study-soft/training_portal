@@ -16,6 +16,7 @@
     <div>
         <input type="text" name="name" id="name">
         <span class="error">${emptyName}</span>
+        <span class="error">${groupExists}</span>
     </div>
     <br>
     <div>

@@ -9,6 +9,7 @@ import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.QuestionType;
+import com.company.training_portal.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -98,7 +99,7 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
-                              Model model) {
+                                     Model model) {
         List<Quiz> unpublishedQuizzes = quizDao.findTeacherQuizzes(teacherId, UNPUBLISHED);
         List<Quiz> publishedQuizzes = quizDao.findTeacherQuizzes(teacherId, PUBLISHED);
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
@@ -127,10 +128,10 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
-    public String showCreateGroup(/*@ModelAttribute("teacherId") Long teacherId,*/ Model model) {
+    public String showCreateGroup(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<User> students = userDao.findStudentWithoutGroup();
         model.addAttribute("students", students);
-        return "create-group";
+        return "teacher/group-create";
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.POST)
@@ -149,10 +150,14 @@ public class TeacherController {
             List<User> students = userDao.findStudentWithoutGroup();
             model.addAttribute("emptyName", emptyName);
             model.addAttribute("students", students);
-            return "create-group";
-        } else {
-//            List<User> students = userDao.findStudentWithoutGroup();
-//            model.addAttribute("students", students);
+            return "teacher/group-create";
+        } else if (groupDao.groupExists(name)) {
+            String groupExists = environment.getProperty("group.name.exists");
+            logger.info("Get property 'group.name.exists': " + groupExists);
+            List<User> students = userDao.findStudentWithoutGroup();
+            model.addAttribute("groupExists", groupExists);
+            model.addAttribute("students", students);
+            return "teacher/group-create";
         }
 
         studentIdsMap.remove("name");
@@ -188,6 +193,57 @@ public class TeacherController {
 
     @RequestMapping("/teacher/groups/create/success")
     public String showCreateGroupSuccess() {
-        return "group-create-success";
+        return "teacher/group-create-success";
+    }
+
+    @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
+    public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
+                                  @PathVariable("groupId") Long groupId, Model model) {
+        Group group = groupDao.findGroup(groupId);
+        List<User> students = userDao.findStudentWithoutGroup();
+
+        model.addAttribute("group", group);
+        model.addAttribute("students", students);
+
+        return "teacher/group-add-students";
+    }
+
+    @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
+    public String addStudents(@ModelAttribute("teacherId") Long teacherId,
+                              @PathVariable("groupId") Long groupId,
+                              @RequestParam Map<String, String> studentIdsMap,
+                              RedirectAttributes redirectAttributes, Model model) {
+        logger.info("request param map: " + studentIdsMap);
+        if (studentIdsMap.isEmpty()) {
+            String noStudents = environment.getProperty("add-students.empty");
+            model.addAttribute("noStudents", noStudents);
+            showAddStudents(teacherId, groupId, model);
+            return "teacher/group-add-students";
+        }
+
+        List<Long> studentIds = studentIdsMap.values().stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        userDao.addStudentsToGroup(groupId, studentIds);
+
+        List<User> students = new ArrayList<>();
+        for (Long studentId : studentIds) {
+            User student = userDao.findUser(studentId);
+            students.add(student);
+        }
+        Collections.sort(students);
+
+        Group group = groupDao.findGroup(groupId);
+
+        redirectAttributes.addFlashAttribute("group", group);
+        redirectAttributes.addFlashAttribute("students", students);
+//        model.clear();
+
+        return "redirect:/teacher/groups/" + groupId + "/add-students/success";
+    }
+
+    @RequestMapping("/teacher/groups/{groupId}/add-students/success")
+    public String showAddStudentsSuccess(@PathVariable("groupId") Long groupId) {
+        return "teacher/group-add-students-success";
     }
 }

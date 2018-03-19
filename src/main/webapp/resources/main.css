@@ -76,31 +76,6 @@ input[type="submit"]:hover, input[type="button"]:hover {
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
-/*ul.nav {*/
-    /*list-style-type: none;*/
-    /*margin: 0;*/
-    /*padding: 0;*/
-    /*overflow: hidden;*/
-    /*background-color: #444343;*/
-/*}*/
-
-/*li.nav {*/
-    /*float: left;*/
-/*}*/
-
-/*li.nav a {*/
-    /*display: block;*/
-    /*color: white;*/
-    /*text-align: center;*/
-    /*padding: 14px 16px;*/
-    /*text-decoration: none;*/
-/*}*/
-
-/*li.nav a:hover:not(.active) {*/
-    /*background-color: #2355b4;*/
-/*}*/
-
-/************************************/
 ul.nav {
     list-style-type: none;
     margin: 0;

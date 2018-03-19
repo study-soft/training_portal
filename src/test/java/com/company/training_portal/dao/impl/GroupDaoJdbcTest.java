@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
@@ -93,6 +92,12 @@ public class GroupDaoJdbcTest {
         Map<Group, Integer> groups = groupDao.findAllGroupsAndStudentsNumberInThem();
 
         assertEquals(testGroups, groups);
+    }
+
+    @Test
+    public void test_group_exists_by_groupName() {
+        assertTrue(groupDao.groupExists("IS-4"));
+        assertFalse(groupDao.groupExists("Test group"));
     }
 
     @Test

@@ -100,6 +100,27 @@ public class GroupDaoJdbc implements GroupDao {
         return results;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean groupExists(String groupName) {
+        Group group = template.query(FIND_GROUP_BY_GROUP_NAME,
+                new Object[]{groupName}, new ResultSetExtractor<Group>() {
+                    @Override
+                    public Group extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapGroup(rs, 0);
+                    }
+                });
+        if (group == null) {
+            logger.info("No group exists by groupName: " + groupName);
+            return false;
+        }
+        logger.info("Group exists by groupName: " + groupName);
+        return true;
+    }
+
     @Transactional
     @Override
     public Long addGroup(Group group) {
@@ -164,6 +185,9 @@ public class GroupDaoJdbc implements GroupDao {
     "FROM USERS INNER JOIN GROUPS ON USERS.GROUP_ID = GROUPS.GROUP_ID " +
     "WHERE USERS.USER_ROLE = 'STUDENT' " +
     "GROUP BY GROUPS.NAME;";
+
+    private static final String FIND_GROUP_BY_GROUP_NAME =
+    "SELECT * FROM GROUPS WHERE NAME = ?;";
 
     private static final String ADD_GROUP =
     "INSERT INTO GROUPS (NAME, DESCRIPTION, CREATION_DATE, AUTHOR_ID) " +

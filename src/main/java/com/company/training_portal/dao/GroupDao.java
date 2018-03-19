@@ -20,6 +20,8 @@ public interface GroupDao {
     //key: Group, value: numberOfStudents
     Map<Group, Integer> findAllGroupsAndStudentsNumberInThem();
 
+    boolean groupExists(String groupName);
+
     Long addGroup(Group group);
 
     //todo: make user cases of editGroup(Group group)

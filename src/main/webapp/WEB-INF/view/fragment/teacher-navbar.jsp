@@ -21,7 +21,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/teacher">
-        <img src="/resources/training-portal-favicon.png" width="40" height="30" alt=""> Training portal
+        <img src="/resources/training-portal-favicon.png" width="30" height="30"> Training portal
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">

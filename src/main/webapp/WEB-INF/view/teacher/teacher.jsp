@@ -8,24 +8,43 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
-        <a href="/teacher/groups/create">+ Create group</a>
-        <a href="#">+ Create quiz</a>
+        <a href="/teacher/groups/create" class="btn btn-success">+ Create group</a>
+        <a href="#" class="btn btn-success">+ Create quiz</a>
     </div>
     <h3>Teacher information</h3>
-    <div>First name: ${teacher.firstName}</div>
-    <div>Last name: ${teacher.lastName}</div>
-    <div>E-mail: ${teacher.email}</div>
-    <div>Phone number: ${teacher.phoneNumber}</div>
-    <c:if test="${teacher.dateOfBirth ne null}">
-        <div>Date of birth: <localDate:format value="${teacher.dateOfBirth}"/></div>
-    </c:if>
+    <table class="table-home">
+        <tr>
+            <td class="table-home">Name</td>
+            <td class="table-home">${teacher.lastName} ${teacher.firstName}</td>
+        <tr>
+            <td class="table-home">E-mail</td>
+            <td class="table-home">${teacher.email}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Phone number</td>
+            <td class="table-home">${teacher.phoneNumber}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Date of birth</td>
+            <td class="table-home"><localDate:format value="${teacher.dateOfBirth}"/></td>
+        </tr>
+    </table>
     <h4>Login and password</h4>
-    <div>Login: ${teacher.login}</div>
-    <div>Password: ${teacher.password}</div>
+    <table class="table-home">
+        <tr>
+            <td class="table-home">Login</td>
+            <td class="table-home">${teacher.login}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Password</td>
+            <td class="table-home">${teacher.password}</td>
+        </tr>
+    </table>
     <div>
-        <a href="/teacher/edit-profile">Edit profile</a>
+        <a href="/teacher/edit-profile" class="btn btn-primary">Edit profile</a>
     </div>
 </div>
 </body>

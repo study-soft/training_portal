@@ -308,21 +308,22 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Long registerUser(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement stmt = con.prepareStatement(REGISTER_USER, new String[]{"user_id"});
-                stmt.setString(1, user.getFirstName());
-                stmt.setString(2, user.getLastName());
-                stmt.setString(3, user.getEmail());
-                stmt.setDate(4, Date.valueOf(user.getDateOfBirth()));
-                stmt.setString(5, user.getPhoneNumber());
-                stmt.setString(6, user.getLogin());
-                stmt.setString(7, user.getPassword());
-                stmt.setString(8, user.getUserRole().getRole());
-                return stmt;
-            }
-        }, keyHolder);
+            template.update(new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                    PreparedStatement stmt = con.prepareStatement(REGISTER_USER, new String[]{"user_id"});
+                    stmt.setString(1, user.getFirstName());
+                    stmt.setString(2, user.getLastName());
+                    stmt.setString(3, user.getEmail());
+                    stmt.setDate(4,
+                            (user.getDateOfBirth() == null) ? null : Date.valueOf(user.getDateOfBirth()));
+                    stmt.setString(5, user.getPhoneNumber());
+                    stmt.setString(6, user.getLogin());
+                    stmt.setString(7, user.getPassword());
+                    stmt.setString(8, user.getUserRole().getRole());
+                    return stmt;
+                }
+            }, keyHolder);
         long userId = keyHolder.getKey().longValue();
         user.setUserId(userId);
         logger.info("User registered: " + user);

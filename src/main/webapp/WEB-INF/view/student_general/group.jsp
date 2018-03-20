@@ -7,37 +7,54 @@
     <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<h2>Group information</h2>
-<h3>${group.name}</h3>
-<div>Created: <localDate:format value="${group.creationDate}"/></div>
-<div>Author: ${authorName}</div>
-<div>Number of students: ${studentsNumber}</div>
-<div>Description: ${group.description}</div>
-<h3>List of students: </h3>
-<table>
-    <tr>
-        <th>Name</th>
-        <th></th>
-    </tr>
-    <c:forEach items="${students}" var="student">
-        <c:choose>
-            <c:when test="${student.userId eq studentId}">
-                <tr>
-                    <td><strong>${student.lastName} ${student.firstName}</strong></td>
-                    <td><a href="/student">Home</a></td>
-                </tr>
-            </c:when>
-            <c:otherwise>
-                <tr>
-                    <td>${student.lastName} ${student.firstName}</td>
-                    <td><a href="/student/${student.userId}">More</a></td>
-                </tr>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-</table>
-<div>
-    <input onclick="window.history.go(-1);" type="button" value="Back"/>
+<div class="container">
+    <br>
+    <h3>${group.name}</h3>
+    <table class="col-6 table-home">
+        <tr>
+            <td class="table-home">Name</td>
+            <td class="table-home">${group.name}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Creation date</td>
+            <td class="table-home"><localDate:format value="${group.creationDate}"/></td>
+        </tr>
+        <tr>
+            <td class="table-home">Number of students</td>
+            <td class="table-home">${studentsNumber}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Author</td>
+            <td class="table-home">${authorName}</td>
+        </tr>
+    </table>
+    <h3>List of students</h3>
+    <table class="table">
+        <tr>
+            <th style="width: 50%">Name</th>
+            <th style="width: 50%"></th>
+        </tr>
+        <c:forEach items="${students}" var="student">
+            <c:choose>
+                <c:when test="${student.userId eq studentId}">
+                    <tr>
+                        <td><strong>${student.lastName} ${student.firstName}</strong></td>
+                        <td><a href="/student">Home</a></td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td>${student.lastName} ${student.firstName}</td>
+                        <td><a href="/student/${student.userId}">More</a></td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    </table>
+    <div>
+        <input onclick="window.history.go(-1);" type="button" value="Back" class="btn btn-primary"/>
+    </div>
 </div>
+<br>
 </body>
 </html>

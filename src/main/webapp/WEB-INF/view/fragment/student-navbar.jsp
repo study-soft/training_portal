@@ -2,32 +2,59 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png"
           href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="../../../resources/main.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css">
+    <link rel="script" href="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js">
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 </head>
 <body>
-<ul class="nav">
-    <li><a href="/student">Home</a></li>
-    <li><a href="/student/quizzes">Quizzes</a></li>
-    <li><a href="/student/teachers">Teachers</a></li>
-    <li><a href="/student/results">Results</a></li>
-    <c:if test="${studentId ne null}">
-        <li class="right">
-            <%--<form action="/logout" method="post">--%>
-                <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">--%>
-                <%--<input type="submit" value="Logout">--%>
-            <%--</form>--%>
-            <form action="/logout" method="post" id="logout">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                <a onclick="document.getElementById('logout').submit();">Logout</a>
-            </form>
-        </li>
-    </c:if>
-</ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/student">
+        <img src="/resources/training-portal-favicon.png" width="30" height="30"> Training portal
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/student">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/quizzes">Quizzes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/teachers">Teachers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/student/results">Results</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+            <li class="nav-item">
+                <a href="/logout" class="nav-link">Log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 <script>
-    $('ul > li > a[href="' + window.location.pathname + '"]').parent().addClass('active');
+    var currentPath = window.location.pathname;
+    var locationPath;
+    if (currentPath === "/student") {
+        locationPath = currentPath;
+    } else {
+        var url = currentPath.split("/");
+        locationPath = "/" + url[1] + "/" + url[2];
+    }
+    $('ul li a[href="'+ locationPath + '"]').parent().addClass('active');
 </script>
 </body>
 </html>

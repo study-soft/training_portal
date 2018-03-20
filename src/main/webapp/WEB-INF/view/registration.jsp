@@ -114,7 +114,7 @@
     <div class="text-center">
         <a href="/login">Login page</a>
     </div>
-    <br>
 </div>
+<br>
 </body>
 </html>

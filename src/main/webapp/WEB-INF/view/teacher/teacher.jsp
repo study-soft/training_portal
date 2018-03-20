@@ -11,11 +11,11 @@
     <br>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
-        <a href="/teacher/groups/create" class="btn btn-success">+ Create group</a>
-        <a href="#" class="btn btn-success">+ Create quiz</a>
+        <a href="/teacher/groups/create" class="btn btn-success">New group</a>
+        <a href="#" class="btn btn-success">New quiz</a>
     </div>
     <h3>Teacher information</h3>
-    <table class="table-home">
+    <table class="col-6 table-home">
         <tr>
             <td class="table-home">Name</td>
             <td class="table-home">${teacher.lastName} ${teacher.firstName}</td>
@@ -33,7 +33,7 @@
         </tr>
     </table>
     <h4>Login and password</h4>
-    <table class="table-home">
+    <table class="col-6 table-home">
         <tr>
             <td class="table-home">Login</td>
             <td class="table-home">${teacher.login}</td>

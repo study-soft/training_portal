@@ -7,41 +7,75 @@
     <c:import url="../fragment/student-navbar.jsp"/>
 </head>
 <body>
-<h2>Hello, student! Welcome to the training portal!</h2>
-<%--<div>--%>
-    <%--<form action="/logout" method="post">--%>
-        <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">--%>
-        <%--<input type="submit" value="Logout">--%>
-    <%--</form>--%>
-<%--</div>--%>
-<h3>Student information</h3>
-<div>First name: ${student.firstName}</div>
-<div>Last name: ${student.lastName}</div>
-<div>E-mail: ${student.email}</div>
-<div>Phone number: ${student.phoneNumber}</div>
-<c:if test="${student.dateOfBirth ne null}">
-    <div>Date of birth: <localDate:format value="${student.dateOfBirth}"/></div>
-</c:if>
-<h4>Login and password</h4>
-<div>Login: ${student.login}</div>
-<div>Password: ${student.password}</div>
-<div>
-    <a href="/student/edit-profile">Edit profile</a>
+<div class="container">
+    <br>
+    <h2>Hello, student! Welcome to the training portal!</h2>
+    <h3>Student information</h3>
+    <table class="col-6 table-home">
+        <tr>
+            <td class="table-home">Name</td>
+            <td class="table-home">${student.lastName} ${student.firstName}</td>
+        </tr>
+        <tr>
+            <td class="table-home">E-mail</td>
+            <td class="table-home">${student.email}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Phone number</td>
+            <td class="table-home">${student.phoneNumber}</td>
+        </tr>
+        <c:if test="${student.dateOfBirth ne null}">
+            <tr>
+                <td class="table-home">Date of birth</td>
+                <td class="table-home"><localDate:format value="${student.dateOfBirth}"/></td>
+            </tr>
+        </c:if>
+    </table>
+    <h4>Login and password</h4>
+    <table class="col-6 table-home">
+        <tr>
+            <td class="table-home">Login</td>
+            <td class="table-home">${student.login}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Password</td>
+            <td class="table-home">${student.password}</td>
+        </tr>
+    </table>
+    <div>
+        <a href="/student/edit-profile" class="btn btn-primary">Edit profile</a>
+    </div>
+    <br>
+    <h3>Group information</h3>
+    <c:choose>
+        <c:when test="${group eq null}">
+            <div>You do not belong to any group</div>
+        </c:when>
+        <c:otherwise>
+            <table class="col-6 table-home">
+                <tr>
+                    <td class="table-home">Name</td>
+                    <td class="table-home">${group.name}</td>
+                </tr>
+                <tr>
+                    <td class="table-home">Creation date</td>
+                    <td class="table-home"><localDate:format value="${group.creationDate}"/></td>
+                </tr>
+                <tr>
+                    <td class="table-home">Number of students</td>
+                    <td class="table-home">${numberOfStudents}</td>
+                </tr>
+                <tr>
+                    <td class="table-home">Author</td>
+                    <td class="table-home">${authorName}</td>
+                </tr>
+            </table>
+            <div>
+                <a href="/student/group" class="btn btn-primary">More info</a>
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
-<h3>Group information</h3>
-<c:choose>
-    <c:when test="${group eq null}">
-        <div>You do not belong to any group</div>
-    </c:when>
-    <c:otherwise>
-        <div>Name: ${group.name}</div>
-        <div>Creation date: <localDate:format value="${group.creationDate}"/></div>
-        <div>Number of students: ${numberOfStudents}</div>
-        <div>Author: ${authorName}</div>
-        <div>
-            <a href="/student/group">More info</a>
-        </div>
-    </c:otherwise>
-</c:choose>
+<br>
 </body>
 </html>

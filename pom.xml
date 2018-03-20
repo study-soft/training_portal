@@ -20,6 +20,7 @@
         <junit.version>4.12</junit.version>
         <h2.version>1.4.196</h2.version>
         <javax-annotation-api.version>1.2</javax-annotation-api.version>
+        <jackson.version>2.7.2</jackson.version>
     </properties>
 
     <dependencies>
@@ -118,6 +119,12 @@
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>${javax-annotation-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
     </dependencies>

@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Group created</title>
-    <c:import url="fragment/teacher-navbar.jsp"/></head>
+    <c:import url="../fragment/teacher-navbar.jsp"/></head>
 <body>
 <h2>Group '${group.name}' successfully created</h2>
 <div>Creation date: <localDate:format value="${group.creationDate}"/></div>

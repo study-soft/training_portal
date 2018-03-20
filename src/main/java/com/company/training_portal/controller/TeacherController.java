@@ -209,17 +209,11 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
-    public String addStudents(@ModelAttribute("teacherId") Long teacherId,
+    @ResponseBody
+    public List<User> addStudents(@ModelAttribute("teacherId") Long teacherId,
                               @PathVariable("groupId") Long groupId,
-                              @RequestParam Map<String, String> studentIdsMap,
-                              RedirectAttributes redirectAttributes, Model model) {
+                              @RequestParam Map<String, String> studentIdsMap) {
         logger.info("request param map: " + studentIdsMap);
-        if (studentIdsMap.isEmpty()) {
-            String noStudents = environment.getProperty("add-students.empty");
-            model.addAttribute("noStudents", noStudents);
-            showAddStudents(teacherId, groupId, model);
-            return "teacher/group-add-students";
-        }
 
         List<Long> studentIds = studentIdsMap.values().stream()
                 .map(Long::valueOf)
@@ -233,17 +227,14 @@ public class TeacherController {
         }
         Collections.sort(students);
 
-        Group group = groupDao.findGroup(groupId);
-
-        redirectAttributes.addFlashAttribute("group", group);
-        redirectAttributes.addFlashAttribute("students", students);
-//        model.clear();
-
-        return "redirect:/teacher/groups/" + groupId + "/add-students/success";
+        return students;
     }
 
-    @RequestMapping("/teacher/groups/{groupId}/add-students/success")
-    public String showAddStudentsSuccess(@PathVariable("groupId") Long groupId) {
-        return "teacher/group-add-students-success";
+    @RequestMapping(value = "/teacher/groups/{groupId}/delete-student", method = RequestMethod.POST)
+    @ResponseBody
+    public Long deleteStudentFromGroup(@PathVariable("groupId") Long groupId,
+                                       @RequestParam("studentId") Long studentId) {
+        userDao.deleteStudentFromGroupByUserId(studentId);
+        return studentId;
     }
 }

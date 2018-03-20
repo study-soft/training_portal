@@ -5,6 +5,7 @@
 <head>
     <title>Group info</title>
     <c:import url="../fragment/teacher-navbar.jsp"/>
+
 </head>
 <body>
 <h2>${group.name}</h2>
@@ -21,16 +22,62 @@
         <th></th>
         <th></th>
     </tr>
-    <c:forEach items="${students}" var="student">
-        <tr>
-            <td>${student.lastName} ${student.firstName}</td>
+    <c:forEach items="${students}" var="student" varStatus="status">
+        <tr id="${student.userId}">
+            <td id="studentName">${student.lastName} ${student.firstName}</td>
             <td><a href="/student/${student.userId}">More</a></td>
-            <td><a href="#">Delete</a></td>
+            <td>
+                <a href="/teacher/groups/${group.groupId}/delete-student"
+                   data-toggle="modal" data-target="#modal">Delete</a>
+                <input type="hidden" name="studentId" value="${student.userId}">
+            </td>
         </tr>
     </c:forEach>
 </table>
 <div>
     <input type="button" value="Back" onclick="window.history.go(-1);">
 </div>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Attention</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button id="yes" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                <input id="studentId" type="hidden" name="studentId" value="">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('td a').click(function (event) {
+            event.preventDefault();
+            var studentName = $(this).parent().prev().prev().text();
+            $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
+            var studentId = $(this).next().val();
+            $('#studentId').val(studentId);
+        });
+
+        $('#yes').click(function () {
+            var studentId = $(this).next().val();
+            $.ajax({
+                type: 'POST',
+                url: '/teacher/groups/${group.groupId}/delete-student',
+                data: 'studentId=' + studentId,
+                success: function (studentId) {
+                    $('#' + studentId).remove();
+                }
+            });
+        })
+    });
+</script>
 </body>
 </html>

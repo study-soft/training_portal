@@ -111,9 +111,11 @@
     </form:form>
     <br>
     <br>
-    <div class="text-center">
+    <div class="right">
         <a href="/login">Login page</a>
     </div>
+    <br>
+    <br>
 </div>
 <br>
 </body>

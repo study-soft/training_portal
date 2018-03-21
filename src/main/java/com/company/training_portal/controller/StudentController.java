@@ -252,14 +252,14 @@ public class StudentController {
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
     public String showEditProfile(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
-        model.addAttribute("student", student);
-        model.addAttribute("birthDate", student.getDateOfBirth());
-        return "student_general/edit-profile";
+        model.addAttribute("user", student);
+        model.addAttribute("dateOfBirth", student.getDateOfBirth());
+        return "edit-profile";
     }
 
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("studentId") Long studentId,
-                              @ModelAttribute("student") User editedStudent,
+                              @ModelAttribute("user") User editedStudent,
                               BindingResult bindingResult, ModelMap model) {
         logger.info("Receiving student from model attribute: " + editedStudent);
         User oldStudent = userDao.findUser(studentId);
@@ -283,7 +283,7 @@ public class StudentController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.register", bindingResult);
             model.addAttribute("student", editedStudent);
-            return "student_general/edit-profile";
+            return "edit-profile";
         }
 
         userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),

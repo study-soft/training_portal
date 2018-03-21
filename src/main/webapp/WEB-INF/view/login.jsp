@@ -45,10 +45,10 @@
         <div class="right">
             <input type="submit" value="Log in" class="btn btn-primary">
         </div>
+        <br>
+        <br>
+        <div class="right">Do not have an account? <a href="/register">Register</a></div>
     </form>
-    <br>
-    <br>
-    <div class="text-center">Do not have an account? <a href="/register">Register</a></div>
 </div>
 </body>
 </html>

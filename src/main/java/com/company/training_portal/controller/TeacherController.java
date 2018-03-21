@@ -14,10 +14,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -236,5 +238,35 @@ public class TeacherController {
                                        @RequestParam("studentId") Long studentId) {
         userDao.deleteStudentFromGroupByUserId(studentId);
         return studentId;
+    }
+
+    @RequestMapping(value = "/teacher/groups/{groupId}/delete", method = RequestMethod.POST)
+    public String deleteGroup(@PathVariable("groupId") Long groupId, Model model) {
+        try {
+            Group group = groupDao.findGroup(groupId);
+            List<User> students = userDao.findStudents(groupId);
+            model.addAttribute("group", group);
+            model.addAttribute("students", students);
+            groupDao.deleteGroup(groupId);
+        } catch (EmptyResultDataAccessException e) {
+            model.addAttribute("groupAlreadyDeleted", true);
+            return "teacher/group-deleted";
+        }
+        return "teacher/group-deleted";
+    }
+
+    @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.GET)
+    public String showEditProfile(@ModelAttribute("teacherId") Long teacherId, Model model) {
+        User teacher = userDao.findUser(teacherId);
+        model.addAttribute("user", teacher);
+        model.addAttribute("dateOfBirth", teacher.getDateOfBirth());
+        return "edit-profile";
+    }
+
+    @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.POST)
+    public String editProfile(@ModelAttribute("teacherId") Long teacherId,
+                              @ModelAttribute("user") User editedTeacher,
+                              BindingResult bindingResult, ModelMap model) {
+        return "edit-profile";
     }
 }

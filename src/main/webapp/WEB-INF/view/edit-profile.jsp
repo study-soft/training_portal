@@ -4,22 +4,24 @@
 <html>
 <head>
     <title>Edit profile</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:choose>
+        <c:when test="${studentId ne null}">
+            <c:import url="fragment/student-navbar.jsp"/>
+        </c:when>
+        <c:when test="${teacherId ne null}">
+            <c:import url="fragment/teacher-navbar.jsp"/>
+        </c:when>
+        <c:otherwise>
+            <div>SOME ERROR: USER ID NOT SPECIFIED IN SESSION</div>
+        </c:otherwise>
+    </c:choose>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 </head>
 <body>
 <div class="container">
     <br>
-    <form:form action="/student/edit-profile" method="post" modelAttribute="student" cssClass="col-6 center">
+    <form:form action="/student/edit-profile" method="post" modelAttribute="user" cssClass="col-6 center">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <div class="form-group row">
-            <form:label path="login" for="login" cssClass="col-4 col-form-label">
-                <strong>Login<span class="error">*</span></strong>
-            </form:label>
-            <div class="col-8">
-                <form:input path="login" cssClass="form-control" id="login" placeholder="Login"/>
-                <form:errors path="login" cssClass="error center"/>
-            </div>
-        </div>
         <div class="form-group row">
             <form:label path="password" for="password" cssClass="col-4 col-form-label">
                 <strong>Password<span class="error">*</span></strong>
@@ -45,19 +47,6 @@
             <div class="col-8">
                 <form:input path="phoneNumber" cssClass="form-control" id="phoneNumber" placeholder="Phone number"/>
                 <form:errors path="phoneNumber" cssClass="error center"/>
-            </div>
-        </div>
-        <div class="form-group row">
-            <form:label path="userRole" for="userRole" cssClass="col-4 col-form-label">
-                <strong>User role<span class="error">*</span></strong>
-            </form:label>
-            <div class="col-8">
-                <form:select path="userRole" id="userRole" cssClass="form-control">
-                    <form:option value="CHOOSE" label="Choose"/>
-                    <form:option value="STUDENT" label="Student"/>
-                    <form:option value="TEACHER" label="Teacher"/>
-                </form:select>
-                <form:errors path="userRole" cssClass="error"/>
             </div>
         </div>
         <div class="form-group row">
@@ -99,5 +88,13 @@
     </form:form>
 </div>
 <br>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var studentId = ${sessionScope.studentId};
+        var teacherId = ${sessionScope.teacherId};
+        alert("studentId: " + studentId);
+        alert("teacherId: " + teacherId);
+    });
+</script>
 </body>
 </html>

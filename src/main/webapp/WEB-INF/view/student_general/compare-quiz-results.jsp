@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Compare quiz results</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Compare quiz results</h2>
 <h3>${quiz.name}</h3>
 <table>
@@ -24,7 +25,9 @@
                     <td><strong><a href="/student">${student.lastName} ${student.firstName}</a></strong></td>
                     <c:choose>
                         <c:when test="${statusList[status.index] ne 'OPENED'}">
-                            <td><strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong></td>
+                            <td>
+                                <strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong>
+                            </td>
                         </c:when>
                         <c:otherwise>
                             <td></td>

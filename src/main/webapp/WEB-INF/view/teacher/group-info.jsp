@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Group info</title>
-    <c:import url="../fragment/teacher-navbar.jsp"/>
-
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
     <h2>${group.name}</h2>

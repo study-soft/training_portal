@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Time is up</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Oops... Time is up</h2>
 <div>You have forcibly completed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt</div>
 <div>You have asked on ${currentQuestionSerial}/${quiz.questionsNumber} questions</div>

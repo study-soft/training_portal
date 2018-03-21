@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Opened quiz</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${openedQuiz.quizName}</h2>
 <h3>Information about quiz</h3>
 <div>Submitted: <localDateTime:format value="${openedQuiz.submitDate}"/></div>

@@ -9,7 +9,6 @@ import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.QuestionType;
-import com.company.training_portal.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -21,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -35,6 +35,7 @@ import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLIS
 
 @Controller
 @PropertySource("classpath:validationMessages.properties")
+@SessionAttributes("teacherId")
 public class TeacherController {
 
     private UserDao userDao;

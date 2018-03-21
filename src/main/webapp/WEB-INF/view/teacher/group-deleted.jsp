@@ -3,9 +3,10 @@
 <html>
 <head>
     <title>Group deleted</title>
-    <c:import url="../fragment/teacher-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <c:choose>
         <c:when test="${groupAlreadyDeleted eq true}">

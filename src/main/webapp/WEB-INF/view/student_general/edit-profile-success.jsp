@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Edit profile success</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <div class="text-center">
         <h2>Profile information successfully changed</h2>

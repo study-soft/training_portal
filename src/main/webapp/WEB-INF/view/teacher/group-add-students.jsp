@@ -3,12 +3,10 @@
 <html>
 <head>
     <title>Add students</title>
-    <link rel="shortcut icon" type="image/png"
-          href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/teacher-navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${group.name}</h2>
 <h3>Students to add:</h3>
 <c:choose>

@@ -3,11 +3,12 @@
 <html>
 <head>
     <title>Not completed</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Wait, please</h2>
-<div>You must wait for all students in your group finish <strong>${quiz.name}</strong> quiz </div>
+<div>You must wait for all students in your group finish <strong>${quiz.name}</strong> quiz</div>
 <div>Finished students: ${finishedStudents}/${allStudents}</div>
 <div>
     <a href="/student/compare-results/${quiz.quizId}">Compare results</a>

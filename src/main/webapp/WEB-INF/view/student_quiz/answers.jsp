@@ -3,9 +3,10 @@
 <html>
 <head>
     <title>Answers</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${quiz.name}. Answers</h2>
 <c:if test="${not empty questionsOneAnswer}">
     <h3>Questions with one correct answer</h3>

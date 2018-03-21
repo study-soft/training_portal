@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Home</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
     <h2>Hello, student! Welcome to the training portal!</h2>

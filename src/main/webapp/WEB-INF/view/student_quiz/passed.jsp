@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Passed quiz</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>${passedQuiz.quizName}</h2>
 <h3>Information about result</h3>
 <div>Finish date: <localDateTime:format value="${passedQuiz.finishDate}"/></div>

@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Teacher info</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Teacher information:</h2>
 <div>Name: ${teacher.lastName} ${teacher.firstName}</div>
 <div>E-mail: ${teacher.email}</div>
@@ -22,11 +23,11 @@
         <th></th>
     </tr>
     <c:forEach items="${quizzes}" var="quiz" varStatus="status">
-    <tr>
-        <td>${quiz.name}</td>
-        <td>${statusList[status.index]}</td>
-        <td><a href="/student/quizzes/${quiz.quizId}">Details</a></td>
-    </tr>
+        <tr>
+            <td>${quiz.name}</td>
+            <td>${statusList[status.index]}</td>
+            <td><a href="/student/quizzes/${quiz.quizId}">Details</a></td>
+        </tr>
     </c:forEach>
 </table>
 <div>

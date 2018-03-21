@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Student info</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <br>
 <div class="container">
     <h2>${student.lastName} ${student.firstName}</h2>

@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Results</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Results</h2>
 <div>Search...</div>
 <h3>Passed quizzes</h3>

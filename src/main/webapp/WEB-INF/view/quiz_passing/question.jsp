@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Question</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
 <h2>${sessionScope.currentQuiz.name}</h2>
 <h3 style="display: inline">${question.body}</h3>

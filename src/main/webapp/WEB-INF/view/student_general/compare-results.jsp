@@ -3,9 +3,10 @@
 <html>
 <head>
     <title>Compare results</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Compare results</h2>
 <h3>Quizzes in group</h3>
 <table>

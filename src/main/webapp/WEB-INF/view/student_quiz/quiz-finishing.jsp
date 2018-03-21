@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Quiz finished</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Quiz finished</h2>
 <div>You have finished <strong>${finishedQuiz.quizName}</strong> quiz from ${finishedQuiz.attempt} attempt.</div>
 <div>Your result: ${finishedQuiz.result}/${finishedQuiz.score}</div>

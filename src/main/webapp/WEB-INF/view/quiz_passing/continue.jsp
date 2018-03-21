@@ -4,9 +4,10 @@
 <html>
 <head>
     <title>Continue</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Attention</h2>
 <div>
     You should continue <strong>${sessionScope.currentQuiz.name}</strong> quiz.

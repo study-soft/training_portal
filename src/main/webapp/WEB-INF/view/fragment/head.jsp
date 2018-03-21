@@ -13,3 +13,16 @@
       href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css">
 <link rel="script" href="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js">
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+<script>
+    $(document).ready(function () {
+        var currentPath = window.location.pathname;
+        var locationPath;
+        if (currentPath === "/student") {
+            locationPath = currentPath;
+        } else {
+            var url = currentPath.split("/");
+            locationPath = "/" + url[1] + "/" + url[2];
+        }
+        $('ul li a[href="'+ locationPath + '"]').parent().addClass('active');
+    });
+</script>

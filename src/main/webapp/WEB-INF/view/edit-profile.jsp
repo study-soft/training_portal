@@ -4,20 +4,10 @@
 <html>
 <head>
     <title>Edit profile</title>
-    <c:choose>
-        <c:when test="${studentId ne null}">
-            <c:import url="fragment/student-navbar.jsp"/>
-        </c:when>
-        <c:when test="${teacherId ne null}">
-            <c:import url="fragment/teacher-navbar.jsp"/>
-        </c:when>
-        <c:otherwise>
-            <div>SOME ERROR: USER ID NOT SPECIFIED IN SESSION</div>
-        </c:otherwise>
-    </c:choose>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+    <c:import url="fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="fragment/navbar.jsp"/>
 <div class="container">
     <br>
     <form:form action="/student/edit-profile" method="post" modelAttribute="user" cssClass="col-6 center">
@@ -88,10 +78,10 @@
     </form:form>
 </div>
 <br>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
-        var studentId = ${sessionScope.studentId};
-        var teacherId = ${sessionScope.teacherId};
+        var studentId = "${sessionScope.studentId}";
+        var teacherId = "${sessionScope.teacherId}";
         alert("studentId: " + studentId);
         alert("teacherId: " + teacherId);
     });

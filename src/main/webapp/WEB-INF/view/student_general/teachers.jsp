@@ -3,9 +3,10 @@
 <html>
 <head>
     <title>Teachers</title>
-    <c:import url="../fragment/student-navbar.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <h2>Student teachers</h2>
 <div>Search...</div>
 <c:choose>

@@ -4,43 +4,50 @@
 <html>
 <head>
     <title>Edit profile success</title>
-    <c:import url="../fragment/head.jsp"/>
+    <c:import url="fragment/head.jsp"/>
 </head>
 <body>
-<c:import url="../fragment/navbar.jsp"/>
+<c:import url="fragment/navbar.jsp"/>
 <div class="container">
     <div class="text-center">
         <h2>Profile information successfully changed</h2>
         <table class="col-6 table-home center">
             <tr>
                 <td class="table-home">Password</td>
-                <td class="table-home">${student.password}</td>
+                <td class="table-home">${user.password}</td>
             </tr>
             <tr>
                 <td class="table-home">E-mail</td>
-                <td class="table-home">${student.email}</td>
+                <td class="table-home">${user.email}</td>
             </tr>
             <tr>
                 <td class="table-home">Phone number</td>
-                <td class="table-home">${student.phoneNumber}</td>
+                <td class="table-home">${user.phoneNumber}</td>
             </tr>
             <tr>
                 <td class="table-home">First name</td>
-                <td class="table-home">${student.firstName}</td>
+                <td class="table-home">${user.firstName}</td>
             </tr>
             <tr>
                 <td class="table-home">Last name</td>
-                <td class="table-home">${student.lastName}</td>
+                <td class="table-home">${user.lastName}</td>
             </tr>
-            <c:if test="${student.dateOfBirth ne null}">
+            <c:if test="${user.dateOfBirth ne null}">
                 <tr>
                     <td class="table-home">Date of birth</td>
-                    <td class="table-home"><localDate:format value="${student.dateOfBirth}"/></td>
+                    <td class="table-home"><localDate:format value="${user.dateOfBirth}"/></td>
                 </tr>
             </c:if>
         </table>
         <div>
-            <a href="/student" class="btn btn-primary">Home</a>
+            <c:choose>
+                <c:when test="${sessionScope.studentId ne null}">
+                    <a href="/student" class="btn btn-primary">Home</a>
+                </c:when>
+                <c:when test="${sessionScope.teacherId ne null}">
+                    <a href="/teacher" class="btn btn-primary">Home</a>
+                </c:when>
+            </c:choose>
         </div>
     </div>
 </div>

@@ -261,7 +261,7 @@ public class StudentController {
     public String editProfile(@ModelAttribute("studentId") Long studentId,
                               @ModelAttribute("user") User editedStudent,
                               BindingResult bindingResult, ModelMap model) {
-        logger.info("Receiving student from model attribute: " + editedStudent);
+        logger.info("Get student information from model attribute: " + editedStudent);
         User oldStudent = userDao.findUser(studentId);
         model.addAttribute("oldStudent", oldStudent);
 
@@ -281,14 +281,14 @@ public class StudentController {
             bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("org.springframework.validation.BindingResult.register", bindingResult);
-            model.addAttribute("student", editedStudent);
+            model.addAttribute("user", editedStudent);
             return "edit-profile";
         }
 
         userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
                 editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
                 editedStudent.getPassword());
+
         model.clear();
         return "redirect:/student/edit-profile/success";
     }
@@ -297,7 +297,7 @@ public class StudentController {
     public String showEditProfileSuccess(@ModelAttribute("studentId") Long studentId,
                                          Model model) {
         User student = userDao.findUser(studentId);
-        model.addAttribute("student", student);
-        return "student_general/edit-profile-success";
+        model.addAttribute("user", student);
+        return "edit-profile-success";
     }
 }

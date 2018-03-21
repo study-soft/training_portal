@@ -11,6 +11,7 @@ import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.QuestionType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -43,6 +45,7 @@ public class TeacherController {
     private QuizDao quizDao;
     private QuestionDao questionDao;
     private Environment environment;
+    private Validator userValidator;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
 
@@ -51,12 +54,14 @@ public class TeacherController {
                              GroupDao groupDao,
                              QuizDao quizDao,
                              QuestionDao questionDao,
-                             Environment environment) {
+                             Environment environment,
+                             @Qualifier("userValidator") Validator userValidator) {
         this.userDao = userDao;
         this.groupDao = groupDao;
+        this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.environment = environment;
-        this.quizDao = quizDao;
+        this.userValidator = userValidator;
     }
 
     @ModelAttribute("teacherId")
@@ -268,6 +273,44 @@ public class TeacherController {
     public String editProfile(@ModelAttribute("teacherId") Long teacherId,
                               @ModelAttribute("user") User editedTeacher,
                               BindingResult bindingResult, ModelMap model) {
-        return "edit-profile";
+        logger.info("Get teacher from model attribute: " + editedTeacher);
+        User oldTeacher = userDao.findUser(teacherId);
+        model.addAttribute("oldTeacher", oldTeacher);
+
+        editedTeacher.setLogin(oldTeacher.getLogin());
+        editedTeacher.setUserRole(oldTeacher.getUserRole());
+
+        userValidator.validate(editedTeacher, bindingResult);
+
+        String editedEmail = editedTeacher.getEmail();
+        String email = oldTeacher.getEmail();
+        if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
+            bindingResult.rejectValue("email", "user.email.exists");
+        }
+        String editedPhoneNumber = editedTeacher.getPhoneNumber();
+        String phoneNumber = oldTeacher.getPhoneNumber();
+        if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
+            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", editedTeacher);
+            return "edit-profile";
+        }
+
+        userDao.editUser(oldTeacher.getUserId(), editedTeacher.getFirstName(),
+                editedTeacher.getLastName(), editedTeacher.getEmail(),
+                editedTeacher.getDateOfBirth(), editedTeacher.getPhoneNumber(),
+                editedTeacher.getPassword());
+
+        model.clear();
+        return "redirect:/teacher/edit-profile/success";
+    }
+
+    @RequestMapping("/teacher/edit-profile/success")
+    public String showEditProfileSuccess(@ModelAttribute("teacherId") Long teacherId,
+                                         Model model) {
+        User teacher = userDao.findUser(teacherId);
+        model.addAttribute("user", teacher);
+        return "edit-profile-success";
     }
 }

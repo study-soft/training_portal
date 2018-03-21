@@ -10,7 +10,8 @@
 <c:import url="fragment/navbar.jsp"/>
 <div class="container">
     <br>
-    <form:form action="/student/edit-profile" method="post" modelAttribute="user" cssClass="col-6 center">
+    <form:form id="editForm" action="${requestScope['javax.servlet.forward.request_uri']}"
+               method="post" modelAttribute="user" cssClass="col-6 center">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-group row">
             <form:label path="password" for="password" cssClass="col-4 col-form-label">
@@ -60,7 +61,8 @@
         <div class="form-group row">
             <label for="dateOfBirth" class="col-4 col-form-label"><strong>Date of birth</strong></label>
             <div class="col-8">
-                <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control">
+                <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control"
+                       value="${dateOfBirth}">
                 <form:errors path="dateOfBirth" cssClass="error"/>
             </div>
         </div>
@@ -78,13 +80,5 @@
     </form:form>
 </div>
 <br>
-<script>
-    $(document).ready(function () {
-        var studentId = "${sessionScope.studentId}";
-        var teacherId = "${sessionScope.teacherId}";
-        alert("studentId: " + studentId);
-        alert("teacherId: " + teacherId);
-    });
-</script>
 </body>
 </html>

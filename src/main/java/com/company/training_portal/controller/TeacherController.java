@@ -193,18 +193,9 @@ public class TeacherController {
         }
         Collections.sort(students);
 
-
-        //todo: delete flash attributes ???
-        redirectAttributes.addFlashAttribute("group", group);
-        redirectAttributes.addFlashAttribute("students", students);
+        redirectAttributes.addFlashAttribute("createSuccess", true);
         model.clear();
-
-        return "redirect:/teacher/groups/create/success";
-    }
-
-    @RequestMapping("/teacher/groups/create/success")
-    public String showCreateGroupSuccess() {
-        return "teacher/group-create-success";
+        return "redirect:/teacher/groups/" + groupId;
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
@@ -275,7 +266,9 @@ public class TeacherController {
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("teacherId") Long teacherId,
                               @ModelAttribute("user") User editedTeacher,
-                              BindingResult bindingResult, ModelMap model) {
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes,
+                              ModelMap model) {
         logger.info("Get teacher from model attribute: " + editedTeacher);
         User oldTeacher = userDao.findUser(teacherId);
         model.addAttribute("oldTeacher", oldTeacher);
@@ -305,16 +298,9 @@ public class TeacherController {
                 editedTeacher.getDateOfBirth(), editedTeacher.getPhoneNumber(),
                 editedTeacher.getPassword());
 
+        redirectAttributes.addFlashAttribute("editSuccess", true);
         model.clear();
-        return "redirect:/teacher/edit-profile/success";
-    }
-
-    @RequestMapping("/teacher/edit-profile/success")
-    public String showEditProfileSuccess(@ModelAttribute("teacherId") Long teacherId,
-                                         Model model) {
-        User teacher = userDao.findUser(teacherId);
-        model.addAttribute("user", teacher);
-        return "edit-profile-success";
+        return "redirect:/teacher";
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.GET)
@@ -332,7 +318,8 @@ public class TeacherController {
     public String editGroup(@PathVariable("groupId") Long groupId,
                             @RequestParam("name") String editedName,
                             @RequestParam("description") String editedDescription,
-                            Model model) {
+                            RedirectAttributes redirectAttributes,
+                            ModelMap model) {
         Group oldGroup = groupDao.findGroup(groupId);
         editedName = editedName.trim();
         if (editedName.isEmpty()) {
@@ -362,6 +349,8 @@ public class TeacherController {
                 .build();
         groupDao.editGroup(editedGroup);
 
+        redirectAttributes.addFlashAttribute("editSuccess", true);
+        model.clear();
         return "redirect:/teacher/groups/" + groupId;
     }
 }

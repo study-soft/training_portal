@@ -5,17 +5,35 @@
 <head>
     <title>Group info</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var createSuccess = "${createSuccess}";
+            var editSuccess = "${editSuccess}";
+            if (createSuccess) {
+                $("#create-success").fadeIn("slow").delay(3000).fadeOut("slow");
+            }
+            if (editSuccess) {
+                $("#edit-success").fadeIn("slow").delay(3000).fadeOut("slow");
+            }
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
+    <div id="create-success" class="col-4 mx-auto text-center correct edit-success">
+        Group successfully created
+    </div>
+    <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
+        Group information successfully changed
+    </div>
     <h2>${group.name}</h2>
     <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
     <div>Number of students: ${studentsNumber}</div>
     <div>Description:</div>
     <div>${group.description}</div>
-    <h3 style="display: inline">Students</h3>
+    <h3 class="inline">Students</h3>
     <a href="/teacher/groups/${group.groupId}/add-students">+ Add students</a>
     <br>
     <c:choose>

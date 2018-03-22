@@ -5,10 +5,19 @@
 <head>
     <title>Home</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var editSuccess = "${editSuccess}";
+            if (editSuccess) {
+                $(".edit-success").fadeIn("slow").delay(3000).fadeOut("slow");
+            }
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
+    <div class="col-4 mx-auto text-center correct edit-success">Profile information successfully changed</div>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
         <a href="/teacher/groups/create" class="btn btn-success">New group</a>

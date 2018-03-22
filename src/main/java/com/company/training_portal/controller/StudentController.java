@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -260,7 +261,8 @@ public class StudentController {
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("studentId") Long studentId,
                               @ModelAttribute("user") User editedStudent,
-                              BindingResult bindingResult, ModelMap model) {
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes, ModelMap model) {
         logger.info("Get student information from model attribute: " + editedStudent);
         User oldStudent = userDao.findUser(studentId);
         model.addAttribute("oldStudent", oldStudent);
@@ -289,15 +291,8 @@ public class StudentController {
                 editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
                 editedStudent.getPassword());
 
+        redirectAttributes.addFlashAttribute("editSuccess", true);
         model.clear();
-        return "redirect:/student/edit-profile/success";
-    }
-
-    @RequestMapping("/student/edit-profile/success")
-    public String showEditProfileSuccess(@ModelAttribute("studentId") Long studentId,
-                                         Model model) {
-        User student = userDao.findUser(studentId);
-        model.addAttribute("user", student);
-        return "edit-profile-success";
+        return "redirect:/student";
     }
 }

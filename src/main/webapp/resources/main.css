@@ -96,17 +96,23 @@ table.table-home tr:last-child td {
     color: darkgreen;
     background-color: #a7f9aa;
     padding: 10px 10px;
-    margin: -5px 0;
+    border: 0.1rem solid #6ea56e;
     border-radius: 0.25rem;
+}
+
+.edit-success {
+    display: none;
+    margin-top: 20px;
 }
 
 .incorrect {
     color: darkred;
     background-color: #ffc6c9;
     padding: 10px 10px;
-    margin: -5px 0;
+    border: 0.1rem solid #b47c7c;
     border-radius: 0.25rem;
 }
+
 
 .icon-one-row {
     margin: 0 5px 0 10px;

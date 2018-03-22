@@ -10,22 +10,22 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Teacher information</h2>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Name</td>
-            <td class="table-home">${teacher.lastName} ${teacher.firstName}</td>
+            <td>Name</td>
+            <td>${teacher.lastName} ${teacher.firstName}</td>
         </tr>
         <tr>
-            <td class="table-home">E-mail</td>
-            <td class="table-home">${teacher.email}</td>
+            <td>E-mail</td>
+            <td>${teacher.email}</td>
         </tr>
         <tr>
-            <td class="table-home">Phone number</td>
-            <td class="table-home">${teacher.phoneNumber}</td>
+            <td>Phone number</td>
+            <td>${teacher.phoneNumber}</td>
         </tr>
         <tr>
-            <td class="table-home">Date of birth</td>
-            <td class="table-home"><localDate:format value="${teacher.dateOfBirth}"/></td>
+            <td>Date of birth</td>
+            <td><localDate:format value="${teacher.dateOfBirth}"/></td>
         </tr>
     </table>
     <h3>${teacher.firstName} gave you next quizzes:</h3>
@@ -43,9 +43,7 @@
             </tr>
         </c:forEach>
     </table>
-    <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    </div>
+    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>
 </body>

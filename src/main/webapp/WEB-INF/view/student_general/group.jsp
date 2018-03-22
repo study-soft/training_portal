@@ -10,22 +10,22 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h3>${group.name}</h3>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Name</td>
-            <td class="table-home">${group.name}</td>
+            <td>Name</td>
+            <td>${group.name}</td>
         </tr>
         <tr>
-            <td class="table-home">Creation date</td>
-            <td class="table-home"><localDate:format value="${group.creationDate}"/></td>
+            <td>Creation date</td>
+            <td><localDate:format value="${group.creationDate}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Number of students</td>
-            <td class="table-home">${studentsNumber}</td>
+            <td>Number of students</td>
+            <td>${studentsNumber}</td>
         </tr>
         <tr>
-            <td class="table-home">Author</td>
-            <td class="table-home">${authorName}</td>
+            <td>Author</td>
+            <td>${authorName}</td>
         </tr>
     </table>
     <h3>List of students</h3>

@@ -9,46 +9,53 @@
         $(document).ready(function () {
             var editSuccess = "${editSuccess}";
             if (editSuccess) {
-                $(".edit-success").fadeIn("slow").delay(3000).fadeOut("slow");
+                $("#edit-success").fadeIn("slow");
             }
+
+            $("#close").click(function () {
+                $("#edit-success").fadeOut("slow");
+            });
         });
     </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div class="col-4 mx-auto text-center correct edit-success">Profile information successfully changed</div>
+    <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
+        Profile information successfully changed
+        <button id="close" class="close">&times;</button>
+    </div>
     <h2>Hello, student! Welcome to the training portal!</h2>
     <h3>Student information</h3>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Name</td>
-            <td class="table-home">${student.lastName} ${student.firstName}</td>
+            <td>Name</td>
+            <td>${student.lastName} ${student.firstName}</td>
         </tr>
         <tr>
-            <td class="table-home">E-mail</td>
-            <td class="table-home">${student.email}</td>
+            <td>E-mail</td>
+            <td>${student.email}</td>
         </tr>
         <tr>
-            <td class="table-home">Phone number</td>
-            <td class="table-home">${student.phoneNumber}</td>
+            <td>Phone number</td>
+            <td>${student.phoneNumber}</td>
         </tr>
         <c:if test="${student.dateOfBirth ne null}">
             <tr>
-                <td class="table-home">Date of birth</td>
-                <td class="table-home"><localDate:format value="${student.dateOfBirth}"/></td>
+                <td>Date of birth</td>
+                <td><localDate:format value="${student.dateOfBirth}"/></td>
             </tr>
         </c:if>
     </table>
     <h4>Login and password</h4>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Login</td>
-            <td class="table-home">${student.login}</td>
+            <td>Login</td>
+            <td>${student.login}</td>
         </tr>
         <tr>
-            <td class="table-home">Password</td>
-            <td class="table-home">${student.password}</td>
+            <td>Password</td>
+            <td>${student.password}</td>
         </tr>
     </table>
     <div>
@@ -60,22 +67,22 @@
             <div>You do not belong to any group</div>
         </c:when>
         <c:otherwise>
-            <table class="col-6 table-home">
+            <table class="col-6 table-info">
                 <tr>
-                    <td class="table-home">Name</td>
-                    <td class="table-home">${group.name}</td>
+                    <td>Name</td>
+                    <td>${group.name}</td>
                 </tr>
                 <tr>
-                    <td class="table-home">Creation date</td>
-                    <td class="table-home"><localDate:format value="${group.creationDate}"/></td>
+                    <td>Creation date</td>
+                    <td><localDate:format value="${group.creationDate}"/></td>
                 </tr>
                 <tr>
-                    <td class="table-home">Number of students</td>
-                    <td class="table-home">${numberOfStudents}</td>
+                    <td>Number of students</td>
+                    <td>${numberOfStudents}</td>
                 </tr>
                 <tr>
-                    <td class="table-home">Author</td>
-                    <td class="table-home">${authorName}</td>
+                    <td>Author</td>
+                    <td>${authorName}</td>
                 </tr>
             </table>
             <div>

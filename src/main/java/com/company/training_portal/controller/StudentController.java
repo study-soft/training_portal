@@ -140,7 +140,7 @@ public class StudentController {
         return "student_general/teacher-info";
     }
 
-    @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
+    @RequestMapping("/student/quizzes")
     public String showStudentQuizzes(@ModelAttribute("studentId") Long studentId, Model model) {
         List<OpenedQuiz> openedQuizzes
                 = quizDao.findOpenedQuizzes(studentId);
@@ -179,6 +179,15 @@ public class StudentController {
         return "student_general/student";
     }
 
+    @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.POST)
+    public String finishQuiz(@ModelAttribute("studentId") Long studentId,
+                             @PathVariable("quizId") Long quizId,
+                             RedirectAttributes redirectAttributes) {
+        quizDao.finishQuiz(studentId, quizId);
+        redirectAttributes.addFlashAttribute("finishSuccess", true);
+        return "redirect:/student/quizzes/" + quizId;
+    }
+
     @RequestMapping(value = "/student/results", method = RequestMethod.GET)
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         List<PassedQuiz> passedQuizzes =
@@ -191,17 +200,6 @@ public class StudentController {
 
         return "student_general/results";
     }
-
-    @RequestMapping(value = "/student/quizzes/{quizId}/finished", method = RequestMethod.POST)
-    public String finishQuiz(@ModelAttribute("studentId") Long studentId,
-                             @PathVariable("quizId") Long quizId,
-                             Model model) {
-        quizDao.finishQuiz(studentId, quizId);
-        PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
-        model.addAttribute("finishedQuiz", finishedQuiz);
-        return "student_quiz/quiz-finishing";
-    }
-
 
     @RequestMapping(value = "/student/compare-results", method = RequestMethod.GET)
     public String showCompareResults(@ModelAttribute("studentId") Long studentId, Model model) {

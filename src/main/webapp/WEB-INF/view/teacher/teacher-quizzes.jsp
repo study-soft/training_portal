@@ -9,7 +9,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <form>
         <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
         <a href="#" class="btn btn-success float-right">+ Create</a>

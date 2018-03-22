@@ -10,24 +10,24 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${student.lastName} ${student.firstName}</h2>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">E-mail</td>
-            <td class="table-home">${student.email}</td>
+            <td>E-mail</td>
+            <td>${student.email}</td>
         </tr>
         <tr>
-            <td class="table-home">Phone number</td>
-            <td class="table-home">${student.phoneNumber}</td>
+            <td>Phone number</td>
+            <td>${student.phoneNumber}</td>
         </tr>
         <c:if test="${student.dateOfBirth ne null}">
             <tr>
-                <td class="table-home">Date of birth</td>
-                <td class="table-home"><localDate:format value="${student.dateOfBirth}"/></td>
+                <td>Date of birth</td>
+                <td><localDate:format value="${student.dateOfBirth}"/></td>
             </tr>
         </c:if>
         <tr>
-            <td class="table-home">Group</td>
-            <td class="table-home">${group.name}</td>
+            <td>Group</td>
+            <td>${group.name}</td>
         </tr>
     </table>
     <h3>${student.firstName} passes next quizzes:</h3>

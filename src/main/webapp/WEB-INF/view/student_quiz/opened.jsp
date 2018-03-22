@@ -36,26 +36,26 @@
     </div>
     <h3>Information about quiz</h3>
     <div class="col-6"><strong>Description: </strong>${openedQuiz.description}</div>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Submitted</td>
-            <td class="table-home"><localDateTime:format value="${openedQuiz.submitDate}"/></td>
+            <td>Submitted</td>
+            <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Passing time</td>
-            <td class="table-home"><duration:format value="${openedQuiz.passingTime}"/></td>
+            <td>Passing time</td>
+            <td><duration:format value="${openedQuiz.passingTime}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Total score</td>
-            <td class="table-home">${openedQuiz.score}</td>
+            <td>Total score</td>
+            <td>${openedQuiz.score}</td>
         </tr>
         <tr>
-            <td class="table-home">Number of questions</td>
-            <td class="table-home">${openedQuiz.questionsNumber}</td>
+            <td>Number of questions</td>
+            <td>${openedQuiz.questionsNumber}</td>
         </tr>
         <tr>
-            <td class="table-home">Author</td>
-            <td class="table-home">${openedQuiz.authorName}</td>
+            <td>Author</td>
+            <td>${openedQuiz.authorName}</td>
         </tr>
     </table>
     <div>

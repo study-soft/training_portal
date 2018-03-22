@@ -45,24 +45,25 @@ th {
     color: white;
 }
 
-table.table-home {
+.table-info {
     background-color: #b8e9e2;
     border: 3px solid #c7cacb;
     margin: 5px 0;
 }
 
-td.table-home {
+.table-info td {
     background-color: #f2f2f2;
     padding: 5px 25px;
+    border: none;
 }
 
-table.table-home tr:first-child td {
+.table-info tr:first-child td {
     padding-left: 25px;
     padding-right: 25px;
     padding-top: 25px;
 }
 
-table.table-home tr:last-child td {
+.table-info tr:last-child td {
     padding-left: 25px;
     padding-right: 25px;
     padding-bottom: 25px;

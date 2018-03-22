@@ -3,7 +3,11 @@
     <a class="navbar-brand" href="/student">
         <img src="/resources/training-portal-favicon.png" width="30" height="30"> Training portal
     </a>
-    <div class="collapse navbar-collapse">
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbarSupportedContent" class="collapse navbar-collapse">
         <c:choose>
             <c:when test="${sessionScope.teacherId ne null}">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">

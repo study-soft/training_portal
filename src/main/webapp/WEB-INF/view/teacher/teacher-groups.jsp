@@ -20,7 +20,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h2>Groups</h2>
     <form>
         <div class="row">

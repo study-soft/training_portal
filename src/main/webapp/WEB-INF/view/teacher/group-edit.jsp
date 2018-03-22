@@ -8,7 +8,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h2>Edit group</h2>
     <form action="/teacher/groups/${group.groupId}/edit" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

@@ -16,19 +16,19 @@
              width="25" height="25" class="icon-one-row">
         You have forcibly completed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt
     </div>
-    <table class="table-home col-6">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Result</td>
-            <td class="table-home">${quiz.result} / ${quiz.score}</td>
+            <td>Result</td>
+            <td>${quiz.result} / ${quiz.score}</td>
         </tr>
         <tr>
-            <td class="table-home">Time spent</td>
-            <td class="table-home"><duration:format value="${quiz.timeSpent}"/> of
+            <td>Time spent</td>
+            <td><duration:format value="${quiz.timeSpent}"/> of
                 <duration:format value="${quiz.passingTime}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Finished</td>
-            <td class="table-home"><localDateTime:format value="${quiz.finishDate}"/></td>
+            <td>Finished</td>
+            <td><localDateTime:format value="${quiz.finishDate}"/></td>
         </tr>
     </table>
     <c:if test="${quiz.explanation ne null}">

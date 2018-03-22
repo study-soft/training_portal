@@ -82,11 +82,11 @@
             </div>
             <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
             <c:set var="rightSide" value="${quizAnswersAccordance[question.questionId].rightSide}" scope="page"/>
-            <table class="table-home col-6">
+            <table class="col-6 table-info">
                 <c:forEach items="${leftSide}" var="item" varStatus="status">
                     <tr>
-                        <td class="table-home">${item}</td>
-                        <td class="table-home">${rightSide[status.index]}</td>
+                        <td>${item}</td>
+                        <td>${rightSide[status.index]}</td>
                     </tr>
                 </c:forEach>
             </table>
@@ -105,11 +105,11 @@
                 </div>
             </div>
             <c:set var="correctList" value="${quizAnswersSequence[question.questionId].correctList}" scope="page"/>
-            <table class="table-home col-6">
+            <table class="col-6 table-info">
                 <c:forEach items="${correctList}" var="item" varStatus="status">
                     <tr>
-                        <td class="table-home">${status.index + 1}</td>
-                        <td class="table-home">${item}</td>
+                        <td>${status.index + 1}</td>
+                        <td>${item}</td>
                     </tr>
                 </c:forEach>
             </table>
@@ -127,10 +127,10 @@
                     <h6>${question.score} points</h6>
                 </div>
             </div>
-            <table class="table-home col-6">
+            <table class="col-6 table-info">
                 <tr>
-                    <td class="table-home">Answer</td>
-                    <td class="table-home">${quizAnswersNumber[question.questionId].correct}</td>
+                    <td>Answer</td>
+                    <td>${quizAnswersNumber[question.questionId].correct}</td>
                 </tr>
             </table>
             <div><strong> Explanation: </strong>${question.explanation}</div>

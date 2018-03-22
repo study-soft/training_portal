@@ -10,23 +10,64 @@
             var createSuccess = "${createSuccess}";
             var editSuccess = "${editSuccess}";
             if (createSuccess) {
-                $("#create-success").fadeIn("slow").delay(3000).fadeOut("slow");
+                $("#create-success").fadeIn("slow");
             }
             if (editSuccess) {
-                $("#edit-success").fadeIn("slow").delay(3000).fadeOut("slow");
+                $("#edit-success").fadeIn("slow");
             }
+
+            $(".close").click(function () {
+                $(".edit-success").fadeOut("slow");
+            });
+
+            $("#back").click(function () {
+                var previousUri = document.referrer;
+                var createGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/create";
+                if (previousUri === createGroupUri) {
+                    window.history.go(-2);
+                } else {
+                    window.history.go(-1);
+                }
+            });
+
+            $('td a').click(function (event) {
+                event.preventDefault();
+                var studentName = $(this).parent().prev().prev().text();
+                $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
+                var studentId = $(this).next().val();
+                $('#studentId').val(studentId);
+            });
+
+            $('#yes').click(function () {
+                var studentId = $(this).next().val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/teacher/groups/${group.groupId}/delete-student',
+                    data: 'studentId=' + studentId,
+                    success: function (studentId) {
+                        $('#' + studentId).remove();
+                        if ($('tr').length === 1) {
+                            var table = $('table');
+                            table.before('<div>There is no students in group.</div>');
+                            table.remove();
+                        }
+                    }
+                });
+            });
         });
     </script>
+
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <div id="create-success" class="col-4 mx-auto text-center correct edit-success">
         Group successfully created
+        <button class="close">&times;</button>
     </div>
     <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
         Group information successfully changed
+        <button class="close">&times;</button>
     </div>
     <h2>${group.name}</h2>
     <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
@@ -61,9 +102,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <div>
-        <input type="button" value="Back" onclick="window.history.go(-1);">
-    </div>
+    <button id="back" class="btn btn-primary">Back</button>
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"
          aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -85,33 +124,5 @@
     </div>
     <br>
 </div>
-<script>
-    $(document).ready(function () {
-        $('td a').click(function (event) {
-            event.preventDefault();
-            var studentName = $(this).parent().prev().prev().text();
-            $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
-            var studentId = $(this).next().val();
-            $('#studentId').val(studentId);
-        });
-
-        $('#yes').click(function () {
-            var studentId = $(this).next().val();
-            $.ajax({
-                type: 'POST',
-                url: '/teacher/groups/${group.groupId}/delete-student',
-                data: 'studentId=' + studentId,
-                success: function (studentId) {
-                    $('#' + studentId).remove();
-                    if ($('tr').length === 1) {
-                        var table = $('table');
-                        table.before('<div>There is no students in group.</div>');
-                        table.remove();
-                    }
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

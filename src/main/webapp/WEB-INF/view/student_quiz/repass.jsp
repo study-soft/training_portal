@@ -22,33 +22,33 @@
 <div class="container">
     <h2>${passedQuiz.quizName}</h2>
     <h3>Information about result</h3>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Result</td>
-            <td class="table-home">${passedQuiz.result} / ${passedQuiz.score}</td>
+            <td>Result</td>
+            <td>${passedQuiz.result} / ${passedQuiz.score}</td>
         </tr>
         <tr>
-            <td class="table-home">Time spent</td>
-            <td class="table-home"><duration:format value="${passedQuiz.timeSpent}"/></td>
+            <td>Time spent</td>
+            <td><duration:format value="${passedQuiz.timeSpent}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Attempts</td>
-            <td class="table-home">${passedQuiz.attempt}</td>
+            <td>Attempts</td>
+            <td>${passedQuiz.attempt}</td>
         </tr>
     </table>
     <h3>Information about passing</h3>
-    <table class="col-6 table-home">
+    <table class="col-6 table-info">
         <tr>
-            <td class="table-home">Passing time</td>
-            <td class="table-home"><duration:format value="${passedQuiz.passingTime}"/></td>
+            <td>Passing time</td>
+            <td><duration:format value="${passedQuiz.passingTime}"/></td>
         </tr>
         <tr>
-            <td class="table-home">Number of questions</td>
-            <td class="table-home">${passedQuiz.questionsNumber}</td>
+            <td>Number of questions</td>
+            <td>${passedQuiz.questionsNumber}</td>
         </tr>
         <tr>
-            <td class="table-home">Total score</td>
-            <td class="table-home">${passedQuiz.score}</td>
+            <td>Total score</td>
+            <td>${passedQuiz.score}</td>
         </tr>
     </table>
     <div class="highlight-primary">

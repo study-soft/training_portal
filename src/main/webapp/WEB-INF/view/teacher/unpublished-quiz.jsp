@@ -10,13 +10,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <h2>Unpublished quiz</h2>
-<div>
-    <a href="#">Publish</a>
-    <a href="#">Preview</a>
-    <a href="#">Edit</a>
-    <a href="#">Delete</a>
-</div>
-<br>
 <div class="highlight-danger">This quiz is not published</div>
 <h3>${unpublishedQuiz.name}</h3>
 <small>Creation date: <localDate:format value="${unpublishedQuiz.creationDate}"/></small>
@@ -53,6 +46,10 @@
 <div>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions">Questions</a>
     <input onclick="window.history.go(-1);" type="button" value="Back"/>
+    <a href="#">Publish</a>
+    <a href="#">Preview</a>
+    <a href="#">Edit</a>
+    <a href="#">Delete</a>
 </div>
 </body>
 </html>

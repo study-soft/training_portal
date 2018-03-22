@@ -25,6 +25,7 @@
             </c:if>
         </c:otherwise>
     </c:choose>
+    <a href="/teacher/groups" class="btn btn-primary" style="width: 140px">Back to groups</a>
 </div>
 </body>
 </html>

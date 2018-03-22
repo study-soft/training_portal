@@ -144,7 +144,9 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Override
     public void editGroup(Group group) {
-        throw new UnsupportedOperationException();
+        template.update(EDIT_GROUP, group.getName(), group.getDescription(),
+                Date.valueOf(group.getCreationDate()), group.getAuthorId(), group.getGroupId());
+        logger.info("Edited group: " + group);
     }
 
     @Transactional
@@ -192,6 +194,11 @@ public class GroupDaoJdbc implements GroupDao {
     private static final String ADD_GROUP =
     "INSERT INTO GROUPS (NAME, DESCRIPTION, CREATION_DATE, AUTHOR_ID) " +
     "VALUES (?, ?, ?, ?);";
+
+    private static final String EDIT_GROUP =
+    "UPDATE GROUPS " +
+    "SET NAME = ?, DESCRIPTION = ?, CREATION_DATE = ?, AUTHOR_ID = ? " +
+    "WHERE GROUP_ID = ?;";
 
     private static final String DELETE_GROUP = "DELETE FROM GROUPS WHERE GROUP_ID = ?;";
 }

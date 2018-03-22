@@ -5,6 +5,17 @@
 <head>
     <title>Groups</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("a:contains(Delete)").click(function (event) {
+                event.preventDefault();
+                var groupName = $(this).parent().prev().prev().prev().prev().prev().text();
+                $("#deleteForm").attr("action", $(this).attr("href"));
+                $(".modal-body").text("Are you sure you want to delete group '" + groupName + "'?");
+                $("#modal").modal();
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -18,7 +29,7 @@
             </div>
             <div class="col-6"></div>
             <div class="col-2">
-                <a href="/teacher/groups/create" class="btn btn-success float-right">+ Create</a>
+                <a href="/teacher/groups/create" class="btn btn-success float-right">New group</a>
             </div>
         </div>
     </form>
@@ -37,7 +48,7 @@
                 <td>${studentsNumber[status.index]}</td>
                 <td><localDate:format value="${group.creationDate}"/></td>
                 <td><a href="/teacher/groups/${group.groupId}">Details</a></td>
-                <td><a href="#">Edit</a></td>
+                <td><a href="/teacher/groups/${group.groupId}/edit">Edit</a></td>
                 <td><a href="/teacher/groups/${group.groupId}/delete">Delete</a></td>
             </tr>
         </c:forEach>
@@ -67,16 +78,5 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("a:contains(Delete)").click(function (event) {
-            event.preventDefault();
-            var groupName = $(this).parent().prev().prev().prev().prev().prev().text();
-            $("#deleteForm").attr("action", $(this).attr("href"));
-            $(".modal-body").text("Are you sure you want to delete group '" + groupName + "'?");
-            $("#modal").modal();
-        });
-    });
-</script>
 </body>
 </html>

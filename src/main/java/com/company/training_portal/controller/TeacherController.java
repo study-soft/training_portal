@@ -118,8 +118,8 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes/{quizId}")
     public String showTeacherQuiz(/*@ModelAttribute("teacherId") Long teacherId,*/
-                                  @PathVariable("quizId") Long quizId,
-                                  Model model) {
+            @PathVariable("quizId") Long quizId,
+            Model model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
         model.addAttribute("questions", questions);
@@ -152,14 +152,15 @@ public class TeacherController {
         logger.info("request param 'description' = " + description);
         logger.info("request param 'studentIdsMap' = " + studentIdsMap);
         name = name.trim();
-        if (name == null || name.isEmpty()) {
+        if (name.isEmpty()) {
             String emptyName = environment.getProperty("group.name.empty");
             logger.info("Get property 'group.name.empty': " + emptyName);
             List<User> students = userDao.findStudentWithoutGroup();
             model.addAttribute("emptyName", emptyName);
             model.addAttribute("students", students);
             return "teacher/group-create";
-        } else if (groupDao.groupExists(name)) {
+        }
+        if (groupDao.groupExists(name)) {
             String groupExists = environment.getProperty("group.name.exists");
             logger.info("Get property 'group.name.exists': " + groupExists);
             List<User> students = userDao.findStudentWithoutGroup();
@@ -192,6 +193,8 @@ public class TeacherController {
         }
         Collections.sort(students);
 
+
+        //todo: delete flash attributes ???
         redirectAttributes.addFlashAttribute("group", group);
         redirectAttributes.addFlashAttribute("students", students);
         model.clear();
@@ -219,8 +222,8 @@ public class TeacherController {
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
     @ResponseBody
     public List<User> addStudents(@ModelAttribute("teacherId") Long teacherId,
-                              @PathVariable("groupId") Long groupId,
-                              @RequestParam Map<String, String> studentIdsMap) {
+                                  @PathVariable("groupId") Long groupId,
+                                  @RequestParam Map<String, String> studentIdsMap) {
         logger.info("request param map: " + studentIdsMap);
 
         List<Long> studentIds = studentIdsMap.values().stream()
@@ -312,5 +315,53 @@ public class TeacherController {
         User teacher = userDao.findUser(teacherId);
         model.addAttribute("user", teacher);
         return "edit-profile-success";
+    }
+
+    @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.GET)
+    public String showEditGroup(@PathVariable("groupId") Long groupId, Model model) {
+        Group group = groupDao.findGroup(groupId);
+        List<User> students = userDao.findStudents(groupId);
+
+        model.addAttribute("group", group);
+        model.addAttribute("students", students);
+
+        return "teacher/group-edit";
+    }
+
+    @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.POST)
+    public String editGroup(@PathVariable("groupId") Long groupId,
+                            @RequestParam("name") String editedName,
+                            @RequestParam("description") String editedDescription,
+                            Model model) {
+        Group oldGroup = groupDao.findGroup(groupId);
+        editedName = editedName.trim();
+        if (editedName.isEmpty()) {
+            String emptyName = environment.getProperty("group.name.empty");
+            List<User> students = userDao.findStudents(groupId);
+            model.addAttribute("group", oldGroup);
+            model.addAttribute("students", students);
+            model.addAttribute("emptyName", emptyName);
+            return "teacher/group-edit";
+        }
+        String name = oldGroup.getName();
+        if (!editedName.equals(name) && groupDao.groupExists(editedName)) {
+            String groupExists = environment.getProperty("group.name.exists");
+            List<User> students = userDao.findStudents(groupId);
+            model.addAttribute("group", oldGroup);
+            model.addAttribute("students", students);
+            model.addAttribute("groupExists", groupExists);
+            return "teacher/group-edit";
+        }
+
+        Group editedGroup = new Group.GroupBuilder()
+                .groupId(oldGroup.getGroupId())
+                .name(editedName)
+                .description(editedDescription)
+                .creationDate(oldGroup.getCreationDate())
+                .authorId(oldGroup.getAuthorId())
+                .build();
+        groupDao.editGroup(editedGroup);
+
+        return "redirect:/teacher/groups/" + groupId;
     }
 }

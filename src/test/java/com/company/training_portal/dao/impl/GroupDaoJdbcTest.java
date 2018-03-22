@@ -118,7 +118,18 @@ public class GroupDaoJdbcTest {
 
     @Test
     public void edit_group() {
+        Group testGroup = new Group.GroupBuilder()
+                .groupId(1L)
+                .name("testGroup")
+                .description("testDescription")
+                .creationDate(LocalDate.of(2000, 1, 1))
+                .authorId(1L)
+                .build();
+        groupDao.editGroup(testGroup);
 
+        Group group = groupDao.findGroup(1L);
+
+        assertEquals(testGroup, group);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)

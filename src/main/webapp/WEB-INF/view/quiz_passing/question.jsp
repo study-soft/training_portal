@@ -5,137 +5,160 @@
 <head>
     <title>Question</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var currentQuestion = "${sessionScope.currentQuestionSerial}";
+            var questionsNumber = "${sessionScope.questionsNumber - 1}";
+            if (currentQuestion === questionsNumber) {
+                var submit = $("#submit");
+                submit.val("Finish");
+                submit.removeClass("btn btn-success").addClass("btn btn-primary");
+                $("#finish").remove();
+            }
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
-<c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
-<h2>${sessionScope.currentQuiz.name}</h2>
-<h3 style="display: inline">${question.body}</h3>
-<form action="/student/quizzes/${question.quizId}/passing" method="post">
-    <c:choose>
-        <c:when test="${question.questionType eq 'ONE_ANSWER'}">
-            <c:forEach items="${answers}" var="answer">
-                <div>
-                    <input type="radio" id="answer${answer.answerSimpleId}"
-                           name="oneAnswer" value="${answer.correct}">
-                    <label for="answer${answer.answerSimpleId}"> ${answer.body}</label>
-                </div>
-            </c:forEach>
-            <c:choose>
-                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
-                    <div>
-                        <input type="submit" value="Finish">
+<div class="container">
+    <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
+    <h2>${sessionScope.currentQuiz.name}</h2>
+    <form action="/student/quizzes/${question.quizId}/passing" method="post">
+        <div class="row">
+            <div class="col-8">
+                Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
+            </div>
+            <div class="col-4">
+                Time left: <duration:format value="${sessionScope.timeLeft}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <h5>${question.body}</h5>
+            </div>
+            <div class="col-4">
+                <h6>${question.score} points</h6>
+            </div>
+        </div>
+        <c:choose>
+            <c:when test="${question.questionType eq 'ONE_ANSWER'}">
+                <c:forEach items="${answers}" var="answer">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="answer${answer.answerSimpleId}"
+                               name="oneAnswer" value="${answer.correct}" class="custom-control-input">
+                        <label for="answer${answer.answerSimpleId}" class="custom-control-label">
+                                ${answer.body}
+                        </label>
                     </div>
-                </c:when>
-                <c:otherwise>
-                    <div>
-                        <input type="submit" value="Next">
-                    </div>
-                </c:otherwise>
-            </c:choose>
-            <div>Result: ${sessionScope.result}</div>
-        </c:when>
-        <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
-            <c:forEach items="${answers}" var="answer" varStatus="status">
-                <div>
-                    <input type="checkbox" id="answer${answer.answerSimpleId}"
-                           name="fewAnswer${status.index}" value="${answer.correct}">
-                    <label for="answer${answer.answerSimpleId}"> ${answer.body}</label>
-                </div>
-            </c:forEach>
-            <c:choose>
-                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
-                    <div>
-                        <input type="submit" value="Finish">
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div>
-                        <input type="submit" value="Next">
-                    </div>
-                </c:otherwise>
-            </c:choose>
-            <div>Result: ${sessionScope.result}</div>
-        </c:when>
-        <c:when test="${question.questionType eq 'ACCORDANCE'}">
-            <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
-                <div>
-                        ${left} <select name="accordance${status.index}">
-                    <option selected>select...</option>
-                    <c:forEach items="${answers.rightSide}" var="right">
-                        <option value="${right}">${right}</option>
-                    </c:forEach>
-                </select>
-                </div>
-            </c:forEach>
-            <c:choose>
-                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
-                    <div>
-                        <input type="submit" value="Finish">
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div>
-                        <input type="submit" value="Next">
-                    </div>
-                </c:otherwise>
-            </c:choose>
-            <div>Result: ${sessionScope.result}</div>
-        </c:when>
-        <c:when test="${question.questionType eq 'SEQUENCE'}">
-            <div style="display: inline">
-                <c:forEach begin="0" end="3" varStatus="status">
-                    ${status.index + 1}. <select name="sequence${status.index}">
-                    <option selected>select...</option>
-                    <c:forEach items="${answers.correctList}" var="item">
-                        <option value="${item}">${item}</option>
-                    </c:forEach>
-                </select>
                 </c:forEach>
-            </div>
-            <c:choose>
-                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
-                    <div>
-                        <input type="submit" value="Finish">
+                <div class="row">
+                    <div class="col-8">
+                            <%--suppress XmlDuplicatedId --%>
+                        <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                </c:when>
-                <c:otherwise>
-                    <div>
-                        <input type="submit" value="Next">
+                    <div class="col-4">
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
                     </div>
-                </c:otherwise>
-            </c:choose>
-            <div>Result: ${sessionScope.result}</div>
-        </c:when>
-        <c:when test="${question.questionType eq 'NUMBER'}">
-            <div>
-                <input type="text" name="number" placeholder="Enter number">
-            </div>
-            <c:choose>
-                <c:when test="${sessionScope.currentQuestionSerial eq sessionScope.questionsNumber - 1}">
-                    <div>
-                        <input type="submit" value="Finish">
+                </div>
+                <div>Result: ${sessionScope.result}</div>
+            </c:when>
+            <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
+                <c:forEach items="${answers}" var="answer" varStatus="status">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="answer${answer.answerSimpleId}" class="custom-control-input"
+                               name="fewAnswer${status.index}" value="${answer.correct}">
+                        <label for="answer${answer.answerSimpleId}" class="custom-control-label">
+                                ${answer.body}
+                        </label>
                     </div>
-                </c:when>
-                <c:otherwise>
-                    <div>
-                        <input type="submit" value="Next">
+                </c:forEach>
+                <div class="row">
+                    <div class="col-8">
+                            <%--suppress XmlDuplicatedId --%>
+                        <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                </c:otherwise>
-            </c:choose>
-            <div>Result: ${sessionScope.result}</div>
-        </c:when>
-        <c:otherwise>
-            <strong class="error">SOME ERROR</strong>
-        </c:otherwise>
-    </c:choose>
-</form>
-<div>${question.score} points</div>
-<div>Time left: <duration:format value="${sessionScope.timeLeft}"/></div>
-<c:if test="${sessionScope.currentQuestionSerial ne sessionScope.questionsNumber - 1}">
-    <div>
-        <a href="/student/quizzes/continue">Finish</a>
-    </div>
-</c:if>
+                    <div class="col-4">
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                    </div>
+                </div>
+                <div>Result: ${sessionScope.result}</div>
+            </c:when>
+            <c:when test="${question.questionType eq 'ACCORDANCE'}">
+                <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
+                    <div class="row">
+                        <div class="col-4">${left}</div>
+                        <div class="col-4">
+                            <select name="accordance${status.index}" class="form-control">
+                                <option selected>select...</option>
+                                <c:forEach items="${answers.rightSide}" var="right">
+                                    <option value="${right}">${right}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                </c:forEach>
+                <div class="row">
+                    <div class="col-8">
+                            <%--suppress XmlDuplicatedId --%>
+                        <input id="submit" type="submit" value="Next" class="btn btn-success">
+                    </div>
+                    <div class="col-4">
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                    </div>
+                </div>
+                <div>Result: ${sessionScope.result}</div>
+            </c:when>
+            <c:when test="${question.questionType eq 'SEQUENCE'}">
+                <c:forEach begin="0" end="3" varStatus="status">
+                    <div class="row">
+                        <div class="col-2">${status.index + 1}.</div>
+                        <div class="col-4">
+                            <select name="sequence${status.index}" class="form-control">
+                                <option selected>select...</option>
+                                <c:forEach items="${answers.correctList}" var="item">
+                                    <option value="${item}">${item}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                </c:forEach>
+                <div class="row">
+                    <div class="col-8">
+                            <%--suppress XmlDuplicatedId --%>
+                        <input id="submit" type="submit" value="Next" class="btn btn-success">
+                    </div>
+                    <div class="col-4">
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                    </div>
+                </div>
+                <div>Result: ${sessionScope.result}</div>
+            </c:when>
+            <c:when test="${question.questionType eq 'NUMBER'}">
+                <div class="col-4">
+                    <input type="text" name="number" class="form-control" style="margin-left: -10px" placeholder="Enter number">
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                            <%--suppress XmlDuplicatedId --%>
+                        <input id="submit" type="submit" value="Next" class="btn btn-success">
+                    </div>
+                    <div class="col-4">
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                    </div>
+                </div>
+                <div>Result: ${sessionScope.result}</div>
+            </c:when>
+            <c:otherwise>
+                <strong class="error">SOME ERROR</strong>
+            </c:otherwise>
+        </c:choose>
+    </form>
+</div>
+<br>
 </body>
 </html>

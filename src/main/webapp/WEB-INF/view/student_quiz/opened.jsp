@@ -9,17 +9,41 @@
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
-<h2>${openedQuiz.quizName}</h2>
-<h3>Information about quiz</h3>
-<div>Submitted: <localDateTime:format value="${openedQuiz.submitDate}"/></div>
-<div>${openedQuiz.description}</div>
-<div>Passing time: <duration:format value="${openedQuiz.passingTime}"/></div>
-<div>Score: ${openedQuiz.score}</div>
-<div>Questions: ${openedQuiz.questionsNumber}</div>
-<div>Author: ${openedQuiz.authorName}</div>
-<div>
-    <a href="/student/quizzes/${openedQuiz.quizId}/start">Start</a>
-    <input onclick="window.history.go(-1);" type="button" value="Back"/>
+<div class="container">
+    <h2>${openedQuiz.quizName}</h2>
+    <div class="highlight-success">
+        <img src="/resources/icon-success.png" width="25" height="25" class="icon-one-row">
+        This quiz is opened
+    </div>
+    <h3>Information about quiz</h3>
+    <div class="col-6"><strong>Description: </strong>${openedQuiz.description}</div>
+    <table class="col-6 table-home">
+        <tr>
+            <td class="table-home">Submitted</td>
+            <td class="table-home"><localDateTime:format value="${openedQuiz.submitDate}"/></td>
+        </tr>
+        <tr>
+            <td class="table-home">Passing time</td>
+            <td class="table-home"><duration:format value="${openedQuiz.passingTime}"/></td>
+        </tr>
+        <tr>
+            <td class="table-home">Total score</td>
+            <td class="table-home">${openedQuiz.score}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Number of questions</td>
+            <td class="table-home">${openedQuiz.questionsNumber}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Author</td>
+            <td class="table-home">${openedQuiz.authorName}</td>
+        </tr>
+    </table>
+    <div>
+        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <a href="/student/quizzes/${openedQuiz.quizId}/start" class="btn btn-success">Start</a>
+    </div>
 </div>
+<br>
 </body>
 </html>

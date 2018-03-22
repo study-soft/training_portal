@@ -24,7 +24,7 @@ VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:00:30', 1, 'PUBLISHED');
+VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '02:00:00', 1, 'PUBLISHED');
 /*2*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'PUBLISHED');
 /*3*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -32,7 +32,7 @@ VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with col
 /*4*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, 'PUBLISHED');
 /*5*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('IO', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
+VALUES ('Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
 /*6*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Generics', 'Try your generics skills', 'Hope you had generic fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
 /*7*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -98,7 +98,7 @@ VALUES (3, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 
 -- Table: questions
 /*1*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.1 body?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
+VALUES (1, 'Question 1.1 bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy br br br br br br?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
 /*2*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2);
 /*3*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
@@ -112,7 +112,7 @@ VALUES (1, 'Question 1.6 body?', 'Question 1.6 explanation', 'ONE_ANSWER', 1);
 /*7*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.7 body?', 'Question 1.7 explanation', 'FEW_ANSWERS', 2);
 /*8*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Set accordance between code fragments and their description?', 'Question 1.8 explanation', 'ACCORDANCE', 4);
+VALUES (1, 'Set accordance between code fragments and their description', 'Question 1.8 explanation', 'ACCORDANCE', 4);
 /*9*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Arrange classes and interfaces from parent to child', 'Question 1.9 explanation', 'SEQUENCE', 4);
 /*10*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)

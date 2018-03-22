@@ -7,12 +7,12 @@
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
-<h2>Compare results</h2>
-<h3>Quizzes in group</h3>
-<table>
+<div class="container">
+<h2>Quizzes in group</h2>
+<table class="table">
     <tr>
-        <th>Name</th>
-        <th></th>
+        <th style="width: 50%">Name</th>
+        <th style="width: 50%"></th>
     </tr>
     <c:forEach items="${groupQuizzes}" var="quiz">
         <tr>
@@ -22,7 +22,9 @@
     </c:forEach>
 </table>
 <div>
-    <input onclick="window.history.go(-1);" type="button" value="Back"/>
+    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
+</div>
+<br>
 </body>
 </html>

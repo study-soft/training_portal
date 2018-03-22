@@ -8,19 +8,32 @@
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
-<h2>${openedQuiz.quizName}</h2>
-<h3>Information about passing</h3>
-<div>Passing time: <duration:format value="${openedQuiz.passingTime}"/></div>
-<div>Score: ${openedQuiz.score}</div>
-<div>Number of questions: ${openedQuiz.questionsNumber}</div>
+<div class="container">
+    <h2>${openedQuiz.quizName}</h2>
+    <table class="col-6 table-home">
+        <tr>
+            <td class="table-home">Passing time</td>
+            <td class="table-home"><duration:format value="${openedQuiz.passingTime}"/></td>
+        </tr>
+        <tr>
+            <td class="table-home">Number of questions</td>
+            <td class="table-home">${openedQuiz.questionsNumber}</td>
+        </tr>
+        <tr>
+            <td class="table-home">Total score</td>
+            <td class="table-home">${openedQuiz.score}</td>
+        </tr>
+    </table>
+    <div class="highlight-primary">
+        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-two-rows">
+        <div class="inline">If you press "Start" you will begin passing the quiz</div>
+        <div class="non-first-row">If you do not want to pass it than press "Back"</div>
+    </div>
+    <div>
+        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <a href="/student/quizzes/${openedQuiz.quizId}/initialize" class="btn btn-success">Start</a>
+    </div>
+</div>
 <br>
-<div class="highlight-green">
-    <div>If you press "Start" you will begin passing the quiz</div>
-    <div>If you do not want to pass it than press "Back"</div>
-</div>
-<div>
-    <a href="/student/quizzes/${openedQuiz.quizId}/initialize">Start</a>
-    <input onclick="window.history.go(-1);" type="button" value="Back"/>
-</div>
 </body>
 </html>

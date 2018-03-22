@@ -9,7 +9,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
         <a href="/teacher/groups/create" class="btn btn-success">New group</a>

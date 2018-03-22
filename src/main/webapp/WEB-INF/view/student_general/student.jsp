@@ -9,7 +9,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h2>Hello, student! Welcome to the training portal!</h2>
     <h3>Student information</h3>
     <table class="col-6 table-home">
@@ -46,7 +45,6 @@
     <div>
         <a href="/student/edit-profile" class="btn btn-primary">Edit profile</a>
     </div>
-    <br>
     <h3>Group information</h3>
     <c:choose>
         <c:when test="${group eq null}">

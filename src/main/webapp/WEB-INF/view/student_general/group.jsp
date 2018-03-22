@@ -9,7 +9,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h3>${group.name}</h3>
     <table class="col-6 table-home">
         <tr>
@@ -53,7 +52,7 @@
         </c:forEach>
     </table>
     <div>
-        <input onclick="window.history.go(-1);" type="button" value="Back" class="btn btn-primary"/>
+        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
     </div>
 </div>
 <br>

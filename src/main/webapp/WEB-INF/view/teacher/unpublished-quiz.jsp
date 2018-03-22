@@ -17,7 +17,7 @@
     <a href="#">Delete</a>
 </div>
 <br>
-<div class="highlight-red">This quiz is not published</div>
+<div class="highlight-danger">This quiz is not published</div>
 <h3>${unpublishedQuiz.name}</h3>
 <small>Creation date: <localDate:format value="${unpublishedQuiz.creationDate}"/></small>
 <div>Description: ${unpublishedQuiz.description}</div>
@@ -48,7 +48,7 @@
     </c:forEach>
 </div>
 <div>Score: ${unpublishedQuiz.score}</div>
-<div class="highlight-green">Students will see explanation after all group finish tis quiz</div>
+<div class="highlight-success">Students will see explanation after all group finish tis quiz</div>
 <div>Explanation: ${unpublishedQuiz.explanation}</div>
 <div>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions">Questions</a>

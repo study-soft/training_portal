@@ -9,12 +9,21 @@
         $(document).ready(function () {
             var currentQuestion = "${sessionScope.currentQuestionSerial}";
             var questionsNumber = "${sessionScope.questionsNumber - 1}";
+            var finish = $("#finish");
             if (currentQuestion === questionsNumber) {
                 var submit = $("#submit");
                 submit.val("Finish");
                 submit.removeClass("btn btn-success").addClass("btn btn-primary");
-                $("#finish").remove();
+                finish.remove();
             }
+
+            finish.click(function (event) {
+                event.preventDefault();
+                $(".modal-body").html("Are you sure you want to finish?" +
+                    "<br>You have answered only " + currentQuestion + " / " +
+                    questionsNumber + " questions yet");
+                $("#modal").modal();
+            })
         });
     </script>
 </head>
@@ -58,7 +67,8 @@
                     </div>
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
-                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
+                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -80,7 +90,8 @@
                     </div>
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
-                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
+                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -106,7 +117,8 @@
                     </div>
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
-                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
+                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -114,7 +126,7 @@
             <c:when test="${question.questionType eq 'SEQUENCE'}">
                 <c:forEach begin="0" end="3" varStatus="status">
                     <div class="row">
-                        <div class="shifted">${status.index + 1}. </div>
+                        <div class="shifted">${status.index + 1}.</div>
                         <div class="col-4">
                             <select name="sequence${status.index}" id="sequence${status.index}"
                                     class="form-control">
@@ -133,7 +145,8 @@
                     </div>
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
-                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
+                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -150,7 +163,8 @@
                     </div>
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
-                        <a id="finish" href="/student/quizzes/continue" class="btn btn-danger">Finish</a>
+                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
+                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -162,5 +176,26 @@
     </form>
 </div>
 <br>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Attention</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <form id="congratulationsForm" method="post"
+                      action="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <input type="submit" id="yes" class="btn btn-primary" value="Yes">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -6,6 +6,25 @@
 <head>
     <title>Opened quiz</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("#start").click(function (event) {
+                var currentQuiz = "${sessionScope.currentQuiz.name}";
+                if (currentQuiz) {
+                    event.preventDefault();
+                    var currentQuestion = "${sessionScope.currentQuestionSerial}";
+                    var questionsNumber = "${sessionScope.questionsNumber - 1}";
+                    var html = 'You should <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing">continue</a> ' +
+                        'or <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">finish</a> ' +
+                        '<strong>' + currentQuiz + '</strong> quiz' +
+                        '<br> You have answered only ' + currentQuestion + " / " +
+                        questionsNumber + ' questions yet';
+                    $(".modal-body").html(html);
+                    $("#modal").modal();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -41,9 +60,30 @@
     </table>
     <div>
         <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-        <a href="/student/quizzes/${openedQuiz.quizId}/start" class="btn btn-success">Start</a>
+        <a id="start" href="/student/quizzes/${openedQuiz.quizId}/start" class="btn btn-success">Start</a>
     </div>
 </div>
 <br>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Attention</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <form id="congratulationsForm" method="post"
+                      action="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <input type="submit" id="yes" class="btn btn-primary" value="Yes">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -5,6 +5,17 @@
 <head>
     <title>Repass quiz</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var percent = "${passedQuiz.attempt * 10}";
+            var attempt = $("#attempt");
+            var repass = $("#repass");
+            if (percent >= 100) {
+                attempt.text("You used maximum number of attempts and need to finish quiz");
+                repass.remove();
+            }
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -43,17 +54,15 @@
     <div class="highlight-primary">
         <img src="/resources/icon-primary.png" width="25" height="25" class="icon-four-rows">
         <div class="inline">If you press "Repass" you will begin repassing the quiz</div>
-        <div class="non-first-row">Your total score will be less on ${passedQuiz.attempt * 10}%</div>
+        <div id="attempt" class="non-first-row">Your total score will be less on ${passedQuiz.attempt * 10}%</div>
         <div class="non-first-row">If you press "Finish" you will finish quiz with current result</div>
         <div class="non-first-row">If you do not want to repass it than press "Back"</div>
     </div>
     <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-        <a href="/student/quizzes/${passedQuiz.quizId}/initialize" class="btn btn-success">Repass</a>
-        <form class="inline" action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <input type="submit" value="Finish"/>
-        </form>
+        <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <a href="/student/quizzes/${passedQuiz.quizId}/initialize" id="repass"
+           class="btn btn-success">Repass</a>
+        <input type="submit" value="Finish"/> Don't work
     </div>
 </div>
 <br>

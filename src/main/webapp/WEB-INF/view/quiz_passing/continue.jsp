@@ -8,16 +8,16 @@
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
-<h2>Attention</h2>
-<div>
-    You should continue <strong>${sessionScope.currentQuiz.name}</strong> quiz.
-    <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing">Continue</a>
+<div class="container">
+    <h2>Attention</h2>
+    <div>
+        You should
+        <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing"> continue</a> or
+        <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"> finish</a>
+        <strong> ${sessionScope.currentQuiz.name}</strong> quiz
+    </div>
+    <div>You have answered only ${sessionScope.currentQuestionSerial} / ${sessionScope.questionsNumber} questions yet</div>
 </div>
-<div>
-    Or you can finish <strong>${sessionScope.currentQuiz.name}</strong> quiz.
-    <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">Finish</a>
-</div>
-<div>You have passed only ${sessionScope.currentQuestionSerial}/${sessionScope.questionsNumber} questions</div>
-<div>Time left: <duration:format value="${sessionScope.timeLeft}"/></div>
+<br>
 </body>
 </html>

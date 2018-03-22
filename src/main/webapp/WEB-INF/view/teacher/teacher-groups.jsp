@@ -69,8 +69,8 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <form id="deleteForm" action="" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                         <input type="submit" id="yes" class="btn btn-primary" value="Yes">
                     </form>
                 </div>

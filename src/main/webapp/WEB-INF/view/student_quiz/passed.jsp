@@ -6,6 +6,25 @@
 <head>
     <title>Passed quiz</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("#repass").click(function (event) {
+                var currentQuiz = "${sessionScope.currentQuiz.name}";
+                if (currentQuiz) {
+                    event.preventDefault();
+                    var currentQuestion = "${sessionScope.currentQuestionSerial}";
+                    var questionsNumber = "${sessionScope.questionsNumber - 1}";
+                    var html = 'You should <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing">continue</a> ' +
+                        'or <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">finish</a> ' +
+                        '<strong>' + currentQuiz + '</strong> quiz' +
+                        '<br> You have answered only ' + currentQuestion + " / " +
+                        questionsNumber + ' questions yet';
+                    $(".modal-body").html(html);
+                    $("#modal").modal();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -69,13 +88,31 @@
         <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
         <a href="/student/quizzes/${passedQuiz.quizId}/answers" class="btn btn-primary">Answers</a>
         <a href="/student/compare-results/${passedQuiz.quizId}" class="btn btn-primary">Results</a>
-        <a href="/student/quizzes/${passedQuiz.quizId}/repass" class="btn btn-success">Repass</a>
-        <form class="inline" action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <input type="submit" value="Finish">
-        </form>
+        <a href="/student/quizzes/${passedQuiz.quizId}/repass" id="repass" class="btn btn-success">Repass</a>
+        <input type="submit" value="Finish"> Don't work
     </div>
 </div>
 <br>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Attention</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <form id="congratulationsForm" method="post"
+                      action="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <input type="submit" id="yes" class="btn btn-primary" value="Yes">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

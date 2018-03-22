@@ -22,8 +22,9 @@
             <td class="table-home">${quiz.result} / ${quiz.score}</td>
         </tr>
         <tr>
-            <td class="table-home">You have spent all time</td>
-            <td class="table-home"><duration:format value="${quiz.timeSpent}"/></td>
+            <td class="table-home">Time spent</td>
+            <td class="table-home"><duration:format value="${quiz.timeSpent}"/> of
+                <duration:format value="${quiz.passingTime}"/></td>
         </tr>
         <tr>
             <td class="table-home">Finished</td>

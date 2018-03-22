@@ -17,7 +17,7 @@
                     <h5>${question.body}</h5>
                 </div>
                 <div class="col-4">
-                    <div class="shifted">${question.score} points</div>
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
@@ -47,7 +47,7 @@
                     <h5>${question.body}</h5>
                 </div>
                 <div class="col-4">
-                    <div class="shifted">${question.score} points</div>
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
@@ -77,7 +77,7 @@
                     <h5>${question.body}</h5>
                 </div>
                 <div class="col-4">
-                    <div class="shifted">${question.score} points</div>
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
@@ -101,7 +101,7 @@
                     <h5>${question.body}</h5>
                 </div>
                 <div class="col-4">
-                    <div class="shifted">${question.score} points</div>
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <c:set var="correctList" value="${quizAnswersSequence[question.questionId].correctList}" scope="page"/>
@@ -124,7 +124,7 @@
                     <h5>${question.body}</h5>
                 </div>
                 <div class="col-4">
-                    <div class="shifted">${question.score} points</div>
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <table class="table-home col-6">

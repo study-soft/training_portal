@@ -19,7 +19,7 @@
     <table class="col-6 table-home">
         <tr>
             <td class="table-home">Result</td>
-            <td class="table-home">${finishedQuiz.result}/${finishedQuiz.score}</td>
+            <td class="table-home">${finishedQuiz.result} / ${finishedQuiz.score}</td>
         </tr>
         <tr>
             <td class="table-home">Time spent</td>

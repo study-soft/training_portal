@@ -148,13 +148,14 @@ table.table-home tr:last-child td {
 }
 
 .shifted {
-    margin: 10px 0;
+    margin-left: 15px;
+    padding-top: 5px;
 }
 
-/* bootstrap overriding */
+/********************* BOOTSTRAP OVERRIDING *********************/
 
 .btn {
-    margin: 5px;
+    margin: 10px 5px 5px 5px;
     width: 110px;
 }
 

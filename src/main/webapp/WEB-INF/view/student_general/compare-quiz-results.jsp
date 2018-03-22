@@ -27,7 +27,7 @@
                         <c:choose>
                             <c:when test="${statusList[status.index] ne 'OPENED'}">
                                 <td>
-                                    <strong>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</strong>
+                                    <strong>${studentsQuizzes[status.index].result} / ${studentsQuizzes[status.index].score}</strong>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -44,7 +44,7 @@
                         <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                         <c:choose>
                             <c:when test="${statusList[status.index] ne 'OPENED'}">
-                                <td>${studentsQuizzes[status.index].result}/${studentsQuizzes[status.index].score}</td>
+                                <td>${studentsQuizzes[status.index].result} / ${studentsQuizzes[status.index].score}</td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>

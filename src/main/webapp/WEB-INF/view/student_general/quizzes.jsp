@@ -10,6 +10,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
+    <h2>Quizzes</h2>
     <form>
         <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
     </form>

@@ -114,9 +114,10 @@
             <c:when test="${question.questionType eq 'SEQUENCE'}">
                 <c:forEach begin="0" end="3" varStatus="status">
                     <div class="row">
-                        <div class="col-2">${status.index + 1}.</div>
+                        <div class="shifted">${status.index + 1}. </div>
                         <div class="col-4">
-                            <select name="sequence${status.index}" class="form-control">
+                            <select name="sequence${status.index}" id="sequence${status.index}"
+                                    class="form-control">
                                 <option selected>select...</option>
                                 <c:forEach items="${answers.correctList}" var="item">
                                     <option value="${item}">${item}</option>
@@ -139,7 +140,8 @@
             </c:when>
             <c:when test="${question.questionType eq 'NUMBER'}">
                 <div class="col-4">
-                    <input type="text" name="number" class="form-control" style="margin-left: -10px" placeholder="Enter number">
+                    <input type="text" name="number" class="form-control" style="margin-left: -10px"
+                           placeholder="Enter number">
                 </div>
                 <div class="row">
                     <div class="col-8">

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
@@ -114,10 +115,12 @@ public class QuizController {
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.GET)
     public String showCurrentQuestionGet(@ModelAttribute("studentId") Long studentId,
                                          @PathVariable("quizId") Long quizId,
-                                         @SessionAttribute(CURRENT_QUIZ) Quiz quiz,
-                                         @SessionAttribute(CURRENT_QUESTION_SERIAL)
+                                         @SessionAttribute(value = CURRENT_QUIZ, required = false)
+                                                 Quiz quiz,
+                                         @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
                                                  Integer currentQuestionSerial,
-                                         @SessionAttribute(QUESTIONS) List<Question> questions,
+                                         @SessionAttribute(value = QUESTIONS, required = false)
+                                                 List<Question> questions,
                                          HttpSession session, ModelMap model) {
 
         Question currentQuestion = questions.get(currentQuestionSerial);
@@ -147,7 +150,7 @@ public class QuizController {
                                           @PathVariable("quizId") Long quizId,
                                           @SessionAttribute(CURRENT_QUIZ) Quiz quiz,
                                           @SessionAttribute(CURRENT_QUESTION_SERIAL)
-                                                  Integer currentQuestionSerial,
+                                                      Integer currentQuestionSerial,
                                           @SessionAttribute(QUESTIONS) List<Question> questions,
                                           @SessionAttribute(RESULT) Double result,
                                           HttpSession session, ModelMap model) {
@@ -197,7 +200,8 @@ public class QuizController {
             case ACCORDANCE:
                 List<String> rightSide = (List<String>) session.getAttribute(ACCORDANCE_LIST);
                 for (int i = 0; i < 4; i++) {
-                    if (studentAnswers.get("accordance" + i).equals(rightSide.get(i))) {
+                    String answer = studentAnswers.get("accordance" + i);
+                    if (answer != null && answer.equals(rightSide.get(i))) {
                         result += ((double) prevQuestionScore) / 4;
                     }
                 }
@@ -209,7 +213,8 @@ public class QuizController {
                 List<String> correctList = answerSequence.getCorrectList();
                 logger.info("get session attribute SEQUENCE_LIST: " + correctList);
                 for (int i = 0; i < 4; i++) {
-                    if (studentAnswers.get("sequence" + i).equals(correctList.get(i))) {
+                    String answer = studentAnswers.get("sequence" + i);
+                    if (answer != null && answer.equals(correctList.get(i))) {
                         result += ((double) prevQuestionScore) / 4;
                     }
                 }
@@ -219,7 +224,8 @@ public class QuizController {
                 AnswerNumber answerNumber =
                         answerNumberDao.findAnswerNumber(prevQuestionId);
                 String correct = answerNumber.getCorrect().toString();
-                if (studentAnswers.get("number").equals(correct)) {
+                String answer = studentAnswers.get("number");
+                if (answer != null && answer.equals(correct)) {
                     result += prevQuestionScore;
                     session.setAttribute(RESULT, result);
                 }
@@ -243,7 +249,7 @@ public class QuizController {
     }
 
     @RequestMapping("/student/quizzes/continue")
-    public String continuePassing(Model model) {
+    public String continuePassing() {
         return "quiz_passing/continue";
     }
 
@@ -265,8 +271,10 @@ public class QuizController {
     @RequestMapping("/student/quizzes/{quizId}/time-up")
     public String showTimeUp(@ModelAttribute("studentId") Long studentId,
                              @PathVariable("quizId") Long quizId,
-                             @SessionAttribute(RESULT) Double result,
-                             @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
+                             @SessionAttribute(value = RESULT, required = false)
+                                     Double result,
+                             @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                     Integer currentQuestionSerial,
                              HttpSession session, Model model) {
         showResult(studentId, quizId, result, currentQuestionSerial, session, model);
         return "quiz_passing/time-up";
@@ -275,11 +283,17 @@ public class QuizController {
     @RequestMapping("/student/quizzes/{quizId}/congratulations")
     public String showResult(@ModelAttribute("studentId") Long studentId,
                              @PathVariable("quizId") Long quizId,
-                             @SessionAttribute(RESULT) Double result,
-                             @SessionAttribute(CURRENT_QUESTION_SERIAL) Integer currentQuestionSerial,
+                             @SessionAttribute(value = RESULT, required = false) Double result,
+                             @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                     Integer currentQuestionSerial,
                              HttpSession session, Model model) {
+        if (result == null) {
+            PassedQuiz quiz = quizDao.findPassedQuiz(studentId, quizId);
+            model.addAttribute("quiz", quiz);
+            return "quiz_passing/congratulations";
+        }
         Integer attempt = quizDao.findAttempt(studentId, quizId);
-        Integer roundedResult = roundOff(result * (1 - result * attempt * 0.1));
+        Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
         attempt += 1;
         LocalDateTime finishDate = LocalDateTime.now();
         quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
@@ -395,7 +409,9 @@ public class QuizController {
                 int seed = new Random().nextInt();
                 Collections.shuffle(answerAccordance.getLeftSide(), new Random(seed));
                 Collections.shuffle(answerAccordance.getRightSide(), new Random(seed));
-                session.setAttribute(ACCORDANCE_LIST, answerAccordance.getRightSide());
+                List<String> originRightSide = new ArrayList<>(answerAccordance.getRightSide());
+                session.setAttribute(ACCORDANCE_LIST, originRightSide);
+                Collections.shuffle(answerAccordance.getRightSide());
                 model.addAttribute("answers", answerAccordance);
                 break;
             case SEQUENCE:

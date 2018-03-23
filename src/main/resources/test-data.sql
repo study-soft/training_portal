@@ -11,13 +11,13 @@ INSERT INTO groups (name, description, creation_date, author_id) VALUES ('AM-4',
 -- Table: users (students)
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '095-123-45-67', null, 'Anton', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role) 
+INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '095-98-76-54', null, 'Artem', '123', 'STUDENT');
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '098-024-68-10', null, 'Mike', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role) 
+INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (2, 'Sara', 'Stivens', 'sara@example.com', '1998-03-01', '098-135-79-11', null, 'Sara', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role) 
+INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'STUDENT');
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
@@ -95,6 +95,10 @@ VALUES (4, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 VALUES (3, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
 /*16*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (3, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
+/*17*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
+VALUES (5, 5, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
+/*18*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
+VALUES (6, 6, NULL, '2018-02-12 14:34:56', NULL, NULL, 0, 'OPENED');
 
 -- Table: questions
 /*1*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)

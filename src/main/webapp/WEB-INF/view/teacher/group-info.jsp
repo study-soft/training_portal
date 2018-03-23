@@ -30,7 +30,7 @@
                 }
             });
 
-            $('td a').click(function (event) {
+            $('a:contains(Delete)').click(function (event) {
                 event.preventDefault();
                 var studentName = $(this).parent().prev().prev().text();
                 $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');

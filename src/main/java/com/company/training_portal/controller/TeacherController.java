@@ -26,12 +26,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 
@@ -92,8 +90,7 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/groups/{groupId}")
-    public String showGroupInfo(@ModelAttribute("teacherId") Long teacherId,
-                                @PathVariable("groupId") Long groupId, Model model) {
+    public String showGroupInfo(@PathVariable("groupId") Long groupId, Model model) {
         Group group = groupDao.findGroup(groupId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
         List<User> students = userDao.findStudents(groupId);
@@ -117,12 +114,13 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}")
-    public String showTeacherQuiz(/*@ModelAttribute("teacherId") Long teacherId,*/
-            @PathVariable("quizId") Long quizId,
-            Model model) {
+    public String showTeacherQuiz(@PathVariable("quizId") Long quizId,
+                                  Model model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
-        model.addAttribute("questions", questions);
+        Map<QuestionType, Integer> orderedQuestions = orderQuestions(questions);
+
+        model.addAttribute("questions", orderedQuestions);
 
         switch (quiz.getTeacherQuizStatus()) {
             case UNPUBLISHED:
@@ -136,7 +134,7 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
-    public String showCreateGroup(@ModelAttribute("teacherId") Long teacherId, Model model) {
+    public String showCreateGroup(Model model) {
         List<User> students = userDao.findStudentWithoutGroup();
         model.addAttribute("students", students);
         return "teacher/group-create";
@@ -186,21 +184,13 @@ public class TeacherController {
                 .collect(Collectors.toList());
         userDao.addStudentsToGroup(groupId, studentIds);
 
-        List<User> students = new ArrayList<>();
-        for (Long studentId : studentIds) {
-            User student = userDao.findUser(studentId);
-            students.add(student);
-        }
-        Collections.sort(students);
-
         redirectAttributes.addFlashAttribute("createSuccess", true);
         model.clear();
         return "redirect:/teacher/groups/" + groupId;
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
-    public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
-                                  @PathVariable("groupId") Long groupId, Model model) {
+    public String showAddStudents(@PathVariable("groupId") Long groupId, Model model) {
         Group group = groupDao.findGroup(groupId);
         List<User> students = userDao.findStudentWithoutGroup();
 
@@ -212,8 +202,7 @@ public class TeacherController {
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
     @ResponseBody
-    public List<User> addStudents(@ModelAttribute("teacherId") Long teacherId,
-                                  @PathVariable("groupId") Long groupId,
+    public List<User> addStudents(@PathVariable("groupId") Long groupId,
                                   @RequestParam Map<String, String> studentIdsMap) {
         logger.info("request param map: " + studentIdsMap);
 
@@ -371,5 +360,33 @@ public class TeacherController {
         model.addAttribute("groups", groups);
 
         return "teacher/teacher-students";
+    }
+
+    //    INTERNALS===================================================================
+
+    private Map<QuestionType, Integer> orderQuestions(Map<QuestionType, Integer> originMap) {
+        Map<QuestionType, Integer> resultMap = new LinkedHashMap<>();
+        while (resultMap.size() != 5) {
+            for (Map.Entry<QuestionType, Integer> entry : originMap.entrySet()) {
+                QuestionType key = entry.getKey();
+                Integer value = entry.getValue();
+                if (key.equals(ONE_ANSWER)) {
+                    resultMap.put(key, value);
+                }
+                if (resultMap.containsKey(ONE_ANSWER) && key.equals(FEW_ANSWERS)) {
+                    resultMap.put(key, value);
+                }
+                if (resultMap.containsKey(FEW_ANSWERS) && key.equals(ACCORDANCE)) {
+                    resultMap.put(key, value);
+                }
+                if (resultMap.containsKey(ACCORDANCE) && key.equals(SEQUENCE)) {
+                    resultMap.put(key, value);
+                }
+                if (resultMap.containsKey(SEQUENCE) && key.equals(NUMBER)) {
+                    resultMap.put(key, value);
+                }
+            }
+        }
+        return resultMap;
     }
 }

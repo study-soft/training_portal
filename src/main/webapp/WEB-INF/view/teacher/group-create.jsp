@@ -58,10 +58,8 @@
                 </table>
             </c:otherwise>
         </c:choose>
-        <div>
-            <input type="button" value="Back" onclick="window.history.go(-1);">
-            <input type="submit" value="Create">
-        </div>
+        <input type="button" value="Back" onclick="window.history.go(-1);" class="btn btn-primary">
+        <input type="submit" value="Create" class="btn btn-success">
     </form>
 </div>
 <br>

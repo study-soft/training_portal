@@ -9,10 +9,9 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <form>
-        <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
-        <a href="#" class="btn btn-success float-right">+ Create</a>
-    </form>
+    <br>
+    <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
+    <a href="#" class="btn btn-success float-right">New quiz</a>
     <h3>Unpublished quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
@@ -22,21 +21,19 @@
             <table class="table">
                 <tr>
                     <th style="width: 35%">Name</th>
-                    <th style="width: 8.33%">Questions</th>
-                    <th style="width: 8.33%">Score</th>
+                    <th style="width: 10%">Questions</th>
+                    <th style="width: 10%">Score</th>
                     <th style="width: 15%;">Creation date</th>
-                    <th style="width: 8.33%"></th>
-                    <th style="width: 8.33%"></th>
-                    <th style="width: 8.33%"></th>
-                    <th style="width: 8.33%"></th>
+                    <th style="width: 10%"></th>
+                    <th style="width: 10%"></th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${unpublishedQuizzes}" var="unpublishedQuiz">
                     <tr>
-                        <td>${unpublishedQuiz.name}</td>
+                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}">${unpublishedQuiz.name}</a></td>
                         <td>${unpublishedQuiz.questionsNumber}</td>
                         <td>${unpublishedQuiz.score}</td>
                         <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>
-                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}">Details</a></td>
                         <td><a href="#">Publish</a></td>
                         <td><a href="#">Edit</a></td>
                         <td><a href="#">Delete</a></td>
@@ -54,28 +51,24 @@
             <table class="table">
                 <tr>
                     <th style="width: 35%">Name</th>
-                    <th style="width: 8.33%">Questions</th>
-                    <th style="width: 8.33%">Score</th>
+                    <th style="width: 10%">Questions</th>
+                    <th style="width: 10%">Score</th>
                     <th style="width: 15%">Creation date</th>
-                    <th style="width: 16.66%"></th>
-                    <th style="width: 16.66%"></th>
+                    <th style="width: 30%"></th>
                 </tr>
                 <c:forEach items="${publishedQuizzes}" var="publishedQuiz">
                     <tr>
-                        <td>${publishedQuiz.name}</td>
+                        <td><a href="/teacher/quizzes/${publishedQuiz.quizId}">${publishedQuiz.name}</a></td>
                         <td>${publishedQuiz.questionsNumber}</td>
                         <td>${publishedQuiz.score}</td>
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
-                        <td><a href="/teacher/quizzes/${publishedQuiz.quizId}">Details</a></td>
-                        <td><a href="#">Unpublish</a></td>
+                        <td class="text-center"><a href="#">Unpublish</a></td>
                     </tr>
                 </c:forEach>
             </table>
         </c:otherwise>
     </c:choose>
-    <div>
-        <button class="btn btn-primary" value="Back" onclick="window.history.go(-1);">Back</button>
-    </div>
+    <button class="btn btn-primary" value="Back" onclick="window.history.go(-1);">Back</button>
     <br>
 </div>
 </body>

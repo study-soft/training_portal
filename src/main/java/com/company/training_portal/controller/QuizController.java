@@ -31,8 +31,6 @@ public class QuizController {
     private AnswerAccordanceDao answerAccordanceDao;
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
-    private GroupDao groupDao;
-    private UserDao userDao;
 
     private Logger logger = Logger.getLogger(QuizController.class);
 
@@ -42,17 +40,13 @@ public class QuizController {
                           AnswerSimpleDao answerSimpleDao,
                           AnswerAccordanceDao answerAccordanceDao,
                           AnswerSequenceDao answerSequenceDao,
-                          AnswerNumberDao answerNumberDao,
-                          GroupDao groupDao,
-                          UserDao userDao) {
+                          AnswerNumberDao answerNumberDao) {
         this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.answerSimpleDao = answerSimpleDao;
         this.answerAccordanceDao = answerAccordanceDao;
         this.answerSequenceDao = answerSequenceDao;
         this.answerNumberDao = answerNumberDao;
-        this.groupDao = groupDao;
-        this.userDao = userDao;
     }
 
     @ModelAttribute("studentId")

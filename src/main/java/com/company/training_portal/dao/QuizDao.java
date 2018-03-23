@@ -37,7 +37,7 @@ public interface QuizDao {
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
-    List<Quiz> findPassedAndFinishedGroupQuizzes(Long groupId);
+    List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId);
 
     Integer findResult(Long studentId, Long quizId);
 
@@ -55,13 +55,13 @@ public interface QuizDao {
 
     PassedQuiz findPassedQuiz(Long studentId, Long quizId);
 
-    PassedQuiz findFinishedQuiz(Long studentId, Long quizId);
+    PassedQuiz findClosedQuiz(Long studentId, Long quizId);
 
     List<OpenedQuiz> findOpenedQuizzes(Long studentId);
 
     List<PassedQuiz> findPassedQuizzes(Long studentId);
 
-    List<PassedQuiz> findFinishedQuizzes(Long studentId);
+    List<PassedQuiz> findClosedQuizzes(Long studentId);
 
     void addPublishedQuizInfo(Long studentId, Long quizId, LocalDate submitDate,
                               Integer attempt, StudentQuizStatus status);
@@ -78,7 +78,7 @@ public interface QuizDao {
 
     void editQuiz(Quiz quiz);
 
-    void finishQuiz(Long studentId, Long quizId);
+    void closeQuiz(Long studentId, Long quizId);
 
     void deleteUnpublishedQuiz(Long quizId);
 }

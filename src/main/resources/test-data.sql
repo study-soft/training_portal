@@ -24,13 +24,13 @@ VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:00:05', 1, 'PUBLISHED');
+VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:10:00', 1, 'PUBLISHED');
 /*2*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'PUBLISHED');
 /*3*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-02-01', '00:15:00', 2, 'PUBLISHED');
 /*4*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:05:00', 2, 'PUBLISHED');
+VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:00:10', 2, 'PUBLISHED');
 /*5*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
 /*6*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -50,17 +50,17 @@ VALUES (7, 1, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:02', '2018-03-05 00:0
 /*2*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (7, 2, 30, '2018-03-05 00:00:00', '2018-03-05 00:00:03', '2018-03-05 00:00:04', 1, 'PASSED');
 UPDATE USER_QUIZ_JUNCTIONS
-SET RESULT = 25, START_DATE = '2018-03-05 00:00:07', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'FINISHED'
+SET RESULT = 25, START_DATE = '2018-03-05 00:00:07', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'CLOSED'
 WHERE USER_ID = 7 AND  QUIZ_ID = 2;
 /*3*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 3, 1, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:00:04', 2, 'FINISHED');
+VALUES (3, 3, 1, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:00:04', 2, 'CLOSED');
 /*4*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, finish_date, start_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (3, 4, 40, '2018-03-05 00:00:00', '2018-03-05 00:00:02', '2018-03-05 00:00:04', 1, 'PASSED');
 UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 40, START_DATE = '2018-03-05 00:00:06', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
 WHERE USER_ID = 3 AND QUIZ_ID = 4;
 UPDATE USER_QUIZ_JUNCTIONS
-SET RESULT = 2, START_DATE = '2018-03-05 00:00:12', FINISH_DATE = '2018-03-05 00:00:15', ATTEMPT = 3, STUDENT_QUIZ_STATUS = 'FINISHED'
+SET RESULT = 2, START_DATE = '2018-03-05 00:00:12', FINISH_DATE = '2018-03-05 00:00:15', ATTEMPT = 3, STUDENT_QUIZ_STATUS = 'CLOSED'
 WHERE USER_ID = 3 AND  QUIZ_ID = 4;
 /*5*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (3, 2, 8, '2018-03-05 00:00:00', '2018-03-05 00:00:03', '2018-03-05 00:00:04', 2, 'PASSED');
@@ -73,18 +73,18 @@ VALUES (5, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*9*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (6, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*10*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 2, 5, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:03:04', 1, 'FINISHED');
+VALUES (4, 2, 5, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:03:04', 1, 'CLOSED');
 UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 19, START_DATE = '2018-03-05 00:00:09', FINISH_DATE = '2018-03-05 00:00:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
 WHERE USER_ID = 3 AND QUIZ_ID = 1;
 UPDATE USER_QUIZ_JUNCTIONS
-SET RESULT = 20, START_DATE = '2018-03-05 00:00:12', FINISH_DATE = '2018-03-05 00:00:15', ATTEMPT = 2, STUDENT_QUIZ_STATUS = 'FINISHED'
+SET RESULT = 20, START_DATE = '2018-03-05 00:00:12', FINISH_DATE = '2018-03-05 00:00:15', ATTEMPT = 2, STUDENT_QUIZ_STATUS = 'CLOSED'
 WHERE USER_ID = 3 AND QUIZ_ID = 1;
 UPDATE USER_QUIZ_JUNCTIONS
 SET RESULT = 10, START_DATE = '2018-03-05 00:00:08', FINISH_DATE = '2018-03-05 00:04:10', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
 WHERE USER_ID = 4 AND QUIZ_ID = 1;
 /*11*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 3, 2, '2018-03-06 00:14:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 2, 'FINISHED');
+VALUES (4, 3, 2, '2018-03-06 00:14:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 2, 'CLOSED');
 /*12*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (4, 4, 3, '2018-03-05 00:08:00', '2018-03-11 00:10:00', '2018-03-11 00:16:04', 2, 'PASSED');
 /*13*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
@@ -269,6 +269,7 @@ VALUES (29, '<html>', '<form action=\"handler.php\">', '<input type=\"checkbox\"
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);
 INSERT INTO answers_number (question_id, correct) VALUES (10, 3);
+INSERT INTO answers_number (question_id, correct) VALUES (15, 3);
 INSERT INTO answers_number (question_id, correct) VALUES (18, 1);
 INSERT INTO answers_number (question_id, correct) VALUES (21, 1);
 INSERT INTO answers_number (question_id, correct) VALUES (24, 1);

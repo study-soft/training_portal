@@ -7,7 +7,6 @@ import com.company.training_portal.model.OpenedQuiz;
 import com.company.training_portal.model.PassedQuiz;
 import com.company.training_portal.model.Question;
 import com.company.training_portal.model.Quiz;
-import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.junit.Test;
@@ -31,7 +30,6 @@ import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -65,7 +63,7 @@ public class QuizDaoJdbcTest {
                 .description("Try your procedural skills")
                 .explanation("Hope you had procedural fun :)")
                 .creationDate(LocalDate.of(2018, 3, 1))
-                .passingTime(Duration.of(30, SECONDS))
+                .passingTime(Duration.of(10, MINUTES))
                 .authorId(1L)
                 .questionsNumber(12)
                 .score(30)
@@ -147,7 +145,7 @@ public class QuizDaoJdbcTest {
     public void test_find_students_number_by_authorId_and_groupId_and_quizId_with_studentQuizStatus() {
         Map<StudentQuizStatus, Integer> testResults = new HashMap<>();
         testResults.put(StudentQuizStatus.PASSED, 1);
-        testResults.put(StudentQuizStatus.FINISHED, 1);
+        testResults.put(StudentQuizStatus.CLOSED, 1);
 
         Map<StudentQuizStatus, Integer> results
                 = quizDao.findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
@@ -202,7 +200,7 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuiz(4L));
         testQuizzes.add(quizDao.findQuiz(1L));
 
-        List<Quiz> quizzes = quizDao.findPassedAndFinishedGroupQuizzes(1L);
+        List<Quiz> quizzes = quizDao.findPassedAndClosedGroupQuizzes(1L);
 
         assertEquals(testQuizzes, quizzes);
     }
@@ -250,14 +248,14 @@ public class QuizDaoJdbcTest {
     public void test_find_studentQuizStatus_by_studentId_and_quizId() {
         StudentQuizStatus studentQuizStatus
                 = quizDao.findStudentQuizStatus(3L, 1L);
-        assertThat(studentQuizStatus, is(StudentQuizStatus.FINISHED));
+        assertThat(studentQuizStatus, is(StudentQuizStatus.CLOSED));
     }
 
     @Test
     public void test_find_opened_quiz_by_studentId_and_quizId() {
         OpenedQuiz testOpenedQuiz = new OpenedQuiz.OpenedQuizBuilder()
                 .quizId(5L)
-                .quizName("IO")
+                .quizName("Input output")
                 .description("Try your IO skills")
                 .passingTime(Duration.of(15, MINUTES))
                 .authorName("Bronson Andrew")
@@ -283,7 +281,7 @@ public class QuizDaoJdbcTest {
                 .score(4)
                 .questionsNumber(1)
                 .attempt(2)
-                .passingTime(Duration.of(5, MINUTES))
+                .passingTime(Duration.of(10, SECONDS))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 8, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 16, 4))
                 .timeSpent(Duration.ofSeconds(364))
@@ -307,12 +305,12 @@ public class QuizDaoJdbcTest {
                 .questionsNumber(2)
                 .attempt(2)
                 .passingTime(Duration.of(15, MINUTES))
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
+                .submitDate(LocalDateTime.of(2018, 3, 6, 0, 14, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 5, 0))
                 .timeSpent(Duration.ofMinutes(5L))
                 .build();
 
-        PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(4L, 3L);
+        PassedQuiz finishedQuiz = quizDao.findClosedQuiz(4L, 3L);
 
         assertEquals(testFinishedQuiz, finishedQuiz);
     }
@@ -332,7 +330,7 @@ public class QuizDaoJdbcTest {
                 .build());
         testOpenedQuizzes.add(new OpenedQuiz.OpenedQuizBuilder()
                 .quizId(5L)
-                .quizName("IO")
+                .quizName("Input output")
                 .description("Try your IO skills")
                 .passingTime(Duration.of(15, MINUTES))
                 .authorName("Bronson Andrew")
@@ -360,7 +358,7 @@ public class QuizDaoJdbcTest {
                 .score(4)
                 .questionsNumber(1)
                 .attempt(2)
-                .passingTime(Duration.of(5, MINUTES))
+                .passingTime(Duration.of(10, SECONDS))
                 .submitDate(LocalDateTime.of(2018, 3, 5, 0, 8, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 16, 4))
                 .timeSpent(Duration.ofSeconds(364))
@@ -375,8 +373,8 @@ public class QuizDaoJdbcTest {
                 .score(30)
                 .questionsNumber(12)
                 .attempt(1)
-                .passingTime(Duration.of(30, SECONDS))
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
+                .passingTime(Duration.of(10, MINUTES))
+                .submitDate(LocalDateTime.of(2018, 3, 8, 0, 13, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 5, 0, 4, 10))
                 .timeSpent(Duration.ofSeconds(242))
                 .build());
@@ -401,7 +399,7 @@ public class QuizDaoJdbcTest {
                 .questionsNumber(2)
                 .attempt(2)
                 .passingTime(Duration.of(15, MINUTES))
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
+                .submitDate(LocalDateTime.of(2018, 3, 6, 0, 14, 0))
                 .finishDate(LocalDateTime.of(2018, 3, 11, 0, 5, 0))
                 .timeSpent(Duration.ofMinutes(5L))
                 .build());
@@ -422,7 +420,7 @@ public class QuizDaoJdbcTest {
                 .build());
 
         List<PassedQuiz> finishedQuizzes
-                = quizDao.findFinishedQuizzes(4L);
+                = quizDao.findClosedQuizzes(4L);
 
         assertEquals(testFinishedQuizzes, finishedQuizzes);
     }
@@ -486,10 +484,10 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_finish_quiz() {
-        quizDao.finishQuiz(4L, 4L);
+        quizDao.closeQuiz(4L, 4L);
         StudentQuizStatus studentQuizStatus =
                 quizDao.findStudentQuizStatus(4L, 4L);
-        assertThat(studentQuizStatus, is(StudentQuizStatus.FINISHED));
+        assertThat(studentQuizStatus, is(StudentQuizStatus.CLOSED));
     }
 
     @Test(expected = EmptyResultDataAccessException.class)

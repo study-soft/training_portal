@@ -11,7 +11,7 @@
             var attempt = $("#attempt");
             var repass = $("#repass");
             if (percent >= 100) {
-                attempt.text("You used maximum number of attempts and need to finish quiz");
+                attempt.text("You used maximum number of attempts and need to close quiz");
                 repass.remove();
             }
         });
@@ -55,14 +55,16 @@
         <img src="/resources/icon-primary.png" width="25" height="25" class="icon-four-rows">
         <div class="inline">If you press "Repass" you will begin repassing the quiz</div>
         <div id="attempt" class="non-first-row">Your total score will be less on ${passedQuiz.attempt * 10}%</div>
-        <div class="non-first-row">If you press "Finish" you will finish quiz with current result</div>
+        <div class="non-first-row">If you press "Close" you will close quiz with current result</div>
         <div class="non-first-row">If you do not want to repass it than press "Back"</div>
     </div>
     <div>
         <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
         <a href="/student/quizzes/${passedQuiz.quizId}/initialize" id="repass"
            class="btn btn-success">Repass</a>
-        <input type="submit" value="Finish"/> Don't work
+        <form class="inline" action="/student/quizzes/${passedQuiz.quizId}" method="post">
+            <input type="submit" value="Close" class="btn btn-success"/>
+        </form>
     </div>
 </div>
 <br>

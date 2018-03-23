@@ -4,16 +4,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Finished quiz</title>
+    <title>Closed quiz</title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var finishedStudents = "${finishedStudents}";
+            var closedStudents = "${closedStudents}";
             var allStudents = "${allStudents}";
             var answers = $("#answers");
-            if (finishedStudents !== allStudents) {
-                var message = "You have to wait until all students in your group finish this quiz. " +
-                    "Finished students: ${finishedStudents} / ${allStudents}";
+            if (closedStudents !== allStudents) {
+                var message = "You have to wait until all students in your group close this quiz. " +
+                    "Closed students: ${closedStudents} / ${allStudents}";
                 answers.addClass("d-inline-block");
                 answers.attr("tabindex", "0");
                 answers.attr("data-toggle", "tooltip");
@@ -27,13 +27,13 @@
     </script>
     <script>
         $(document).ready(function () {
-            var finishSuccess = "${finishSuccess}";
-            if (finishSuccess) {
-                $("#finish-success").fadeIn("slow");
+            var closeSuccess = "${closeSuccess}";
+            if (closeSuccess) {
+                $("#close-success").fadeIn("slow");
             }
 
             $("#close").click(function () {
-                $("#finish-success").fadeOut("slow");
+                $("#close-success").fadeOut("slow");
             });
 
             $("#back").click(function () {
@@ -51,70 +51,70 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="finish-success" class="col-4 mx-auto text-center correct edit-success">
-        Quiz successfully finished
+    <div id="close-success" class="col-4 mx-auto text-center correct edit-success">
+        Quiz successfully closed
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>${finishedQuiz.quizName}</h2>
+    <h2>${closedQuiz.quizName}</h2>
     <div class="highlight-primary">
         <img src="/resources/icon-primary.png" width="25" height="25" class="icon-one-row">
-        This quiz is finished
+        This quiz is closed
     </div>
     <h3>Information about result</h3>
     <table class="col-6 table-info">
         <tr>
             <td>Result</td>
-            <td>${finishedQuiz.result} / ${finishedQuiz.score}</td>
+            <td>${closedQuiz.result} / ${closedQuiz.score}</td>
         </tr>
         <tr>
             <td>Time spent</td>
-            <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
+            <td><duration:format value="${closedQuiz.timeSpent}"/></td>
         </tr>
         <tr>
             <td>Attempts</td>
-            <td>${finishedQuiz.attempt}</td>
+            <td>${closedQuiz.attempt}</td>
         </tr>
         <tr>
-            <td>Finished</td>
-            <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>
+            <td>Passed</td>
+            <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
         </tr>
     </table>
     <h3>Information about quiz</h3>
-    <c:if test="${finishedQuiz.description ne null}">
-        <div class="col-6"><strong>Description: </strong>${finishedQuiz.description}</div>
+    <c:if test="${closedQuiz.description ne null}">
+        <div class="col-6"><strong>Description: </strong>${closedQuiz.description}</div>
     </c:if>
     <table class="col-6 table-info">
         <tr>
             <td>Submitted</td>
-            <td><localDateTime:format value="${finishedQuiz.submitDate}"/></td>
+            <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
         </tr>
         <tr>
             <td>Passing time</td>
-            <td><duration:format value="${finishedQuiz.passingTime}"/></td>
+            <td><duration:format value="${closedQuiz.passingTime}"/></td>
         </tr>
         <tr>
             <td>Number of questions</td>
-            <td>${finishedQuiz.questionsNumber}</td>
+            <td>${closedQuiz.questionsNumber}</td>
         </tr>
         <tr>
             <td>Total score</td>
-            <td>${finishedQuiz.score}</td>
+            <td>${closedQuiz.score}</td>
         </tr>
         <tr>
             <td>Author</td>
-            <td>${finishedQuiz.authorName}</td>
+            <td>${closedQuiz.authorName}</td>
         </tr>
     </table>
-    <c:if test="${finishedQuiz.explanation ne null}">
-        <div class="col-6"><strong>Explanation: </strong>${finishedQuiz.explanation}</div>
+    <c:if test="${closedQuiz.explanation ne null}">
+        <div class="col-6"><strong>Explanation: </strong>${closedQuiz.explanation}</div>
     </c:if>
     <div>
         <button id="back" value="Back" class="btn btn-primary">Back</button>
         <span id="answers">
-            <a href="/student/quizzes/${finishedQuiz.quizId}/answers"
+            <a href="/student/quizzes/${closedQuiz.quizId}/answers"
                class="btn btn-primary disabled">Answers</a>
         </span>
-        <a href="/student/compare-results/${finishedQuiz.quizId}" class="btn btn-primary">Results</a>
+        <a href="/student/compare-results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
     </div>
 </div>
 <br>

@@ -26,7 +26,7 @@
             <td><duration:format value="${quiz.timeSpent}"/></td>
         </tr>
         <tr>
-            <td>Finished</td>
+            <td>Closed</td>
             <td><localDateTime:format value="${quiz.finishDate}"/></td>
         </tr>
     </table>

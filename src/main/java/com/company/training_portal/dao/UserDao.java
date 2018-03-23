@@ -39,13 +39,14 @@ public interface UserDao {
 
     Integer findTeachersNumber();
 
-    Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId);
+    Integer findStudentsNumberInGroupWithClosedQuiz(Long groupId, Long quizId);
 
     Integer findResultsNumber(Long groupId, Long quizId);
 
     Integer findFinalResultsNumber(Long groupId, Long quizId);
 
     // key: studentId, value: result
+    @Deprecated
     Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId, Long quizId);
 
     boolean userExistsByLogin(String login);
@@ -68,10 +69,12 @@ public interface UserDao {
 
     void addStudentsToGroup(Long groupId, List<Long> studentIds);
 
+    @Deprecated
     void addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                  LocalDateTime submitDate, LocalDateTime startDate,
                                  LocalDateTime finishDate, StudentQuizStatus studentQuizStatus);
 
+    @Deprecated
     void updateStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
                                     LocalDateTime finishDate, LocalDateTime startDate,
                                     Integer attempt, StudentQuizStatus studentQuizStatus);

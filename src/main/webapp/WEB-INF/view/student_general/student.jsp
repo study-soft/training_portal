@@ -66,8 +66,9 @@
         <c:when test="${group eq null}">
             <div class="col-6 highlight-danger">
                 <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-                     width="25" height="25" class="icon-one-row">
-                You do no belong to any group. Say your teachers to add you.
+                     width="25" height="25" class="icon-two-rows">
+                <div class="inline">You do not belong to any group</div>
+                <div class="non-first-row">Say your teachers to add you</div>
             </div>
         </c:when>
         <c:otherwise>

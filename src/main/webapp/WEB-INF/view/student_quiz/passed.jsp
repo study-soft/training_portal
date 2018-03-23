@@ -81,14 +81,14 @@
     </table>
     <div class="highlight-primary">
         <img src="/resources/icon-primary.png" width="25" height="25" class="icon-two-rows">
-        <div class="inline">If you are satisfied with your result, you need to finish quiz</div>
+        <div class="inline">If you are satisfied with your result, you need to close quiz</div>
         <div class="non-first-row">Also you can try again but score will be less</div>
     </div>
     <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
     <a href="/student/compare-results/${passedQuiz.quizId}" class="btn btn-primary">Results</a>
     <a href="/student/quizzes/${passedQuiz.quizId}/repass" id="repass" class="btn btn-success">Repass</a>
     <form class="inline" action="/student/quizzes/${passedQuiz.quizId}" method="post">
-        <input type="submit" value="Finish" class="btn btn-success">
+        <input type="submit" value="Close" class="btn btn-success">
     </form>
 </div>
 <br>

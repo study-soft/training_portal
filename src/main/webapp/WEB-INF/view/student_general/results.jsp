@@ -30,7 +30,7 @@
                     <th style="width: 10%">Result</th>
                     <th style="width: 10%">Attempt</th>
                     <th style="width: 15%">Time spent</th>
-                    <th style="width: 20%">Finish date</th>
+                    <th style="width: 20%">Passed</th>
                     <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
@@ -46,9 +46,9 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h3>Finished quizzes</h3>
+    <h3>Closed quizzes</h3>
     <c:choose>
-        <c:when test="${empty finishedQuizzes}">
+        <c:when test="${empty closedQuizzes}">
             <div class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
@@ -62,17 +62,17 @@
                     <th style="width: 10%">Result</th>
                     <th style="width: 10%">Attempt</th>
                     <th style="width: 15%">Time spent</th>
-                    <th style="width: 20%">Finish date</th>
+                    <th style="width: 20%">Passed</th>
                     <th style="width: 10%"></th>
                 </tr>
-                <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
+                <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
-                        <td><a href="/student/quizzes/${finishedQuiz.quizId}">${finishedQuiz.quizName}</a></td>
-                        <td>${finishedQuiz.result} / ${finishedQuiz.score}</td>
-                        <td>${finishedQuiz.attempt}</td>
-                        <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
-                        <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>
-                        <td><a href="/student/compare-results/${finishedQuiz.quizId}">Compare</a></td>
+                        <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
+                        <td>${closedQuiz.result} / ${closedQuiz.score}</td>
+                        <td>${closedQuiz.attempt}</td>
+                        <td><duration:format value="${closedQuiz.timeSpent}"/></td>
+                        <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
+                        <td><a href="/student/compare-results/${closedQuiz.quizId}">Compare</a></td>
                     </tr>
                 </c:forEach>
             </table>

@@ -32,7 +32,7 @@
     </table>
     <h3>${student.firstName} passes next quizzes:</h3>
     <c:choose>
-        <c:when test="${empty openedQuizzes and empty passedQuizzes and empty finishedQuizzes}">
+        <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             There is no quizzes for ${student.firstName}.
         </c:when>
         <c:otherwise>
@@ -59,12 +59,12 @@
                         <td>${passedQuiz.attempt}</td>
                     </tr>
                 </c:forEach>
-                <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
+                <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
-                        <td>${finishedQuiz.quizName}</td>
-                        <td>FINISHED</td>
-                        <td>${finishedQuiz.result}/${finishedQuiz.score}</td>
-                        <td>${finishedQuiz.attempt}</td>
+                        <td>${closedQuiz.quizName}</td>
+                        <td>CLOSED</td>
+                        <td>${closedQuiz.result}/${closedQuiz.score}</td>
+                        <td>${closedQuiz.attempt}</td>
                     </tr>
                 </c:forEach>
             </table>

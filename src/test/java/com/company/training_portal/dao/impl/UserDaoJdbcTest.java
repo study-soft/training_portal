@@ -116,8 +116,8 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_students_without_group() {
         List<User> testStudents = new ArrayList<>();
-        testStudents.add(userDao.findUser(7L));
         testStudents.add(userDao.findUser(8L));
+        testStudents.add(userDao.findUser(7L));
 
         List<User> students = userDao.findStudentWithoutGroup();
 
@@ -160,7 +160,7 @@ public class UserDaoJdbcTest {
     @Test
     public void test_find_students_number_in_group_with_finished_quiz() {
         Integer studentsNumber =
-                userDao.findStudentsNumberInGroupWithFinishedQuiz(1L, 1L);
+                userDao.findStudentsNumberInGroupWithClosedQuiz(1L, 1L);
         assertThat(studentsNumber, is(1));
     }
 
@@ -265,17 +265,17 @@ public class UserDaoJdbcTest {
 
     @Test
     public void test_add_student_info_about_quiz() {
-        userDao.addStudentInfoAboutQuiz(3L, 5L, 56,
+        userDao.addStudentInfoAboutQuiz(3L, 100L, 56,
                 LocalDateTime.of(2018, 3, 7, 20, 48),
                 LocalDateTime.of(2018, 4, 8, 21, 40),
                 LocalDateTime.of(2018, 4, 8, 21, 49),
                 StudentQuizStatus.PASSED);
 
-        Integer result = quizDao.findResult(3L, 5L);
-        LocalDateTime submitDate = quizDao.findSubmitDate(3L, 5L);
-        LocalDateTime startDate = quizDao.findStartDate(3L, 5L);
-        LocalDateTime finishDate = quizDao.findFinishDate(3L, 5L);
-        Integer attempt = quizDao.findAttempt(3L, 5L);
+        Integer result = quizDao.findResult(3L, 100L);
+        LocalDateTime submitDate = quizDao.findSubmitDate(3L, 100L);
+        LocalDateTime startDate = quizDao.findStartDate(3L, 100L);
+        LocalDateTime finishDate = quizDao.findFinishDate(3L, 100L);
+        Integer attempt = quizDao.findAttempt(3L, 100L);
         StudentQuizStatus studentQuizStatus = quizDao.findStudentQuizStatus(3L, 5L);
 
         assertThat(result, is(56));

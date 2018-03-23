@@ -9,7 +9,6 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <br>
     <h2>Quizzes</h2>
     <form>
         <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
@@ -74,9 +73,9 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h3>Finished quizzes</h3>
+    <h3>Closed quizzes</h3>
     <c:choose>
-        <c:when test="${empty finishedQuizzes}">
+        <c:when test="${empty closedQuizzes}">
             <div class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
@@ -92,13 +91,13 @@
                     <th style="width: 20%">Submit date</th>
                     <th style="width: 30%">Author</th>
                 </tr>
-                <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
+                <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
-                        <td><a href="/student/quizzes/${finishedQuiz.quizId}">${finishedQuiz.quizName}</a></td>
-                        <td>${finishedQuiz.questionsNumber}</td>
-                        <td>${finishedQuiz.score}</td>
-                        <td><localDateTime:format value="${finishedQuiz.submitDate}"/></td>
-                        <td>${finishedQuiz.authorName}</td>
+                        <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
+                        <td>${closedQuiz.questionsNumber}</td>
+                        <td>${closedQuiz.score}</td>
+                        <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
+                        <td>${closedQuiz.authorName}</td>
                     </tr>
                 </c:forEach>
             </table>

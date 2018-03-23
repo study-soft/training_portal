@@ -182,10 +182,10 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public List<Quiz> findPassedAndFinishedGroupQuizzes(Long groupId) {
-        List<Quiz> quizzes = template.query(FIND_PASSED_AND_FINISHED_QUIZZES_BY_GROUP_ID,
+    public List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId) {
+        List<Quiz> quizzes = template.query(FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID,
                 new Object[]{groupId}, this::mapQuiz);
-        logger.info("Found passed and finished quizzes by groupId:");
+        logger.info("Found passed and closed quizzes by groupId:");
         quizzes.forEach(logger::info);
         return quizzes;
     }
@@ -267,12 +267,12 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public PassedQuiz findFinishedQuiz(Long studentId, Long quizId) {
-        PassedQuiz finishedQuiz = template.queryForObject(
-                FIND_FINISHED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID,
+    public PassedQuiz findClosedQuiz(Long studentId, Long quizId) {
+        PassedQuiz closedQuiz = template.queryForObject(
+                FIND_CLOSED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID,
                 new Object[]{studentId, quizId}, this::mapPassedQuiz);
-        logger.info("Found finished quiz by studentId and quizId: " + finishedQuiz);
-        return finishedQuiz;
+        logger.info("Found closed quiz by studentId and quizId: " + closedQuiz);
+        return closedQuiz;
     }
 
     @Override
@@ -296,13 +296,13 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public List<PassedQuiz> findFinishedQuizzes(Long studentId) {
-        List<PassedQuiz> finishedQuizzes = template.query(
-                FIND_FINISHED_QUIZZES_BY_STUDENT_ID,
+    public List<PassedQuiz> findClosedQuizzes(Long studentId) {
+        List<PassedQuiz> closedQuizzes = template.query(
+                FIND_CLOSED_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapPassedQuiz);
-        logger.info("Found finished quizzes by studentId:");
-        finishedQuizzes.forEach(logger::info);
-        return finishedQuizzes;
+        logger.info("Found closed quizzes by studentId:");
+        closedQuizzes.forEach(logger::info);
+        return closedQuizzes;
     }
 
     @Override
@@ -381,9 +381,9 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Override
-    public void finishQuiz(Long studentId, Long quizId) {
-        template.update(FINISH_QUIZ, studentId, quizId);
-        logger.info("Finished quiz by studentId = " + studentId + " and quizId = " + quizId);
+    public void closeQuiz(Long studentId, Long quizId) {
+        template.update(CLOSE_QUIZ, studentId, quizId);
+        logger.info("Closed quiz by studentId = " + studentId + " and quizId = " + quizId);
     }
 
     @Transactional
@@ -525,7 +525,7 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_PASSED_AND_FINISHED_QUIZZES_BY_GROUP_ID =
+    private static final String FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID =
     "SELECT DISTINCT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
@@ -534,7 +534,7 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'FINISHED') " +
+    "WHERE GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'CLOSED') " +
     "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
@@ -577,7 +577,7 @@ public class QuizDaoJdbc implements QuizDao {
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'PASSED';";
 
-    private static final String FIND_FINISHED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
+    private static final String FIND_CLOSED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
@@ -586,7 +586,7 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
+    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED';";
 
     private static final String FIND_OPENED_QUIZZES_BY_STUDENT_ID =
     "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
@@ -613,7 +613,7 @@ public class QuizDaoJdbc implements QuizDao {
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.FINISH_DATE DESC;";
 
-    private static final String FIND_FINISHED_QUIZZES_BY_STUDENT_ID =
+    private static final String FIND_CLOSED_QUIZZES_BY_STUDENT_ID =
     "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
     "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
     "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
@@ -622,7 +622,7 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND J.STUDENT_QUIZ_STATUS = 'FINISHED' " +
+    "WHERE J.USER_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED' " +
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.FINISH_DATE DESC;";
 
@@ -650,9 +650,9 @@ public class QuizDaoJdbc implements QuizDao {
     "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, CREATION_DATE = ?, PASSING_TIME = ?, AUTHOR_ID = ?, TEACHER_QUIZ_STATUS = ? " +
     "WHERE QUIZ_ID = ?;";
 
-    private static final String FINISH_QUIZ =
+    private static final String CLOSE_QUIZ =
     "UPDATE USER_QUIZ_JUNCTIONS " +
-    "SET STUDENT_QUIZ_STATUS = 'FINISHED' " +
+    "SET STUDENT_QUIZ_STATUS = 'CLOSED' " +
     "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String DELETE_UNPUBLISHED_QUIZ =

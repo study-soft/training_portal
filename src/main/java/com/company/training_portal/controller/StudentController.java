@@ -79,10 +79,10 @@ public class StudentController {
 
         List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
         List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);
-        List<PassedQuiz> finishedQuizzes = quizDao.findFinishedQuizzes(studentId);
+        List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(studentId);
         model.addAttribute("openedQuizzes", openedQuizzes);
         model.addAttribute("passedQuizzes", passedQuizzes);
-        model.addAttribute("finishedQuizzes", finishedQuizzes);
+        model.addAttribute("closedQuizzes", closedQuizzes);
 
         return "student_general/student-info";
     }
@@ -150,9 +150,9 @@ public class StudentController {
                 = quizDao.findPassedQuizzes(studentId);
         model.addAttribute("passedQuizzes", passedQuizzes);
 
-        List<PassedQuiz> finishedQuizzes
-                = quizDao.findFinishedQuizzes(studentId);
-        model.addAttribute("finishedQuizzes", finishedQuizzes);
+        List<PassedQuiz> closedQuizzes
+                = quizDao.findClosedQuizzes(studentId);
+        model.addAttribute("closedQuizzes", closedQuizzes);
 
         return "student_general/quizzes";
     }
@@ -171,25 +171,25 @@ public class StudentController {
                 PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
                 model.addAttribute("passedQuiz", passedQuiz);
                 return "student_quiz/passed";
-            case FINISHED:
+            case CLOSED:
                 Long groupId = userDao.findUser(studentId).getGroupId();
-                Integer finishedStudents = userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
+                Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
                 Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
-                PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
-                model.addAttribute("finishedStudents", finishedStudents);
+                PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+                model.addAttribute("closedStudents", closedStudents);
                 model.addAttribute("allStudents", allStudents);
-                model.addAttribute("finishedQuiz", finishedQuiz);
-                return "student_quiz/finished";
+                model.addAttribute("closedQuiz", closedQuiz);
+                return "student_quiz/closed";
         }
         return "student_general/student";
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.POST)
-    public String finishQuiz(@ModelAttribute("studentId") Long studentId,
-                             @PathVariable("quizId") Long quizId,
-                             RedirectAttributes redirectAttributes) {
-        quizDao.finishQuiz(studentId, quizId);
-        redirectAttributes.addFlashAttribute("finishSuccess", true);
+    public String closeQuiz(@ModelAttribute("studentId") Long studentId,
+                            @PathVariable("quizId") Long quizId,
+                            RedirectAttributes redirectAttributes) {
+        quizDao.closeQuiz(studentId, quizId);
+        redirectAttributes.addFlashAttribute("closeSuccess", true);
         return "redirect:/student/quizzes/" + quizId;
     }
 
@@ -199,9 +199,9 @@ public class StudentController {
                 quizDao.findPassedQuizzes(studentId);
         model.addAttribute("passedQuizzes", passedQuizzes);
 
-        List<PassedQuiz> finishedQuizzes =
-                quizDao.findFinishedQuizzes(studentId);
-        model.addAttribute("finishedQuizzes", finishedQuizzes);
+        List<PassedQuiz> closedQuizzes =
+                quizDao.findClosedQuizzes(studentId);
+        model.addAttribute("closedQuizzes", closedQuizzes);
 
         return "student_general/results";
     }
@@ -233,9 +233,9 @@ public class StudentController {
                     PassedQuiz passedQuiz = quizDao.findPassedQuiz(currentStudentId, quizId);
                     studentsQuizzes.add(passedQuiz);
                     break;
-                case FINISHED:
-                    PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(currentStudentId, quizId);
-                    studentsQuizzes.add(finishedQuiz);
+                case CLOSED:
+                    PassedQuiz closedQuiz = quizDao.findClosedQuiz(currentStudentId, quizId);
+                    studentsQuizzes.add(closedQuiz);
                     break;
             }
         }

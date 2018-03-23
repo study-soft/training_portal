@@ -171,11 +171,11 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Integer findStudentsNumberInGroupWithFinishedQuiz(Long groupId, Long quizId) {
+    public Integer findStudentsNumberInGroupWithClosedQuiz(Long groupId, Long quizId) {
         Integer studentsNumber = template.queryForObject(
-                FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ,
+                FIND_STUDENTS_NUMBER_IN_GROUP_WITH_CLOSED_QUIZ,
                 new Object[]{groupId, quizId}, Integer.class);
-        logger.info("Students number in group with finished quiz found: " + studentsNumber);
+        logger.info("Students number in group with closed quiz found: " + studentsNumber);
         return studentsNumber;
     }
 
@@ -481,11 +481,11 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_TEACHERS_NUMBER =
     "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'TEACHER';";
 
-    private static final String FIND_STUDENTS_NUMBER_IN_GROUP_WITH_FINISHED_QUIZ =
+    private static final String FIND_STUDENTS_NUMBER_IN_GROUP_WITH_CLOSED_QUIZ =
     "SELECT COUNT(USERS.USER_ID) " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? " +
-    "AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
+    "AND J.STUDENT_QUIZ_STATUS = 'CLOSED';";
 
     private static final String FIND_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT COUNT(J.RESULT) " +
@@ -495,7 +495,7 @@ public class UserDaoJdbc implements UserDao {
     private static final String FIND_FINAL_RESULTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT COUNT(J.RESULT) " +
     "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'FINISHED';";
+    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED';";
 
     private static final String FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT USERS.USER_ID, J.RESULT " +

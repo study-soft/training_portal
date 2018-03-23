@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/student">
-        <img src="/resources/training-portal-favicon.png" width="30" height="30"> Training portal
+        <img src="/resources/training-portal-favicon.png" width="30" height="35"> Training portal
     </a>
     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

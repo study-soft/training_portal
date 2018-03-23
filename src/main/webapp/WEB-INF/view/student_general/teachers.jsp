@@ -14,7 +14,11 @@
     </form>
     <c:choose>
         <c:when test="${empty teachers}">
-            <div>You do not have any teachers</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have teachers
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">

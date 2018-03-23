@@ -49,7 +49,7 @@
             <td>${passedQuiz.attempt}</td>
         </tr>
         <tr>
-            <td>Finished</td>
+            <td>Passed</td>
             <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
         </tr>
     </table>

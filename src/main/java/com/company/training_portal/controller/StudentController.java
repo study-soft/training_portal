@@ -172,7 +172,12 @@ public class StudentController {
                 model.addAttribute("passedQuiz", passedQuiz);
                 return "student_quiz/passed";
             case FINISHED:
+                Long groupId = userDao.findUser(studentId).getGroupId();
+                Integer finishedStudents = userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
+                Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
                 PassedQuiz finishedQuiz = quizDao.findFinishedQuiz(studentId, quizId);
+                model.addAttribute("finishedStudents", finishedStudents);
+                model.addAttribute("allStudents", allStudents);
                 model.addAttribute("finishedQuiz", finishedQuiz);
                 return "student_quiz/finished";
         }
@@ -199,14 +204,6 @@ public class StudentController {
         model.addAttribute("finishedQuizzes", finishedQuizzes);
 
         return "student_general/results";
-    }
-
-    @RequestMapping(value = "/student/compare-results", method = RequestMethod.GET)
-    public String showCompareResults(@ModelAttribute("studentId") Long studentId, Model model) {
-        User student = userDao.findUser(studentId);
-        List<Quiz> groupQuizzes = quizDao.findPassedAndFinishedGroupQuizzes(student.getGroupId());
-        model.addAttribute("groupQuizzes", groupQuizzes);
-        return "student_general/compare-results";
     }
 
     @RequestMapping(value = "/student/compare-results/{quizId}")

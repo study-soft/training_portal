@@ -8,8 +8,8 @@
     <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <c:import url="../fragment/navbar.jsp"/>
     <h2>Congratulations!</h2>
     <div class="highlight-success">
         <img src="${pageContext.request.contextPath}/resources/icon-success.png"
@@ -33,7 +33,7 @@
     <c:if test="${quiz.explanation ne null}">
         <div class="col-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
     </c:if>
-    <div><a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary">Back to quiz</a></div>
+    <div><a style="width: 125px" href="/student/quizzes/${quiz.quizId}" class="btn btn-primary">Back to quiz</a></div>
 </div>
 <br>
 </body>

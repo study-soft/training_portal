@@ -5,6 +5,15 @@
 <head>
     <title>Group results</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("tr").each(function () {
+                if ($(this).attr("id") === "${studentId}") {
+                    $(this).css("background-color", "#a7f9aa");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -20,42 +29,20 @@
             <th>Status</th>
         </tr>
         <c:forEach items="${studentsInGroup}" var="student" varStatus="status">
-            <c:choose>
-                <c:when test="${student.userId eq studentId}">
-                    <tr>
-                        <td><strong><a href="/student">${student.lastName} ${student.firstName}</a></strong></td>
-                        <c:choose>
-                            <c:when test="${statusList[status.index] ne 'OPENED'}">
-                                <td>
-                                    <strong>${studentsQuizzes[status.index].result} / ${studentsQuizzes[status.index].score}</strong>
-                                </td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-                        <td><strong>${studentsQuizzes[status.index].attempt}</strong></td>
-                        <td><strong><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></strong></td>
-                        <td><strong>${statusList[status.index]}</strong></td>
-                    </tr>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                        <c:choose>
-                            <c:when test="${statusList[status.index] ne 'OPENED'}">
-                                <td>${studentsQuizzes[status.index].result} / ${studentsQuizzes[status.index].score}</td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-                        <td>${studentsQuizzes[status.index].attempt}</td>
-                        <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>
-                        <td>${statusList[status.index]}</td>
-                    </tr>
-                </c:otherwise>
-            </c:choose>
+            <tr id="${student.userId}">
+                <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
+                <c:choose>
+                    <c:when test="${statusList[status.index] ne 'OPENED'}">
+                        <td>${studentsQuizzes[status.index].result} / ${studentsQuizzes[status.index].score}</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td></td>
+                    </c:otherwise>
+                </c:choose>
+                <td>${studentsQuizzes[status.index].attempt}</td>
+                <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>
+                <td>${statusList[status.index]}</td>
+            </tr>
         </c:forEach>
     </table>
     <div>

@@ -114,7 +114,6 @@ th {
     border-radius: 0.25rem;
 }
 
-
 .icon-one-row {
     margin: 0 5px 0 10px;
 }
@@ -247,4 +246,9 @@ th {
 
 .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
     background-color: #3173E6;
+}
+
+.tooltip-inner {
+    /* default 200px */
+    max-width: 350px;
 }

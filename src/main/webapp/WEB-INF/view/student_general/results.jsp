@@ -17,33 +17,30 @@
     <h3>Passed quizzes</h3>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
-            <div>You have finally completed all your quizzes</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have passed quizzes
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 25%">Name</th>
+                    <th style="width: 35%">Name</th>
                     <th style="width: 10%">Result</th>
                     <th style="width: 10%">Attempt</th>
-                    <th style="width: 13.33%">Time spent</th>
-                    <th style="width: 25%">Finish date</th>
-                    <th style="width: 8.33%"></th>
-                    <th style="width: 8.33%">ВЫПИЛИТЬ</th>
+                    <th style="width: 15%">Time spent</th>
+                    <th style="width: 20%">Finish date</th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
-                        <td>${passedQuiz.quizName}</td>
+                        <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a></td>
                         <td>${passedQuiz.result} / ${passedQuiz.score}</td>
                         <td>${passedQuiz.attempt}</td>
                         <td><duration:format value="${passedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                        <td><a href="/student/quizzes/${passedQuiz.quizId}/repass">Repass</a></td>
-                        <td>
-                            <form action="/student/quizzes/${passedQuiz.quizId}/finished" method="post">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                                <input type="submit" value="Finish"/>
-                            </form>
-                        </td>
+                        <td><a href="/student/compare-results/${passedQuiz.quizId}">Compare</a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -52,33 +49,36 @@
     <h3>Finished quizzes</h3>
     <c:choose>
         <c:when test="${empty finishedQuizzes}">
-            <div>You do not have finished quizzes.</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have closed quizzes
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 30%">Name</th>
-                    <th style="width: 13.33%">Result</th>
-                    <th style="width: 13.33%">Attempt</th>
-                    <th style="width: 13.33%">Time spent</th>
-                    <th style="width: 30%">Finish date</th>
+                    <th style="width: 35%">Name</th>
+                    <th style="width: 10%">Result</th>
+                    <th style="width: 10%">Attempt</th>
+                    <th style="width: 15%">Time spent</th>
+                    <th style="width: 20%">Finish date</th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
                     <tr>
-                        <td>${finishedQuiz.quizName}</td>
+                        <td><a href="/student/quizzes/${finishedQuiz.quizId}">${finishedQuiz.quizName}</a></td>
                         <td>${finishedQuiz.result} / ${finishedQuiz.score}</td>
                         <td>${finishedQuiz.attempt}</td>
                         <td><duration:format value="${finishedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>
+                        <td><a href="/student/compare-results/${finishedQuiz.quizId}">Compare</a></td>
                     </tr>
                 </c:forEach>
             </table>
         </c:otherwise>
     </c:choose>
-    <div>
-        <a href="/student/compare-results" class="btn btn-primary">Compare</a>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    </div>
+    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>
 </body>

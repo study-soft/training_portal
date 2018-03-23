@@ -10,7 +10,7 @@
 <div class="container">
     <br>
     <div class="text-center">
-        <img src="/resources/training-portal-favicon.png" width="30" height="30" style="margin-bottom: 15px">
+        <img src="/resources/training-portal-favicon.png" width="30" height="35" style="margin-bottom: 15px">
         <h2 style="display: inline">Training portal</h2>
     </div>
     <br>

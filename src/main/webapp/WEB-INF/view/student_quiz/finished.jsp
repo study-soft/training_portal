@@ -8,6 +8,25 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
+            var finishedStudents = "${finishedStudents}";
+            var allStudents = "${allStudents}";
+            var answers = $("#answers");
+            if (finishedStudents !== allStudents) {
+                var message = "You have to wait until all students in your group finish this quiz. " +
+                    "Finished students: ${finishedStudents} / ${allStudents}";
+                answers.addClass("d-inline-block");
+                answers.attr("tabindex", "0");
+                answers.attr("data-toggle", "tooltip");
+                answers.attr("data-placement", "top");
+                answers.attr("title", message);
+                answers.tooltip();
+            } else {
+                answers.find("a").removeClass("disabled");
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
             var finishSuccess = "${finishSuccess}";
             if (finishSuccess) {
                 $("#finish-success").fadeIn("slow");
@@ -57,7 +76,7 @@
         </tr>
         <tr>
             <td>Finished</td>
-            <td><localDateTime:format value="${finishedQuiz.finishDate}"/> </td>
+            <td><localDateTime:format value="${finishedQuiz.finishDate}"/></td>
         </tr>
     </table>
     <h3>Information about quiz</h3>
@@ -91,7 +110,10 @@
     </c:if>
     <div>
         <button id="back" value="Back" class="btn btn-primary">Back</button>
-        <a href="/student/quizzes/${finishedQuiz.quizId}/answers" class="btn btn-primary">Answers</a>
+        <span id="answers">
+            <a href="/student/quizzes/${finishedQuiz.quizId}/answers"
+               class="btn btn-primary disabled">Answers</a>
+        </span>
         <a href="/student/compare-results/${finishedQuiz.quizId}" class="btn btn-primary">Results</a>
     </div>
 </div>

@@ -310,40 +310,11 @@ public class QuizController {
         return "quiz_passing/congratulations";
     }
 
-    @RequestMapping("/student/quizzes/{quizId}/not-completed")
-    public String showQuizNotCompleted(@ModelAttribute("studentId") Long studentId,
-                                       @PathVariable("quizId") Long quizId,
-                                       Model model) {
-        Quiz quiz = quizDao.findQuiz(quizId);
-        model.addAttribute("quiz", quiz);
-
-        User student = userDao.findUser(studentId);
-        Long groupId = student.getGroupId();
-        Integer finishedStudents =
-                userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
-        Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
-        model.addAttribute("finishedStudents", finishedStudents);
-        model.addAttribute("allStudents", allStudents);
-        return "student_quiz/not-completed";
-    }
-
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
     public String showAnswers(@ModelAttribute("studentId") Long studentId,
                               @PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
-
-        User student = userDao.findUser(studentId);
-        Long groupId = student.getGroupId();
-        Integer finishedStudents =
-                userDao.findStudentsNumberInGroupWithFinishedQuiz(groupId, quizId);
-        Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
-        if (!finishedStudents.equals(allStudents)) {
-            model.addAttribute("finishedStudents", finishedStudents);
-            model.addAttribute("allStudents", allStudents);
-            model.clear();
-            return "redirect:/student/quizzes/" + quizId + "/not-completed";
-        }
 
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);

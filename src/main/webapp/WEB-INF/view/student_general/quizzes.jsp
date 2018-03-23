@@ -17,26 +17,28 @@
     <h3>Opened quizzes</h3>
     <c:choose>
         <c:when test="${empty openedQuizzes}">
-            <div>You do not have any opened quizzes. Say your teachers to give you some</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have opened quizzes. Say your teachers to give you some
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 8.33%">Questions</th>
-                    <th style="width: 8.33%">Score</th>
-                    <th style="width: 25%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 8.33%"></th>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 10%">Questions</th>
+                    <th style="width: 10%">Score</th>
+                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
-                        <td>${openedQuiz.quizName}</td>
+                        <td><a href="/student/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a></td>
                         <td>${openedQuiz.questionsNumber}</td>
                         <td>${openedQuiz.score}</td>
                         <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
                         <td>${openedQuiz.authorName}</td>
-                        <td><a href="/student/quizzes/${openedQuiz.quizId}">Details</a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -45,26 +47,28 @@
     <h3>Passed quizzes</h3>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
-            <div>You do not have any passed quizzes</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have passed quizzes
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 8.33%">Questions</th>
-                    <th style="width: 8.33%">Score</th>
-                    <th style="width: 25%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 8.33%"></th>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 10%">Questions</th>
+                    <th style="width: 10%">Score</th>
+                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
-                        <td>${passedQuiz.quizName}</td>
+                        <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a></td>
                         <td>${passedQuiz.questionsNumber}</td>
                         <td>${passedQuiz.score}</td>
                         <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
                         <td>${passedQuiz.authorName}</td>
-                        <td><a href="/student/quizzes/${passedQuiz.quizId}">Details</a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -73,34 +77,34 @@
     <h3>Finished quizzes</h3>
     <c:choose>
         <c:when test="${empty finishedQuizzes}">
-            <div>You do not have finished quizzes</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have closed quizzes
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 8.33%">Questions</th>
-                    <th style="width: 8.33%">Score</th>
-                    <th style="width: 25%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 8.33%"></th>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 10%">Questions</th>
+                    <th style="width: 10%">Score</th>
+                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${finishedQuizzes}" var="finishedQuiz">
                     <tr>
-                        <td>${finishedQuiz.quizName}</td>
+                        <td><a href="/student/quizzes/${finishedQuiz.quizId}">${finishedQuiz.quizName}</a></td>
                         <td>${finishedQuiz.questionsNumber}</td>
                         <td>${finishedQuiz.score}</td>
                         <td><localDateTime:format value="${finishedQuiz.submitDate}"/></td>
                         <td>${finishedQuiz.authorName}</td>
-                        <td><a href="/student/quizzes/${finishedQuiz.quizId}">Details</a></td>
                     </tr>
                 </c:forEach>
             </table>
         </c:otherwise>
     </c:choose>
-    <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    </div>
+    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>
 </body>

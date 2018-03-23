@@ -64,7 +64,11 @@
     <h3>Group information</h3>
     <c:choose>
         <c:when test="${group eq null}">
-            <div>You do not belong to any group</div>
+            <div class="col-6 highlight-danger">
+                <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                     width="25" height="25" class="icon-one-row">
+                You do no belong to any group. Say your teachers to add you.
+            </div>
         </c:when>
         <c:otherwise>
             <table class="col-6 table-info">

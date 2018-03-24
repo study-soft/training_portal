@@ -74,8 +74,10 @@ public class StudentController {
         User student = userDao.findUser(studentId);
         model.addAttribute("student", student);
 
-        Group group = groupDao.findGroup(student.getGroupId());
-        model.addAttribute("group", group);
+        if (student.getGroupId() != 0) {
+            Group group = groupDao.findGroup(student.getGroupId());
+            model.addAttribute("group", group);
+        }
 
         List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
         List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);

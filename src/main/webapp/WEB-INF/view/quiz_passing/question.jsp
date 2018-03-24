@@ -23,7 +23,7 @@
                     "<br>You have answered only " + currentQuestion + " / " +
                     questionsNumber + " questions yet");
                 $("#modal").modal();
-            })
+            });
         });
     </script>
 </head>

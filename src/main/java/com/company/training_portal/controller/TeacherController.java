@@ -44,6 +44,7 @@ public class TeacherController {
     private QuestionDao questionDao;
     private Environment environment;
     private Validator userValidator;
+    private StudentController studentController;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
 
@@ -53,13 +54,15 @@ public class TeacherController {
                              QuizDao quizDao,
                              QuestionDao questionDao,
                              Environment environment,
-                             @Qualifier("userValidator") Validator userValidator) {
+                             @Qualifier("userValidator") Validator userValidator,
+                             StudentController studentController) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.environment = environment;
         this.userValidator = userValidator;
+        this.studentController = studentController;
     }
 
     @ModelAttribute("teacherId")
@@ -118,9 +121,11 @@ public class TeacherController {
                                   Model model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
-        Map<QuestionType, Integer> orderedQuestions = orderQuestions(questions);
 
-        model.addAttribute("questions", orderedQuestions);
+        Map<String, Integer> stringQuestions = new HashMap<>();
+        questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
+
+        model.addAttribute("questions", stringQuestions);
 
         switch (quiz.getTeacherQuizStatus()) {
             case UNPUBLISHED:
@@ -362,31 +367,9 @@ public class TeacherController {
         return "teacher/teacher-students";
     }
 
-    //    INTERNALS===================================================================
-
-    private Map<QuestionType, Integer> orderQuestions(Map<QuestionType, Integer> originMap) {
-        Map<QuestionType, Integer> resultMap = new LinkedHashMap<>();
-        while (resultMap.size() != 5) {
-            for (Map.Entry<QuestionType, Integer> entry : originMap.entrySet()) {
-                QuestionType key = entry.getKey();
-                Integer value = entry.getValue();
-                if (key.equals(ONE_ANSWER)) {
-                    resultMap.put(key, value);
-                }
-                if (resultMap.containsKey(ONE_ANSWER) && key.equals(FEW_ANSWERS)) {
-                    resultMap.put(key, value);
-                }
-                if (resultMap.containsKey(FEW_ANSWERS) && key.equals(ACCORDANCE)) {
-                    resultMap.put(key, value);
-                }
-                if (resultMap.containsKey(ACCORDANCE) && key.equals(SEQUENCE)) {
-                    resultMap.put(key, value);
-                }
-                if (resultMap.containsKey(SEQUENCE) && key.equals(NUMBER)) {
-                    resultMap.put(key, value);
-                }
-            }
-        }
-        return resultMap;
+    @RequestMapping("/teacher/students/{studentId}")
+    public String showStudent(@PathVariable("studentId") Long studentId, Model model) {
+        studentController.showStudentInfo(studentId, model);
+        return "/student_general/student-info";
     }
 }

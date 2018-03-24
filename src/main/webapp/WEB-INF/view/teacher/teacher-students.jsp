@@ -25,7 +25,7 @@
         </tr>
         <c:forEach items="${students}" var="student" varStatus="status">
             <tr>
-                <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
+                <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                 <td>${student.email}</td>
                 <td>${student.phoneNumber}</td>
                 <td><a href="/teacher/groups/${groups[status.index].groupId}">${groups[status.index].name}</a></td>

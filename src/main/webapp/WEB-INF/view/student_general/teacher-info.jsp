@@ -29,17 +29,15 @@
         </tr>
     </table>
     <h3>${teacher.firstName} gave you next quizzes:</h3>
-    <table class="table">
+    <table style="width: 50%" class="table">
         <tr>
             <th>Name</th>
             <th>Status</th>
-            <th></th>
         </tr>
         <c:forEach items="${quizzes}" var="quiz" varStatus="status">
             <tr>
-                <td>${quiz.name}</td>
+                <td><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></td>
                 <td>${statusList[status.index]}</td>
-                <td><a href="/student/quizzes/${quiz.quizId}">Details</a></td>
             </tr>
         </c:forEach>
     </table>

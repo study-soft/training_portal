@@ -70,7 +70,7 @@
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsAccordance}">
-        <h4>Compliance questions</h4>
+        <h4>Accordance questions</h4>
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="row">
                 <div class="col-8">
@@ -94,7 +94,7 @@
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsSequence}">
-        <h4>Consistency questions</h4>
+        <h4>Sequence questions</h4>
         <c:forEach items="${questionsSequence}" var="question">
             <div class="row">
                 <div class="col-8">

@@ -305,8 +305,7 @@ public class QuizController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
-    public String showAnswers(@ModelAttribute("studentId") Long studentId,
-                              @PathVariable("quizId") Long quizId, ModelMap model) {
+    public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
 

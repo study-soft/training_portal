@@ -26,14 +26,12 @@
                     <th>Name</th>
                     <th>E-mail</th>
                     <th>Phone number</th>
-                    <th></th>
                 </tr>
                 <c:forEach items="${teachers}" var="teacher">
                     <tr>
-                        <td>${teacher.lastName} ${teacher.firstName}</td>
+                        <td><a href="/student/teachers/${teacher.userId}">${teacher.lastName} ${teacher.firstName}</a></td>
                         <td>${teacher.email}</td>
                         <td>${teacher.phoneNumber}</td>
-                        <td><a href="/student/teachers/${teacher.userId}">Details</a></td>
                     </tr>
                 </c:forEach>
             </table>

@@ -45,43 +45,36 @@
             <td>Questions by types:</td>
             <td></td>
         </tr>
-        <c:forEach items="${questions}" var="entry">
-            <c:choose>
-                <c:when test="${entry.key eq 'ONE_ANSWER'}">
-                    <tr>
-                        <td style="font-weight: normal">One answer</td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:when>
-                <c:when test="${entry.key eq 'FEW_ANSWERS'}">
-                    <tr>
-                        <td style="font-weight: normal">Few answers</td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:when>
-                <c:when test="${entry.key eq 'ACCORDANCE'}">
-                    <tr>
-                        <td style="font-weight: normal">Compliance</td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:when>
-                <c:when test="${entry.key eq 'SEQUENCE'}">
-                    <tr>
-                        <td style="font-weight: normal">Consistency</td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:when>
-                <c:when test="${entry.key eq 'NUMBER'}">
-                    <tr>
-                        <td style="font-weight: normal">With numerical answer</td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:when>
-                <c:otherwise>
-                    <div>SOME ERROR</div>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
+        <c:if test="${questions['ONE_ANSWER'] ne null}">
+            <tr>
+                <td style="font-weight: normal">One answer</td>
+                <td>${questions['ONE_ANSWER']}</td>
+            </tr>
+        </c:if>
+        <c:if test="${questions['FEW_ANSWERS'] ne null}">
+            <tr>
+                <td style="font-weight: normal;">Few answers</td>
+                <td>${questions['FEW_ANSWERS']}</td>
+            </tr>
+        </c:if>
+        <c:if test="${questions['ACCORDANCE'] ne null}">
+            <tr>
+                <td style="font-weight: normal">Accordance</td>
+                <td>${questions['ACCORDANCE']}</td>
+            </tr>
+        </c:if>
+        <c:if test="${questions['SEQUENCE'] ne null}">
+            <tr>
+                <td style="font-weight: normal">Sequence</td>
+                <td>${questions['SEQUENCE']}</td>
+            </tr>
+        </c:if>
+        <c:if test="${questions['NUMBER'] ne null}">
+            <tr>
+                <td style="font-weight: normal">Numerical</td>
+                <td>${questions['NUMBER']}</td>
+            </tr>
+        </c:if>
     </table>
     <div><strong>Explanation: </strong>${publishedQuiz.explanation}</div>
     <div class="highlight-primary">

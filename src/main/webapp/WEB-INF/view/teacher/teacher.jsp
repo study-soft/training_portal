@@ -16,10 +16,14 @@
                 $("#edit-success").fadeOut("slow");
             });
 
-            $("#show").click(function (event) {
+            $("#switcher").click(function (event) {
                 event.preventDefault();
-                $("#credentials").slideToggle("slow");
-                $(this).toggleClass("fa fa-sort-asc arrow-up");
+                if ($(this).text() === "show") {
+                    $(this).text("hide");
+                } else {
+                    $(this).text("show");
+                }
+                $("#credentials").fadeToggle("slow");
             });
         });
     </script>
@@ -59,8 +63,8 @@
         </tr>
     </table>
     <h4 class="inline"><i class="fa fa-lock"></i> Login and password</h4>
-    <a href="" id="show" style="margin-left: 10px">show <i class="fa fa-sort-desc arrow-down"></i></a>
-    <table id="credentials" class="col-6 table-info">
+    <a href="" id="switcher" style="margin-left: 10px;">show</a>
+    <table id="credentials" class="col-6 table-info hidden">
         <tr>
             <td>Login</td>
             <td>${teacher.login}</td>

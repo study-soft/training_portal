@@ -134,6 +134,10 @@ th {
     display: inline;
 }
 
+.hidden {
+    display: none;
+}
+
 .center {
     float: none;
     margin: 0 auto;
@@ -180,6 +184,16 @@ th {
     font-size: 24px;
     position: relative;
     top: 3px;
+}
+
+.arrow-up {
+    position: relative;
+    margin-top: 2px;
+}
+
+.arrow-down {
+    position: relative;
+    margin-top: 2px;
 }
 
 /********************* BOOTSTRAP OVERRIDING *********************/

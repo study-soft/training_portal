@@ -4,6 +4,39 @@
 <head>
     <title>Add students</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var form = $("#addStudentsForm");
+            form.submit(function (e) {
+                e.preventDefault();
+                var formData = form.serialize();
+                if (formData) {
+                    $.ajax({
+                        type: form.attr("method"),
+                        url: form.attr("action"),
+                        data: formData,
+                        success: function (students) {
+                            $('.modal-body').html('<div>You have added such students:</div><ul></ul>');
+                            for (var i = 0; i < students.length; i++) {
+                                var student = students[i];
+                                $('input[value="' + student.userId + '"]').parents("tr").remove();
+                                $('.modal-title').text('Success');
+                                $('.modal-body ul').append('<li>' + student.lastName + ' ' + student.firstName + '</li>');
+                            }
+                            if ($('tr').length === 1) {
+                                $('table').remove();
+                                $('h3').after('<div>There is no students without group.</div>');
+                                $('input[type="submit"]').remove();
+                            }
+                        }
+                    });
+                } else {
+                    $('.modal-title').text('Oops...');
+                    $('.modal-body').text('Select at least one student please');
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -71,38 +104,5 @@
         </c:otherwise>
     </c:choose>
 </div>
-<script>
-    $(document).ready(function () {
-        var form = $("#addStudentsForm");
-        form.submit(function (e) {
-            e.preventDefault();
-            var formData = form.serialize();
-            if (formData) {
-                $.ajax({
-                    type: form.attr("method"),
-                    url: form.attr("action"),
-                    data: formData,
-                    success: function (students) {
-                        $('.modal-body').html('<div>You have added such students:</div><ul></ul>');
-                        for (var i = 0; i < students.length; i++) {
-                            var student = students[i];
-                            $('input[value="' + student.userId + '"]').parents("tr").remove();
-                            $('.modal-title').text('Success');
-                            $('.modal-body ul').append('<li>' + student.lastName + ' ' + student.firstName + '</li>');
-                        }
-                        if ($('tr').length === 1) {
-                            $('table').remove();
-                            $('h3').after('<div>There is no students without group.</div>');
-                            $('input[type="submit"]').remove();
-                        }
-                    }
-                });
-            } else {
-                $('.modal-title').text('Oops...');
-                $('.modal-body').text('Select at least one student please');
-            }
-        });
-    });
-</script>
 </body>
 </html>

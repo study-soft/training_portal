@@ -61,6 +61,17 @@ public class GroupDaoJdbcTest {
     }
 
     @Test
+    public void test_find_groups_which_teacher_gave_quiz_by_teacher_id() {
+        List<Group> testGroups = new ArrayList<>();
+        testGroups.add(groupDao.findGroup(2L));
+        testGroups.add(groupDao.findGroup(1L));
+
+        List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(1L);
+
+        assertEquals(testGroups, groups);
+    }
+
+    @Test
     public void test_find_all_groups() {
         List<Group> testGroups = new ArrayList<>();
         testGroups.add(groupDao.findGroup(1L));

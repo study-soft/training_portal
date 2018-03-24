@@ -23,7 +23,7 @@
             $("#back").click(function () {
                 var previousUri = document.referrer;
                 var createGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/create";
-                var editGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/" + ${group.groupId} + "/edit";
+                var editGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/" + ${group.groupId} +"/edit";
                 if (previousUri === createGroupUri || previousUri === editGroupUri) {
                     window.history.go(-2);
                 } else {
@@ -47,10 +47,10 @@
                     data: 'studentId=' + studentId,
                     success: function (studentId) {
                         $('#' + studentId).remove();
-                        if ($('tr').length === 1) {
-                            var table = $('table');
-                            table.before('<div>There is no students in group.</div>');
-                            table.remove();
+                        var studentsTable = $('#studentsTable');
+                        if (studentsTable.find("tr").length === 1) {
+                            studentsTable.before('<div>There is no students in group.</div>');
+                            studentsTable.remove();
                         }
                     }
                 });
@@ -87,7 +87,7 @@
             <div>There is no students in group.</div>
         </c:when>
         <c:otherwise>
-            <table class="table">
+            <table id="studentsTable" class="table">
                 <tr>
                     <th style="width: 50%">Name</th>
                     <th style="width: 50%"></th>
@@ -95,7 +95,7 @@
                 <c:forEach items="${students}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td id="studentName"><a
-                                href="/student/${student.userId}">${student.lastName} ${student.firstName}</td>
+                                href="/teacher/student/${student.userId}">${student.lastName} ${student.firstName}</td>
                         <td>
                             <a href="/teacher/groups/${group.groupId}/delete-student"
                                data-toggle="modal" data-target="#modal"><i class="fa fa-user-times"></i> Delete</a>

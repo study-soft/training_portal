@@ -59,6 +59,7 @@
                                 ${answer.body}
                         </label>
                     </div>
+                    <br>
                 </c:forEach>
                 <div class="row">
                     <div class="col-8">
@@ -82,6 +83,7 @@
                                 ${answer.body}
                         </label>
                     </div>
+                    <br>
                 </c:forEach>
                 <div class="row">
                     <div class="col-8">

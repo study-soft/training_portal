@@ -367,6 +367,22 @@ public class TeacherController {
         return "teacher/teacher-students";
     }
 
+    @RequestMapping("/teacher/results")
+    public String showResults(@ModelAttribute("teacherId") Long teacherId, Model model) {
+        List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
+        List<User> students = userDao.findStudentWithoutGroup();
+
+        model.addAttribute("groups", groups);
+        model.addAttribute("students", students);
+
+        return "teacher/results";
+    }
+
+    @RequestMapping("/teacher/results/group/{groupId}")
+    public String showGroupQuizzes(@PathVariable("groupId") Long groupId, Model model) {
+        return "";
+    }
+
     @RequestMapping("/teacher/students/{studentId}")
     public String showStudent(@PathVariable("studentId") Long studentId, Model model) {
         studentController.showStudentInfo(studentId, model);

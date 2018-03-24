@@ -54,6 +54,15 @@ public class GroupDaoJdbc implements GroupDao {
         return groups;
     }
 
+    @Override
+    public List<Group> findGroupsWhichTeacherGaveQuiz(Long teacherId) {
+        List<Group> groups = template.query(FIND_GROUPS_WITCH_TEACHER_SEND_QUIZ,
+                new Object[]{teacherId}, this::mapGroup);
+        logger.info("Found groups which teacher send quiz:");
+        groups.forEach(logger::info);
+        return groups;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<Group> findAllGroups() {
@@ -172,6 +181,16 @@ public class GroupDaoJdbc implements GroupDao {
 
     private static final String FIND_GROUPS_BY_AUTHOR_ID =
     "SELECT * FROM GROUPS WHERE AUTHOR_ID = ?;";
+
+    private static final String FIND_GROUPS_WITCH_TEACHER_SEND_QUIZ =
+    "SELECT GROUPS.GROUP_ID, GROUPS.NAME, GROUPS.DESCRIPTION, " +
+    "GROUPS.CREATION_DATE, GROUPS.AUTHOR_ID " +
+    "FROM GROUPS INNER JOIN USERS ON GROUPS.GROUP_ID = USERS.GROUP_ID " +
+    "INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "WHERE QUIZZES.AUTHOR_ID = ? " +
+    "GROUP BY GROUPS.GROUP_ID " +
+    "ORDER BY GROUPS.NAME;";
 
     private static final String FIND_ALL_GROUPS = "SELECT * FROM GROUPS;";
 

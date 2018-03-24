@@ -21,6 +21,10 @@ INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'STUDENT');
 INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
+INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
+VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '095-456-34-37', NULL, 'Jack', '123', 'STUDENT');
+INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
+VALUES (NULL, 'Lily', 'Collins', 'lili@example.com', NULL, '095-437-78-45', NULL, 'Lili', '123', 'STUDENT');
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -99,6 +103,12 @@ VALUES (3, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 VALUES (5, 5, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
 /*18*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
 VALUES (6, 6, NULL, '2018-02-12 14:34:56', NULL, NULL, 0, 'OPENED');
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 5, START_DATE = '2018-03-23 19:20:45', FINISH_DATE = '2018-03-23 19:25:45', ATTEMPT = 1, STUDENT_QUIZ_STATUS = 'PASSED'
+WHERE USER_ID = 5 AND QUIZ_ID = 5;
+UPDATE USER_QUIZ_JUNCTIONS
+SET RESULT = 3, START_DATE = '2018-03-23 19:23:45', FINISH_DATE = '2018-03-23 19:30:45', ATTEMPT = 2, STUDENT_QUIZ_STATUS = 'FINISHED'
+WHERE USER_ID = 6 AND QUIZ_ID = 2;
 
 -- Table: questions
 /*1*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)

@@ -398,7 +398,7 @@ public class QuizController {
         }
     }
 
-    private int roundOff(double value) {
+    public static int roundOff(double value) {
         return (value * 10) % 10 >= 5 ? (int) value + 1 : (int) value;
     }
 }

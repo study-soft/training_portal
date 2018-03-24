@@ -15,6 +15,12 @@
             $("#close").click(function () {
                 $("#edit-success").fadeOut("slow");
             });
+
+            $("#switcher").click(function (event) {
+                event.preventDefault();
+                $(this).text() === "show" ? $(this).text("hide") : $(this).text("show");
+                $("#credentials").fadeToggle("slow");
+            });
         });
     </script>
 </head>
@@ -47,8 +53,9 @@
             </tr>
         </c:if>
     </table>
-    <h4><i class="fa fa-lock"></i> Login and password</h4>
-    <table class="col-6 table-info">
+    <h4 class="inline"><i class="fa fa-lock"></i> Login and password</h4>
+    <a href="" id="switcher" style="margin-left: 10px;">show</a>
+    <table id="credentials" class="col-6 table-info hidden">
         <tr>
             <td>Login</td>
             <td>${student.login}</td>

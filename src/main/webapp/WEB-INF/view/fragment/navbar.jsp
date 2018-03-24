@@ -30,7 +30,7 @@
                 </ul>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link">Log out</a>
+                        <a href="/logout" class="nav-link">Log out<i class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                     </li>
                 </ul>
             </div>
@@ -63,7 +63,7 @@
                 </ul>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item">
-                        <a href="/logout" class="nav-link">Log out</a>
+                        <a href="/logout" class="nav-link">Log out<i class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                     </li>
                 </ul>
             </div>

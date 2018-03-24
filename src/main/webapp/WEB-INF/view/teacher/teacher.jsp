@@ -21,16 +21,20 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
-        <a href="/teacher/groups/create" class="btn btn-success">New group</a>
-        <a href="#" class="btn btn-success">New quiz</a>
+        <a href="/teacher/groups/create" class="btn btn-success" style="width: 125px">
+            <i class="fa fa-group"></i> New group
+        </a>
+        <a href="/teacher/quizzes/create" class="btn btn-success" style="width: 125px">
+            <i class="fa fa-book"></i> New quiz
+        </a>
     </div>
-    <h3>Teacher information</h3>
+    <h3><i class="fa fa-user"></i> Teacher information</h3>
     <table class="col-6 table-info">
         <tr>
             <td>Name</td>
@@ -48,7 +52,7 @@
             <td><localDate:format value="${teacher.dateOfBirth}"/></td>
         </tr>
     </table>
-    <h4>Login and password</h4>
+    <h4><i class="fa fa-lock"></i> Login and password</h4>
     <table class="col-6 table-info">
         <tr>
             <td>Login</td>
@@ -63,5 +67,6 @@
         <a href="/teacher/edit-profile" class="btn btn-primary">Edit profile</a>
     </div>
 </div>
+<br>
 </body>
 </html>

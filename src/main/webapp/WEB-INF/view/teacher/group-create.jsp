@@ -13,18 +13,18 @@
     <form action="/teacher/groups/create" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div>
-            <label for="name">Name<span class="error">*</span>:</label>
+            <label for="name" class="col-form-label">Name<span class="error">*</span>:</label>
         </div>
         <div>
-            <input type="text" name="name" id="name">
+            <input type="text" name="name" id="name" class="col-4 form-control">
             <span class="error">${emptyName}</span>
             <span class="error">${groupExists}</span>
         </div>
         <div>
-            <label for="description">Description:</label>
+            <label for="description" class="col-form-label">Description:</label>
         </div>
         <div>
-            <textarea rows="6" cols="40" name="description" id="description"></textarea>
+            <textarea rows="6" name="description" id="description" class="col-6 form-control"></textarea>
         </div>
         <h3>Students to add:</h3>
         <c:choose>
@@ -33,7 +33,7 @@
                 <div>You can create an empty group and later add students to it that do not belong to any group</div>
             </c:when>
             <c:otherwise>
-                <table>
+                <table class="table">
                     <tr>
                         <th>Name</th>
                         <th>E-mail</th>
@@ -51,15 +51,20 @@
                             <td>
                                 <label for="student${status.index}">${student.phoneNumber}</label>
                             </td>
-                            <td><input type="checkbox" name="student${status.index}"
-                                       value="${student.userId}" id="student${status.index}"></td>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="student${status.index}" id="student${status.index}"
+                                           value="${student.userId}" class="custom-control-input">
+                                    <label for="student${status.index}" class="custom-control-label"> </label>
+                                </div>
+                            </td>
                         </tr>
                     </c:forEach>
                 </table>
             </c:otherwise>
         </c:choose>
         <input type="button" value="Back" onclick="window.history.go(-1);" class="btn btn-primary">
-        <input type="submit" value="Create" class="btn btn-success">
+        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
     </form>
 </div>
 <br>

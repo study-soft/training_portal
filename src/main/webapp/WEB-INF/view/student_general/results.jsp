@@ -30,8 +30,8 @@
                     <th style="width: 10%">Result</th>
                     <th style="width: 10%">Attempt</th>
                     <th style="width: 15%">Time spent</th>
-                    <th style="width: 20%">Passed</th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 22%">Passed</th>
+                    <th style="width: 8%"></th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
@@ -62,8 +62,8 @@
                     <th style="width: 10%">Result</th>
                     <th style="width: 10%">Attempt</th>
                     <th style="width: 15%">Time spent</th>
-                    <th style="width: 20%">Passed</th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 22%">Passed</th>
+                    <th style="width: 8%"></th>
                 </tr>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>

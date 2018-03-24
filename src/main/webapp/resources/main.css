@@ -118,6 +118,30 @@ th {
     border-radius: 0.25rem;
 }
 
+.inline {
+    display: inline;
+}
+
+.center {
+    float: none;
+    margin: 0 auto;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.shifted {
+    margin-left: 15px;
+    padding-top: 5px;
+}
+
+/********************* ICONS ************************/
+
 .icon-one-row {
     margin: 0 5px 0 10px;
 }
@@ -140,26 +164,10 @@ th {
     margin-left: 65px;
 }
 
-.inline {
-    display: inline;
-}
-
-.center {
-    float: none;
-    margin: 0 auto;
-}
-
-.right {
-    float: right;
-}
-
-.left {
-    float: left;
-}
-
-.shifted {
-    margin-left: 15px;
-    padding-top: 5px;
+.nav-icon {
+    font-size: 24px;
+    position: relative;
+    top: 3px;
 }
 
 /********************* BOOTSTRAP OVERRIDING *********************/
@@ -244,7 +252,7 @@ th {
 }
 
 .custom-control-label::before {
-    background-color: #ccfcf5;
+    background-color: white;
     border: 1px solid #3173E6;
 }
 

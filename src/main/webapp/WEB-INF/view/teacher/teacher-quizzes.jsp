@@ -11,7 +11,7 @@
 <div class="container">
     <br>
     <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
-    <a href="#" class="btn btn-success float-right">New quiz</a>
+    <a href="/teacher/quizzes/create" class="btn btn-success float-right">New quiz</a>
     <h3>Unpublished quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">

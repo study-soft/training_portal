@@ -85,7 +85,7 @@
     <div class="highlight-primary">
         <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
              width="25" height="25" class="icon-one-row">
-        You can see groups and students where quiz was published <a href="#">here</a>
+        You can see groups and students where quiz was published <a href="#">here <i class="fa fa-external-link"></i></a>
     </div>
     <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>

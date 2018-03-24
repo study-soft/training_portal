@@ -23,7 +23,8 @@
             $("#back").click(function () {
                 var previousUri = document.referrer;
                 var createGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/create";
-                if (previousUri === createGroupUri) {
+                var editGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/" + ${group.groupId} + "/edit";
+                if (previousUri === createGroupUri || previousUri === editGroupUri) {
                     window.history.go(-2);
                 } else {
                     window.history.go(-1);
@@ -32,7 +33,7 @@
 
             $('a:contains(Delete)').click(function (event) {
                 event.preventDefault();
-                var studentName = $(this).parent().prev().prev().text();
+                var studentName = $(this).parent().prev().text();
                 $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
                 var studentId = $(this).next().val();
                 $('#studentId').val(studentId);
@@ -56,42 +57,45 @@
             });
         });
     </script>
-
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="create-success" class="col-4 mx-auto text-center correct edit-success">
+    <div id="create-success" class="col-5 mx-auto text-center correct edit-success">
         Group successfully created
         <button class="close">&times;</button>
     </div>
-    <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
         Group information successfully changed
         <button class="close">&times;</button>
     </div>
     <h2>${group.name}</h2>
-    <small>Creation date: <localDate:format value="${group.creationDate}"/></small>
-    <div>Number of students: ${studentsNumber}</div>
-    <div>Description:</div>
-    <div>${group.description}</div>
-    <h3 class="inline">Students</h3>
-    <a href="/teacher/groups/${group.groupId}/add-students">+ Add students</a>
-    <br>
+    <div class="col-6"><strong>Description: </strong>${group.description}</div>
+    <table class="col-6 table-info">
+        <tr>
+            <td>Creation date</td>
+            <td><localDate:format value="${group.creationDate}"/></td>
+        </tr>
+        <tr>
+            <td>Number of students</td>
+            <td>${studentsNumber}</td>
+        </tr>
+    </table>
+    <h3>Students</h3>
     <c:choose>
         <c:when test="${empty students}">
             <div>There is no students in group.</div>
         </c:when>
         <c:otherwise>
-            <table>
+            <table class="table">
                 <tr>
-                    <th>Name</th>
-                    <th></th>
-                    <th></th>
+                    <th style="width: 50%">Name</th>
+                    <th style="width: 50%"></th>
                 </tr>
                 <c:forEach items="${students}" var="student" varStatus="status">
                     <tr id="${student.userId}">
-                        <td id="studentName">${student.lastName} ${student.firstName}</td>
-                        <td><a href="/student/${student.userId}">More</a></td>
+                        <td id="studentName"><a
+                                href="/student/${student.userId}">${student.lastName} ${student.firstName}</td>
                         <td>
                             <a href="/teacher/groups/${group.groupId}/delete-student"
                                data-toggle="modal" data-target="#modal">Delete</a>
@@ -103,6 +107,9 @@
         </c:otherwise>
     </c:choose>
     <button id="back" class="btn btn-primary">Back</button>
+    <a href="/teacher/groups/${group.groupId}/add-students" class="btn btn-success" style="width: 150px">
+        <i class="fa fa-user-plus"></i> Add students
+    </a>
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"
          aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -124,5 +131,6 @@
     </div>
     <br>
 </div>
+<br>
 </body>
 </html>

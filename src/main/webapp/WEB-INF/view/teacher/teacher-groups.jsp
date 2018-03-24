@@ -9,7 +9,7 @@
         $(document).ready(function () {
             $("a:contains(Delete)").click(function (event) {
                 event.preventDefault();
-                var groupName = $(this).parent().prev().prev().prev().prev().prev().text();
+                var groupName = $(this).parent().prev().prev().prev().prev().text();
                 $("#deleteForm").attr("action", $(this).attr("href"));
                 $(".modal-body").text("Are you sure you want to delete group '" + groupName + "'?");
                 $("#modal").modal();
@@ -26,9 +26,11 @@
             <div class="col-4">
                 <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
             </div>
-            <div class="col-6"></div>
-            <div class="col-2">
-                <a href="/teacher/groups/create" class="btn btn-success float-right">New group</a>
+            <div class="col-5"></div>
+            <div class="col-3">
+                <a href="/teacher/groups/create" class="btn btn-success float-right" style="width: 125px">
+                    <i class="fa fa-group"></i> New group
+                </a>
             </div>
         </div>
     </form>
@@ -39,16 +41,14 @@
             <th>Creation date</th>
             <th></th>
             <th></th>
-            <th></th>
         </tr>
         <c:forEach items="${groups}" var="group" varStatus="status">
             <tr>
-                <td>${group.name}</td>
+                <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
                 <td>${studentsNumber[status.index]}</td>
                 <td><localDate:format value="${group.creationDate}"/></td>
-                <td><a href="/teacher/groups/${group.groupId}">Details</a></td>
-                <td><a href="/teacher/groups/${group.groupId}/edit">Edit</a></td>
-                <td><a href="/teacher/groups/${group.groupId}/delete">Delete</a></td>
+                <td><a href="/teacher/groups/${group.groupId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
+                <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
             </tr>
         </c:forEach>
     </table>

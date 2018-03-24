@@ -21,12 +21,12 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-4 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
     <h2>Hello, student! Welcome to the training portal!</h2>
-    <h3>Student information</h3>
+    <h3><i class="fa fa-graduation-cap"></i> Student information</h3>
     <table class="col-6 table-info">
         <tr>
             <td>Name</td>
@@ -47,7 +47,7 @@
             </tr>
         </c:if>
     </table>
-    <h4>Login and password</h4>
+    <h4><i class="fa fa-lock"></i> Login and password</h4>
     <table class="col-6 table-info">
         <tr>
             <td>Login</td>
@@ -61,7 +61,7 @@
     <div>
         <a href="/student/edit-profile" class="btn btn-primary">Edit profile</a>
     </div>
-    <h3>Group information</h3>
+    <h3><i class="fa fa-group"></i> Group information</h3>
     <c:choose>
         <c:when test="${group eq null}">
             <div class="col-6 highlight-danger">

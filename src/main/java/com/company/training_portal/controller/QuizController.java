@@ -356,6 +356,14 @@ public class QuizController {
         return "student_quiz/answers";
     }
 
+    // QUIZ CREATION==================================================================
+
+    @RequestMapping("/teacher/quizzes/create")
+    public String createQuiz(Model model) {
+
+        return "teacher/quiz-create";
+    }
+
     //    INTERNALS===================================================================
 
     private void setAnswers(QuestionType questionType, Long questionId, HttpSession session, ModelMap model) {

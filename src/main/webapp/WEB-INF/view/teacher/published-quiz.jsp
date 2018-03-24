@@ -89,7 +89,7 @@
     </div>
     <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="#" class="btn btn-primary">Preview</a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
 </div>
 <br>
 </body>

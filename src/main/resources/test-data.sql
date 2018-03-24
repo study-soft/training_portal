@@ -102,7 +102,7 @@ VALUES (6, 6, NULL, '2018-02-12 14:34:56', NULL, NULL, 0, 'OPENED');
 
 -- Table: questions
 /*1*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (1, 'Question 1.1 bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy br br br br br br?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
+VALUES (1, 'Question 1.1 bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy br br br br br br br br br br br br br br ?', 'Question 1.1 explanation', 'ONE_ANSWER', 1);
 /*2*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (1, 'Question 1.2 body?', 'Question 1.2 explanation', 'FEW_ANSWERS', 2);
 /*3*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)

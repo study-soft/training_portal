@@ -84,9 +84,9 @@
     </div>
     <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="#" class="btn btn-primary">Preview</a>
-    <a href="#" class="btn btn-primary">Edit</a>
-    <a href="#" class="btn btn-danger">Delete</a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">Edit</a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete" class="btn btn-danger">Delete</a>
 </div>
 <br>
 </body>

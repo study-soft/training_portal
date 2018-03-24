@@ -22,6 +22,7 @@
                 answers.tooltip();
             } else {
                 answers.find("a").removeClass("disabled");
+                answers.find("i").remove();
             }
         });
     </script>
@@ -108,14 +109,12 @@
     <c:if test="${closedQuiz.explanation ne null}">
         <div class="col-6"><strong>Explanation: </strong>${closedQuiz.explanation}</div>
     </c:if>
-    <div>
-        <button id="back" value="Back" class="btn btn-primary">Back</button>
-        <span id="answers">
+    <button id="back" value="Back" class="btn btn-primary">Back</button>
+    <span id="answers">
             <a href="/student/quizzes/${closedQuiz.quizId}/answers"
-               class="btn btn-primary disabled">Answers</a>
+               class="btn btn-primary disabled"><i class="fa fa-ban error"></i> Answers</a>
         </span>
-        <a href="/student/compare-results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
-    </div>
+    <a href="/student/compare-results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
 </div>
 <br>
 </body>

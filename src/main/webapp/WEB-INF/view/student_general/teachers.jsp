@@ -9,9 +9,12 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Teachers</h2>
-    <form>
-        <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
-    </form>
+    <div class="input-group">
+        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-search"></i></span>
+        </div>
+    </div>
     <c:choose>
         <c:when test="${empty teachers}">
             <div class="highlight-primary">
@@ -29,7 +32,8 @@
                 </tr>
                 <c:forEach items="${teachers}" var="teacher">
                     <tr>
-                        <td><a href="/student/teachers/${teacher.userId}">${teacher.lastName} ${teacher.firstName}</a></td>
+                        <td><a href="/student/teachers/${teacher.userId}">${teacher.lastName} ${teacher.firstName}</a>
+                        </td>
                         <td>${teacher.email}</td>
                         <td>${teacher.phoneNumber}</td>
                     </tr>
@@ -37,9 +41,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    </div>
+    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>
 </body>

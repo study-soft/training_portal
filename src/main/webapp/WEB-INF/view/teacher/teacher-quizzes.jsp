@@ -10,8 +10,15 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
-    <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
-    <a href="/teacher/quizzes/create" class="btn btn-success float-right">New quiz</a>
+    <div class="input-group">
+        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-search"></i></span>
+        </div>
+    </div>
+    <a href="/teacher/quizzes/create" class="btn btn-success float-right" style="width: 125px">
+        <i class="fa fa-book"></i> New quiz
+    </a>
     <h3>Unpublished quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
@@ -24,8 +31,8 @@
                     <th style="width: 10%">Questions</th>
                     <th style="width: 10%">Score</th>
                     <th style="width: 15%;">Creation date</th>
-                    <th style="width: 10%"></th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 12%"></th>
+                    <th style="width: 8%"></th>
                     <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${unpublishedQuizzes}" var="unpublishedQuiz">
@@ -34,9 +41,9 @@
                         <td>${unpublishedQuiz.questionsNumber}</td>
                         <td>${unpublishedQuiz.score}</td>
                         <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>
-                        <td><a href="#">Publish</a></td>
-                        <td><a href="#">Edit</a></td>
-                        <td><a href="#">Delete</a></td>
+                        <td><a href="#"><i class="fa fa-share-square-o"></i> Publish</a></td>
+                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
+                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -62,7 +69,7 @@
                         <td>${publishedQuiz.questionsNumber}</td>
                         <td>${publishedQuiz.score}</td>
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
-                        <td class="text-center"><a href="#">Unpublish</a></td>
+                        <td class="text-center"><a href="#"><i class="fa fa-close"></i> Unpublish</a></td>
                     </tr>
                 </c:forEach>
             </table>

@@ -11,9 +11,12 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Results</h2>
-    <form>
-        <input class="form-control col-4" type="search" placeholder="Search..." aria-label="Search">
-    </form>
+    <div class="input-group">
+        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-search"></i></span>
+        </div>
+    </div>
     <h3>Passed quizzes</h3>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
@@ -78,7 +81,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>
 </body>

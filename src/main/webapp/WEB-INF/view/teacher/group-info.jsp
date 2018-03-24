@@ -98,7 +98,7 @@
                                 href="/student/${student.userId}">${student.lastName} ${student.firstName}</td>
                         <td>
                             <a href="/teacher/groups/${group.groupId}/delete-student"
-                               data-toggle="modal" data-target="#modal">Delete</a>
+                               data-toggle="modal" data-target="#modal"><i class="fa fa-user-times"></i> Delete</a>
                             <input type="hidden" name="studentId" value="${student.userId}">
                         </td>
                     </tr>

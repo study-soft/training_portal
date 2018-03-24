@@ -15,6 +15,12 @@
             $("#close").click(function () {
                 $("#edit-success").fadeOut("slow");
             });
+
+            $("#show").click(function (event) {
+                event.preventDefault();
+                $("#credentials").slideToggle("slow");
+                $(this).toggleClass("fa fa-sort-asc arrow-up");
+            });
         });
     </script>
 </head>
@@ -52,8 +58,9 @@
             <td><localDate:format value="${teacher.dateOfBirth}"/></td>
         </tr>
     </table>
-    <h4><i class="fa fa-lock"></i> Login and password</h4>
-    <table class="col-6 table-info">
+    <h4 class="inline"><i class="fa fa-lock"></i> Login and password</h4>
+    <a href="" id="show" style="margin-left: 10px">show <i class="fa fa-sort-desc arrow-down"></i></a>
+    <table id="credentials" class="col-6 table-info">
         <tr>
             <td>Login</td>
             <td>${teacher.login}</td>

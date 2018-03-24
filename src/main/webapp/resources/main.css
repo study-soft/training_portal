@@ -101,6 +101,7 @@ th {
     color: darkgreen;
     background-color: #a7f9aa;
     padding: 10px 10px;
+    margin: 10px 0;
     border: 0.1rem solid #6ea56e;
     border-radius: 0.25rem;
 }
@@ -114,6 +115,7 @@ th {
     color: darkred;
     background-color: #ffc6c9;
     padding: 10px 10px;
+    margin: 10px 0;
     border: 0.1rem solid #b47c7c;
     border-radius: 0.25rem;
 }
@@ -126,7 +128,7 @@ th {
 .question-answers {
     background-color: #ccfcf5;
     margin-bottom: 20px;
-    padding: 20px 0 10px 30px;
+    padding: 10px 0 10px 30px;
     border: 2px solid #bbbdff;
 }
 
@@ -147,9 +149,13 @@ th {
     float: left;
 }
 
-.shifted {
+.shifted-left {
     margin-left: 15px;
     padding-top: 5px;
+}
+
+.shifted-down {
+    margin-top: 10px;
 }
 
 /********************* ICONS ************************/

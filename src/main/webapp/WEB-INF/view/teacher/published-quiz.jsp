@@ -88,8 +88,8 @@
         You can see groups and students where quiz was published <a href="#">here <i class="fa fa-external-link"></i></a>
     </div>
     <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
+    <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
+    <a href="/teacher/quizzes/${publishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
 </div>
 <br>
 </body>

@@ -126,7 +126,7 @@
             <c:when test="${question.questionType eq 'SEQUENCE'}">
                 <c:forEach begin="0" end="3" varStatus="status">
                     <div class="row">
-                        <div class="shifted">${status.index + 1}.</div>
+                        <div class="shifted-left">${status.index + 1}.</div>
                         <div class="col-4">
                             <select name="sequence${status.index}" id="sequence${status.index}"
                                     class="form-control">

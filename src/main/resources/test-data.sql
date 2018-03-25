@@ -169,7 +169,7 @@ VALUES (8, 'Question 8.1 body?', 'Question 8.1 explanation', 'FEW_ANSWERS', 3);
 VALUES (9, 'Question 9.1 body?', 'Question 9.1 explanation', 'NUMBER', 4);
 
 /*25*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (10, 'Which element DOESN''T BELONGS TO HTML forms?', '''Name'' is input type element, NOT form', 'ONE_ANSWER', 1);
+VALUES (10, 'Which element DOESN''T belongs to HTML forms?', '''Name'' is input type element, NOT form', 'ONE_ANSWER', 1);
 /*26*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Set accordance between HTML form elements and their description', 'Question 6.1 explanation', 'ACCORDANCE', 4);
 /*27*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
@@ -177,7 +177,7 @@ VALUES (10, 'Enter the year when Berners-Lee wrote HTML', 'End of 1990', 'NUMBER
 /*28*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Which input restriction specifies a regular expression to check the input value against', 'It is ''pattern'' restriction', 'ONE_ANSWER', 3);
 /*29*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (10, 'Set correct sequence of tags in HTML document', '<html> -> <form action=\"handler.php\"> -> <input type=\"checkbox\"> -> </body>', 'SEQUENCE', 3);
+VALUES (10, 'Set correct sequence of tags in HTML document', 'html -> form action="handler.php" -> input type="checkbox" -> /body', 'SEQUENCE', 3);
 /*30*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Select ALL correct HTML form input types', '''style'' and ''value'' are NOT input types', 'FEW_ANSWERS', 3);
 
@@ -267,8 +267,8 @@ left_side_3, right_side_3, left_side_4, right_side_4)
 VALUES (8, '(a == 1)', 'expression', 'a = b + 1;', 'statement', '{a = 0; b = a + 1;}', 'block', '[a-zA-Z]+', 'regExp');
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
-VALUES (26, '<textarea>', 'Defines a multiline input control', '<select>', '	Defines a drop-down list',
-'<option>', 'Defines an option in a drop-down list', '<input>', '	Defines an input control');
+VALUES (26, 'textarea', 'Defines a multiline input control', 'select', 'Defines a drop-down list',
+'option', 'Defines an option in a drop-down list', 'input', '	Defines an input control');
 
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
@@ -278,7 +278,7 @@ VALUES (9, 'Object', 'Collection', 'List', 'ArrayList');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (20, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
-VALUES (29, '<html>', '<form action=\"handler.php\">', '<input type=\"checkbox\">', '</body');
+VALUES (29, 'html', 'form action="handler.php"', 'input type="checkbox"', '/body');
 
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);

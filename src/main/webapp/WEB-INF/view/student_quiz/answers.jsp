@@ -10,7 +10,7 @@
 <div class="container">
     <h2>Answers for quiz '${quiz.name}'</h2>
     <c:if test="${not empty questionsOneAnswer}">
-        <h4 class="shifted">Questions with one correct answer</h4>
+        <h4 class="shifted-left">Questions with one correct answer</h4>
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -25,27 +25,25 @@
             </div>
             <div class="question-answers">
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
-                    <form>
-                        <c:choose>
-                            <c:when test="${answer.correct eq true}">
-                                <div class="col-6">
-                                    <div class="correct">${answer.body}</div>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="col-6">
-                                    <div class="incorrect">${answer.body}</div>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </form>
+                    <c:choose>
+                        <c:when test="${answer.correct eq true}">
+                            <div class="col-6">
+                                <div class="correct">${answer.body}</div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="col-6">
+                                <div class="incorrect">${answer.body}</div>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </c:forEach>
                 <div><strong> Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsFewAnswers}">
-        <h4 class="shifted">Questions with few correct answers</h4>
+        <h4 class="shifted-left">Questions with few correct answers</h4>
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -60,27 +58,25 @@
             </div>
             <div class="question-answers">
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
-                    <form>
-                        <c:choose>
-                            <c:when test="${answer.correct eq true}">
-                                <div class="col-6">
-                                    <div class="correct">${answer.body}</div>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="col-6">
-                                    <div class="incorrect">${answer.body}</div>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </form>
+                    <c:choose>
+                        <c:when test="${answer.correct eq true}">
+                            <div class="col-6">
+                                <div class="correct">${answer.body}</div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="col-6">
+                                <div class="incorrect">${answer.body}</div>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </c:forEach>
                 <div><strong> Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsAccordance}">
-        <h4 class="shifted">Accordance questions</h4>
+        <h4 class="shifted-left">Accordance questions</h4>
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -96,7 +92,7 @@
             <div class="question-answers">
                 <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
                 <c:set var="rightSide" value="${quizAnswersAccordance[question.questionId].rightSide}" scope="page"/>
-                <table class="col-6 table-info">
+                <table class="table-info">
                     <c:forEach items="${leftSide}" var="item" varStatus="status">
                         <tr>
                             <td>${item}</td>
@@ -109,7 +105,7 @@
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsSequence}">
-        <h4 class="shifted">Sequence questions</h4>
+        <h4 class="shifted-left">Sequence questions</h4>
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -137,7 +133,7 @@
         </c:forEach>
     </c:if>
     <c:if test="${not empty questionsNumber}">
-        <h4 class="shifted">Questions with numerical answers</h4>
+        <h4 class="shifted-left">Questions with numerical answers</h4>
         <c:forEach items="${questionsNumber}" var="question">
             <div class="question-header">
                 <div class="row">

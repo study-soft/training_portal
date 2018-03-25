@@ -54,6 +54,8 @@ public class QuizController {
         return securityUser.getUserId();
     }
 
+    //    STUDENT ZONE===============================================================
+
     @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
     public String showQuizStart(@ModelAttribute("studentId") Long studentId,
                                 @PathVariable("quizId") Long quizId,
@@ -304,7 +306,7 @@ public class QuizController {
         return "quiz_passing/congratulations";
     }
 
-    @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
+    @RequestMapping("/student/quizzes/{quizId}/answers")
     public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
@@ -356,7 +358,13 @@ public class QuizController {
         return "student_quiz/answers";
     }
 
-    //    QUIZ CREATION===============================================================
+    //    TEACHER ZONE===============================================================
+
+    @RequestMapping("/teacher/quizzes/{quizId}/questions")
+    public String showQuestions(@PathVariable("quizId") Long quizId, ModelMap model) {
+        showAnswers(quizId, model);
+        return "/teacher/questions";
+    }
 
     @RequestMapping("/teacher/quizzes/create")
     public String createQuiz(Model model) {

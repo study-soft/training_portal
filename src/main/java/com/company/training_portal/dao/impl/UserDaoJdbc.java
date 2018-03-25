@@ -130,9 +130,18 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findStudentWithoutGroup() {
+    public List<User> findStudentsWithoutGroup() {
         List<User> students = template.query(FIND_STUDENTS_WITHOUT_GROUP, this::mapUser);
         logger.info("Found students without group:");
+        students.forEach(logger::info);
+        return students;
+    }
+
+    @Override
+    public List<User> findStudentsWithoutGroup(Long teacherId) {
+        List<User> students = template.query(FIND_STUDENTS_WITHOUT_GROUP_BY_TEACHER_ID,
+                new Object[]{teacherId}, this::mapUser);
+        logger.info("Found students without group by teacherId '" + teacherId + "' :");
         students.forEach(logger::info);
         return students;
     }
@@ -485,6 +494,15 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String FIND_STUDENTS_WITHOUT_GROUP =
     "SELECT * FROM USERS WHERE GROUP_ID IS NULL AND USER_ROLE = 'STUDENT' ORDER BY LAST_NAME, FIRST_NAME;";
+
+    private static final String FIND_STUDENTS_WITHOUT_GROUP_BY_TEACHER_ID =
+    "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +
+    "USERS.DATE_OF_BIRTH, USERS.PHONE_NUMBER, USERS.PHOTO, USERS.LOGIN, USERS.PASSWORD, USERS.USER_ROLE " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "WHERE QUIZZES.AUTHOR_ID = ? AND USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS NULL " +
+    "GROUP BY USERS.USER_ID " +
+    "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
 
     private static final String FIND_STUDENT_IDS_WITHOUT_GROUP =
     "SELECT USER_ID FROM USERS WHERE USER_ROLE = 'STUDENT' AND GROUP_ID IS NULL;";

@@ -49,7 +49,7 @@ public class StudentController {
         return securityUser.getUserId();
     }
 
-    @RequestMapping(value = "/student", method = RequestMethod.GET)
+    @RequestMapping("/student")
     public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         Group group = null;
@@ -68,7 +68,7 @@ public class StudentController {
         return "student_general/student";
     }
 
-    @RequestMapping(value = "/student/{studentId}", method = RequestMethod.GET)
+    @RequestMapping("/student/{studentId}")
     public String showStudentInfo(@PathVariable("studentId") Long studentId,
                                   Model model) {
         User student = userDao.findUser(studentId);
@@ -89,7 +89,7 @@ public class StudentController {
         return "student_general/student-info";
     }
 
-    @RequestMapping(value = "/student/group", method = RequestMethod.GET)
+    @RequestMapping("/student/group")
     public String showGroup(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
@@ -108,7 +108,7 @@ public class StudentController {
         return "student_general/group";
     }
 
-    @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
+    @RequestMapping("/student/teachers")
     public String showStudentTeachers(@ModelAttribute("studentId") Long studentId, Model model) {
         List<Quiz> quizzes = quizDao.findStudentQuizzes(studentId);
         HashSet<User> teachers = new HashSet<>();
@@ -121,7 +121,7 @@ public class StudentController {
         return "student_general/teachers";
     }
 
-    @RequestMapping(value = "/student/teachers/{teacherId}", method = RequestMethod.GET)
+    @RequestMapping("/student/teachers/{teacherId}")
     public String showTeacherDetails(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
@@ -195,7 +195,7 @@ public class StudentController {
         return "redirect:/student/quizzes/" + quizId;
     }
 
-    @RequestMapping(value = "/student/results", method = RequestMethod.GET)
+    @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         List<PassedQuiz> passedQuizzes =
                 quizDao.findPassedQuizzes(studentId);
@@ -208,7 +208,7 @@ public class StudentController {
         return "student_general/results";
     }
 
-    @RequestMapping(value = "/student/compare-results/{quizId}")
+    @RequestMapping("/student/compare-results/{quizId}")
     public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {

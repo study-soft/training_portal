@@ -1,7 +1,7 @@
 -- Table: users (teachers)
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*1*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '073-000-00-11', null, 'Andrew', '123', 'TEACHER');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*2*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '073-003-02-01', null, 'Angel', '123', 'TEACHER');
 
 -- Table: groups
@@ -9,22 +9,22 @@ INSERT INTO groups (name, description, creation_date, author_id) VALUES ('IS-4',
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('AM-4', 'Applied Mathematics', '2017-03-02', 2);
 
 -- Table: users (students)
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*3*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '095-123-45-67', null, 'Anton', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*4*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '095-98-76-54', null, 'Artem', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*5*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '098-024-68-10', null, 'Mike', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*6*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (2, 'Sara', 'Stivens', 'sara@example.com', '1998-03-01', '098-135-79-11', null, 'Sara', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*7*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'STUDENT');
-INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
+/*8*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
 VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
-INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
+/*9*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
 VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '095-456-34-37', NULL, 'Jack', '123', 'STUDENT');
-INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (NULL, 'Lily', 'Collins', 'lili@example.com', NULL, '095-437-78-45', NULL, 'Lili', '123', 'STUDENT');
+/*10*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
+VALUES (NULL, 'Lily', 'Collins', 'lily@example.com', NULL, '095-437-78-45', NULL, 'Lily', '123', 'STUDENT');
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)

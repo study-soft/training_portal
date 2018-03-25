@@ -37,7 +37,6 @@
                     window.location = $(this).attr("href");
                 }
             } else {
-                alert("usual logout");
                 window.location = "/logout";
             }
         });

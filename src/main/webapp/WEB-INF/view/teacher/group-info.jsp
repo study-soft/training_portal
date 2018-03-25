@@ -95,7 +95,7 @@
                 <c:forEach items="${students}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td id="studentName"><a
-                                href="/teacher/student/${student.userId}">${student.lastName} ${student.firstName}</td>
+                                href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                         <td>
                             <a href="/teacher/groups/${group.groupId}/delete-student"
                                data-toggle="modal" data-target="#modal"><i class="fa fa-user-times"></i> Delete</a>

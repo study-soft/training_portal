@@ -5,6 +5,15 @@
 <head>
     <title>Student info</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            if (${sessionScope.teacherId ne null}) {
+                $("td[id]").each(function () {
+                    $(this).find("a").attr("href", "/teacher/quizzes/" + this.id);
+                });
+            }
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -45,7 +54,9 @@
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
-                        <td>${openedQuiz.quizName}</td>
+                        <td id="${openedQuiz.quizId}">
+                            <a href="/student/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a>
+                        </td>
                         <td>OPENED</td>
                         <td></td>
                         <td></td>
@@ -53,7 +64,9 @@
                 </c:forEach>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
-                        <td>${passedQuiz.quizName}</td>
+                        <td id="${passedQuiz.quizId}">
+                            <a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
+                        </td>
                         <td>PASSED</td>
                         <td>${passedQuiz.result}/${passedQuiz.score}</td>
                         <td>${passedQuiz.attempt}</td>
@@ -61,7 +74,9 @@
                 </c:forEach>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
-                        <td>${closedQuiz.quizName}</td>
+                        <td id="${closedQuiz.quizId}">
+                            <a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a>
+                        </td>
                         <td>CLOSED</td>
                         <td>${closedQuiz.result}/${closedQuiz.score}</td>
                         <td>${closedQuiz.attempt}</td>

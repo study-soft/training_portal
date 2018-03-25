@@ -29,7 +29,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 
@@ -140,7 +139,7 @@ public class TeacherController {
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
     public String showCreateGroup(Model model) {
-        List<User> students = userDao.findStudentWithoutGroup();
+        List<User> students = userDao.findStudentsWithoutGroup();
         model.addAttribute("students", students);
         return "teacher/group-create";
     }
@@ -158,7 +157,7 @@ public class TeacherController {
         if (name.isEmpty()) {
             String emptyName = environment.getProperty("group.name.empty");
             logger.info("Get property 'group.name.empty': " + emptyName);
-            List<User> students = userDao.findStudentWithoutGroup();
+            List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("emptyName", emptyName);
             model.addAttribute("students", students);
             return "teacher/group-create";
@@ -166,7 +165,7 @@ public class TeacherController {
         if (groupDao.groupExists(name)) {
             String groupExists = environment.getProperty("group.name.exists");
             logger.info("Get property 'group.name.exists': " + groupExists);
-            List<User> students = userDao.findStudentWithoutGroup();
+            List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("groupExists", groupExists);
             model.addAttribute("students", students);
             return "teacher/group-create";
@@ -197,7 +196,7 @@ public class TeacherController {
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
     public String showAddStudents(@PathVariable("groupId") Long groupId, Model model) {
         Group group = groupDao.findGroup(groupId);
-        List<User> students = userDao.findStudentWithoutGroup();
+        List<User> students = userDao.findStudentsWithoutGroup();
 
         model.addAttribute("group", group);
         model.addAttribute("students", students);
@@ -370,12 +369,12 @@ public class TeacherController {
     @RequestMapping("/teacher/results")
     public String showResults(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
-        List<User> students = userDao.findStudentWithoutGroup();
+        List<User> students = userDao.findStudentsWithoutGroup(teacherId);
 
         model.addAttribute("groups", groups);
         model.addAttribute("students", students);
 
-        return "teacher/results";
+        return "teacher/teacher-results";
     }
 
     @RequestMapping("/teacher/results/group/{groupId}")

@@ -132,7 +132,17 @@ public class UserDaoJdbcTest {
         testStudents.add(userDao.findUser(8L));
         testStudents.add(userDao.findUser(7L));
 
-        List<User> students = userDao.findStudentWithoutGroup();
+        List<User> students = userDao.findStudentsWithoutGroup();
+
+        assertEquals(testStudents, students);
+    }
+
+    @Test
+    public void test_find_students_without_group_by_teacherId() {
+        List<User> testStudents = new ArrayList<>();
+        testStudents.add(userDao.findUser(7L));
+
+        List<User> students = userDao.findStudentsWithoutGroup(1L);
 
         assertEquals(testStudents, students);
     }

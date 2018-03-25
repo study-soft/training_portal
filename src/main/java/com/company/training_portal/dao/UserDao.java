@@ -29,12 +29,16 @@ public interface UserDao {
 
     List<User> findAllStudents();
 
-    List<User> findStudentWithoutGroup();
+    List<User> findStudentsWithoutGroup();
+
+    List<User> findStudentsWithoutGroup(Long teacherId);
 
     List<User> findAllTeachers();
 
+    @Deprecated
     List<Long> findStudentIdsWithoutGroup();
 
+    @Deprecated
     List<Long> findStudentIdsByGroupIdAndQuizId(Long quizId, Long groupId);
 
     Integer findStudentsNumber();

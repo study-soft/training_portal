@@ -18,29 +18,29 @@ h5, h6 {
     margin: 10px 0;
 }
 
-table {
+.table {
     border-collapse: collapse;
     width: 100%;
 }
 
-th, td {
+.table th, td {
     text-align: left;
     padding: 12px;
 }
 
-tr:nth-child(even) {
+.table tr:nth-child(even) {
     background-color: #f2f2f2
 }
 
-tr:nth-child(odd) {
+.table tr:nth-child(odd) {
     background-color: #ffffff
 }
 
-tr:hover {
+.table tr:hover {
     background-color: #ddd;
 }
 
-th {
+.table th {
     background-color: #0380ff;
     color: white;
 }

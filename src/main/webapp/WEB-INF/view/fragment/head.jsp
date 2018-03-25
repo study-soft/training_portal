@@ -27,3 +27,19 @@
         $('ul li a[href="'+ locationPath + '"]').parent().addClass('active');
     });
 </script>
+<script>
+    $(document).ready(function () {
+        $("#logout").click(function (event) {
+            event.preventDefault();
+            var quizStarted = Boolean("${sessionScope.result}");
+            if (quizStarted) {
+                if (confirm("Are you sure you want to log out? You do not finish current quiz")) {
+                    window.location = $(this).attr("href");
+                }
+            } else {
+                alert("usual logout");
+                window.location = "/logout";
+            }
+        });
+    });
+</script>

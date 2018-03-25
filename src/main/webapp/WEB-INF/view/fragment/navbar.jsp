@@ -1,20 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script>
-    $(document).ready(function () {
-        $("#logout").click(function (event) {
-            event.preventDefault();
-            var quizStarted = Boolean("${sessionScope.result}");
-            if (quizStarted) {
-                if (confirm("Are you sure you want to log out? You do not finish current quiz")) {
-                    alert($(this).attr("href"));
-                    window.location = $(this).attr("href");
-                }
-            } else {
-                window.location = $(this).attr("href");
-            }
-        });
-    });
-</script>
 <c:choose>
     <c:when test="${sessionScope.teacherId ne null}">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -46,6 +30,7 @@
                 </ul>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item">
+                            <%--suppress XmlDuplicatedId --%>
                         <a id="logout" href="/logout" class="nav-link">Log out<i
                                 class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                     </li>
@@ -80,7 +65,8 @@
                 </ul>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item">
-                        <a id="logout" href="/logout" class="nav-link">Log out<i
+                            <%--suppress XmlDuplicatedId --%>
+                        <a id="logout" href="/quiz-passing-logout" class="nav-link">Log out<i
                                 class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                     </li>
                 </ul>

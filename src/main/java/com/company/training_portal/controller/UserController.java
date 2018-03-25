@@ -1,6 +1,8 @@
 package com.company.training_portal.controller;
 
+import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +14,30 @@ import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttribute;
+
+import java.time.LocalDateTime;
+
+import static com.company.training_portal.controller.QuizController.roundOff;
+import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUIZ;
+import static com.company.training_portal.controller.SessionAttributes.RESULT;
+import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 
 @Controller
 public class UserController {
 
     private UserDao userDao;
+    private QuizDao quizDao;
     private Validator userValidator;
 
     private static final Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserDao userDao, @Qualifier("userValidator") Validator userValidator) {
+    public UserController(UserDao userDao,
+                          QuizDao quizDao,
+                          @Qualifier("userValidator") Validator userValidator) {
         this.userDao = userDao;
+        this.quizDao = quizDao;
         this.userValidator = userValidator;
     }
 
@@ -57,5 +71,22 @@ public class UserController {
 
         model.clear();
         return "redirect:/login";
+    }
+
+    @RequestMapping("/quiz-passing-logout")
+    public String writeResultToDB(@SessionAttribute("studentId") Long studentId,
+                                  @SessionAttribute(value = CURRENT_QUIZ, required = false) Quiz quiz,
+                                  @SessionAttribute(value = "result", required = false) Double result) {
+        if (result != null) {
+            Long quizId = quiz.getQuizId();
+            Integer attempt = quizDao.findAttempt(studentId, quizId);
+            Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
+            attempt += 1;
+            LocalDateTime finishDate = LocalDateTime.now();
+            quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
+                    finishDate, attempt, PASSED);
+            logger.info(">>>>>>> WRITING RESULT TO DATABASE");
+        }
+        return "redirect:/logout";
     }
 }

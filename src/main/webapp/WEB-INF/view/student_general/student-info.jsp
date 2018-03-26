@@ -42,6 +42,11 @@
     <h3>${student.firstName} passes next quizzes:</h3>
     <c:choose>
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                You do not have opened quizzes. Say your teachers to give you some
+            </div>
             There is no quizzes for ${student.firstName}.
         </c:when>
         <c:otherwise>

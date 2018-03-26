@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @SessionAttributes("studentId")
@@ -68,25 +69,34 @@ public class StudentController {
         return "student_general/student";
     }
 
-    @RequestMapping("/student/{studentId}")
-    public String showStudentInfo(@PathVariable("studentId") Long studentId,
+    @RequestMapping("/student/{groupMateId}")
+    public String showStudentInfo(@ModelAttribute("studentId") Long studentId,
+                                  @PathVariable("groupMateId") Long groupMateId,
                                   Model model) {
         User student = userDao.findUser(studentId);
-        model.addAttribute("student", student);
+        List<User> groupMates = userDao.findStudents(student.getGroupId());
+        List<Long> groupMatesIds = groupMates.stream()
+                .map(User::getUserId)
+                .collect(Collectors.toList());
+        if (groupMatesIds.contains(groupMateId)) {
+            model.addAttribute("student", student);
 
-        if (student.getGroupId() != 0) {
-            Group group = groupDao.findGroup(student.getGroupId());
-            model.addAttribute("group", group);
+            if (student.getGroupId() != 0) {
+                Group group = groupDao.findGroup(student.getGroupId());
+                model.addAttribute("group", group);
+            }
+
+            List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
+            List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);
+            List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(studentId);
+            model.addAttribute("openedQuizzes", openedQuizzes);
+            model.addAttribute("passedQuizzes", passedQuizzes);
+            model.addAttribute("closedQuizzes", closedQuizzes);
+
+            return "student_general/student-info";
+        } else {
+            return "access-denied";
         }
-
-        List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
-        List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);
-        List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(studentId);
-        model.addAttribute("openedQuizzes", openedQuizzes);
-        model.addAttribute("passedQuizzes", passedQuizzes);
-        model.addAttribute("closedQuizzes", closedQuizzes);
-
-        return "student_general/student-info";
     }
 
     @RequestMapping("/student/group")

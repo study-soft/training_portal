@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
+import static java.lang.Enum.valueOf;
+
 @Repository
 public class QuizDaoJdbc implements QuizDao {
 
@@ -280,7 +283,7 @@ public class QuizDaoJdbc implements QuizDao {
         List<OpenedQuiz> openedQuizzes = template.query(
                 FIND_OPENED_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapOpenedQuiz);
-        logger.info("Found opened quizzes by studentId:");
+        logger.info("Found opened quizzes by studentId '" + studentId + "':");
         openedQuizzes.forEach(logger::info);
         return openedQuizzes;
     }
@@ -290,7 +293,7 @@ public class QuizDaoJdbc implements QuizDao {
         List<PassedQuiz> passedQuizzes = template.query(
                 FIND_PASSED_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapPassedQuiz);
-        logger.info("Found passed quizzes by studentId:");
+        logger.info("Found passed quizzes by studentId '" + studentId + "':");
         passedQuizzes.forEach(logger::info);
         return passedQuizzes;
     }
@@ -300,22 +303,54 @@ public class QuizDaoJdbc implements QuizDao {
         List<PassedQuiz> closedQuizzes = template.query(
                 FIND_CLOSED_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapPassedQuiz);
-        logger.info("Found closed quizzes by studentId:");
+        logger.info("Found closed quizzes by studentId '" + studentId + "':");
         closedQuizzes.forEach(logger::info);
         return closedQuizzes;
     }
 
     @Override
-    public void addPublishedQuizInfo(Long studentId, Long quizId, LocalDate submitDate,
-                                     Integer attempt, StudentQuizStatus status) {
+    public List<OpenedQuiz> findOpenedQuizzes(Long studentId, Long teacherId) {
+        List<OpenedQuiz> openedQuizzes = template.query(
+                FIND_OPENED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID,
+                new Object[]{studentId, teacherId}, this::mapOpenedQuiz);
+        logger.info("Found opened quizzes by studentId '" + studentId +
+                "' and teacherId '" + teacherId + "':");
+        openedQuizzes.forEach(logger::info);
+        return openedQuizzes;
+    }
+
+    @Override
+    public List<PassedQuiz> findPassedQuizzes(Long studentId, Long teacherId) {
+        List<PassedQuiz> passedQuizzes = template.query(
+                FIND_PASSED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID,
+                new Object[]{studentId, teacherId}, this::mapPassedQuiz);
+        logger.info("Found passed quizzes by studentId '" + studentId +
+                "' and teacherId '" + teacherId + "':");
+        passedQuizzes.forEach(logger::info);
+        return passedQuizzes;
+    }
+
+    @Override
+    public List<PassedQuiz> findClosedQuizzes(Long studentId, Long teacherId) {
+        List<PassedQuiz> closedQuizzes = template.query(
+                FIND_CLOSED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID,
+                new Object[]{studentId, teacherId}, this::mapPassedQuiz);
+        logger.info("Found closed quizzes by studentId '" + studentId +
+                "' and teacherId '" + teacherId + "':");
+        closedQuizzes.forEach(logger::info);
+        return closedQuizzes;
+    }
+
+    @Override
+    public void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate) {
         template.update(ADD_PUBLISHED_QUIZ_INFO,
-                studentId, quizId, submitDate, attempt, status);
+                studentId, quizId, submitDate, 0, OPENED.getStudentQuizStatus());
         logger.info("Added published quiz info:");
         logger.info("userId: " + studentId +
-                "quizId: " + quizId +
-                "submitDate: " + submitDate +
-                "attempt: " + attempt +
-                "studentQuizStatus: " + status);
+                " quizId: " + quizId +
+                " submitDate: " + submitDate +
+                " attempt: 0" +
+                " studentQuizStatus: OPENED");
     }
 
     @Transactional
@@ -564,7 +599,8 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'OPENED';";
+    "WHERE J.USER_ID = ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'OPENED' " +
+    "GROUP BY QUIZZES.QUIZ_ID;"; // Need group by for case when no quiz for such quizId
 
     private static final String FIND_PASSED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
@@ -623,6 +659,44 @@ public class QuizDaoJdbc implements QuizDao {
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE J.USER_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED' " +
+    "GROUP BY QUIZZES.NAME " +
+    "ORDER BY J.FINISH_DATE DESC;";
+
+    private static final String FIND_OPENED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.PASSING_TIME AS passing_time, QUIZZES.AUTHOR_ID AS author_id, " +
+    "COUNT(QUESTIONS.QUESTION_ID) AS questions_number, SUM(QUESTIONS.SCORE) AS score, " +
+    "J.SUBMIT_DATE AS submit_date " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? AND J.STUDENT_QUIZ_STATUS = 'OPENED' " +
+    "GROUP BY QUIZZES.NAME " +
+    "ORDER BY J.SUBMIT_DATE DESC;";
+
+    private static final String FIND_PASSED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    " FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? AND J.STUDENT_QUIZ_STATUS = 'PASSED' " +
+    "GROUP BY QUIZZES.NAME " +
+    "ORDER BY J.FINISH_DATE DESC;";
+
+    private static final String FIND_CLOSED_QUIZZES_BY_STUDENT_ID_AND_TEACHER_ID =
+    "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +
+    "QUIZZES.EXPLANATION AS explanation, QUIZZES.AUTHOR_ID AS author_id, " +
+    "J.RESULT AS result, SUM(QUESTIONS.SCORE) AS score, COUNT(QUESTIONS.QUESTION_ID) AS questions_number, " +
+    "J.ATTEMPT AS attempt, QUIZZES.PASSING_TIME AS passing_time, J.SUBMIT_DATE AS submit_date, " +
+    "J.FINISH_DATE AS finish_date, DATEDIFF('SECOND', J.START_DATE, J.FINISH_DATE) AS time_spent " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED' " +
     "GROUP BY QUIZZES.NAME " +
     "ORDER BY J.FINISH_DATE DESC;";
 

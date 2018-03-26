@@ -4,10 +4,7 @@ import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
-import com.company.training_portal.model.Group;
-import com.company.training_portal.model.Quiz;
-import com.company.training_portal.model.SecurityUser;
-import com.company.training_portal.model.User;
+import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -383,8 +380,23 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/students/{studentId}")
-    public String showStudent(@PathVariable("studentId") Long studentId, Model model) {
-        studentController.showStudentInfo(studentId, model);
+    public String showStudent(@ModelAttribute("teacherId") Long teacherId,
+            @PathVariable("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+        model.addAttribute("student", student);
+
+        if (student.getGroupId() != 0) {
+            Group group = groupDao.findGroup(student.getGroupId());
+            model.addAttribute("group", group);
+        }
+
+        List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId, teacherId);
+        List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId, teacherId);
+        List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(studentId, teacherId);
+        model.addAttribute("openedQuizzes", openedQuizzes);
+        model.addAttribute("passedQuizzes", passedQuizzes);
+        model.addAttribute("closedQuizzes", closedQuizzes);
+
         return "/student_general/student-info";
     }
 }

@@ -63,8 +63,13 @@ public interface QuizDao {
 
     List<PassedQuiz> findClosedQuizzes(Long studentId);
 
-    void addPublishedQuizInfo(Long studentId, Long quizId, LocalDate submitDate,
-                              Integer attempt, StudentQuizStatus status);
+    List<OpenedQuiz> findOpenedQuizzes(Long studentId, Long teacherId);
+
+    List<PassedQuiz> findPassedQuizzes(Long studentId, Long teacherId);
+
+    List<PassedQuiz> findClosedQuizzes(Long studentId, Long teacherId);
+
+    void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate);
 
     Long addQuiz(Quiz quiz);
 

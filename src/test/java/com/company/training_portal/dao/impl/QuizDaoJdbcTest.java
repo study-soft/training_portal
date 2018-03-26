@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
+import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -293,7 +294,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_finished_quiz_by_studentId_and_quizId() {
+    public void test_find_closed_quiz_by_studentId_and_quizId() {
         PassedQuiz testFinishedQuiz = new PassedQuiz.PassedQuizBuilder()
                 .quizId(3L)
                 .quizName("Collections")
@@ -316,7 +317,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_opened_quizzes_info_by_studentId() {
+    public void test_find_opened_quizzes_by_studentId() {
         List<OpenedQuiz> testOpenedQuizzes = new ArrayList<>();
         testOpenedQuizzes.add(new OpenedQuiz.OpenedQuizBuilder()
                 .quizId(6L)
@@ -346,7 +347,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_passed_quizzes_info_by_studentId() {
+    public void test_find_passed_quizzes_by_studentId() {
         List<PassedQuiz> testPassedQuizzes = new ArrayList<>();
         testPassedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
                 .quizId(4L)
@@ -386,7 +387,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_finished_quizzes_info_by_studentId() {
+    public void test_find_closed_quizzes_by_studentId() {
         List<PassedQuiz> testFinishedQuizzes = new ArrayList<>();
         testFinishedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
                 .quizId(3L)
@@ -423,6 +424,57 @@ public class QuizDaoJdbcTest {
                 = quizDao.findClosedQuizzes(4L);
 
         assertEquals(testFinishedQuizzes, finishedQuizzes);
+    }
+
+    @Test
+    public void find_opened_quizzes_by_studentId_and_teacherId() {
+        List<OpenedQuiz> testOpenedQuizzes = new ArrayList<>();
+        testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 5L));
+
+        List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(4L, 1L);
+
+        assertEquals(testOpenedQuizzes, openedQuizzes);
+    }
+
+    @Test
+    public void find_passed_quizzes_by_studentId_and_teacherId() {
+        List<PassedQuiz> testPassedQuizzes = new ArrayList<>();
+        testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 1L));
+
+        List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(4L, 1L);
+
+        assertEquals(testPassedQuizzes, passedQuizzes);
+    }
+
+    @Test
+    public void find_closed_quizzes_by_studentId_and_teacherId() {
+        List<PassedQuiz> testClosedQuizzes = new ArrayList<>();
+        testClosedQuizzes.add(quizDao.findClosedQuiz(4L, 2L));
+
+        List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(4L, 1L);
+
+        assertEquals(testClosedQuizzes, closedQuizzes);
+    }
+
+    @Test
+    public void add_published_quiz_info() {
+        quizDao.addPublishedQuizInfo(5L, 1L,
+                LocalDateTime.of(2018, 3, 26, 11, 37,0));
+
+        OpenedQuiz testOpenedQuiz = new OpenedQuiz.OpenedQuizBuilder()
+                .quizId(1L)
+                .quizName("Procedural")
+                .description("Try your procedural skills")
+                .passingTime(Duration.of(10, MINUTES))
+                .authorName("Bronson Andrew")
+                .submitDate(LocalDateTime.of(2018, 3, 26, 11, 37, 0))
+                .questionsNumber(12)
+                .score(30)
+                .build();
+
+        OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(5L, 1L);
+
+        assertEquals(testOpenedQuiz, openedQuiz);
     }
 
     @Test
@@ -483,7 +535,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_finish_quiz() {
+    public void test_close_quiz() {
         quizDao.closeQuiz(4L, 4L);
         StudentQuizStatus studentQuizStatus =
                 quizDao.findStudentQuizStatus(4L, 4L);

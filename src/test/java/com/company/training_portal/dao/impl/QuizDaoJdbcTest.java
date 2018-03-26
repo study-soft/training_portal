@@ -32,8 +32,7 @@ import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHE
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
@@ -150,7 +149,7 @@ public class QuizDaoJdbcTest {
 
         Map<StudentQuizStatus, Integer> results
                 = quizDao.findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
-                        1L, 1L, 1L);
+                1L, 1L, 1L);
 
         assertEquals(testResults, results);
     }
@@ -215,7 +214,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_submitDate_by_studentId_and_quizId() {
         LocalDateTime testSubmitDate
-                = LocalDateTime.of(2018, 3, 5, 0,0,0);
+                = LocalDateTime.of(2018, 3, 5, 0, 0, 0);
         LocalDateTime submitDate
                 = quizDao.findSubmitDate(3L, 1L);
         assertThat(submitDate, is(testSubmitDate));
@@ -224,7 +223,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_startDate_by_studentId_and_quizId() {
         LocalDateTime testStartDate
-                = LocalDateTime.of(2018, 3, 5, 0,0,12);
+                = LocalDateTime.of(2018, 3, 5, 0, 0, 12);
         LocalDateTime startDate
                 = quizDao.findStartDate(3L, 1L);
         assertThat(startDate, is(testStartDate));
@@ -233,7 +232,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_finishDate_by_studentId_and_quizId() {
         LocalDateTime testFinishDate
-                = LocalDateTime.of(2018, 3, 5, 0,0,15);
+                = LocalDateTime.of(2018, 3, 5, 0, 0, 15);
         LocalDateTime finishDate
                 = quizDao.findFinishDate(3L, 1L);
         assertThat(finishDate, is(testFinishDate));
@@ -248,8 +247,8 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_studentQuizStatus_by_studentId_and_quizId() {
         StudentQuizStatus studentQuizStatus
-                = quizDao.findStudentQuizStatus(3L, 1L);
-        assertThat(studentQuizStatus, is(StudentQuizStatus.CLOSED));
+                = quizDao.findStudentQuizStatus(5L, 5L);
+        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
     }
 
     @Test
@@ -427,7 +426,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void find_opened_quizzes_by_studentId_and_teacherId() {
+    public void test_find_opened_quizzes_by_studentId_and_teacherId() {
         List<OpenedQuiz> testOpenedQuizzes = new ArrayList<>();
         testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 5L));
 
@@ -437,7 +436,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void find_passed_quizzes_by_studentId_and_teacherId() {
+    public void test_find_passed_quizzes_by_studentId_and_teacherId() {
         List<PassedQuiz> testPassedQuizzes = new ArrayList<>();
         testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 1L));
 
@@ -447,7 +446,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void find_closed_quizzes_by_studentId_and_teacherId() {
+    public void test_find_closed_quizzes_by_studentId_and_teacherId() {
         List<PassedQuiz> testClosedQuizzes = new ArrayList<>();
         testClosedQuizzes.add(quizDao.findClosedQuiz(4L, 2L));
 
@@ -457,9 +456,15 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void add_published_quiz_info() {
+    public void test_quiz_exists_by_name() {
+        assertTrue(quizDao.quizExistsByName("Procedural"));
+        assertFalse(quizDao.quizExistsByName("Test name"));
+    }
+
+    @Test
+    public void test_add_published_quiz_info() {
         quizDao.addPublishedQuizInfo(5L, 1L,
-                LocalDateTime.of(2018, 3, 26, 11, 37,0));
+                LocalDateTime.of(2018, 3, 26, 11, 37, 0));
 
         OpenedQuiz testOpenedQuiz = new OpenedQuiz.OpenedQuizBuilder()
                 .quizId(1L)
@@ -532,6 +537,19 @@ public class QuizDaoJdbcTest {
                 .findQuiz(4L)
                 .getTeacherQuizStatus();
         assertThat(teacherQuizStatus, is(TeacherQuizStatus.UNPUBLISHED));
+    }
+
+    @Test
+    public void test_edit_quiz_by_quiz_id_name_description_explnation_passing_time() {
+        quizDao.editQuiz(1L, "Name", "Description", "Explanation",
+                Duration.ofSeconds(3680));
+
+        Quiz quiz = quizDao.findQuiz(1L);
+
+        assertThat(quiz.getName(), is("Name"));
+        assertThat(quiz.getDescription(), is("Description"));
+        assertThat(quiz.getExplanation(), is("Explanation"));
+        assertThat(quiz.getPassingTime(), is(Duration.ofSeconds(3680)));
     }
 
     @Test

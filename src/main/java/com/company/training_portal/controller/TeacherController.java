@@ -6,6 +6,9 @@ import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
+import com.company.training_portal.util.Utils;
+import com.company.training_portal.validator.QuizValidator;
+import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,12 +19,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +44,8 @@ public class TeacherController {
     private QuizDao quizDao;
     private QuestionDao questionDao;
     private Environment environment;
-    private Validator userValidator;
+    private UserValidator userValidator;
+    private QuizValidator quizValidator;
     private StudentController studentController;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
@@ -50,7 +56,8 @@ public class TeacherController {
                              QuizDao quizDao,
                              QuestionDao questionDao,
                              Environment environment,
-                             @Qualifier("userValidator") Validator userValidator,
+                             UserValidator userValidator,
+                             QuizValidator quizValidator,
                              StudentController studentController) {
         this.userDao = userDao;
         this.groupDao = groupDao;
@@ -58,6 +65,7 @@ public class TeacherController {
         this.questionDao = questionDao;
         this.environment = environment;
         this.userValidator = userValidator;
+        this.quizValidator = quizValidator;
         this.studentController = studentController;
     }
 
@@ -398,5 +406,53 @@ public class TeacherController {
         model.addAttribute("closedQuizzes", closedQuizzes);
 
         return "/student_general/student-info";
+    }
+
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.GET)
+    public String showEditQuiz(@PathVariable("quizId") Long quizId, Model model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        List<Integer> timeUnits = Utils.durationToTimeUnits(quiz.getPassingTime());
+        model.addAttribute("hours", timeUnits.get(0));
+        model.addAttribute("minutes", timeUnits.get(1));
+        model.addAttribute("seconds", timeUnits.get(2));
+
+        return "teacher/quiz-edit";
+    }
+
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.POST)
+    public String editQuiz(@PathVariable("quizId") Long quizId,
+                           @ModelAttribute("quiz") Quiz editedQuiz,
+                           BindingResult bindingResult,
+                           @RequestParam("hours") String hours,
+                           @RequestParam("minutes") String minutes,
+                           @RequestParam("seconds") String seconds,
+                           RedirectAttributes redirectAttributes, ModelMap model) {
+        quizValidator.validate(editedQuiz, bindingResult);
+        quizValidator.validateHours(hours, bindingResult);
+        quizValidator.validateMinutes(minutes, bindingResult);
+        quizValidator.validateSeconds(seconds, bindingResult);
+
+        Quiz oldQuiz = quizDao.findQuiz(quizId);
+        String editedName = editedQuiz.getName();
+        String name = oldQuiz.getName();
+        if (!editedName.equals(name) && quizDao.quizExistsByName(editedName)) {
+            bindingResult.rejectValue("name", "quiz.name.exists");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("quiz", editedQuiz);
+            return "teacher/quiz-edit";
+        }
+
+        Duration editedPassingTime = Utils.timeUnitsToDuration(Integer.valueOf(hours),
+                Integer.valueOf(minutes), Integer.valueOf(seconds));
+        quizDao.editQuiz(oldQuiz.getQuizId(), editedQuiz.getName(), editedQuiz.getDescription(),
+                editedQuiz.getExplanation(), editedPassingTime);
+
+        redirectAttributes.addFlashAttribute("editSuccess", true);
+        model.clear();
+
+        return "redirect:/teacher/quizzes/" + quizId;
     }
 }

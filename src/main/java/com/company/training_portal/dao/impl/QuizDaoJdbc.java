@@ -6,8 +6,10 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.OpenedQuiz;
 import com.company.training_portal.model.PassedQuiz;
 import com.company.training_portal.model.Quiz;
+import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
+import com.company.training_portal.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
-import static java.lang.Enum.valueOf;
 
 @Repository
 public class QuizDaoJdbc implements QuizDao {
@@ -79,6 +79,7 @@ public class QuizDaoJdbc implements QuizDao {
         return quizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Quiz> findTeacherQuizzes(Long authorId, TeacherQuizStatus status) {
         List<Quiz> quizzes = template.query(
@@ -184,6 +185,7 @@ public class QuizDaoJdbc implements QuizDao {
         return quizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId) {
         List<Quiz> quizzes = template.query(FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID,
@@ -212,6 +214,7 @@ public class QuizDaoJdbc implements QuizDao {
         return submitDate;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public LocalDateTime findStartDate(Long studentId, Long quizId) {
         LocalDateTime startDate = template.queryForObject(
@@ -251,6 +254,7 @@ public class QuizDaoJdbc implements QuizDao {
         return studentQuizStatus;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public OpenedQuiz findOpenedQuiz(Long studentId, Long quizId) {
         OpenedQuiz openedQuiz = template.queryForObject(
@@ -260,6 +264,7 @@ public class QuizDaoJdbc implements QuizDao {
         return openedQuiz;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PassedQuiz findPassedQuiz(Long studentId, Long quizId) {
         PassedQuiz passedQuiz = template.queryForObject(
@@ -269,6 +274,7 @@ public class QuizDaoJdbc implements QuizDao {
         return passedQuiz;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PassedQuiz findClosedQuiz(Long studentId, Long quizId) {
         PassedQuiz closedQuiz = template.queryForObject(
@@ -278,6 +284,7 @@ public class QuizDaoJdbc implements QuizDao {
         return closedQuiz;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<OpenedQuiz> findOpenedQuizzes(Long studentId) {
         List<OpenedQuiz> openedQuizzes = template.query(
@@ -288,6 +295,7 @@ public class QuizDaoJdbc implements QuizDao {
         return openedQuizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<PassedQuiz> findPassedQuizzes(Long studentId) {
         List<PassedQuiz> passedQuizzes = template.query(
@@ -298,6 +306,7 @@ public class QuizDaoJdbc implements QuizDao {
         return passedQuizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<PassedQuiz> findClosedQuizzes(Long studentId) {
         List<PassedQuiz> closedQuizzes = template.query(
@@ -308,6 +317,7 @@ public class QuizDaoJdbc implements QuizDao {
         return closedQuizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<OpenedQuiz> findOpenedQuizzes(Long studentId, Long teacherId) {
         List<OpenedQuiz> openedQuizzes = template.query(
@@ -319,6 +329,7 @@ public class QuizDaoJdbc implements QuizDao {
         return openedQuizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<PassedQuiz> findPassedQuizzes(Long studentId, Long teacherId) {
         List<PassedQuiz> passedQuizzes = template.query(
@@ -330,6 +341,7 @@ public class QuizDaoJdbc implements QuizDao {
         return passedQuizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<PassedQuiz> findClosedQuizzes(Long studentId, Long teacherId) {
         List<PassedQuiz> closedQuizzes = template.query(
@@ -341,6 +353,28 @@ public class QuizDaoJdbc implements QuizDao {
         return closedQuizzes;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public boolean quizExistsByName(String name) {
+        Quiz quiz = template.query(FIND_QUIZ_BY_NAME, new Object[]{name},
+                new ResultSetExtractor<Quiz>() {
+                    @Override
+                    public Quiz extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        if (!rs.next()) {
+                            return null;
+                        }
+                        return mapQuiz(rs, 0);
+                    }
+                });
+        if (quiz == null) {
+            logger.info("No quiz exists by name: " + name);
+            return false;
+        }
+        logger.info("Quiz exists by name: " + name);
+        return true;
+    }
+
+    @Transactional
     @Override
     public void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate) {
         template.update(ADD_PUBLISHED_QUIZ_INFO,
@@ -378,6 +412,7 @@ public class QuizDaoJdbc implements QuizDao {
         return quizId;
     }
 
+    @Transactional
     @Override
     public void editStartDate(LocalDateTime startDate, Long studentId, Long quizId) {
         template.update(EDIT_START_DATE_BY_STUDENT_ID_AND_QUIZ_ID,
@@ -386,6 +421,7 @@ public class QuizDaoJdbc implements QuizDao {
                 "' where studentId=" + studentId + ", quizId=" + quizId);
     }
 
+    @Transactional
     @Override
     public void editStudentInfoAboutOpenedQuiz(Long studentId, Long quizId, Integer result,
                                                LocalDateTime finishDate, Integer attempt,
@@ -410,11 +446,23 @@ public class QuizDaoJdbc implements QuizDao {
                 " in quiz with quizId " + quizId);
     }
 
+    @Transactional
     @Override
     public void editQuiz(Quiz quiz) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void editQuiz(Long quizId, String name, String description,
+                         String explanation, Duration passingTime) {
+        List<Integer> timeUnits = Utils.durationToTimeUnits(passingTime);
+        template.update(EDIT_QUIZ_BY_QUIZ_ID_NAME_DESCRIPTION_EXPLANATION_PASSING_TIME,
+                name, description, explanation,
+                Time.valueOf(LocalTime.of(timeUnits.get(0), timeUnits.get(1), timeUnits.get(2))),
+                quizId);
+    }
+
+    @Transactional
     @Override
     public void closeQuiz(Long studentId, Long quizId) {
         template.update(CLOSE_QUIZ, studentId, quizId);
@@ -488,6 +536,16 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE QUIZZES.QUIZ_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;"; // Need group by for case when no quiz for such quizId
+
+    private static final String FIND_QUIZ_BY_NAME =
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE QUIZZES.NAME = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_ALL_QUIZZES =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
@@ -722,6 +780,11 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String EDIT_QUIZ =
     "UPDATE QUIZZES " +
     "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, CREATION_DATE = ?, PASSING_TIME = ?, AUTHOR_ID = ?, TEACHER_QUIZ_STATUS = ? " +
+    "WHERE QUIZ_ID = ?;";
+
+    private static final String EDIT_QUIZ_BY_QUIZ_ID_NAME_DESCRIPTION_EXPLANATION_PASSING_TIME =
+    "UPDATE QUIZZES " +
+    "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, PASSING_TIME = ? " +
     "WHERE QUIZ_ID = ?;";
 
     private static final String CLOSE_QUIZ =

@@ -21,6 +21,7 @@ import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
+import static com.company.training_portal.util.Utils.roundOff;
 
 @Controller
 public class QuizController {
@@ -404,9 +405,5 @@ public class QuizController {
                 model.addAttribute("answers", answerNumber);
                 break;
         }
-    }
-
-    public static int roundOff(double value) {
-        return (value * 10) % 10 >= 5 ? (int) value + 1 : (int) value;
     }
 }

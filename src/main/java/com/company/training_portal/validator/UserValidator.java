@@ -35,8 +35,8 @@ public class UserValidator implements Validator {
         return Pattern.compile(regex).matcher(string).find();
     }
 
-    private void validateLogin(String login, Errors errors) {
-        if (login == null) {
+    public void validateLogin(String login, Errors errors) {
+        if (login == null || login.isEmpty()) {
             errors.rejectValue("login", "user.login.empty");
         } else if (contains(login, "\\s+")) {
             errors.rejectValue("login", "user.login.space");
@@ -47,8 +47,8 @@ public class UserValidator implements Validator {
         }
     }
 
-    private void validatePassword(String password, Errors errors) {
-        if (password == null) {
+    public void validatePassword(String password, Errors errors) {
+        if (password == null || password.isEmpty()) {
             errors.rejectValue("password", "user.password.empty");
         } else if (contains(password, "\\s+")) {
             errors.rejectValue("password", "user.password.space");
@@ -59,24 +59,24 @@ public class UserValidator implements Validator {
         }
     }
 
-    private void validateEmail(String email, Errors errors) {
-        if (email == null) {
+    public void validateEmail(String email, Errors errors) {
+        if (email == null || email.isEmpty()) {
             errors.rejectValue("email", "user.email.empty");
         } else if (!email.matches("^[\\w\\d._-]+@[\\w\\d.-]+\\.[\\w\\d]{2,6}$")) {
             errors.rejectValue("email", "user.email.format");
         }
     }
 
-    private void validatePhoneNumber(String phoneNumber, Errors errors) {
-        if (phoneNumber == null) {
+    public void validatePhoneNumber(String phoneNumber, Errors errors) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
             errors.rejectValue("phoneNumber", "user.phoneNumber.empty");
         } else if (!phoneNumber.matches("\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{2})\\2([0-9]{2})")) {
             errors.rejectValue("phoneNumber", "user.phoneNumber.format");
         }
     }
 
-    private void validateUserRole(UserRole userRole, Errors errors) {
-        if (userRole == null) {
+    public void validateUserRole(UserRole userRole, Errors errors) {
+        if (userRole == null || userRole.getRole().isEmpty()) {
             errors.rejectValue("userRole", "user.userRole.empty");
         } else {
             String role = userRole.getRole();
@@ -86,7 +86,7 @@ public class UserValidator implements Validator {
         }
     }
 
-    private void validateFirstName(String firstName, Errors errors) {
+    public void validateFirstName(String firstName, Errors errors) {
         if (firstName == null) {
             return;
         } else if (firstName.length() > 40) {
@@ -96,7 +96,7 @@ public class UserValidator implements Validator {
         }
     }
 
-    private void validateLastName(String lastName, Errors errors) {
+    public void validateLastName(String lastName, Errors errors) {
         if (lastName == null) {
             return;
         } else if (lastName.length() > 40) {
@@ -106,7 +106,7 @@ public class UserValidator implements Validator {
         }
     }
 
-    private void validateDateOfBirth(LocalDate dateOfBirth, Errors errors) {
+    public void validateDateOfBirth(LocalDate dateOfBirth, Errors errors) {
         if (dateOfBirth == null) {
             return;
         } else if (dateOfBirth.isAfter(LocalDate.now())) {

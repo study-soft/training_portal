@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
 
-import static com.company.training_portal.controller.QuizController.roundOff;
 import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUIZ;
 import static com.company.training_portal.controller.SessionAttributes.RESULT;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
+import static com.company.training_portal.util.Utils.roundOff;
 
 @Controller
 public class UserController {

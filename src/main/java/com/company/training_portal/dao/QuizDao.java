@@ -6,6 +6,7 @@ import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,6 +70,8 @@ public interface QuizDao {
 
     List<PassedQuiz> findClosedQuizzes(Long studentId, Long teacherId);
 
+    boolean quizExistsByName(String name);
+
     void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate);
 
     Long addQuiz(Quiz quiz);
@@ -82,6 +85,9 @@ public interface QuizDao {
     void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus, Long quizId);
 
     void editQuiz(Quiz quiz);
+
+    void editQuiz(Long quizId, String name, String description,
+                  String explanation, Duration passingTime);
 
     void closeQuiz(Long studentId, Long quizId);
 

@@ -14,18 +14,18 @@
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-1">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-trash-o"></i> Delete</a>
                         </div>
@@ -56,18 +56,18 @@
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-1">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-trash-o"></i> Delete</a>
                         </div>
@@ -98,18 +98,18 @@
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-1">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-trash-o"></i> Delete</a>
                         </div>
@@ -136,18 +136,18 @@
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-1">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-trash-o"></i> Delete</a>
                         </div>
@@ -173,18 +173,18 @@
         <c:forEach items="${questionsNumber}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-1">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <div class="shifted-down">
                             <a href="#"><i class="fa fa-trash-o"></i> Delete</a>
                         </div>

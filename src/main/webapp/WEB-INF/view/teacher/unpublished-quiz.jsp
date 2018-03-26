@@ -6,10 +6,26 @@
 <head>
     <title>Unpublished quiz</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var editSuccess = "${editSuccess}";
+            if (editSuccess) {
+                $("#edit-success").fadeIn("slow");
+            }
+
+            $("#close").click(function () {
+                $("#edit-success").fadeOut("slow");
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
+    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
+        Quiz information successfully changed
+        <button id="close" class="close">&times;</button>
+    </div>
     <h2>${unpublishedQuiz.name}</h2>
     <div class="row">
         <div class="col-4">

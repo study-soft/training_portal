@@ -37,26 +37,28 @@
                 <div>There is no students in this group.</div>
             </c:when>
             <c:otherwise>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>E-mail</th>
-                        <th></th>
-                    </tr>
-                    <c:forEach items="${students}" var="student" varStatus="status">
+                <div class="col-6">
+                    <table class="table">
                         <tr>
-                            <td>
-                                <label for="student${status.index}">${student.lastName} ${student.firstName}</label>
-                            </td>
-                            <td>
-                                <label for="student${status.index}">${student.email}</label>
-                            </td>
-                            <td>
-                                <label for="student${status.index}">${student.phoneNumber}</label>
-                            </td>
+                            <th>Name</th>
+                            <th>E-mail</th>
+                            <th></th>
                         </tr>
-                    </c:forEach>
-                </table>
+                        <c:forEach items="${students}" var="student" varStatus="status">
+                            <tr>
+                                <td>
+                                    <label for="student${status.index}">${student.lastName} ${student.firstName}</label>
+                                </td>
+                                <td>
+                                    <label for="student${status.index}">${student.email}</label>
+                                </td>
+                                <td>
+                                    <label for="student${status.index}">${student.phoneNumber}</label>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
             </c:otherwise>
         </c:choose>
         <div>

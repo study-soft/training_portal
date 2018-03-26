@@ -10,7 +10,7 @@
             $("tr").each(function () {
                 if ($(this).attr("id") === "${studentId}") {
                     $(this).css("background-color", "#a7f9aa");
-                    $(this).find("a").attr("href", "/student").text("Home");
+                    $(this).find("a").attr("href", "/student");
                 }
             });
         });
@@ -39,18 +39,18 @@
         </tr>
     </table>
     <h3>List of students</h3>
-    <table style="width: 50%" class="table">
-        <tr>
-            <th style="width: 80%">Name</th>
-            <th style="width: 20%"></th>
-        </tr>
-        <c:forEach items="${students}" var="student">
-            <tr id="${student.userId}">
-                <td>${student.lastName} ${student.firstName}</td>
-                <td><a href="/student/${student.userId}">More</a></td>
+    <div class="col-6">
+        <table class="table">
+            <tr>
+                <th>Name</th>
             </tr>
-        </c:forEach>
-    </table>
+            <c:forEach items="${students}" var="student">
+                <tr id="${student.userId}">
+                    <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
     <div>
         <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
     </div>

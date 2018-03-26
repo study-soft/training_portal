@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -34,21 +35,29 @@
             </div>
         </div>
     </form>
-    <table>
+    <table class="table">
         <tr>
-            <th>Name</th>
-            <th>Students</th>
-            <th>Creation date</th>
-            <th></th>
-            <th></th>
+            <th style="width: 40%">Name</th>
+            <th style="width: 20%">Students</th>
+            <th style="width: 20%">Creation date</th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
         </tr>
         <c:forEach items="${groups}" var="group" varStatus="status">
             <tr>
                 <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
                 <td>${studentsNumber[status.index]}</td>
                 <td><localDate:format value="${group.creationDate}"/></td>
-                <td><a href="/teacher/groups/${group.groupId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
-                <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
+                <c:choose>
+                    <c:when test="${fn:contains(teacherGroupsIds, group.groupId)}">
+                        <td><a href="/teacher/groups/${group.groupId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
+                        <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
+                    </c:when>
+                    <c:otherwise>
+                        <td></td>
+                        <td></td>
+                    </c:otherwise>
+                </c:choose>
             </tr>
         </c:forEach>
     </table>

@@ -79,16 +79,17 @@ public class StudentController {
                 .map(User::getUserId)
                 .collect(Collectors.toList());
         if (groupMatesIds.contains(groupMateId)) {
-            model.addAttribute("student", student);
+            User groupMate = userDao.findUser(groupMateId);
+            model.addAttribute("student", groupMate);
 
             if (student.getGroupId() != 0) {
                 Group group = groupDao.findGroup(student.getGroupId());
                 model.addAttribute("group", group);
             }
 
-            List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(studentId);
-            List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(studentId);
-            List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(studentId);
+            List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(groupMateId);
+            List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(groupMateId);
+            List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(groupMateId);
             model.addAttribute("openedQuizzes", openedQuizzes);
             model.addAttribute("passedQuizzes", passedQuizzes);
             model.addAttribute("closedQuizzes", closedQuizzes);

@@ -39,7 +39,17 @@
             <td>${group.name}</td>
         </tr>
     </table>
-    <h3>${student.firstName} passes next quizzes:</h3>
+    <c:choose>
+        <c:when test="${sessionScope.studentId ne null}">
+            <h3>${student.firstName} passes next quizzes:</h3>
+        </c:when>
+        <c:when test="${sessionScope.teacherId ne null}">
+            <h3>You gave ${student.firstName} next quizzes:</h3>
+        </c:when>
+        <c:otherwise>
+            <div class="error">SOME ERROR</div>
+        </c:otherwise>
+    </c:choose>
     <c:choose>
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="highlight-primary">

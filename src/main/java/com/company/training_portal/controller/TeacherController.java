@@ -11,7 +11,6 @@ import com.company.training_portal.validator.QuizValidator;
 import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,9 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -83,7 +80,11 @@ public class TeacherController {
 
     @RequestMapping("/teacher/groups")
     public String showTeacherGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
-        List<Group> groups = groupDao.findGroups(teacherId);
+        List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
+        List<Group> teacherGroups = groupDao.findGroups(teacherId);
+        List<Long> teacherGroupsIds = teacherGroups.stream()
+                .map(Group::getGroupId)
+                .collect(Collectors.toList());
         List<Integer> studentsNumber = new ArrayList<>();
         for (Group group : groups) {
             Long groupId = group.getGroupId();
@@ -91,13 +92,20 @@ public class TeacherController {
         }
 
         model.addAttribute("groups", groups);
+        model.addAttribute("teacherGroupsIds", teacherGroupsIds);
         model.addAttribute("studentsNumber", studentsNumber);
 
         return "teacher/teacher-groups";
     }
 
     @RequestMapping("/teacher/groups/{groupId}")
-    public String showGroupInfo(@PathVariable("groupId") Long groupId, Model model) {
+    public String showGroupInfo(@ModelAttribute("teacherId") Long teacherId,
+                                @PathVariable("groupId") Long groupId, Model model) {
+        List<Group> teacherGroups = groupDao.findGroups(teacherId);
+        List<Long> teacherGroupsIds = teacherGroups.stream()
+                .map(Group::getGroupId)
+                .collect(Collectors.toList());
+
         Group group = groupDao.findGroup(groupId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
         List<User> students = userDao.findStudents(groupId);
@@ -106,7 +114,11 @@ public class TeacherController {
         model.addAttribute("studentsNumber", studentsNumber);
         model.addAttribute("students", students);
 
-        return "teacher/group-info";
+        if (teacherGroupsIds.contains(groupId)) {
+            return "teacher/own-group-info";
+        } else {
+            return "teacher/foreign-group-info";
+        }
     }
 
     @RequestMapping("/teacher/quizzes")
@@ -121,25 +133,34 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}")
-    public String showTeacherQuiz(@PathVariable("quizId") Long quizId,
+    public String showTeacherQuiz(@ModelAttribute("teacherId") Long teacherId,
+                                  @PathVariable("quizId") Long quizId,
                                   Model model) {
         Quiz quiz = quizDao.findQuiz(quizId);
-        Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
+        List<Quiz> teacherQuizzes = quizDao.findTeacherQuizzes(teacherId);
+        List<Long> teacherQuizzesIds = teacherQuizzes.stream()
+                .map(Quiz::getQuizId)
+                .collect(Collectors.toList());
 
-        Map<String, Integer> stringQuestions = new HashMap<>();
-        questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
+        if (teacherQuizzesIds.contains(quiz.getQuizId())) {
+            Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
+            Map<String, Integer> stringQuestions = new HashMap<>();
+            questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
 
-        model.addAttribute("questions", stringQuestions);
+            model.addAttribute("questions", stringQuestions);
 
-        switch (quiz.getTeacherQuizStatus()) {
-            case UNPUBLISHED:
-                model.addAttribute("unpublishedQuiz", quiz);
-                return "teacher/unpublished-quiz";
-            case PUBLISHED:
-                model.addAttribute("publishedQuiz", quiz);
-                return "teacher/published-quiz";
+            switch (quiz.getTeacherQuizStatus()) {
+                case UNPUBLISHED:
+                    model.addAttribute("unpublishedQuiz", quiz);
+                    return "teacher/unpublished-quiz";
+                case PUBLISHED:
+                    model.addAttribute("publishedQuiz", quiz);
+                    return "teacher/published-quiz";
+            }
+            return "teacher/teacher";
+        } else {
+            return "access-denied";
         }
-        return "teacher/teacher";
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
@@ -389,7 +410,7 @@ public class TeacherController {
 
     @RequestMapping("/teacher/students/{studentId}")
     public String showStudent(@ModelAttribute("teacherId") Long teacherId,
-            @PathVariable("studentId") Long studentId, Model model) {
+                              @PathVariable("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         model.addAttribute("student", student);
 

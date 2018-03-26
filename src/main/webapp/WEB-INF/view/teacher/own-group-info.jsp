@@ -84,7 +84,11 @@
     <h3>Students</h3>
     <c:choose>
         <c:when test="${empty students}">
-            <div>There is no students in group.</div>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                There is no students in group
+            </div>
         </c:when>
         <c:otherwise>
             <table id="studentsTable" class="table">

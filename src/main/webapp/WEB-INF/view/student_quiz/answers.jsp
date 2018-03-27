@@ -38,7 +38,9 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <c:if test="${question.explanation ne null}">
+                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -71,7 +73,9 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <c:if test="${question.explanation ne null}">
+                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -100,7 +104,9 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <c:if test="${question.explanation ne null}">
+                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -128,7 +134,9 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <c:if test="${question.explanation ne null}">
+                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -153,7 +161,9 @@
                         <td>${quizAnswersNumber[question.questionId].correct}</td>
                     </tr>
                 </table>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <c:if test="${question.explanation ne null}">
+                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>

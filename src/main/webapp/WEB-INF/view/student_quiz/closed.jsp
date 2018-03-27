@@ -11,7 +11,7 @@
             var closedStudents = "${closedStudents}";
             var allStudents = "${allStudents}";
             var answers = $("#answers");
-            if (${isCommon} && closedStudents !== allStudents) { // Everything is OK
+            if ("${isCommon}" === "true" && closedStudents !== allStudents) {
                 var message = "You have to wait until all students in your group close this quiz. " +
                     "Closed students: ${closedStudents} / ${allStudents}";
                 answers.addClass("d-inline-block");

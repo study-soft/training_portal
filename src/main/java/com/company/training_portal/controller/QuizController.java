@@ -109,6 +109,7 @@ public class QuizController {
         return "redirect:/student/quizzes/" + quizId + "/passing";
     }
 
+    @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.GET)
     public String showCurrentQuestionGet(@ModelAttribute("studentId") Long studentId,
                                          @PathVariable("quizId") Long quizId,
@@ -142,7 +143,7 @@ public class QuizController {
         return "quiz_passing/question";
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "Duplicates"})
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.POST)
     public String showCurrentQuestionPost(@ModelAttribute("studentId") Long studentId,
                                           @RequestParam Map<String, String> studentAnswers,

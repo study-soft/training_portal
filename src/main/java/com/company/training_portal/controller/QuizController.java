@@ -373,7 +373,7 @@ public class QuizController {
 
     @RequestMapping("/teacher/quizzes/create")
     public String createQuiz(Model model) {
-
+        model.addAttribute("quiz", new Quiz());
         return "teacher/quiz-create";
     }
 

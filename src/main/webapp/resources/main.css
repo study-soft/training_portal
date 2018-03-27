@@ -131,6 +131,17 @@ h5, h6 {
     border: 2px solid #bbbdff;
 }
 
+.answer-delete {
+    border: 0;
+    padding: 10px;
+    background-color: #ccfcf5;
+    color: red;
+}
+
+.answer-delete:hover {
+    color: darkred;
+}
+
 .inline {
     display: inline;
 }
@@ -159,6 +170,10 @@ h5, h6 {
 
 .shifted-down {
     margin-top: 10px;
+}
+
+.margin-row {
+    margin: 10px 0;
 }
 
 /********************* ICONS ************************/
@@ -294,4 +309,12 @@ h5, h6 {
 .tooltip-inner {
     /* default 200px */
     max-width: 350px;
+}
+
+.is-valid {
+    background-color: #a7f9aa;
+}
+
+.is-invalid {
+    background-color: #ffc6c9;
 }

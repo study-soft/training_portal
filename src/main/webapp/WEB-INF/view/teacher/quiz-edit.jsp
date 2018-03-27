@@ -12,8 +12,6 @@
     <h2>Edit quiz</h2>
     <form:form action="/teacher/quizzes/${quiz.quizId}/edit" method="post" modelAttribute="quiz">
         <div class="form-group">
-            <%--<label for="name">Name<span class="error">*</span>:</label>--%>
-            <%--<input type="text" class="col col-md-6 form-control" id="name" name="name" value="${quiz.name}">--%>
             <form:label path="name" for="name">Name<span class="error">*</span>:</form:label>
             <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="Name"/>
             <form:errors path="name" cssClass="error"/>
@@ -36,18 +34,12 @@
             </div>
         </div>
         <div class="form-group">
-            <%--<label for="description">Description:</label>--%>
-            <%--<textarea class="col col-md-6 form-control" rows="6" name="description" id="description"--%>
-                      <%--placeholder="Description">${quiz.description}</textarea>--%>
             <form:label path="description" for="description">Description:</form:label>
             <form:textarea path="description" cssClass="col col-md-6 form-control"
                            rows="6" id="description" placeholder="Description"/>
             <form:errors path="description" cssClass="error"/>
         </div>
         <div class="form-group">
-            <%--<label for="explanation">Explanation:</label>--%>
-            <%--<textarea class="col col-md-6 form-control" rows="6" name="explanation" id="explanation"--%>
-                      <%--placeholder="Description">${quiz.explanation}</textarea>--%>
             <form:label path="explanation" for="explanation">Explanation</form:label>
             <form:textarea path="explanation" cssClass="col col-md-6 form-control"
                            rows="6" id="explanation" placeholder="Explanation"/>

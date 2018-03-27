@@ -193,25 +193,24 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_common_group_quizzes_by_groupId() {
-        List<Long> testCommonGroupQuizzes = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
+    public void test_find_common_group_quiz_ids_by_groupId() {
+        List<Long> testCommonGroupQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
 
-        List<Long> commonGroupQuizzes = quizDao.findCommonGroupQuizIds(1L);
+        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(1L);
 
-        assertEquals(testCommonGroupQuizzes, commonGroupQuizzes);
+        assertEquals(testCommonGroupQuizIds, commonGroupQuizIds);
     }
 
     @Test
-    public void test_find_passed_and_finished_group_quizzes() {
-        List<Quiz> testQuizzes = new ArrayList<>();
-        testQuizzes.add(quizDao.findQuiz(3L));
-        testQuizzes.add(quizDao.findQuiz(2L));
-        testQuizzes.add(quizDao.findQuiz(4L));
-        testQuizzes.add(quizDao.findQuiz(1L));
+    public void test_find_common_group_quizzes_by_groupId_and_teacherId() {
+        List<Quiz> testCommonGroupQuizzes = new ArrayList<>();
+        testCommonGroupQuizzes.add(quizDao.findQuiz(1L));
+        testCommonGroupQuizzes.add(quizDao.findQuiz(2L));
+        testCommonGroupQuizzes.add(quizDao.findQuiz(5L));
 
-        List<Quiz> quizzes = quizDao.findPassedAndClosedGroupQuizzes(1L);
+        List<Quiz> commonGroupQuizzes = quizDao.findCommonGroupQuizzes(1L, 1L);
 
-        assertEquals(testQuizzes, quizzes);
+        assertEquals(testCommonGroupQuizzes, commonGroupQuizzes);
     }
 
     @Test
@@ -258,6 +257,16 @@ public class QuizDaoJdbcTest {
         StudentQuizStatus studentQuizStatus
                 = quizDao.findStudentQuizStatus(5L, 5L);
         assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
+    }
+
+    @Test
+    public void test_find_closing_date_by_groupId_and_quizId() {
+        LocalDateTime testClosingDate =
+                LocalDateTime.of(2018, 3, 27, 10,35,55);
+
+        LocalDateTime closingDate = quizDao.findClosingDate(1L, 3L);
+
+        assertEquals(testClosingDate, closingDate);
     }
 
     @Test

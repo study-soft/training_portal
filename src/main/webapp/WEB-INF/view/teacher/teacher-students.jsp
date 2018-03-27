@@ -8,7 +8,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Students</h2>
+    <h2>Students which are passing your quizzes</h2>
     <form>
         <div class="row">
             <div class="col-4">
@@ -34,5 +34,6 @@
     </table>
     <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
+<br>
 </body>
 </html>

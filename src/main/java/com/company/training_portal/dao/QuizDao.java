@@ -40,8 +40,7 @@ public interface QuizDao {
 
     List<Long> findCommonGroupQuizIds(Long groupId);
 
-    @Deprecated
-    List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId);
+    List<Quiz> findCommonGroupQuizzes(Long groupId, Long teacherId);
 
     Integer findResult(Long studentId, Long quizId);
 
@@ -54,6 +53,8 @@ public interface QuizDao {
     Integer findAttempt(Long studentId, Long quizId);
 
     StudentQuizStatus findStudentQuizStatus(Long studentId, Long quizId);
+
+    LocalDateTime findClosingDate(Long groupId, Long quizId);
 
     OpenedQuiz findOpenedQuiz(Long studentId, Long quizId);
 

@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -396,36 +397,71 @@ public class TeacherController {
     @RequestMapping("/teacher/results")
     public String showResults(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
-        List<User> students = userDao.findStudentsWithoutGroup(teacherId);
-
         model.addAttribute("groups", groups);
-        model.addAttribute("students", students);
+
+        List<User> teacherSingleStudents = new ArrayList<>();
+        List<Group> singleStudentGroups = new ArrayList<>();
+        List<User> teacherStudents = userDao.findStudentsByTeacherId(teacherId);
+        for (User student : teacherStudents) {
+            List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
+            List<Long> studentQuizIds = quizDao.findQuizzes(student.getUserId(), teacherId)
+                    .stream()
+                    .map(Quiz::getQuizId)
+                    .collect(Collectors.toList());
+            if (!commonGroupQuizIds.containsAll(studentQuizIds)) {
+                teacherSingleStudents.add(student);
+                Long groupId = student.getGroupId();
+                if (groupId == 0) {
+                    singleStudentGroups.add(null);
+                } else {
+                    singleStudentGroups.add(groupDao.findGroup(groupId));
+                }
+            }
+        }
+
+        model.addAttribute("singleStudentGroups", singleStudentGroups);
+        model.addAttribute("students", teacherSingleStudents);
 
         return "teacher/teacher-results";
     }
 
     @RequestMapping("/teacher/results/group/{groupId}")
-    public String showGroupQuizzes(@ModelAttribute("teacherId") Long teacherId,
+    public String showGroupResults(@ModelAttribute("teacherId") Long teacherId,
                                    @PathVariable("groupId") Long groupId, Model model) {
-        List<Quiz> quizzes = quizDao.findTeacherQuizzes(teacherId, PUBLISHED);
-        model.addAttribute("quizzes", quizzes);
+        List<Quiz> quizzes = quizDao.findCommonGroupQuizzes(groupId, teacherId);
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        model.addAttribute("studentsNumber", studentsNumber);
 
+        List<Quiz> closedQuizzes = new ArrayList<>();
+        List<LocalDateTime> closingDates = new ArrayList<>();
         List<Map<String, Integer>> students = new ArrayList<>();
+
         for (Quiz quiz : quizzes) {
             Long quizId = quiz.getQuizId();
-            Map<StudentQuizStatus, Integer> enumMap =
-                    quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
-            Map<String, Integer> stringMap = new HashMap<>();
-            enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
-            students.add(stringMap);
+            Integer closedStudents =
+                    userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
+            if (closedStudents.equals(studentsNumber)) {
+                closedQuizzes.add(quiz);
+                LocalDateTime closingDate = quizDao.findClosingDate(groupId, quizId);
+                closingDates.add(closingDate);
+            } else {
+                Map<StudentQuizStatus, Integer> enumMap =
+                        quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
+                Map<String, Integer> stringMap = new HashMap<>();
+                enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
+                students.add(stringMap);
+            }
         }
+        quizzes.removeAll(closedQuizzes);
+        List<Quiz> passedQuizzes = new ArrayList<>(quizzes);
+
+        model.addAttribute("closedQuizzes", closedQuizzes);
+        model.addAttribute("closingDates", closingDates);
         model.addAttribute("students", students);
+        model.addAttribute("passedQuizzes", passedQuizzes);
 
         Group group = groupDao.findGroup(groupId);
         model.addAttribute("group", group);
-
-        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
-        model.addAttribute("studentsNumber", studentsNumber);
 
         return "/teacher/results-group";
     }

@@ -188,19 +188,12 @@ public class QuizDaoJdbc implements QuizDao {
         return quizzes;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Long> findCommonGroupQuizIds(Long groupId) {
-        List<Long> allQuizIds = new ArrayList<>();
-        template.query(FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID,
-                new Object[]{groupId}, new ResultSetExtractor<List<Long>>() {
-                    @Override
-                    public List<Long> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        while (rs.next()) {
-                            allQuizIds.add(rs.getLong(1));
-                        }
-                        return allQuizIds;
-                    }
-                });
+        List<Long> allQuizIds = template.queryForList(
+                FIND_ALL_GROUP_QUIZ_IDS_BY_GROUP_ID,
+                new Object[]{groupId}, Long.class);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
         List<Long> commonGroupQuizIds = new ArrayList<>();
         Set<Long> uniqueQuizIds = new HashSet<>(allQuizIds);
@@ -215,12 +208,21 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId) {
-        List<Quiz> quizzes = template.query(FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID,
-                new Object[]{groupId}, this::mapQuiz);
-        logger.info("Found passed and closed quizzes by groupId:");
-        quizzes.forEach(logger::info);
-        return quizzes;
+    public List<Quiz> findCommonGroupQuizzes(Long groupId, Long teacherId) {
+        List<Long> allQuizIds = template.queryForList(
+                FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID,
+                new Object[]{groupId, teacherId}, Long.class);
+        Integer studentNumber = groupDao.findStudentsNumberInGroup(groupId);
+        List<Quiz> commonGroupQuizzes = new ArrayList<>();
+        Set<Long> uniqueQuizIds = new HashSet<>(allQuizIds);
+        for (Long quizId : uniqueQuizIds) {
+            if (Collections.frequency(allQuizIds, quizId) == studentNumber) {
+                commonGroupQuizzes.add(findQuiz(quizId));
+            }
+        }
+        logger.info("Found all common group quizzes by groupId '" + groupId + "' and teacherId '" + teacherId +"':");
+        commonGroupQuizzes.forEach(logger::info);
+        return commonGroupQuizzes;
     }
 
     @Transactional(readOnly = true)
@@ -280,6 +282,15 @@ public class QuizDaoJdbc implements QuizDao {
                 new Object[]{studentId, quizId}, String.class));
         logger.info("StudentQuizStatus by studentId and quizId found: " + studentQuizStatus);
         return studentQuizStatus;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public LocalDateTime findClosingDate(Long groupId, Long quizId) {
+        LocalDateTime closingDate = template.queryForObject(FIND_CLOSING_DATE_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, LocalDateTime.class);
+        logger.info("Found closing date by groupId '" + groupId + "' and quizId '" + quizId + "':");
+        return closingDate;
     }
 
     @Transactional(readOnly = true)
@@ -649,12 +660,8 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID =
-    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
-    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
-    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
-    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
-    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS, COUNT(QUIZZES.QUIZ_ID) " +
+    private static final String FIND_ALL_GROUP_QUIZ_IDS_BY_GROUP_ID =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
@@ -662,16 +669,12 @@ public class QuizDaoJdbc implements QuizDao {
     "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
-    private static final String FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID =
-    "SELECT DISTINCT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
-    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
-    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
-    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
-    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
+    private static final String FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID =
+    "SELECT QUIZZES.QUIZ_ID " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE USERS.GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'CLOSED') " +
+    "WHERE USERS.GROUP_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
@@ -692,6 +695,12 @@ public class QuizDaoJdbc implements QuizDao {
 
     private static final String FIND_STUDENT_QUIZ_STATUS_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT STUDENT_QUIZ_STATUS FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";
+
+    private static final String FIND_CLOSING_DATE_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT MAX(J.FINISH_DATE) " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ?;";
 
     private static final String FIND_OPENED_QUIZ_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT QUIZZES.QUIZ_ID AS quiz_id, QUIZZES.NAME AS quiz_name, QUIZZES.DESCRIPTION AS description, " +

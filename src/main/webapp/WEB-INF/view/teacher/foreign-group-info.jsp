@@ -47,5 +47,6 @@
     </c:choose>
     <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
 </div>
+<br>
 </body>
 </html>

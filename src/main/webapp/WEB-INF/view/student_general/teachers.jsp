@@ -15,6 +15,7 @@
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
+    <br>
     <c:choose>
         <c:when test="${empty teachers}">
             <div class="highlight-primary">

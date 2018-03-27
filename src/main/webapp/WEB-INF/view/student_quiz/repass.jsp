@@ -38,10 +38,12 @@
     </table>
     <h3>Information about passing</h3>
     <table class="col-6 table-info">
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${passedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${passedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${passedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Number of questions</td>
             <td>${passedQuiz.questionsNumber}</td>

@@ -11,7 +11,7 @@
             var closedStudents = "${closedStudents}";
             var allStudents = "${allStudents}";
             var answers = $("#answers");
-            if (closedStudents !== allStudents) {
+            if (${isCommon} && closedStudents !== allStudents) { // Everything is OK
                 var message = "You have to wait until all students in your group close this quiz. " +
                     "Closed students: ${closedStudents} / ${allStudents}";
                 answers.addClass("d-inline-block");
@@ -89,10 +89,12 @@
             <td>Submitted</td>
             <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
         </tr>
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${closedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${closedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${closedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Number of questions</td>
             <td>${closedQuiz.questionsNumber}</td>
@@ -114,7 +116,9 @@
             <a href="/student/quizzes/${closedQuiz.quizId}/answers"
                class="btn btn-primary disabled"><i class="fa fa-ban error"></i> Answers</a>
         </span>
-    <a href="/student/compare-results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
+    <c:if test="${isCommon}">
+        <a href="/student/results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
+    </c:if>
 </div>
 <br>
 </body>

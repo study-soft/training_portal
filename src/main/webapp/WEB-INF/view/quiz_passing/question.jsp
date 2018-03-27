@@ -38,7 +38,9 @@
                 Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
             </div>
             <div class="col-4">
-                Time left: <duration:format value="${sessionScope.timeLeft}"/>
+                <c:if test="${sessionScope.timeLeft ne null}">
+                    Time left: <duration:format value="${sessionScope.timeLeft}"/>
+                </c:if>
             </div>
         </div>
         <div class="row">

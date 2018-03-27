@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
-import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -148,7 +148,7 @@ public class QuizDaoJdbcTest {
         testResults.put(StudentQuizStatus.CLOSED, 1);
 
         Map<StudentQuizStatus, Integer> results
-                = quizDao.findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
+                = quizDao.findStudentsNumberWithStudentQuizStatus(
                 1L, 1L, 1L);
 
         assertEquals(testResults, results);
@@ -190,6 +190,15 @@ public class QuizDaoJdbcTest {
 
         List<Quiz> quizzes = quizDao.findQuizzes(3L, 1L);
         assertEquals(testQuizzes, quizzes);
+    }
+
+    @Test
+    public void test_find_common_group_quizzes_by_groupId() {
+        List<Long> testCommonGroupQuizzes = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
+
+        List<Long> commonGroupQuizzes = quizDao.findCommonGroupQuizIds(1L);
+
+        assertEquals(testCommonGroupQuizzes, commonGroupQuizzes);
     }
 
     @Test

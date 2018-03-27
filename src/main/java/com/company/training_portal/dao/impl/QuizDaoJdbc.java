@@ -1,5 +1,6 @@
 package com.company.training_portal.dao.impl;
 
+import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
@@ -23,12 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 
@@ -39,16 +39,19 @@ public class QuizDaoJdbc implements QuizDao {
 
     private QuestionDao questionDao;
     private UserDao userDao;
+    private GroupDao groupDao;
 
     private static final Logger logger = Logger.getLogger(QuizDaoJdbc.class);
 
     @Autowired
     public QuizDaoJdbc(DataSource dataSource,
                        QuestionDao questionDao,
-                       UserDao userDao) {
+                       UserDao userDao,
+                       GroupDao groupDao) {
         template = new JdbcTemplate(dataSource);
         this.questionDao = questionDao;
         this.userDao = userDao;
+        this.groupDao = groupDao;
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +116,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
+    public Map<StudentQuizStatus, Integer> findStudentsNumberWithStudentQuizStatus(
             Long authorId, Long groupId, Long quizId) {
         Map<StudentQuizStatus, Integer> results = new HashMap<>();
         template.query(
@@ -183,6 +186,31 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("Found quizzes by studentId and authorId:");
         quizzes.forEach(logger::info);
         return quizzes;
+    }
+
+    @Override
+    public List<Long> findCommonGroupQuizIds(Long groupId) {
+        List<Long> allQuizIds = new ArrayList<>();
+        template.query(FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID,
+                new Object[]{groupId}, new ResultSetExtractor<List<Long>>() {
+                    @Override
+                    public List<Long> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        while (rs.next()) {
+                            allQuizIds.add(rs.getLong(1));
+                        }
+                        return allQuizIds;
+                    }
+                });
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        List<Long> commonGroupQuizIds = new ArrayList<>();
+        Set<Long> uniqueQuizIds = new HashSet<>(allQuizIds);
+        for (Long quizId : uniqueQuizIds) {
+            if (Collections.frequency(allQuizIds, quizId) == studentsNumber) {
+                commonGroupQuizIds.add(quizId);
+            }
+        }
+        logger.info("Found all common group quizzes by groupId '" + groupId + "': " + commonGroupQuizIds);
+        return commonGroupQuizIds;
     }
 
     @Transactional(readOnly = true)
@@ -399,7 +427,7 @@ public class QuizDaoJdbc implements QuizDao {
                 stmt.setString(2, quiz.getDescription());
                 stmt.setString(3, quiz.getExplanation());
                 stmt.setDate(4, Date.valueOf(quiz.getCreationDate()));
-                stmt.setTime(5,
+                stmt.setTime(5, quiz.getPassingTime() == null ? null :
                         Time.valueOf(LocalTime.MIDNIGHT.plus(quiz.getPassingTime())));
                 stmt.setLong(6, quiz.getAuthorId());
                 stmt.setString(7, quiz.getTeacherQuizStatus().getTeacherQuizStatus());
@@ -484,7 +512,8 @@ public class QuizDaoJdbc implements QuizDao {
                 .description(rs.getString("description"))
                 .explanation(rs.getString("explanation"))
                 .creationDate(rs.getDate("creation_date").toLocalDate())
-                .passingTime(Duration.between(LocalTime.MIDNIGHT,
+                .passingTime(rs.getTime("passing_time") == null ? null :
+                        Duration.between(LocalTime.MIDNIGHT,
                         rs.getTime("passing_time").toLocalTime()))
                 .authorId(rs.getLong("author_id"))
                 .score(rs.getInt("score"))
@@ -499,7 +528,8 @@ public class QuizDaoJdbc implements QuizDao {
                 .quizId(rs.getLong("quiz_id"))
                 .quizName(rs.getString("quiz_name"))
                 .description(rs.getString("description"))
-                .passingTime(Duration.between(LocalTime.MIDNIGHT,
+                .passingTime(rs.getTime("passing_time") == null ? null :
+                        Duration.between(LocalTime.MIDNIGHT,
                         rs.getTime("passing_time").toLocalTime()))
                 .authorName(userDao.findUserName(rs.getLong("author_id")))
                 .questionsNumber(rs.getInt("questions_number"))
@@ -519,8 +549,9 @@ public class QuizDaoJdbc implements QuizDao {
                 .score(rs.getInt("score"))
                 .questionsNumber(rs.getInt("questions_number"))
                 .attempt(rs.getInt("attempt"))
-                .passingTime(Duration.between(LocalTime.MIDNIGHT,
-                        rs.getTime("passing_time").toLocalTime()))
+                .passingTime(rs.getTime("passing_time") == null ? null :
+                        Duration.between(LocalTime.MIDNIGHT,
+                                rs.getTime("passing_time").toLocalTime()))
                 .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
                 .finishDate(rs.getTimestamp("finish_date").toLocalDateTime())
                 .timeSpent(Duration.ofSeconds(rs.getLong("time_spent")))
@@ -618,6 +649,19 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
+    private static final String FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID =
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
+    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
+    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS, COUNT(QUIZZES.QUIZ_ID) " +
+    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
+    "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
+    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "WHERE USERS.GROUP_ID = ? " +
+    "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
+    "ORDER BY QUIZZES.NAME;";
+
     private static final String FIND_PASSED_AND_CLOSED_QUIZZES_BY_GROUP_ID =
     "SELECT DISTINCT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
@@ -627,7 +671,7 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
     "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'CLOSED') " +
+    "WHERE USERS.GROUP_ID = ? AND (STUDENT_QUIZ_STATUS = 'PASSED' OR STUDENT_QUIZ_STATUS = 'CLOSED') " +
     "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 

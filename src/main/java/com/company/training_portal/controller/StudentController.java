@@ -87,9 +87,23 @@ public class StudentController {
                 model.addAttribute("group", group);
             }
 
-            List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(groupMateId);
-            List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(groupMateId);
-            List<PassedQuiz> closedQuizzes = quizDao.findClosedQuizzes(groupMateId);
+            List<OpenedQuiz> openedQuizzes = new ArrayList<>();
+            List<PassedQuiz> passedQuizzes = new ArrayList<>();
+            List<PassedQuiz> closedQuizzes = new ArrayList<>();
+            List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
+            for (Long quizId : commonGroupQuizIds) {
+                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+                switch (status) {
+                    case OPENED:
+                        openedQuizzes.add(quizDao.findOpenedQuiz(studentId, quizId));
+                        break;
+                    case PASSED:
+                        passedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
+                        break;
+                    case CLOSED:
+                        closedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
+                }
+            }
             model.addAttribute("openedQuizzes", openedQuizzes);
             model.addAttribute("passedQuizzes", passedQuizzes);
             model.addAttribute("closedQuizzes", closedQuizzes);
@@ -174,6 +188,15 @@ public class StudentController {
     public String showStudentQuiz(@ModelAttribute("studentId") Long studentId,
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
+        User student = userDao.findUser(studentId);
+        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
+
+        if (commonGroupQuizIds.contains(quizId)) {
+            model.addAttribute("isCommon", true);
+        } else {
+            model.addAttribute("isCommon", false);
+        }
+
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         switch (status) {
             case OPENED:
@@ -208,6 +231,25 @@ public class StudentController {
 
     @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+
+        List<PassedQuiz> commonPassedQuizzes = new ArrayList<>();
+        List<PassedQuiz> commonClosedQuizzes = new ArrayList<>();
+        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
+        for (Long quizId : commonGroupQuizIds) {
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+            switch (status) {
+                case PASSED:
+                    commonPassedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
+                    break;
+                case CLOSED:
+                    commonClosedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
+            }
+        }
+
+        model.addAttribute("commonPassedQuizzes", commonPassedQuizzes);
+        model.addAttribute("commonClosedQuizzes", commonClosedQuizzes);
+
         List<PassedQuiz> passedQuizzes =
                 quizDao.findPassedQuizzes(studentId);
         model.addAttribute("passedQuizzes", passedQuizzes);
@@ -219,7 +261,7 @@ public class StudentController {
         return "student_general/results";
     }
 
-    @RequestMapping("/student/compare-results/{quizId}")
+    @RequestMapping("/student/results/{quizId}")
     public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {

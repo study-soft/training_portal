@@ -62,10 +62,12 @@
             <td>Submitted</td>
             <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
         </tr>
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${passedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${passedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${passedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Number of questions</td>
             <td>${passedQuiz.questionsNumber}</td>
@@ -85,7 +87,9 @@
         <div class="non-first-row">Also you can try again but score will be less</div>
     </div>
     <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    <a href="/student/compare-results/${passedQuiz.quizId}" class="btn btn-primary">Results</a>
+    <c:if test="${isCommon}">
+        <a href="/student/results/${passedQuiz.quizId}" class="btn btn-primary">Results</a>
+    </c:if>
     <a href="/student/quizzes/${passedQuiz.quizId}/repass" id="repass" class="btn btn-success">Repass</a>
     <form class="inline" action="/student/quizzes/${passedQuiz.quizId}" method="post">
         <input type="submit" value="Close" class="btn btn-success">

@@ -103,7 +103,7 @@ CREATE TABLE user_quiz_junctions (
   user_id bigint NOT NULL,
   quiz_id bigint NOT NULL,
   result int NULL,
-  submit_date datetime NULL,
+  submit_date datetime NOT NULL,
   start_date datetime NULL,
   finish_date datetime NULL,
   attempt int NOT NULL,

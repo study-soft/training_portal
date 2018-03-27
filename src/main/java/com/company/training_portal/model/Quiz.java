@@ -126,11 +126,12 @@ public class Quiz {
         if (description != null ? !description.equals(quiz.description) : quiz.description != null) return false;
         if (explanation != null ? !explanation.equals(quiz.explanation) : quiz.explanation != null) return false;
         if (!creationDate.equals(quiz.creationDate)) return false;
-        if (!passingTime.equals(quiz.passingTime)) return false;
+        if (passingTime != null ? !passingTime.equals(quiz.passingTime) : quiz.passingTime != null) return false;
         if (!authorId.equals(quiz.authorId)) return false;
-        if (questionsNumber != null ? !questionsNumber.equals(quiz.questionsNumber) : quiz.questionsNumber!= null) return false;
+        if (questionsNumber != null ? !questionsNumber.equals(quiz.questionsNumber) : quiz.questionsNumber != null)
+            return false;
         if (score != null ? !score.equals(quiz.score) : quiz.score != null) return false;
-        return teacherQuizStatus.equals(quiz.teacherQuizStatus);
+        return teacherQuizStatus == quiz.teacherQuizStatus;
     }
 
     @Override
@@ -140,10 +141,10 @@ public class Quiz {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (explanation != null ? explanation.hashCode() : 0);
         result = 31 * result + creationDate.hashCode();
-        result = 31 * result + passingTime.hashCode();
+        result = 31 * result + (passingTime != null ? passingTime.hashCode() : 0);
         result = 31 * result + authorId.hashCode();
-        result = 31 * result + questionsNumber.hashCode();
-        result = 31 * result + score.hashCode();
+        result = 31 * result + (questionsNumber != null ? questionsNumber.hashCode() : 0);
+        result = 31 * result + (score != null ? score.hashCode() : 0);
         result = 31 * result + teacherQuizStatus.hashCode();
         return result;
     }

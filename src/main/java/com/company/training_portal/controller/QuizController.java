@@ -126,16 +126,18 @@ public class QuizController {
 
         setAnswers(currentQuestionType, currentQuestionId, session, model);
 
-        LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
-        LocalDateTime currentTime = LocalDateTime.now();
-        Duration studentPassingTime = Duration.between(startTime, currentTime);
-        Duration passingTime = quiz.getPassingTime();
-        if (studentPassingTime.compareTo(passingTime) > 0) {
-            model.clear();
-            return "redirect:/student/quizzes/" + quizId + "/time-up";
+        if (quiz.getPassingTime() != null) {
+            LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
+            LocalDateTime currentTime = LocalDateTime.now();
+            Duration studentPassingTime = Duration.between(startTime, currentTime);
+            Duration passingTime = quiz.getPassingTime();
+            if (studentPassingTime.compareTo(passingTime) > 0) {
+                model.clear();
+                return "redirect:/student/quizzes/" + quizId + "/time-up";
+            }
+            Duration timeLeft = passingTime.minus(studentPassingTime);
+            session.setAttribute(TIME_LEFT, timeLeft);
         }
-        Duration timeLeft = passingTime.minus(studentPassingTime);
-        session.setAttribute(TIME_LEFT, timeLeft);
 
         return "quiz_passing/question";
     }
@@ -153,16 +155,18 @@ public class QuizController {
                                           HttpSession session, ModelMap model) {
         session.setAttribute(CURRENT_QUESTION_SERIAL, ++currentQuestionSerial);
 
-        LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
-        LocalDateTime currentTime = LocalDateTime.now();
-        Duration studentPassingTime = Duration.between(startTime, currentTime);
-        Duration passingTime = quiz.getPassingTime();
-        if (studentPassingTime.compareTo(passingTime) > 0) {
-            model.clear();
-            return "redirect:/student/quizzes/" + quizId + "/time-up";
+        if (quiz.getPassingTime() != null) {
+            LocalDateTime startTime = quizDao.findStartDate(studentId, quizId);
+            LocalDateTime currentTime = LocalDateTime.now();
+            Duration studentPassingTime = Duration.between(startTime, currentTime);
+            Duration passingTime = quiz.getPassingTime();
+            if (studentPassingTime.compareTo(passingTime) > 0) {
+                model.clear();
+                return "redirect:/student/quizzes/" + quizId + "/time-up";
+            }
+            Duration timeLeft = passingTime.minus(studentPassingTime);
+            session.setAttribute(TIME_LEFT, timeLeft);
         }
-        Duration timeLeft = passingTime.minus(studentPassingTime);
-        session.setAttribute(TIME_LEFT, timeLeft);
 
         Question prevQuestion = questions.get(currentQuestionSerial - 1);
         QuestionType prevQuestionType = prevQuestion.getQuestionType();

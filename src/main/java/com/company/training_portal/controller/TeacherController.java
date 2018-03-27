@@ -6,6 +6,7 @@ import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.util.Utils;
 import com.company.training_portal.validator.QuizValidator;
 import com.company.training_portal.validator.UserValidator;
@@ -404,8 +405,29 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/results/group/{groupId}")
-    public String showGroupQuizzes(@PathVariable("groupId") Long groupId, Model model) {
-        return "";
+    public String showGroupQuizzes(@ModelAttribute("teacherId") Long teacherId,
+                                   @PathVariable("groupId") Long groupId, Model model) {
+        List<Quiz> quizzes = quizDao.findTeacherQuizzes(teacherId, PUBLISHED);
+        model.addAttribute("quizzes", quizzes);
+
+        List<Map<String, Integer>> students = new ArrayList<>();
+        for (Quiz quiz : quizzes) {
+            Long quizId = quiz.getQuizId();
+            Map<StudentQuizStatus, Integer> enumMap =
+                    quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
+            Map<String, Integer> stringMap = new HashMap<>();
+            enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
+            students.add(stringMap);
+        }
+        model.addAttribute("students", students);
+
+        Group group = groupDao.findGroup(groupId);
+        model.addAttribute("group", group);
+
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        model.addAttribute("studentsNumber", studentsNumber);
+
+        return "/teacher/results-group";
     }
 
     @RequestMapping("/teacher/students/{studentId}")

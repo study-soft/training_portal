@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -43,7 +44,14 @@
                         <td>${passedQuiz.attempt}</td>
                         <td><duration:format value="${passedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                        <td><a href="/student/compare-results/${passedQuiz.quizId}">Compare</a></td>
+                        <c:choose>
+                            <c:when test="${fn:contains(commonPassedQuizzes, passedQuiz)}">
+                                <td><a href="/student/results/${passedQuiz.quizId}">Compare</a></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
                     </tr>
                 </c:forEach>
             </table>
@@ -75,7 +83,14 @@
                         <td>${closedQuiz.attempt}</td>
                         <td><duration:format value="${closedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
-                        <td><a href="/student/compare-results/${closedQuiz.quizId}">Compare</a></td>
+                        <c:choose>
+                            <c:when test="${fn:contains(commonClosedQuizzes, closedQuiz)}">
+                                <td><a href="/student/results/${closedQuiz.quizId}">Compare</a></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
                     </tr>
                 </c:forEach>
             </table>

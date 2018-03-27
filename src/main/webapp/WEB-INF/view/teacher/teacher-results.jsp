@@ -18,7 +18,7 @@
                 </tr>
                 <c:forEach items="${groups}" var="group">
                     <tr>
-                        <td><a href="#">${group.name}</a></td>
+                        <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
                     </tr>
                 </c:forEach>
             </table>

@@ -28,10 +28,10 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 30%">Name</th>
+                    <th style="width: 27.5%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 10%">Score</th>
-                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 22.5%">Submit date</th>
                     <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
@@ -58,10 +58,10 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 30%">Name</th>
+                    <th style="width: 27.5%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 10%">Score</th>
-                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 22.5%">Submit date</th>
                     <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
@@ -88,10 +88,10 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 30%">Name</th>
+                    <th style="width: 27.5%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 10%">Score</th>
-                    <th style="width: 20%">Submit date</th>
+                    <th style="width: 22.5%">Submit date</th>
                     <th style="width: 30%">Author</th>
                 </tr>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">

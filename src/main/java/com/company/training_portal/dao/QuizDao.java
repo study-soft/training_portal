@@ -27,7 +27,7 @@ public interface QuizDao {
     Integer findQuizzesNumber(Long authorId);
 
     // key: studentQuizStatus, value: number of students
-    Map<StudentQuizStatus, Integer> findStudentsNumberByAuthorIdAndGroupIdAndQuizIdWithStudentQuizStatus(
+    Map<StudentQuizStatus, Integer> findStudentsNumberWithStudentQuizStatus(
             Long authorId, Long groupId, Long quizId);
 
     // key: teacherQuizStatus, value: number of quizzes
@@ -38,6 +38,9 @@ public interface QuizDao {
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
+    List<Long> findCommonGroupQuizIds(Long groupId);
+
+    @Deprecated
     List<Quiz> findPassedAndClosedGroupQuizzes(Long groupId);
 
     Integer findResult(Long studentId, Long quizId);

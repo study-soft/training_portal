@@ -11,10 +11,12 @@
 <div class="container">
     <h2>${openedQuiz.quizName}</h2>
     <table class="col-6 table-info">
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${openedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${openedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${openedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Number of questions</td>
             <td>${openedQuiz.questionsNumber}</td>

@@ -35,16 +35,20 @@
         This quiz is opened
     </div>
     <h3>Information about quiz</h3>
-    <div class="col-6"><strong>Description: </strong>${openedQuiz.description}</div>
+    <c:if test="${openedQuiz.description ne null}">
+        <div class="col-6"><strong>Description: </strong>${openedQuiz.description}</div>
+    </c:if>
     <table class="col-6 table-info">
         <tr>
             <td>Submitted</td>
             <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
         </tr>
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${openedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${openedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${openedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Total score</td>
             <td>${openedQuiz.score}</td>

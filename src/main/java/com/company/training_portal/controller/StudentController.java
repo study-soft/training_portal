@@ -262,6 +262,7 @@ public class StudentController {
     }
 
     @RequestMapping("/student/results/{quizId}")
+    @SuppressWarnings("Duplicates")
     public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {

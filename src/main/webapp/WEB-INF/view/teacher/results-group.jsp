@@ -9,16 +9,24 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${group.name}</h2>
-    <div>Number of students: ${studentsNumber}</div>
+    <h2><a href="/teacher/groups/${group.groupId}">${group.name}</a></h2>
+    <div class="col-6">
+        <table class="table-info">
+            <tr>
+                <td>Number of students</td>
+                <td>${studentsNumber}</td>
+            </tr>
+        </table>
+    </div>
     <c:if test="${not empty passedQuizzes}">
         <h3>Progress of passed quizzes</h3>
         <table class="table">
             <tr>
-                <th style="width: 25%">Name</th>
-                <th style="width: 25%">Opened students</th>
-                <th style="width: 25%;">Passed students</th>
-                <th style="width: 25%">Closed students</th>
+                <th style="width: 30%">Name</th>
+                <th style="width: 18.33%;">Opened students</th>
+                <th style="width: 18.33%;">Passed students</th>
+                <th style="width: 18.33%;">Closed students</th>
+                <th style="width: 15%"></th>
             </tr>
             <c:forEach items="${passedQuizzes}" var="passedQuiz" varStatus="status">
                 <c:set var="map" value="${students[status.index]}"/>
@@ -29,6 +37,7 @@
                     <td>${map['OPENED']}</td>
                     <td>${map['PASSED']}</td>
                     <td>${map['CLOSED']}</td>
+                    <td><a href="#" class="danger"><i class="fa fa-close"></i> Close all</a></td>
                 </tr>
             </c:forEach>
         </table>

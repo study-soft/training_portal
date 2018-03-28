@@ -41,9 +41,21 @@
                         <td>${unpublishedQuiz.questionsNumber}</td>
                         <td>${unpublishedQuiz.score}</td>
                         <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>
-                        <td><a href="#"><i class="fa fa-share-square-o"></i> Publish</a></td>
-                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
-                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
+                        <td>
+                            <a href="#" class="success">
+                                <i class="fa fa-share-square-o"></i> Publish
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete" class="danger">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -69,7 +81,11 @@
                         <td>${publishedQuiz.questionsNumber}</td>
                         <td>${publishedQuiz.score}</td>
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
-                        <td class="text-center"><a href="#"><i class="fa fa-close"></i> Unpublish</a></td>
+                        <td class="text-center">
+                            <a href="#" class="danger">
+                                <i class="fa fa-close"></i> Unpublish
+                            </a>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -78,5 +94,6 @@
     <button class="btn btn-primary" value="Back" onclick="window.history.go(-1);">Back</button>
     <br>
 </div>
+<br>
 </body>
 </html>

@@ -1,12 +1,11 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
+import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
-import com.company.training_portal.model.OpenedQuiz;
-import com.company.training_portal.model.PassedQuiz;
-import com.company.training_portal.model.Question;
-import com.company.training_portal.model.Quiz;
+import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 import org.junit.Test;
@@ -21,12 +20,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
+import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -47,12 +46,26 @@ public class QuizDaoJdbcTest {
     @Autowired
     private QuestionDao questionDao;
 
+    @Autowired
+    private GroupDao groupDao;
+
+    @Autowired
+    private UserDao userDao;
+
     public void setQuizDao(QuizDao quizDao) {
         this.quizDao = quizDao;
     }
 
     public void setQuestionDao(QuestionDao questionDao) {
         this.questionDao = questionDao;
+    }
+
+    public void setGroupDao(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Test
@@ -144,8 +157,9 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_students_number_by_authorId_and_groupId_and_quizId_with_studentQuizStatus() {
         Map<StudentQuizStatus, Integer> testResults = new HashMap<>();
-        testResults.put(StudentQuizStatus.PASSED, 1);
-        testResults.put(StudentQuizStatus.CLOSED, 1);
+        testResults.put(OPENED, 1);
+        testResults.put(PASSED, 2);
+        testResults.put(CLOSED, 3);
 
         Map<StudentQuizStatus, Integer> results
                 = quizDao.findStudentsNumberWithStudentQuizStatus(
@@ -155,9 +169,9 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_quizzes_number_by_AuthorId_with_teacherQuizStatus() {
+    public void test_find_quizzes_number_by_authorId_with_teacherQuizStatus() {
         Map<TeacherQuizStatus, Integer> testResults = new HashMap<>();
-        testResults.put(PUBLISHED, 3);
+        testResults.put(PUBLISHED, 5);
         testResults.put(TeacherQuizStatus.UNPUBLISHED, 2);
 
         Map<TeacherQuizStatus, Integer> results
@@ -256,13 +270,16 @@ public class QuizDaoJdbcTest {
     public void test_find_studentQuizStatus_by_studentId_and_quizId() {
         StudentQuizStatus studentQuizStatus
                 = quizDao.findStudentQuizStatus(5L, 5L);
-        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
+        assertThat(studentQuizStatus, is(PASSED));
     }
 
     @Test
     public void test_find_closing_date_by_groupId_and_quizId() {
-        LocalDateTime testClosingDate =
-                LocalDateTime.of(2018, 3, 27, 10,35,55);
+        List<User> students = userDao.findStudents(1L);
+        Optional<LocalDateTime> finishDate = students.stream()
+                .map(student -> quizDao.findFinishDate(student.getUserId(), 3L))
+                .max(LocalDateTime::compareTo);
+        LocalDateTime testClosingDate = finishDate.orElse(null);
 
         LocalDateTime closingDate = quizDao.findClosingDate(1L, 3L);
 
@@ -534,7 +551,7 @@ public class QuizDaoJdbcTest {
     public void test_edit_student_info_about_opened_quiz() {
         quizDao.editStudentInfoAboutOpenedQuiz(4L, 1L, 56,
                 LocalDateTime.of(2018, 1, 10, 10, 2),
-                1, StudentQuizStatus.PASSED);
+                1, PASSED);
 
         Integer result = quizDao.findResult(4L, 1L);
         LocalDateTime finishDate = quizDao.findFinishDate(4L, 1L);
@@ -545,7 +562,7 @@ public class QuizDaoJdbcTest {
         assertThat(result, is(56));
         assertThat(finishDate, is(LocalDateTime.of(2018, 1, 10, 10, 2)));
         assertThat(attempt, is(1));
-        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
+        assertThat(studentQuizStatus, is(PASSED));
     }
 
     @Test
@@ -575,7 +592,7 @@ public class QuizDaoJdbcTest {
         quizDao.closeQuiz(4L, 4L);
         StudentQuizStatus studentQuizStatus =
                 quizDao.findStudentQuizStatus(4L, 4L);
-        assertThat(studentQuizStatus, is(StudentQuizStatus.CLOSED));
+        assertThat(studentQuizStatus, is(CLOSED));
     }
 
     @Test(expected = EmptyResultDataAccessException.class)

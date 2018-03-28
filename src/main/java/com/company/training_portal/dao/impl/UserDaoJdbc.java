@@ -222,12 +222,12 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId,
                                                                          Long quizId) {
-        Map<Long, Integer> results = new HashMap<>();
-        template.query(
+        Map<Long, Integer> results = template.query(
                 FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID,
                 new Object[]{groupId, quizId}, new ResultSetExtractor<Map<Long, Integer>>() {
                     @Override
                     public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Long, Integer> results = new HashMap<>();
                         while (rs.next()) {
                             Long studentId = rs.getLong(1);
                             Integer result = rs.getInt(2);

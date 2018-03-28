@@ -1,11 +1,3 @@
-.error {
-    color: red;
-}
-
-.success {
-    color: lime
-}
-
 body {
     background-color: #ccfcf5;
 }
@@ -138,8 +130,26 @@ h5, h6 {
     color: red;
 }
 
-.answer-delete:hover {
+.success {
+    color: #189e1d;
+    text-decoration: none;
+}
+
+.success:hover {
+    color: darkgreen;
+}
+
+.danger {
+    color: red;
+    text-decoration: none;
+}
+
+.answer-delete:hover, .danger:hover {
     color: darkred;
+}
+
+.error {
+    color: red;
 }
 
 .inline {

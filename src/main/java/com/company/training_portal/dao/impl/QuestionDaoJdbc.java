@@ -80,11 +80,12 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Transactional(readOnly = true)
     @Override
     public Map<QuestionType, Integer> findQuestionTypesAndCount(Long quizId) {
-        Map<QuestionType, Integer> questionTypes = new HashMap<>();
-        template.query(FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID, new Object[]{quizId},
+        Map<QuestionType, Integer> questionTypes = template.query(
+                FIND_QUESTION_TYPES_AND_COUNT_BY_QUIZ_ID, new Object[]{quizId},
                 new ResultSetExtractor<Map<QuestionType, Integer>>() {
                     @Override
                     public Map<QuestionType, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<QuestionType, Integer> questionTypes = new HashMap<>();
                         while (rs.next()) {
                             questionTypes.put(QuestionType.valueOf(rs.getString(1)),
                                     rs.getInt(2));

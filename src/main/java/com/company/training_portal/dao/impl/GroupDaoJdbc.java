@@ -93,11 +93,12 @@ public class GroupDaoJdbc implements GroupDao {
     @Transactional(readOnly = true)
     @Override
     public Map<Group, Integer> findAllGroupsAndStudentsNumberInThem() {
-        Map<Group, Integer> results = new HashMap<>();
-        template.query(FIND_ALL_GROUPS_AND_STUDENTS_NUMBER_IN_THEM,
+        Map<Group, Integer> results = template.query(
+                FIND_ALL_GROUPS_AND_STUDENTS_NUMBER_IN_THEM,
                 new ResultSetExtractor<Map<Group, Integer>>() {
                     @Override
                     public Map<Group, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Group, Integer> results = new HashMap<>();
                         while (rs.next()) {
                             results.put(mapGroup(rs, 0), rs.getInt(6));
                         }

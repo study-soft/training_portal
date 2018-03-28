@@ -440,7 +440,7 @@
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
@@ -482,7 +482,7 @@
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
@@ -524,7 +524,7 @@
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
@@ -562,7 +562,7 @@
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">
@@ -599,7 +599,7 @@
         <c:forEach items="${questionsNumber}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-7">
                         <h5>${question.body}</h5>
                     </div>
                     <div class="col-2">

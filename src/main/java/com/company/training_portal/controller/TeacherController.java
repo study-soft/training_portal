@@ -466,6 +466,60 @@ public class TeacherController {
         return "/teacher/results-group";
     }
 
+    @RequestMapping("/teacher/results/group/{groupId}/quiz/{quizId}")
+    @SuppressWarnings("Duplicates")
+    public String showGroupQuizResults(@ModelAttribute("teacherId") Long teacherId,
+                                       @PathVariable("groupId") Long groupId,
+                                       @PathVariable("quizId") Long quizId,
+                                       Model model) {
+        List<User> students = userDao.findStudents(groupId);
+        Group group = groupDao.findGroup(groupId);
+        Quiz quiz = quizDao.findQuiz(quizId);
+
+        model.addAttribute("students", students);
+        model.addAttribute("group", group);
+        model.addAttribute("quiz", quiz);
+
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
+
+        if (closedStudents.equals(studentsNumber)) {
+            List<PassedQuiz> closedResults = new ArrayList<>();
+            for (User student : students) {
+                Long studentId = student.getUserId();
+                PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+                closedResults.add(closedQuiz);
+            }
+            model.addAttribute("closedResults", closedResults);
+            return "teacher/results-group-closed-quiz";
+        } else {
+            List<PassedQuiz> passedResults = new ArrayList<>();
+            List<String> statusList = new ArrayList<>();
+            for (User student : students) {
+                Long studentId = student.getUserId();
+                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+                statusList.add(status.getStudentQuizStatus());
+                switch (status) {
+                    case OPENED:
+                        PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder().build();
+                        passedResults.add(openedQuiz);
+                        break;
+                    case PASSED:
+                        PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+                        passedResults.add(passedQuiz);
+                        break;
+                    case CLOSED:
+                        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+                        passedResults.add(closedQuiz);
+                        break;
+                }
+            }
+            model.addAttribute("passedResults", passedResults);
+            model.addAttribute("statusList", statusList);
+            return "teacher/results-group-passed-quiz";
+        }
+    }
+
     @RequestMapping("/teacher/students/{studentId}")
     public String showStudent(@ModelAttribute("teacherId") Long teacherId,
                               @PathVariable("studentId") Long studentId, Model model) {

@@ -50,6 +50,18 @@
         </c:when>
         <c:otherwise>
             <div class="row">
+                <div class="col-4">
+                    <table class="table">
+                        <tr>
+                            <th>Groups</th>
+                        </tr>
+                        <c:forEach items="${groups}" var="group">
+                            <tr>
+                                <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
                 <div class="col-8">
                     <table class="table">
                         <tr>
@@ -60,18 +72,6 @@
                             <tr>
                                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                                 <td>${singleStudentGroups[status.index].name}</td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-                <div class="col-4">
-                    <table class="table">
-                        <tr>
-                            <th>Groups</th>
-                        </tr>
-                        <c:forEach items="${groups}" var="group">
-                            <tr>
-                                <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
                             </tr>
                         </c:forEach>
                     </table>

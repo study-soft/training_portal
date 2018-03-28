@@ -7,7 +7,6 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.OpenedQuiz;
 import com.company.training_portal.model.PassedQuiz;
 import com.company.training_portal.model.Quiz;
-import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 import com.company.training_portal.util.Utils;
@@ -29,6 +28,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 
@@ -118,13 +118,13 @@ public class QuizDaoJdbc implements QuizDao {
     @Override
     public Map<StudentQuizStatus, Integer> findStudentsNumberWithStudentQuizStatus(
             Long authorId, Long groupId, Long quizId) {
-        Map<StudentQuizStatus, Integer> results = new HashMap<>();
-        template.query(
+        Map<StudentQuizStatus, Integer> results = template.query(
                 FIND_STUDENTS_NUMBER_BY_AUTHOR_ID_AND_GROUP_ID_AND_QUIZ_ID_WITH_STUDENT_QUIZ_STATUS,
                 new Object[]{authorId, groupId, quizId},
                 new ResultSetExtractor<Map<StudentQuizStatus, Integer>>() {
                     @Override
                     public Map<StudentQuizStatus, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<StudentQuizStatus, Integer> results = new HashMap<>();
                         while (rs.next()) {
                             results.put(StudentQuizStatus.valueOf(rs.getString(1)),
                                     rs.getInt(2));
@@ -140,12 +140,13 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public Map<TeacherQuizStatus, Integer> findQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId) {
-        Map<TeacherQuizStatus, Integer> results = new HashMap<>();
-        template.query(FIND_QUIZZES_NUMBER_BY_AUTHOR_ID_WITH_TEACHER_QUIZ_STATUS,
+        Map<TeacherQuizStatus, Integer> results = template.query(
+                FIND_QUIZZES_NUMBER_BY_AUTHOR_ID_WITH_TEACHER_QUIZ_STATUS,
                 new Object[]{authorId},
                 new ResultSetExtractor<Map<TeacherQuizStatus, Integer>>() {
                     @Override
                     public Map<TeacherQuizStatus, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<TeacherQuizStatus, Integer> results = new HashMap<>();
                         while (rs.next()) {
                             results.put(TeacherQuizStatus.valueOf(rs.getString(1)),
                                     rs.getInt(2));
@@ -161,11 +162,11 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public Map<Long, Integer> findAllStudentResults(Long studentId) {
-        Map<Long, Integer> results = new HashMap<>();
-        template.query(FIND_ALL_STUDENT_RESULTS, new Object[]{studentId},
+        Map<Long, Integer> results = template.query(FIND_ALL_STUDENT_RESULTS, new Object[]{studentId},
                 new ResultSetExtractor<Map<Long, Integer>>() {
                     @Override
                     public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Long, Integer> results = new HashMap<>();
                         while (rs.next()) {
                             results.put(rs.getLong(1), rs.getInt(2));
                         }
@@ -189,37 +190,55 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Transactional(readOnly = true)
+    @SuppressWarnings("Duplicates")
     @Override
     public List<Long> findCommonGroupQuizIds(Long groupId) {
-        List<Long> allQuizIds = template.queryForList(
-                FIND_ALL_GROUP_QUIZ_IDS_BY_GROUP_ID,
-                new Object[]{groupId}, Long.class);
+        Map<Long, Integer> allQuizIds = template.query(
+                FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID,
+                new Object[]{groupId}, new ResultSetExtractor<Map<Long, Integer>>() {
+                    @Override
+                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Long, Integer> allQuizIds = new HashMap<>();
+                        while (rs.next()) {
+                            allQuizIds.put(rs.getLong("quiz_id"),
+                                    rs.getInt("count"));
+                        }
+                        return allQuizIds;
+                    }
+                });
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
-        List<Long> commonGroupQuizIds = new ArrayList<>();
-        Set<Long> uniqueQuizIds = new HashSet<>(allQuizIds);
-        for (Long quizId : uniqueQuizIds) {
-            if (Collections.frequency(allQuizIds, quizId) == studentsNumber) {
-                commonGroupQuizIds.add(quizId);
-            }
-        }
+        List<Long> commonGroupQuizIds = allQuizIds.keySet()
+                .stream()
+                .filter(k -> allQuizIds.get(k).equals(studentsNumber))
+                .collect(Collectors.toList());
         logger.info("Found all common group quizzes by groupId '" + groupId + "': " + commonGroupQuizIds);
         return commonGroupQuizIds;
     }
 
     @Transactional(readOnly = true)
+    @SuppressWarnings("Duplicates")
     @Override
     public List<Quiz> findCommonGroupQuizzes(Long groupId, Long teacherId) {
-        List<Long> allQuizIds = template.queryForList(
-                FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID,
-                new Object[]{groupId, teacherId}, Long.class);
-        Integer studentNumber = groupDao.findStudentsNumberInGroup(groupId);
-        List<Quiz> commonGroupQuizzes = new ArrayList<>();
-        Set<Long> uniqueQuizIds = new HashSet<>(allQuizIds);
-        for (Long quizId : uniqueQuizIds) {
-            if (Collections.frequency(allQuizIds, quizId) == studentNumber) {
-                commonGroupQuizzes.add(findQuiz(quizId));
-            }
-        }
+        Map<Long, Integer> allQuizIds = template.query(
+                FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID_AND_TEACHER_ID,
+                new Object[]{groupId, teacherId},
+                new ResultSetExtractor<Map<Long, Integer>>() {
+                    @Override
+                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                        Map<Long, Integer> allQuizIds = new HashMap<>();
+                        while (rs.next()) {
+                            allQuizIds.put(rs.getLong("quiz_id"),
+                                    rs.getInt("count"));
+                        }
+                        return allQuizIds;
+                    }
+                });
+        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        List<Quiz> commonGroupQuizzes = allQuizIds.keySet()
+                .stream()
+                .filter(k -> allQuizIds.get(k).equals(studentsNumber))
+                .map(this::findQuiz)
+                .collect(Collectors.toList());
         logger.info("Found all common group quizzes by groupId '" + groupId + "' and teacherId '" + teacherId +"':");
         commonGroupQuizzes.forEach(logger::info);
         return commonGroupQuizzes;
@@ -660,22 +679,20 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_GROUP_QUIZ_IDS_BY_GROUP_ID =
-    "SELECT QUIZZES.QUIZ_ID " +
+    private static final String FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID =
+    "SELECT QUIZZES.QUIZ_ID, COUNT(QUIZZES.QUIZ_ID) AS COUNT " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE USERS.GROUP_ID = ? " +
-    "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
+    "WHERE GROUP_ID = ? " +
+    "GROUP BY QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
-    private static final String FIND_ALL_GROUP_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID =
-    "SELECT QUIZZES.QUIZ_ID " +
+    private static final String FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID_AND_TEACHER_ID =
+    "SELECT QUIZZES.QUIZ_ID, COUNT(QUIZZES.QUIZ_ID) AS COUNT " +
     "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
     "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE USERS.GROUP_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
-    "GROUP BY USERS.USER_ID, QUIZZES.QUIZ_ID " +
+    "GROUP BY QUIZZES.QUIZ_ID " +
     "ORDER BY QUIZZES.NAME;";
 
     private static final String FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID =

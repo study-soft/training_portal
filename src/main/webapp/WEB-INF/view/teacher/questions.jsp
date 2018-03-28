@@ -37,7 +37,7 @@
                 '                </div>\n' +
                 '            </div>';
 
-            $("#addAnswer").click(function () {
+            $(document).on("click", "#addAnswer", function () {
                 var questionType = $(this).val();
                 var lastRow;
                 var newRow;
@@ -88,6 +88,197 @@
                     answer.removeClass("is-valid").addClass("is-invalid");
                 }
             });
+
+            var oneAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
+                '                <div id="${status.index}" class="row margin-row">\n' +
+                '                    <div class="col-auto">\n' +
+                '                        <div class="custom-control custom-radio shifted-down">\n' +
+                '                            <input type="radio" id="status${status.index}" name="answer" value="correct"\n' +
+                '                                   class="custom-control-input">\n' +
+                '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="col-9">\n' +
+                '                        <input type="text" id="answer${status.index}" class="form-control is-invalid">\n' +
+                '                    </div>\n' +
+                '                    <c:if test="${status.index eq 2}">\n' +
+                '                        <div class="col-1">\n' +
+                '                            <button type="button" class="answer-delete" value="${status.index}"><i\n' +
+                '                                    class="fa fa-close"></i></button>\n' +
+                '                        </div>\n' +
+                '                    </c:if>\n' +
+                '                </div>\n' +
+                '            </c:forEach>\n' +
+                '                <div class="row">\n' +
+                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                    <div class="form-group">\n' +
+                '                        <label for="explanation" class="col-form-label">\n' +
+                '                            <strong>Explanation</strong>\n' +
+                '                        </label>\n' +
+                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
+                '                                  placeholder="Explanation"></textarea>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
+                '                    <button id="addAnswer" type="button" class="btn btn-success" style="width: 140px"\n' +
+                '                            value="oneAnswer">\n' +
+                '                        <i class="fa fa-plus"></i> Add answer\n' +
+                '                    </button>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="text-center">\n' +
+                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button type="submit" class="btn btn-success">Save</button>\n' +
+                '            </div>';
+
+            var fewAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
+                '                <div id="${status.index}" class="row margin-row">\n' +
+                '                    <div class="col-auto">\n' +
+                '                        <div class="custom-control custom-checkbox shifted-down">\n' +
+                '                            <input type="checkbox" id="status${status.index}" value="correct"\n' +
+                '                                   class="custom-control-input">\n' +
+                '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="col-9">\n' +
+                '                        <input type="text" id="answer${status.index}" class="form-control is-invalid">\n' +
+                '                    </div>\n' +
+                '                    <c:if test="${status.index eq 2}">\n' +
+                '                        <div class="col-1">\n' +
+                '                            <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>\n' +
+                '                        </div>\n' +
+                '                    </c:if>\n' +
+                '                </div>\n' +
+                '            </c:forEach>\n' +
+                '                <div class="row">\n' +
+                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                    <div class="form-group">\n' +
+                '                        <label for="explanation" class="col-form-label">\n' +
+                '                            <strong>Explanation</strong>\n' +
+                '                        </label>\n' +
+                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
+                '                                  placeholder="Explanation"></textarea>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
+                '                    <button id="addAnswer" type="button" class="btn btn-success" style="width: 140px"\n' +
+                '                            value="fewAnswers">\n' +
+                '                        <i class="fa fa-plus"></i> Add answer\n' +
+                '                    </button>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="text-center">\n' +
+                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button type="submit" class="btn btn-success">Save</button>\n' +
+                '            </div>';
+
+            var accordanceAnswers = '<div class="row">\n' +
+                '                <div class="col-6">\n' +
+                '                    <strong>Left side</strong>\n' +
+                '                </div>\n' +
+                '                <div class="col-6">\n' +
+                '                    <strong>Right side</strong>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <c:forEach begin="0" end="3" varStatus="status">\n' +
+                '                <div class="row margin-row">\n' +
+                '                    <div class="col-6">\n' +
+                '                        <input type="text" class="form-control" name="left${status.index}">\n' +
+                '                    </div>\n' +
+                '                    <div class="col-6">\n' +
+                '                        <input type="text" class="form-control" name="right${status.index}">\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </c:forEach>\n' +
+                '                <div class="row">\n' +
+                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                    <div class="form-group">\n' +
+                '                        <label for="explanation" class="col-form-label">\n' +
+                '                            <strong>Explanation</strong>\n' +
+                '                        </label>\n' +
+                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
+                '                                  placeholder="Explanation"></textarea>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="text-center">\n' +
+                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button type="submit" class="btn btn-success">Save</button>\n' +
+                '            </div>';
+
+            var sequenceAnswers = '<div><strong>Sequence</strong></div>\n' +
+                '            <c:forEach begin="0" end="3" varStatus="status">\n' +
+                '                <div class="row margin-row">\n' +
+                '                    <div class="col-auto">\n' +
+                '                            ${status.index + 1}.\n' +
+                '                    </div>\n' +
+                '                    <div class="col-6">\n' +
+                '                        <input type="text" class="form-control" name="sequence${status.index}">\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </c:forEach>' +
+                '                <div class="row">\n' +
+                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                    <div class="form-group">\n' +
+                '                        <label for="explanation" class="col-form-label">\n' +
+                '                            <strong>Explanation</strong>\n' +
+                '                        </label>\n' +
+                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
+                '                                  placeholder="Explanation"></textarea>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="text-center">\n' +
+                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button type="submit" class="btn btn-success">Save</button>\n' +
+                '            </div>';
+
+            var numberAnswers = '<div class="form-group form-inline">\n' +
+                '                <label for="number">\n' +
+                '                    <strong>Number</strong>\n' +
+                '                </label>\n' +
+                '                <div class="col">\n' +
+                '                    <input type="text" class="form-control" id="number" name="number">\n' +
+                '                </div>\n' +
+                '            </div>' +
+                '                <div class="row">\n' +
+                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                    <div class="form-group">\n' +
+                '                        <label for="explanation" class="col-form-label">\n' +
+                '                            <strong>Explanation</strong>\n' +
+                '                        </label>\n' +
+                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
+                '                                  placeholder="Explanation"></textarea>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="text-center">\n' +
+                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button type="submit" class="btn btn-success">Save</button>\n' +
+                '            </div>';
+
+            $("#type").on("change", function () {
+                var answersContainer = $("#answersContainer");
+                answersContainer.empty();
+                var type = $(this).val();
+                switch (type) {
+                    case "oneAnswer":
+                        answersContainer.append(oneAnswers);
+                        break;
+                    case "fewAnswers":
+                        answersContainer.append(fewAnswers);
+                        break;
+                    case "accordance":
+                        answersContainer.append(accordanceAnswers);
+                        break;
+                    case "sequence":
+                        answersContainer.append(sequenceAnswers);
+                        break;
+                    case "number":
+                        answersContainer.append(numberAnswers);
+                        break;
+                }
+            });
         });
     </script>
 </head>
@@ -131,32 +322,13 @@
         </div>
         <%--*********************     One answer     **********************--%>
         <div class="question-answers">
-            <h5>Answers</h5>
-            <%--<c:forEach begin="0" end="2" varStatus="status">--%>
-            <%--<div id="${status.index}" class="row margin-row">--%>
-            <%--<div class="col-auto">--%>
-            <%--<div class="custom-control custom-radio shifted-down">--%>
-            <%--<input type="radio" id="correct${status.index}" name="answer" value="correct" class="custom-control-input">--%>
-            <%--<label for="correct${status.index}" class="custom-control-label"></label>--%>
-            <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="col-9">--%>
-            <%--<input type="text" id="answer${status.index}" class="form-control is-invalid">--%>
-            <%--</div>--%>
-            <%--<c:if test="${status.index eq 2}">--%>
-            <%--<div class="col-1">--%>
-            <%--<button type="button" class="answer-delete" value="${status.index}"><i class="fa fa-close"></i></button>--%>
-            <%--</div>--%>
-            <%--</c:if>--%>
-            <%--</div>--%>
-            <%--</c:forEach>--%>
-            <%--*********************************************--%>
-            <%--*********************     Few answers     **************--%>
+            <h5 id="answersHeader">Answers</h5>
+            <span id="answersContainer">
             <c:forEach begin="0" end="2" varStatus="status">
                 <div id="${status.index}" class="row margin-row">
                     <div class="col-auto">
-                        <div class="custom-control custom-checkbox shifted-down">
-                            <input type="checkbox" id="status${status.index}" value="correct"
+                        <div class="custom-control custom-radio shifted-down">
+                            <input type="radio" id="status${status.index}" name="answer" value="correct"
                                    class="custom-control-input">
                             <label for="status${status.index}" class="custom-control-label"></label>
                         </div>
@@ -166,16 +338,81 @@
                     </div>
                     <c:if test="${status.index eq 2}">
                         <div class="col-1">
-                            <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>
+                            <button type="button" class="answer-delete" value="${status.index}"><i
+                                    class="fa fa-close"></i></button>
                         </div>
                     </c:if>
                 </div>
             </c:forEach>
-            <%--**********************************************--%>
+            <%--********************************************************--%>
+            <%--*********************     Few answers     **************--%>
+            <%--<c:forEach begin="0" end="2" varStatus="status">--%>
+                <%--<div id="${status.index}" class="row margin-row">--%>
+                    <%--<div class="col-auto">--%>
+                        <%--<div class="custom-control custom-checkbox shifted-down">--%>
+                            <%--<input type="checkbox" id="status${status.index}" value="correct"--%>
+                                   <%--class="custom-control-input">--%>
+                            <%--<label for="status${status.index}" class="custom-control-label"></label>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="col-9">--%>
+                        <%--<input type="text" id="answer${status.index}" class="form-control is-invalid">--%>
+                    <%--</div>--%>
+                    <%--<c:if test="${status.index eq 2}">--%>
+                        <%--<div class="col-1">--%>
+                            <%--<button type="button" class="answer-delete"><i class="fa fa-close"></i></button>--%>
+                        <%--</div>--%>
+                    <%--</c:if>--%>
+                <%--</div>--%>
+            <%--</c:forEach>--%>
+            <%--*******************************************************--%>
+            <%--*********************     Accordance     **************--%>
+            <%--<div class="row">--%>
+                <%--<div class="col-6">--%>
+                    <%--<strong>Left side</strong>--%>
+                <%--</div>--%>
+                <%--<div class="col-6">--%>
+                    <%--<strong>Right side</strong>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<c:forEach begin="0" end="3" varStatus="status">--%>
+                <%--<div class="row margin-row">--%>
+                    <%--<div class="col-6">--%>
+                        <%--<input type="text" class="form-control" name="left${status.index}">--%>
+                    <%--</div>--%>
+                    <%--<div class="col-6">--%>
+                        <%--<input type="text" class="form-control" name="right${status.index}">--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</c:forEach>--%>
+            <%--*******************************************************--%>
+            <%--*********************     Sequence     ****************--%>
+            <%--<div><strong>Sequence</strong></div>--%>
+            <%--<c:forEach begin="0" end="3" varStatus="status">--%>
+                <%--<div class="row margin-row">--%>
+                    <%--<div class="col-auto">--%>
+                            <%--${status.index + 1}.--%>
+                    <%--</div>--%>
+                    <%--<div class="col-6">--%>
+                        <%--<input type="text" class="form-control" name="sequence${status.index}">--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</c:forEach>--%>
+            <%--*******************************************************--%>
+            <%--*********************     Number     ******************--%>
+            <%--<div class="form-group form-inline">--%>
+                <%--<label for="number">--%>
+                    <%--<strong>Number</strong>--%>
+                <%--</label>--%>
+                <%--<div class="col">--%>
+                    <%--<input type="text" class="form-control" id="number" name="number">--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--*******************************************************--%>
             <div class="row">
                 <div class="col-xl-9 col-lg-8 col-md-6">
                     <div class="form-group">
-                        <label for="question" class="col-form-label">
+                        <label for="explanation" class="col-form-label">
                             <strong>Explanation</strong>
                         </label>
                         <textarea name="explanation" id="explanation" rows="2" class="form-control"
@@ -184,15 +421,16 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <button id="addAnswer" type="button" class="btn btn-success" style="width: 140px"
-                            value="fewAnswers">
+                            value="oneAnswer">
                         <i class="fa fa-plus"></i> Add answer
                     </button>
                 </div>
             </div>
             <div class="text-center">
-                <button class="btn btn-primary">Cancel</button>
-                <button class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-primary">Cancel</button>
+                <button type="submit" class="btn btn-success">Save</button>
             </div>
+            </span>
         </div>
     </form>
 

@@ -279,7 +279,7 @@ public class QuizDaoJdbcTest {
         Optional<LocalDateTime> finishDate = students.stream()
                 .map(student -> quizDao.findFinishDate(student.getUserId(), 3L))
                 .max(LocalDateTime::compareTo);
-        LocalDateTime testClosingDate = finishDate.orElse(null);
+        LocalDateTime testClosingDate = finishDate.orElse(LocalDateTime.now());
 
         LocalDateTime closingDate = quizDao.findClosingDate(1L, 3L);
 

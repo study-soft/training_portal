@@ -291,19 +291,19 @@
                 answersContainer.empty();
                 var type = $(this).val();
                 switch (type) {
-                    case "oneAnswer":
+                    case "ONE_ANSWER":
                         answersContainer.append(oneAnswers);
                         break;
-                    case "fewAnswers":
+                    case "FEW_ANSWERS":
                         answersContainer.append(fewAnswers);
                         break;
-                    case "accordance":
+                    case "ACCORDANCE":
                         answersContainer.append(accordanceAnswers);
                         break;
-                    case "sequence":
+                    case "SEQUENCE":
                         answersContainer.append(sequenceAnswers);
                         break;
-                    case "number":
+                    case "NUMBER":
                         answersContainer.append(numberAnswers);
                         break;
                 }
@@ -324,11 +324,11 @@
                             <strong>Select type</strong>
                         </label>
                         <select id="type" name="type" class="col-4 form-control">
-                            <option value="oneAnswer">One answer</option>
-                            <option value="fewAnswers">Few answers</option>
-                            <option value="accordance">Accordance</option>
-                            <option value="sequence">Sequence</option>
-                            <option value="number">Numerical</option>
+                            <option value="ONE_ANSWER">One answer</option>
+                            <option value="FEW_ANSWERS">Few answers</option>
+                            <option value="ACCORDANCE">Accordance</option>
+                            <option value="SEQUENCE">Sequence</option>
+                            <option value="NUMBER">Numerical</option>
                         </select>
                     </div>
                 </div>

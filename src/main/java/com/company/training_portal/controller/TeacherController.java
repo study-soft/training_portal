@@ -1,9 +1,6 @@
 package com.company.training_portal.controller;
 
-import com.company.training_portal.dao.GroupDao;
-import com.company.training_portal.dao.QuestionDao;
-import com.company.training_portal.dao.QuizDao;
-import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
@@ -42,6 +39,10 @@ public class TeacherController {
     private GroupDao groupDao;
     private QuizDao quizDao;
     private QuestionDao questionDao;
+    private AnswerSimpleDao answerSimpleDao;
+    private AnswerAccordanceDao answerAccordanceDao;
+    private AnswerSequenceDao answerSequenceDao;
+    private AnswerNumberDao answerNumberDao;
     private Environment environment;
     private UserValidator userValidator;
     private QuizValidator quizValidator;
@@ -54,6 +55,10 @@ public class TeacherController {
                              GroupDao groupDao,
                              QuizDao quizDao,
                              QuestionDao questionDao,
+                             AnswerSimpleDao answerSimpleDao,
+                             AnswerAccordanceDao answerAccordanceDao,
+                             AnswerSequenceDao answerSequenceDao,
+                             AnswerNumberDao answerNumberDao,
                              Environment environment,
                              UserValidator userValidator,
                              QuizValidator quizValidator,
@@ -62,6 +67,10 @@ public class TeacherController {
         this.groupDao = groupDao;
         this.quizDao = quizDao;
         this.questionDao = questionDao;
+        this.answerSimpleDao = answerSimpleDao;
+        this.answerAccordanceDao = answerAccordanceDao;
+        this.answerSequenceDao = answerSequenceDao;
+        this.answerNumberDao = answerNumberDao;
         this.environment = environment;
         this.userValidator = userValidator;
         this.quizValidator = quizValidator;
@@ -594,6 +603,106 @@ public class TeacherController {
     public String editQuestion(@PathVariable("quizId") Long quizId,
                                @RequestParam Map<String, String> params) {
         logger.info(params);
+        QuestionType questionType = QuestionType.valueOf(params.get("type"));
+        Integer score = Integer.valueOf(params.get("points"));
+        String questionBody = params.get("question");
+        String explanation = params.get("explanation");
+
+        Question question = new Question.QuestionBuilder()
+                .quizId(quizId)
+                .body(questionBody)
+                .explanation(explanation)
+                .questionType(questionType)
+                .score(score)
+                .build();
+
+        params.remove("type");
+        params.remove("points");
+        params.remove("question");
+        params.remove("explanation");
+
+        Long questionId = questionDao.addQuestion(question);
+        switch (questionType) {
+            case ONE_ANSWER:
+                String correctAnswer = params.get("correct");
+                params.remove("correct");
+                for (String answer : params.keySet()) {
+                    boolean correct = false;
+                    String answerBody = params.get(answer);
+                    if (answer.equals(correctAnswer)) {
+                        correct = true;
+                    }
+                    AnswerSimple answerSimple = new AnswerSimple.AnswerSimpleBuilder()
+                            .questionId(questionId)
+                            .body(answerBody)
+                            .correct(correct)
+                            .build();
+                    answerSimpleDao.addAnswerSimple(answerSimple);
+                }
+                break;
+            case FEW_ANSWERS:
+                Set<String> answers = new HashSet<>();
+                Set<String> correctAnswers = new HashSet<>();
+                for (String key : params.keySet()) {
+                    if (key.contains("correct")) {
+                        correctAnswers.add(params.get(key));
+                    } else {
+                        answers.add(key);
+                    }
+                }
+
+                for (String answer : answers) {
+                    boolean correct = false;
+                    String answerBody = params.get(answer);
+                    if (correctAnswers.contains(answer)) {
+                        correct = true;
+                    }
+                    AnswerSimple answerSimple = new AnswerSimple.AnswerSimpleBuilder()
+                            .questionId(questionId)
+                            .body(answerBody)
+                            .correct(correct)
+                            .build();
+                    answerSimpleDao.addAnswerSimple(answerSimple);
+                }
+                break;
+            case ACCORDANCE:
+                List<String> leftSide = new ArrayList<>();
+                List<String> rightSide = new ArrayList<>();
+                for (int i = 0; i < 4; i++) {
+                    leftSide.add(params.get("left" + i));
+                    rightSide.add(params.get("right" + i));
+                }
+
+                AnswerAccordance answerAccordance = new AnswerAccordance.AnswerAccordanceBuilder()
+                        .questionId(questionId)
+                        .leftSide(leftSide)
+                        .rightSide(rightSide)
+                        .build();
+
+                answerAccordanceDao.addAnswerAccordance(answerAccordance);
+                break;
+            case SEQUENCE:
+                List<String> correctList = new ArrayList<>();
+                for (int i = 0; i < 4; i++) {
+                    correctList.add(params.get("sequence" + i));
+                }
+
+                AnswerSequence answerSequence = new AnswerSequence.AnswerSequenceBuilder()
+                        .questionId(questionId)
+                        .correctList(correctList)
+                        .build();
+
+                answerSequenceDao.addAnswerSequence(answerSequence);
+                break;
+            case NUMBER:
+                Integer number = Integer.valueOf(params.get("number"));
+                AnswerNumber answerNumber = new AnswerNumber.AnswerNumberBuilder()
+                        .questionId(questionId)
+                        .correct(number)
+                        .build();
+                answerNumberDao.addAnswerNumber(answerNumber);
+                break;
+        }
         return "success";
     }
 }

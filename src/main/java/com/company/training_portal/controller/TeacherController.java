@@ -588,4 +588,12 @@ public class TeacherController {
 
         return "redirect:/teacher/quizzes/" + quizId;
     }
+
+    @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
+    @ResponseBody
+    public String editQuestion(@PathVariable("quizId") Long quizId,
+                               @RequestParam Map<String, String> params) {
+        logger.info(params);
+        return "success";
+    }
 }

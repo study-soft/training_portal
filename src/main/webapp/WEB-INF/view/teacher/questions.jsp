@@ -10,12 +10,12 @@
             var rowOneAnswer = '<div id="new-row" class="row margin-row">\n' +
                 '                <div class="col-auto">\n' +
                 '                    <div class="custom-control custom-radio shifted-down">\n' +
-                '                        <input type="radio" id="correct2" name="answer" value="correct" class="custom-control-input">\n' +
+                '                        <input type="radio" id="" name="correct" value="" class="custom-control-input">\n' +
                 '                        <label for="correct2" class="custom-control-label"></label>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
                 '                <div class="col-9">\n' +
-                '                    <input type="text" class="form-control">\n' +
+                '                    <input type="text" class="form-control" name="">\n' +
                 '                </div>\n' +
                 '                <div class="col-1">\n' +
                 '                    <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>\n' +
@@ -44,25 +44,32 @@
                 var counter;
                 if (questionType === "oneAnswer") {
                     lastRow = $(".margin-row:last");
-                    counter = lastRow.attr("id") + 1;
+                    counter = Number(lastRow.attr("id")) + 1;
                     lastRow.after(rowOneAnswer);
                     newRow = $("#new-row");
-                    newRow.find("input[type='radio']").attr("id", "status" + counter)
+                    newRow.find("input[type='radio']")
+                        .attr("id", "status" + counter)
+                        .val("answer" + counter)
                         .next().attr("for", "status" + counter);
                     newRow.find("input[type='text']")
                         .attr("id", "answer" + counter)
+                        .attr("name", "answer" + counter)
                         .addClass("is-invalid");
                     newRow.find(".answer-delete").val(counter);
                     newRow.attr("id", counter);
                 } else if (questionType === "fewAnswers") {
                     lastRow = $(".margin-row:last");
-                    counter = lastRow.attr("id") + 1;
+                    counter = Number(lastRow.attr("id")) + 1;
                     lastRow.after(rowFewAnswers);
                     newRow = $("#new-row");
-                    newRow.find("input[type='checkbox']").attr("id", "status" + counter)
+                    newRow.find("input[type='checkbox']")
+                        .attr("id", "status" + counter)
+                        .attr("name", "correct" + counter)
+                        .val("answer" + counter)
                         .next().attr("for", "status" + counter);
                     newRow.find("input[type='text']")
                         .attr("id", "answer" + counter)
+                        .attr("name", "answer" + counter)
                         .addClass("is-invalid");
                     newRow.find(".answer-delete").val(counter);
                     newRow.attr("id", counter);
@@ -73,7 +80,7 @@
                 $(this).parents(".margin-row").remove();
             });
 
-            $(document).on("change", "input[type=radio][name=answer]", function () {
+            $(document).on("change", "input[type=radio][name=correct]", function () {
                 $("input[type='text'].is-valid").removeClass("is-valid").addClass("is-invalid");
                 var rowNumber = $(this).attr("id").replace("status", "");
                 $("#answer" + rowNumber).removeClass("is-invalid").addClass("is-valid");
@@ -84,16 +91,36 @@
                 var answer = $("#answer" + rowNumber);
                 if (this.checked) {
                     answer.removeClass("is-invalid").addClass("is-valid");
+                    // $(this).val("correct");
                 } else {
                     answer.removeClass("is-valid").addClass("is-invalid");
+                    // $(this).val("incorrect");
                 }
+                // $(":checkbox").each(function () {
+                //     alert($(this).val());
+                // });
+            });
+
+            $(document).on("submit", "#questionForm", function (event) {
+                event.preventDefault();
+                var form = $("#questionForm");
+                var data = form.serialize();
+                $.ajax({
+                    type: form.attr("method"),
+                    url: form.attr("action"),
+                    data: form.serialize(),
+                    success: function(data) {
+                        alert("success: " + data);
+                    }
+                });
+                alert(form.serialize());
             });
 
             var oneAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
                 '                <div id="${status.index}" class="row margin-row">\n' +
                 '                    <div class="col-auto">\n' +
                 '                        <div class="custom-control custom-radio shifted-down">\n' +
-                '                            <input type="radio" id="status${status.index}" name="answer" value="correct"\n' +
+                '                            <input type="radio" id="status${status.index}" name="answer" value="incorrect"\n' +
                 '                                   class="custom-control-input">\n' +
                 '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
                 '                        </div>\n' +
@@ -135,13 +162,15 @@
                 '                <div id="${status.index}" class="row margin-row">\n' +
                 '                    <div class="col-auto">\n' +
                 '                        <div class="custom-control custom-checkbox shifted-down">\n' +
-                '                            <input type="checkbox" id="status${status.index}" value="correct"\n' +
+                '                            <input type="checkbox" id="status${status.index}"\n ' +
+                '                                   name="correct${status.index}" value="answer${status.index}"\n' +
                 '                                   class="custom-control-input">\n' +
                 '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
                 '                        </div>\n' +
                 '                    </div>\n' +
                 '                    <div class="col-9">\n' +
-                '                        <input type="text" id="answer${status.index}" class="form-control is-invalid">\n' +
+                '                        <input type="text" id="answer${status.index}" name="answer${status.index}"\n ' +
+                '                               class="form-control is-invalid">\n' +
                 '                    </div>\n' +
                 '                    <c:if test="${status.index eq 2}">\n' +
                 '                        <div class="col-1">\n' +
@@ -286,7 +315,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
-    <form action="#" method="post">
+    <form id="questionForm" action="/teacher/quizzes/${quiz.quizId}/questions/update" method="post">
         <div class="question-header">
             <div class="row">
                 <div class="col-8">
@@ -328,13 +357,13 @@
                 <div id="${status.index}" class="row margin-row">
                     <div class="col-auto">
                         <div class="custom-control custom-radio shifted-down">
-                            <input type="radio" id="status${status.index}" name="answer" value="correct"
+                            <input type="radio" id="status${status.index}" name="correct" value="answer${status.index}"
                                    class="custom-control-input">
                             <label for="status${status.index}" class="custom-control-label"></label>
                         </div>
                     </div>
                     <div class="col-9">
-                        <input type="text" id="answer${status.index}" class="form-control is-invalid">
+                        <input type="text" id="answer${status.index}" name="answer${status.index}" class="form-control is-invalid">
                     </div>
                     <c:if test="${status.index eq 2}">
                         <div class="col-1">
@@ -350,7 +379,7 @@
                 <%--<div id="${status.index}" class="row margin-row">--%>
                     <%--<div class="col-auto">--%>
                         <%--<div class="custom-control custom-checkbox shifted-down">--%>
-                            <%--<input type="checkbox" id="status${status.index}" value="correct"--%>
+                            <%--<input type="checkbox" id="status${status.index}" value="incorrect"--%>
                                    <%--class="custom-control-input">--%>
                             <%--<label for="status${status.index}" class="custom-control-label"></label>--%>
                         <%--</div>--%>

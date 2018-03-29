@@ -641,7 +641,7 @@ public class TeacherController {
                 }
                 break;
             case FEW_ANSWERS:
-                Set<String> answers = new HashSet<>();
+                Set<String> answers = new LinkedHashSet<>();
                 Set<String> correctAnswers = new HashSet<>();
                 for (String key : params.keySet()) {
                     if (key.contains("correct")) {

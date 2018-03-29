@@ -91,42 +91,95 @@
                 var answer = $("#answer" + rowNumber);
                 if (this.checked) {
                     answer.removeClass("is-invalid").addClass("is-valid");
-                    // $(this).val("correct");
                 } else {
                     answer.removeClass("is-valid").addClass("is-invalid");
-                    // $(this).val("incorrect");
                 }
-                // $(":checkbox").each(function () {
-                //     alert($(this).val());
-                // });
             });
 
             $(document).on("submit", "#questionForm", function (event) {
                 event.preventDefault();
                 var form = $("#questionForm");
                 var data = form.serialize();
-                $.ajax({
-                    type: form.attr("method"),
-                    url: form.attr("action"),
-                    data: form.serialize(),
-                    success: function(data) {
-                        alert("success: " + data);
+                alert(data);
+
+                $(".error").remove();
+                var points = $("#points");
+                if (!points.val()) {
+                    points.after('<div class="error">Cannot be empty</div>');
+                } else if (!points.val().match(/[0-9]+/)) {
+                    points.after('<div class="error">Only digits allowed</div>')
+                }
+
+                var question = $("#question");
+                if (!question.val()) {
+                    question.after('<div class="error">Cannot be empty</div>');
+                } else if (question.val().match(/[<>]+/)) {
+                    question.after('<div class="error">Cannot contain "<" or ">"</div>');
+                }
+
+                var explanation = $("#explanation")
+                if (explanation.val().match(/[<>]+/)) {
+                    explanation.after('<div class="error">Cannot contain "<" or ">"</div>');
+                }
+
+                var questionType = $("#type").val();
+                switch(questionType) {
+                    case "ONE_ANSWER":
+                    case "FEW_ANSWERS":
+                        $("input[name*='answer']").each(function () {
+                            validateAnswer($(this));
+                        });
+                        var countOfCorrect = $("input[type='radio'][name='correct']:checked").length;
+                        if (countOfCorrect === 0) {
+                            alert("select correct answer");
+                        }
+                        break;
+                    case "ACCORDANCE":
+                    case "SEQUENCE":
+                        $("input[name*='left'], input[name*='right'], input[name*='sequence']").each(function () {
+                                validateAnswer($(this));
+                            });
+                        break;
+                    case "NUMBER":
+                        var number = $("#number");
+                        if (!number.val()) {
+                            number.after('<div class="error">Cannot be empty</div>');
+                        } else if (!number.val().match(/[0-9]+/)) {
+                            number.after('<div class="error">Only digits allowed</div>');
+                        }
+                        break;
+                }
+
+                function validateAnswer(answer) {
+                    if (!answer.val()) {
+                        answer.after('<div class="error">Cannot be empty</div>');
+                    } else if (answer.val().match(/[<>]+/)) {
+                        answer.after('<div class="error">Cannot contain "<" or ">"</div>');
                     }
-                });
-                alert(form.serialize());
+                }
+
+                // $.ajax({
+                //     type: form.attr("method"),
+                //     url: form.attr("action"),
+                //     data: form.serialize(),
+                //     success: function(data) {
+                //         alert("success: " + data);
+                //     }
+                // });
             });
 
             var oneAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
                 '                <div id="${status.index}" class="row margin-row">\n' +
                 '                    <div class="col-auto">\n' +
                 '                        <div class="custom-control custom-radio shifted-down">\n' +
-                '                            <input type="radio" id="status${status.index}" name="answer" value="incorrect"\n' +
+                '                            <input type="radio" id="status${status.index}" name="correct" value="answer${status.index}"\n' +
                 '                                   class="custom-control-input">\n' +
                 '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
                 '                        </div>\n' +
                 '                    </div>\n' +
                 '                    <div class="col-9">\n' +
-                '                        <input type="text" id="answer${status.index}" class="form-control is-invalid">\n' +
+                '                        <input type="text" id="answer${status.index}" name="answer${status.index}"\n' +
+                '                               class="form-control is-invalid">\n' +
                 '                    </div>\n' +
                 '                    <c:if test="${status.index eq 2}">\n' +
                 '                        <div class="col-1">\n' +
@@ -289,8 +342,8 @@
             $("#type").on("change", function () {
                 var answersContainer = $("#answersContainer");
                 answersContainer.empty();
-                var type = $(this).val();
-                switch (type) {
+                var questionType = $(this).val();
+                switch (questionType) {
                     case "ONE_ANSWER":
                         answersContainer.append(oneAnswers);
                         break;
@@ -308,7 +361,8 @@
                         break;
                 }
             });
-        });
+        })
+        ;
     </script>
 </head>
 <body>
@@ -341,6 +395,9 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+
+            </div>
             <div class="form-group">
                 <label for="question" class="col-form-label">
                     <strong>Question</strong>
@@ -363,7 +420,8 @@
                         </div>
                     </div>
                     <div class="col-9">
-                        <input type="text" id="answer${status.index}" name="answer${status.index}" class="form-control is-invalid">
+                        <input type="text" id="answer${status.index}" name="answer${status.index}"
+                               class="form-control is-invalid">
                     </div>
                     <c:if test="${status.index eq 2}">
                         <div class="col-1">

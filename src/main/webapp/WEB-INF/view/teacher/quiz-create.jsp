@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Quiz edit</title>
+    <title>Quiz create</title>
     <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
@@ -12,12 +12,13 @@
     <h2>Create quiz</h2>
     <form:form action="/teacher/quizzes/create" method="post" modelAttribute="quiz">
         <div class="form-group">
-            <form:label path="name" for="name">Name<span class="error">*</span>:</form:label>
+            <form:label path="name" for="name"><strong>Name</strong><span class="error">*</span></form:label>
             <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="Name"/>
             <form:errors path="name" cssClass="error"/>
         </div>
         <div class="form-group">
-            <div>Passing time:</div>
+            <div><strong>Passing time</strong></div>
+            <form:errors path="passingTime" cssClass="error"/>
             <div class="row">
                 <div class="col col-md-2">
                     <label for="hours">Hours </label>
@@ -34,13 +35,13 @@
             </div>
         </div>
         <div class="form-group">
-            <form:label path="description" for="description">Description:</form:label>
+            <form:label path="description" for="description"><strong>Description</strong></form:label>
             <form:textarea path="description" cssClass="col col-md-6 form-control"
                            rows="6" id="description" placeholder="Description"/>
             <form:errors path="description" cssClass="error"/>
         </div>
         <div class="form-group">
-            <form:label path="explanation" for="explanation">Explanation</form:label>
+            <form:label path="explanation" for="explanation"><strong>Explanation</strong></form:label>
             <form:textarea path="explanation" cssClass="col col-md-6 form-control"
                            rows="6" id="explanation" placeholder="Explanation"/>
             <form:errors path="explanation" cssClass="error"/>

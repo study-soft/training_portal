@@ -1,7 +1,6 @@
 package com.company.training_portal.dao.impl;
 
 import com.company.training_portal.config.AppConfig;
-import com.company.training_portal.dao.GroupDao;
 import com.company.training_portal.dao.QuestionDao;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
@@ -27,6 +26,7 @@ import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
@@ -47,9 +47,6 @@ public class QuizDaoJdbcTest {
     private QuestionDao questionDao;
 
     @Autowired
-    private GroupDao groupDao;
-
-    @Autowired
     private UserDao userDao;
 
     public void setQuizDao(QuizDao quizDao) {
@@ -58,10 +55,6 @@ public class QuizDaoJdbcTest {
 
     public void setQuestionDao(QuestionDao questionDao) {
         this.questionDao = questionDao;
-    }
-
-    public void setGroupDao(GroupDao groupDao) {
-        this.groupDao = groupDao;
     }
 
     public void setUserDao(UserDao userDao) {
@@ -83,9 +76,24 @@ public class QuizDaoJdbcTest {
                 .teacherQuizStatus(PUBLISHED)
                 .build();
 
-        Quiz quizByQuizId = quizDao.findQuiz(1L);
+        Quiz quiz = quizDao.findQuiz(1L);
 
-        assertEquals(testQuiz, quizByQuizId);
+        assertEquals(testQuiz, quiz);
+
+        Quiz testQuizWithoutQuestions = new Quiz.QuizBuilder()
+                .quizId(13L)
+                .name("SQL")
+                .creationDate(LocalDate.of(2018, 3, 29))
+                .authorId(1L)
+                .questionsNumber(0)
+                .score(0)
+                .teacherQuizStatus(UNPUBLISHED)
+                .build();
+
+        Quiz quizWithoutQuestions = quizDao.findQuiz(13L);
+
+        assertEquals(testQuizWithoutQuestions, quizWithoutQuestions);
+
     }
 
     @Test
@@ -101,36 +109,50 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuiz(8L));
         testQuizzes.add(quizDao.findQuiz(9L));
         testQuizzes.add(quizDao.findQuiz(10L));
+        testQuizzes.add(quizDao.findQuiz(11L));
+        testQuizzes.add(quizDao.findQuiz(12L));
+        testQuizzes.add(quizDao.findQuiz(13L));
 
-        List<Quiz> quizzes = quizDao.findAllQuizzes();
+        List<Quiz> quizzes = quizDao.findAllQuizzesWithQuestions();
 
         assertEquals(testQuizzes, quizzes);
     }
 
     @Test
     public void test_find_all_quizzes_by_authorId() {
-        List<Quiz> testQuizzes = new ArrayList<>();
-        testQuizzes.add(quizDao.findQuiz(1L));
-        testQuizzes.add(quizDao.findQuiz(2L));
-        testQuizzes.add(quizDao.findQuiz(10L));
-        testQuizzes.add(quizDao.findQuiz(9L));
-        testQuizzes.add(quizDao.findQuiz(5L));
+        List<Long> testQuizzes = new ArrayList<>(
+                asList(1L, 2L, 5L, 9L, 10L, 11L, 12L, 13L, 14L));
 
-        List<Quiz> quizzes = quizDao.findTeacherQuizzes(1L);
+        List<Long> quizzes = quizDao.findTeacherQuizIds(1L);
 
         assertEquals(testQuizzes, quizzes);
     }
 
     @Test
-    public void test_find_all_quizzes_by_author_id_and_teacher_quiz_status() {
-        List<Quiz> testQuizzes = new ArrayList<>();
-        testQuizzes.add(quizDao.findQuiz(1L));
-        testQuizzes.add(quizDao.findQuiz(2L));
-        testQuizzes.add(quizDao.findQuiz(5L));
+    public void test_find_published_quizzes_by_teacherId() {
+        List<Quiz> testPublishedQuizzes = new ArrayList<>();
+        testPublishedQuizzes.add(quizDao.findQuiz(1L));
+        testPublishedQuizzes.add(quizDao.findQuiz(2L));
+        testPublishedQuizzes.add(quizDao.findQuiz(11L));
+        testPublishedQuizzes.add(quizDao.findQuiz(12L));
+        testPublishedQuizzes.add(quizDao.findQuiz(5L));
 
-        List<Quiz> quizzes = quizDao.findTeacherQuizzes(1L, PUBLISHED);
+        List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(1L);
 
-        assertEquals(testQuizzes, quizzes);
+        assertEquals(testPublishedQuizzes, publishedQuizzes);
+    }
+
+    @Test
+    public void test_find_unpublished_quizzes_by_teacherId() {
+        List<Quiz> testUnpublishedQuizzes = new ArrayList<>();
+        testUnpublishedQuizzes.add(quizDao.findQuiz(9L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(10L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(13L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(14L));
+
+        List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(1L);
+
+        assertEquals(testUnpublishedQuizzes, unpublishedQuizzes);
     }
 
     @Test
@@ -493,6 +515,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_quiz_exists_by_name() {
         assertTrue(quizDao.quizExistsByName("Procedural"));
+        assertTrue(quizDao.quizExistsByName("SQL"));
         assertFalse(quizDao.quizExistsByName("Test name"));
     }
 
@@ -520,7 +543,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_add_quiz() {
         Quiz testQuiz = new Quiz.QuizBuilder()
-                .name("Servlet API")
+                .name("Spring core")
                 .description("description")
                 .explanation("explanation")
                 .creationDate(LocalDate.of(2018, 3, 7))
@@ -531,7 +554,6 @@ public class QuizDaoJdbcTest {
                 .teacherQuizStatus(TeacherQuizStatus.UNPUBLISHED)
                 .build();
         Long quizId = quizDao.addQuiz(testQuiz);
-        System.out.println(">>>>>quizId: " + quizId);
         Question question = new Question.QuestionBuilder()
                 .questionId(100_000L)
                 .quizId(quizId)

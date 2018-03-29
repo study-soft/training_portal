@@ -16,11 +16,13 @@ public interface QuizDao {
 
     Quiz findQuiz(Long quizId);
 
-    List<Quiz> findAllQuizzes();
+    List<Quiz> findAllQuizzesWithQuestions();
 
-    List<Quiz> findTeacherQuizzes(Long authorId);
+    List<Long> findTeacherQuizIds(Long authorId);
 
-    List<Quiz> findTeacherQuizzes(Long authorId, TeacherQuizStatus status);
+    List<Quiz> findUnpublishedQuizzes(Long teacherId);
+
+    List<Quiz> findPublishedQuizzes(Long teacherId);
 
     List<Quiz> findStudentQuizzes(Long studentId);
 

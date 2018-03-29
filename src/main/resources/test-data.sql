@@ -59,6 +59,10 @@ VALUES ('HTML forms', 'Try your HTML skills with forms', 'Hope you had HTML fun 
 VALUES ('Servlet API', NULL, NULL, '2018-03-27', NULL, 1, 'PUBLISHED');
 /*12*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Java server pages', NULL, NULL, '2018-03-27', NULL, 1, 'PUBLISHED');
+/*13*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('SQL', NULL, NULL, '2018-03-29', NULL, 1, 'UNPUBLISHED');
+/*14*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
+VALUES ('Javascript basics', NULL, NULL, '2018-03-29', NULL, 1, 'UNPUBLISHED');
 
 -- Table: user_quiz_junctions
 /*1*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)

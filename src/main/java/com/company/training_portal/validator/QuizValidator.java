@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.List;
 import java.util.regex.Pattern;
+
+import static com.company.training_portal.util.Utils.durationToTimeUnits;
 
 @Service
 public class QuizValidator implements Validator {
@@ -47,6 +50,35 @@ public class QuizValidator implements Validator {
         }
     }
 
+    public void validatePassingTime(String hours, String minutes, String seconds, Errors errors) {
+        if (hours != null && minutes != null && seconds != null) {
+            if (hours.isEmpty() && minutes.isEmpty() && seconds.isEmpty()) {
+                errors.rejectValue("passingTime", "quiz.passingTime.empty");
+                return;
+            }
+
+            if (!hours.isEmpty() && !hours.matches("[0-9]+")) {
+                errors.rejectValue("passingTime", "quiz.hours.format");
+            }
+
+            if (!minutes.isEmpty()) {
+                if (!minutes.matches("[0-9]+")) {
+                    errors.rejectValue("passingTime", "quiz.minutes.format");
+                } else if (Integer.valueOf(minutes) < 0 || Integer.valueOf(minutes) > 60) {
+                    errors.rejectValue("passingTime", "quiz.minutes.size");
+                }
+            }
+
+            if (!seconds.isEmpty()) {
+                if (!seconds.matches("[0-9]+")) {
+                    errors.rejectValue("passingTime", "quiz.seconds.format");
+                } else if (Integer.valueOf(seconds) < 0 || Integer.valueOf(seconds) > 60) {
+                    errors.rejectValue("passingTime", "quiz.seconds.size");
+                }
+            }
+        }
+    }
+
     public void validateExplanation(String explanation, Errors errors) {
         if (explanation == null) {
             return;
@@ -55,17 +87,5 @@ public class QuizValidator implements Validator {
         } else if (contains(explanation, "[<>]+")) {
             errors.rejectValue("explanation", "quiz.explanation.format");
         }
-    }
-
-    public void validateHours(String hours, Errors errors) {
-
-    }
-
-    public void validateMinutes(String minutes, Errors errors) {
-
-    }
-
-    public void validateSeconds(String seconds, Errors errors) {
-
     }
 }

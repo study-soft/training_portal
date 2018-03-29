@@ -13,6 +13,7 @@ import com.company.training_portal.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -57,16 +58,22 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public Quiz findQuiz(Long quizId) {
-        Quiz quiz = template.queryForObject(FIND_QUIZ_BY_QUIZ_ID,
-                new Object[]{quizId}, this::mapQuiz);
+        Quiz quiz;
+        try {
+            quiz = template.queryForObject(FIND_QUIZ_WITH_QUESTIONS_BY_QUIZ_ID,
+                    new Object[]{quizId}, this::mapQuiz);
+        } catch (EmptyResultDataAccessException e) {
+            quiz = template.queryForObject(FIND_QUIZ_WITHOUT_QUESTIONS_BY_QUIZ_ID,
+                    new Object[]{quizId}, this::mapQuiz);
+        }
         logger.info("Quiz found by quizId: " + quiz);
         return quiz;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findAllQuizzes() {
-        List<Quiz> quizzes = template.query(FIND_ALL_QUIZZES, this::mapQuiz);
+    public List<Quiz> findAllQuizzesWithQuestions() {
+        List<Quiz> quizzes = template.query(FIND_ALL_QUIZZES_WITH_QUESTIONS, this::mapQuiz);
         logger.info("All quizzes found:");
         quizzes.forEach(logger::info);
         return quizzes;
@@ -74,22 +81,32 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findTeacherQuizzes(Long authorId) {
-        List<Quiz> quizzes = template.query(FIND_ALL_QUIZZES_BY_AUTHOR_ID,
-                new Object[]{authorId}, this::mapQuiz);
-        logger.info("All quizzes by authorId found:");
-        quizzes.forEach(logger::info);
-        return quizzes;
+    public List<Long> findTeacherQuizIds(Long authorId) {
+        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID,
+                new Object[]{authorId}, Long.class);
+        logger.info("All quizIds by authorId found: " + quizIds);
+        return quizIds;
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findTeacherQuizzes(Long authorId, TeacherQuizStatus status) {
-        List<Quiz> quizzes = template.query(
-                FIND_QUIZZES_BY_AUTHOR_ID_AND_TEACHER_QUIZ_STATUS,
-                new Object[]{authorId, status.getTeacherQuizStatus()},
-                this::mapQuiz);
-        logger.info("All " + status + " quizzes by authorId found: ");
+    public List<Quiz> findUnpublishedQuizzes(Long teacherId) {
+        List<Quiz> quizzesWithQuestions = template.query(
+                FIND_UNPUBLISHED_QUIZZES_WITH_QUESTIONS_BY_AUTHOR_ID,
+                new Object[]{teacherId}, this::mapQuiz);
+        List<Quiz> quizzesWithoutQuestions = template.query(
+                FIND_UNPUBLISHED_QUIZZES_WITHOUT_QUESTIONS_BY_AUTHOR_ID,
+                new Object[]{teacherId}, this::mapQuiz);
+        quizzesWithQuestions.addAll(quizzesWithoutQuestions);
+        logger.info("Found unpublished quizzes by teacherId '" + teacherId + "':");
+        quizzesWithQuestions.forEach(logger::info);
+        return quizzesWithQuestions;
+    }
+
+    @Override
+    public List<Quiz> findPublishedQuizzes(Long teacherId) {
+        List<Quiz> quizzes = template.query(FIND_PUBLISHED_QUIZZES_BY_AUTHOR_ID,
+                new Object[]{teacherId}, this::mapQuiz);
+        logger.info("Found published quizzes by teacherId '" + teacherId + "':");
         quizzes.forEach(logger::info);
         return quizzes;
     }
@@ -414,17 +431,10 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public boolean quizExistsByName(String name) {
-        Quiz quiz = template.query(FIND_QUIZ_BY_NAME, new Object[]{name},
-                new ResultSetExtractor<Quiz>() {
-                    @Override
-                    public Quiz extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        if (!rs.next()) {
-                            return null;
-                        }
-                        return mapQuiz(rs, 0);
-                    }
-                });
-        if (quiz == null) {
+        try {
+            template.queryForObject(FIND_QUIZ_NAME_IF_EXISTS,
+                    new Object[]{name}, String.class);
+        } catch (EmptyResultDataAccessException e) {
             logger.info("No quiz exists by name: " + name);
             return false;
         }
@@ -588,7 +598,7 @@ public class QuizDaoJdbc implements QuizDao {
                 .build();
     }
 
-    private static final String FIND_QUIZ_BY_QUIZ_ID =
+    private static final String FIND_QUIZ_WITH_QUESTIONS_BY_QUIZ_ID =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
@@ -598,17 +608,14 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE QUIZZES.QUIZ_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;"; // Need group by for case when no quiz for such quizId
 
-    private static final String FIND_QUIZ_BY_NAME =
-    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
-    "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
-    "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
-    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
-    "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
-    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE QUIZZES.NAME = ? " +
-    "GROUP BY QUIZZES.QUIZ_ID;";
+    private static final String FIND_QUIZ_WITHOUT_QUESTIONS_BY_QUIZ_ID =
+    "SELECT *, 0 AS SCORE, 0 AS QUESTIONS_NUMBER " +
+    "FROM QUIZZES WHERE QUIZ_ID = ?;";
 
-    private static final String FIND_ALL_QUIZZES =
+    private static final String FIND_QUIZ_NAME_IF_EXISTS =
+    "SELECT NAME FROM QUIZZES WHERE QUIZZES.NAME = ?;";
+
+    private static final String FIND_ALL_QUIZZES_WITH_QUESTIONS =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
@@ -617,24 +624,32 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_QUIZZES_BY_AUTHOR_ID =
+    private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
+    "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
+
+    private static final String FIND_UNPUBLISHED_QUIZZES_WITH_QUESTIONS_BY_AUTHOR_ID =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
     "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
     "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE QUIZZES.AUTHOR_ID = ? " +
+    "WHERE QUIZZES.AUTHOR_ID = ? AND QUIZZES.TEACHER_QUIZ_STATUS = 'UNPUBLISHED' " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_QUIZZES_BY_AUTHOR_ID_AND_TEACHER_QUIZ_STATUS =
+    private static final String FIND_UNPUBLISHED_QUIZZES_WITHOUT_QUESTIONS_BY_AUTHOR_ID =
+    "SELECT *, 0 AS SCORE, 0 AS QUESTIONS_NUMBER FROM QUIZZES " +
+    "WHERE AUTHOR_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED' " +
+    "AND NOT EXISTS(SELECT QUESTION_ID FROM QUESTIONS WHERE QUESTIONS.QUIZ_ID = QUIZZES.QUIZ_ID);";
+
+    private static final String FIND_PUBLISHED_QUIZZES_BY_AUTHOR_ID =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
     "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
     "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
     "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
-    "WHERE QUIZZES.AUTHOR_ID = ? AND QUIZZES.TEACHER_QUIZ_STATUS = ? " +
+    "WHERE QUIZZES.AUTHOR_ID = ? AND QUIZZES.TEACHER_QUIZ_STATUS = 'PUBLISHED' " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
     private static final String FIND_QUIZZES_BY_STUDENT_ID =

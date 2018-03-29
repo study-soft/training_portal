@@ -27,9 +27,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
-import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
-
 @Controller
 @PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
@@ -135,8 +132,8 @@ public class TeacherController {
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
                                      Model model) {
-        List<Quiz> unpublishedQuizzes = quizDao.findTeacherQuizzes(teacherId, UNPUBLISHED);
-        List<Quiz> publishedQuizzes = quizDao.findTeacherQuizzes(teacherId, PUBLISHED);
+        List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(teacherId);
+        List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(teacherId);
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
         model.addAttribute("publishedQuizzes", publishedQuizzes);
 
@@ -148,12 +145,10 @@ public class TeacherController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         Quiz quiz = quizDao.findQuiz(quizId);
-        List<Quiz> teacherQuizzes = quizDao.findTeacherQuizzes(teacherId);
-        List<Long> teacherQuizzesIds = teacherQuizzes.stream()
-                .map(Quiz::getQuizId)
-                .collect(Collectors.toList());
+        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
 
-        if (teacherQuizzesIds.contains(quiz.getQuizId())) {
+        if (teacherQuizIds.contains(quiz.getQuizId())) {
+            logger.info("Access allowed");
             Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
             Map<String, Integer> stringQuestions = new HashMap<>();
             questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
@@ -170,6 +165,7 @@ public class TeacherController {
             }
             return "teacher/teacher";
         } else {
+            logger.info("access denied");
             return "access-denied";
         }
     }
@@ -572,9 +568,7 @@ public class TeacherController {
                            @RequestParam("seconds") String seconds,
                            RedirectAttributes redirectAttributes, ModelMap model) {
         quizValidator.validate(editedQuiz, bindingResult);
-        quizValidator.validateHours(hours, bindingResult);
-        quizValidator.validateMinutes(minutes, bindingResult);
-        quizValidator.validateSeconds(seconds, bindingResult);
+        quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
 
         Quiz oldQuiz = quizDao.findQuiz(quizId);
         String editedName = editedQuiz.getName();

@@ -3,16 +3,20 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
+import com.company.training_portal.model.enums.TeacherQuizStatus;
+import com.company.training_portal.validator.QuizValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +25,9 @@ import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 import static com.company.training_portal.util.Utils.roundOff;
+import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
 @Controller
 public class QuizController {
@@ -32,6 +38,7 @@ public class QuizController {
     private AnswerAccordanceDao answerAccordanceDao;
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
+    private QuizValidator quizValidator;
 
     private Logger logger = Logger.getLogger(QuizController.class);
 
@@ -41,24 +48,26 @@ public class QuizController {
                           AnswerSimpleDao answerSimpleDao,
                           AnswerAccordanceDao answerAccordanceDao,
                           AnswerSequenceDao answerSequenceDao,
-                          AnswerNumberDao answerNumberDao) {
+                          AnswerNumberDao answerNumberDao,
+                          QuizValidator quizValidator) {
         this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.answerSimpleDao = answerSimpleDao;
         this.answerAccordanceDao = answerAccordanceDao;
         this.answerSequenceDao = answerSequenceDao;
         this.answerNumberDao = answerNumberDao;
+        this.quizValidator = quizValidator;
     }
 
-    @ModelAttribute("studentId")
-    public Long getStudentId(@AuthenticationPrincipal SecurityUser securityUser) {
+    @ModelAttribute("userId")
+    public Long getUserId(@AuthenticationPrincipal SecurityUser securityUser) {
         return securityUser.getUserId();
     }
 
     //    STUDENT ZONE===============================================================
 
     @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
-    public String showQuizStart(@ModelAttribute("studentId") Long studentId,
+    public String showQuizStart(@ModelAttribute("userId") Long studentId,
                                 @PathVariable("quizId") Long quizId,
                                 @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
                                         Integer currentQuestionSerial,
@@ -73,7 +82,7 @@ public class QuizController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/initialize", method = RequestMethod.GET)
-    public String initializeQuiz(@ModelAttribute("studentId") Long studentId,
+    public String initializeQuiz(@ModelAttribute("userId") Long studentId,
                                  @PathVariable("quizId") Long quizId,
                                  HttpSession session,
                                  ModelMap model) {
@@ -111,7 +120,7 @@ public class QuizController {
 
     @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.GET)
-    public String showCurrentQuestionGet(@ModelAttribute("studentId") Long studentId,
+    public String showCurrentQuestionGet(@ModelAttribute("userId") Long studentId,
                                          @PathVariable("quizId") Long quizId,
                                          @SessionAttribute(value = CURRENT_QUIZ, required = false)
                                                  Quiz quiz,
@@ -145,12 +154,12 @@ public class QuizController {
 
     @SuppressWarnings({"unchecked", "Duplicates"})
     @RequestMapping(value = "/student/quizzes/{quizId}/passing", method = RequestMethod.POST)
-    public String showCurrentQuestionPost(@ModelAttribute("studentId") Long studentId,
+    public String showCurrentQuestionPost(@ModelAttribute("userId") Long studentId,
                                           @RequestParam Map<String, String> studentAnswers,
                                           @PathVariable("quizId") Long quizId,
                                           @SessionAttribute(CURRENT_QUIZ) Quiz quiz,
                                           @SessionAttribute(CURRENT_QUESTION_SERIAL)
-                                                      Integer currentQuestionSerial,
+                                                  Integer currentQuestionSerial,
                                           @SessionAttribute(QUESTIONS) List<Question> questions,
                                           @SessionAttribute(RESULT) Double result,
                                           HttpSession session, ModelMap model) {
@@ -256,7 +265,7 @@ public class QuizController {
     }
 
     @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
-    public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
+    public String showQuizRepass(@ModelAttribute("userId") Long studentId,
                                  @PathVariable("quizId") Long quizId,
                                  @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
                                          Integer currentQuestionSerial,
@@ -271,7 +280,7 @@ public class QuizController {
     }
 
     @RequestMapping("/student/quizzes/{quizId}/time-up")
-    public String showTimeUp(@ModelAttribute("studentId") Long studentId,
+    public String showTimeUp(@ModelAttribute("userId") Long studentId,
                              @PathVariable("quizId") Long quizId,
                              @SessionAttribute(value = RESULT, required = false)
                                      Double result,
@@ -283,7 +292,7 @@ public class QuizController {
     }
 
     @RequestMapping("/student/quizzes/{quizId}/congratulations")
-    public String showResult(@ModelAttribute("studentId") Long studentId,
+    public String showResult(@ModelAttribute("userId") Long studentId,
                              @PathVariable("quizId") Long quizId,
                              @SessionAttribute(value = RESULT, required = false) Double result,
                              @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
@@ -372,10 +381,54 @@ public class QuizController {
         return "/teacher/questions";
     }
 
-    @RequestMapping("/teacher/quizzes/create")
-    public String createQuiz(Model model) {
+    @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.GET)
+    public String showCreateQuiz(Model model) {
         model.addAttribute("quiz", new Quiz());
         return "teacher/quiz-create";
+    }
+
+    @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.POST)
+    public String createQuiz(@ModelAttribute("userId") Long teacherId,
+                             @ModelAttribute("quiz") Quiz quiz,
+                             @RequestParam("hours") String hours,
+                             @RequestParam("minutes") String minutes,
+                             @RequestParam("seconds") String seconds,
+                             BindingResult bindingResult, ModelMap model) {
+        quizValidator.validate(quiz, bindingResult);
+        quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
+
+        if (quizDao.quizExistsByName(quiz.getName())) {
+            bindingResult.rejectValue("name", "quiz.name.exists");
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("hours", hours);
+            model.addAttribute("minutes", minutes);
+            model.addAttribute("seconds", seconds);
+            return "teacher/quiz-create";
+        }
+
+        Duration passingTime = timeUnitsToDuration(
+                hours.isEmpty() ? 0 : Integer.valueOf(hours),
+                minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
+                seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
+        LocalDate creationDate = LocalDate.now();
+        Quiz newQuiz = new Quiz.QuizBuilder()
+                .name(quiz.getName())
+                .description(quiz.getDescription())
+                .explanation(quiz.getExplanation())
+                .creationDate(creationDate)
+                .passingTime(passingTime)
+                .authorId(teacherId)
+                .questionsNumber(0)
+                .score(0)
+                .teacherQuizStatus(UNPUBLISHED)
+                .build();
+
+        Long newQuizId = quizDao.addQuiz(newQuiz);
+        model.clear();
+
+        return "redirect: /teacher/quizzes/" + newQuizId;
     }
 
     //    INTERNALS===================================================================

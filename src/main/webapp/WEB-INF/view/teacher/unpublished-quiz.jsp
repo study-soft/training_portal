@@ -39,16 +39,20 @@
             <a href="#" class="btn btn-success">Publish</a>
         </div>
     </div>
-    <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
+    <c:if test="${unpublishedQuiz.description ne null}">
+        <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
+    </c:if>
     <table class="table-info col-6">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>
         </tr>
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${unpublishedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${unpublishedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${unpublishedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Score</td>
             <td>${unpublishedQuiz.score}</td>
@@ -57,10 +61,12 @@
             <td>Total questions</td>
             <td>${unpublishedQuiz.questionsNumber}</td>
         </tr>
-        <tr>
-            <td>Questions by types:</td>
-            <td></td>
-        </tr>
+        <c:if test="${not empty questions}">
+            <tr>
+                <td>Questions by types:</td>
+                <td></td>
+            </tr>
+        </c:if>
         <c:if test="${questions['ONE_ANSWER'] ne null}">
             <tr>
                 <td style="font-weight: normal">One answer</td>
@@ -92,7 +98,9 @@
             </tr>
         </c:if>
     </table>
-    <div><strong>Explanation: </strong>${unpublishedQuiz.explanation}</div>
+    <c:if test="${unpublishedQuiz.explanation ne null}">
+        <div><strong>Explanation: </strong>${unpublishedQuiz.explanation}</div>
+    </c:if>
     <div class="highlight-primary">
         <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
              width="25" height="25" class="icon-one-row">

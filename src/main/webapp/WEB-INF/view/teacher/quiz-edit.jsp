@@ -5,6 +5,19 @@
 <head>
     <title>Quiz edit</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var passingTimeRemoved;
+            $("#enabled").change(function () {
+                if (passingTimeRemoved) {
+                    $("#after").after(passingTimeRemoved);
+                    passingTimeRemoved = null;
+                } else {
+                    passingTimeRemoved = $("#passingTime").detach();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -17,8 +30,16 @@
             <form:errors path="name" cssClass="error"/>
         </div>
         <div class="form-group">
-            <div>Passing time:</div>
-            <div class="row">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="enabled" name="enabled"
+                       value="enabled" class="custom-control-input" checked>
+                <label for="enabled" class="custom-control-label">
+                    <strong>Passing time</strong>
+                </label>
+            </div>
+            <form:errors path="passingTime" cssClass="error"/>
+            <span id="after"></span>
+            <div id="passingTime" class="row">
                 <div class="col col-md-2">
                     <label for="hours">Hours </label>
                     <input type="text" class="form-control" id="hours" name="hours" value="${hours}">

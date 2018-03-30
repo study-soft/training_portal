@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
+import static com.company.training_portal.util.Utils.durationToTimeUnits;
 
 @Repository
 public class QuizDaoJdbc implements QuizDao {
@@ -88,6 +89,7 @@ public class QuizDaoJdbc implements QuizDao {
         return quizIds;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Quiz> findUnpublishedQuizzes(Long teacherId) {
         List<Quiz> quizzesWithQuestions = template.query(
@@ -102,6 +104,7 @@ public class QuizDaoJdbc implements QuizDao {
         return quizzesWithQuestions;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Quiz> findPublishedQuizzes(Long teacherId) {
         List<Quiz> quizzes = template.query(FIND_PUBLISHED_QUIZZES_BY_AUTHOR_ID,
@@ -520,12 +523,13 @@ public class QuizDaoJdbc implements QuizDao {
         throw new UnsupportedOperationException();
     }
 
+    @Transactional
     @Override
     public void editQuiz(Long quizId, String name, String description,
                          String explanation, Duration passingTime) {
-        List<Integer> timeUnits = Utils.durationToTimeUnits(passingTime);
+        List<Integer> timeUnits = durationToTimeUnits(passingTime);
         template.update(EDIT_QUIZ_BY_QUIZ_ID_NAME_DESCRIPTION_EXPLANATION_PASSING_TIME,
-                name, description, explanation,
+                name, description, explanation, timeUnits == null ? null :
                 Time.valueOf(LocalTime.of(timeUnits.get(0), timeUnits.get(1), timeUnits.get(2))),
                 quizId);
     }

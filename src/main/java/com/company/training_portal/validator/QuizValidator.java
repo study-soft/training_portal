@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.company.training_portal.util.Utils.durationToTimeUnits;
 
 @Service
 public class QuizValidator implements Validator {

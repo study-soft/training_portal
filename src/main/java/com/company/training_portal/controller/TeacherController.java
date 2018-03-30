@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.util.Utils.timeUnitsToDuration;
+
 @Controller
 @PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
@@ -551,10 +553,13 @@ public class TeacherController {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
 
-        List<Integer> timeUnits = Utils.durationToTimeUnits(quiz.getPassingTime());
-        model.addAttribute("hours", timeUnits.get(0));
-        model.addAttribute("minutes", timeUnits.get(1));
-        model.addAttribute("seconds", timeUnits.get(2));
+        Duration passingTime = quiz.getPassingTime();
+        if (passingTime != null) {
+            List<Integer> timeUnits = Utils.durationToTimeUnits(passingTime);
+            model.addAttribute("hours", timeUnits.get(0));
+            model.addAttribute("minutes", timeUnits.get(1));
+            model.addAttribute("seconds", timeUnits.get(2));
+        }
 
         return "teacher/quiz-edit";
     }
@@ -563,12 +568,19 @@ public class TeacherController {
     public String editQuiz(@PathVariable("quizId") Long quizId,
                            @ModelAttribute("quiz") Quiz editedQuiz,
                            BindingResult bindingResult,
-                           @RequestParam("hours") String hours,
-                           @RequestParam("minutes") String minutes,
-                           @RequestParam("seconds") String seconds,
+                           @RequestParam(value = "enabled", required = false)
+                                   String enabled,
+                           @RequestParam(value = "hours", required = false)
+                                   String hours,
+                           @RequestParam(value = "minutes", required = false)
+                                   String minutes,
+                           @RequestParam(value = "seconds", required = false)
+                                   String seconds,
                            RedirectAttributes redirectAttributes, ModelMap model) {
         quizValidator.validate(editedQuiz, bindingResult);
-        quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
+        if (enabled != null) {
+            quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
+        }
 
         Quiz oldQuiz = quizDao.findQuiz(quizId);
         String editedName = editedQuiz.getName();
@@ -581,8 +593,13 @@ public class TeacherController {
             return "teacher/quiz-edit";
         }
 
-        Duration editedPassingTime = Utils.timeUnitsToDuration(Integer.valueOf(hours),
-                Integer.valueOf(minutes), Integer.valueOf(seconds));
+        Duration editedPassingTime = null;
+        if (enabled != null) {
+            editedPassingTime = timeUnitsToDuration(
+                    hours.isEmpty() ? 0 : Integer.valueOf(hours),
+                    minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
+                    seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
+        }
         quizDao.editQuiz(oldQuiz.getQuizId(), editedQuiz.getName(), editedQuiz.getDescription(),
                 editedQuiz.getExplanation(), editedPassingTime);
 

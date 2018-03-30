@@ -390,12 +390,19 @@ public class QuizController {
     @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.POST)
     public String createQuiz(@ModelAttribute("userId") Long teacherId,
                              @ModelAttribute("quiz") Quiz quiz,
-                             @RequestParam("hours") String hours,
-                             @RequestParam("minutes") String minutes,
-                             @RequestParam("seconds") String seconds,
+                             @RequestParam(value = "enabled", required = false)
+                                     String enabled,
+                             @RequestParam(value = "hours", required = false)
+                                     String hours,
+                             @RequestParam(value = "minutes", required = false)
+                                     String minutes,
+                             @RequestParam(value = "seconds", required = false)
+                                     String seconds,
                              BindingResult bindingResult, ModelMap model) {
         quizValidator.validate(quiz, bindingResult);
-        quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
+        if (enabled != null) {
+            quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
+        }
 
         if (quizDao.quizExistsByName(quiz.getName())) {
             bindingResult.rejectValue("name", "quiz.name.exists");
@@ -408,15 +415,18 @@ public class QuizController {
             return "teacher/quiz-create";
         }
 
-        Duration passingTime = timeUnitsToDuration(
-                hours.isEmpty() ? 0 : Integer.valueOf(hours),
-                minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
-                seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
+        Duration passingTime = null;
+        if (enabled != null) {
+            passingTime = timeUnitsToDuration(
+                    hours.isEmpty() ? 0 : Integer.valueOf(hours),
+                    minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
+                    seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
+        }
         LocalDate creationDate = LocalDate.now();
         Quiz newQuiz = new Quiz.QuizBuilder()
                 .name(quiz.getName())
-                .description(quiz.getDescription())
-                .explanation(quiz.getExplanation())
+                .description(quiz.getDescription().isEmpty() ? null : quiz.getDescription())
+                .explanation(quiz.getExplanation().isEmpty() ? null : quiz.getExplanation())
                 .creationDate(creationDate)
                 .passingTime(passingTime)
                 .authorId(teacherId)

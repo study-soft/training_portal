@@ -11,6 +11,9 @@ public class Utils {
     }
 
     public static List<Integer> durationToTimeUnits(Duration duration) {
+        if (duration == null) {
+            return null;
+        }
         long seconds = duration.toSeconds();
         int effectiveSeconds = (int) seconds % 60;
         int minutes = (int) seconds / 60;

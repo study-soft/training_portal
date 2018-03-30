@@ -23,16 +23,20 @@
             <a href="#" class="btn btn-danger">Unpublish</a>
         </div>
     </div>
-    <div><strong>Description: </strong>${publishedQuiz.description}</div>
+    <c:if test="${publishedQuiz.description ne null}">
+        <div><strong>Description: </strong>${publishedQuiz.description}</div>
+    </c:if>
     <table class="table-info col-6">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
         </tr>
-        <tr>
-            <td>Passing time</td>
-            <td><duration:format value="${publishedQuiz.passingTime}"/></td>
-        </tr>
+        <c:if test="${publishedQuiz.passingTime ne null}">
+            <tr>
+                <td>Passing time</td>
+                <td><duration:format value="${publishedQuiz.passingTime}"/></td>
+            </tr>
+        </c:if>
         <tr>
             <td>Score</td>
             <td>${publishedQuiz.score}</td>
@@ -76,7 +80,9 @@
             </tr>
         </c:if>
     </table>
-    <div><strong>Explanation: </strong>${publishedQuiz.explanation}</div>
+    <c:if test="${publishedQuiz.explanation ne null}">
+        <div><strong>Explanation: </strong>${publishedQuiz.explanation}</div>
+    </c:if>
     <div class="highlight-primary">
         <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
              width="25" height="25" class="icon-one-row">
@@ -85,7 +91,8 @@
     <div class="highlight-primary">
         <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
              width="25" height="25" class="icon-one-row">
-        You can see groups and students where quiz was published <a href="#">here <i class="fa fa-external-link"></i></a>
+        You can see groups and students where quiz was published <a href="#">here <i
+            class="fa fa-external-link"></i></a>
     </div>
     <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>

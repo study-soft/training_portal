@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -620,7 +622,7 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
     @ResponseBody
-    public String editQuestion(@PathVariable("quizId") Long quizId,
+    public ResponseEntity<?> editQuestion(@PathVariable("quizId") Long quizId,
                                @RequestParam Map<String, String> params) {
         logger.info(params);
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
@@ -723,6 +725,20 @@ public class TeacherController {
                 answerNumberDao.addAnswerNumber(answerNumber);
                 break;
         }
-        return "success";
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping("/teacher/quizzes/{quizId}/questions/delete")
+    @ResponseBody
+    public ResponseEntity<?> deleteQuestion(@PathVariable("quizId") Long quizId,
+                                 @RequestParam("questionId") Long questionId) {
+        questionDao.deleteQuestion(questionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping("/teacher/quizzes/{quizId}/questions/hello")
+    @ResponseBody
+    public String hello(@PathVariable("quizId") Long quizId) {
+        return "hello";
     }
 }

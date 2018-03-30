@@ -22,13 +22,11 @@
             <div class="col-8">
                 <table class="table">
                     <tr>
-                        <th style="width: 70%">Students</th>
-                        <th style="width: 30%"></th>
+                        <th>Students without group</th>
                     </tr>
-                    <c:forEach items="${students}" var="student" varStatus="status">
+                    <c:forEach items="${students}" var="student">
                         <tr>
                             <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                            <td>${singleStudentGroups[status.index].name}</td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -65,13 +63,11 @@
                 <div class="col-8">
                     <table class="table">
                         <tr>
-                            <th style="width: 70%">Students</th>
-                            <th style="width: 30%"></th>
+                            <th>Students without group</th>
                         </tr>
                         <c:forEach items="${students}" var="student" varStatus="status">
                             <tr>
                                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                                <td>${singleStudentGroups[status.index].name}</td>
                             </tr>
                         </c:forEach>
                     </table>

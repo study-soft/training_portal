@@ -34,6 +34,7 @@ h5, h6 {
 .table th {
     background-color: #0380ff;
     color: white;
+    border: none;
 }
 
 .table-info {
@@ -135,7 +136,13 @@ h5, h6 {
     text-decoration: none;
 }
 
-.success:hover {
+.success-button {
+    border: 0;
+    background: none;
+    color: #189e1d;
+}
+
+.success:hover, .success-button:hover {
     color: darkgreen;
 }
 

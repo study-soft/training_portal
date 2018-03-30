@@ -21,7 +21,7 @@
     <h2>Group results</h2>
     <h3>${quiz.name}</h3>
     <c:choose>
-        <c:when test="${not empty studentsInGroup}">
+        <c:when test="${not empty students}">
             <table class="table">
                 <tr>
                     <th>Name</th>
@@ -30,7 +30,7 @@
                     <th>Time spent</th>
                     <th>Status</th>
                 </tr>
-                <c:forEach items="${studentsInGroup}" var="student" varStatus="status">
+                <c:forEach items="${students}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                         <c:choose>

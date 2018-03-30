@@ -22,18 +22,25 @@
         <h3>Progress of passed quizzes</h3>
         <table class="table">
             <tr>
-                <th style="width: 30%">Name</th>
-                <th style="width: 18.33%;">Opened students</th>
-                <th style="width: 18.33%;">Passed students</th>
-                <th style="width: 18.33%;">Closed students</th>
-                <th style="width: 15%"></th>
+                <th></th>
+                <th colspan="4" class="text-center">Students</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th style="width: 30%;">Quiz name</th>
+                <th style="width: 12.5%">Total</th>
+                <th style="width: 12.5%;">Opened</th>
+                <th style="width: 12.5%;">Passed</th>
+                <th style="width: 12.5%;">Closed</th>
+                <th style="width: 20%"></th>
             </tr>
             <c:forEach items="${passedQuizzes}" var="passedQuiz" varStatus="status">
-                <c:set var="map" value="${students[status.index]}"/>
+                <c:set var="map" value="${quizStudents[status.index]}"/>
                 <tr>
                     <td>
                         <a href="/teacher/results/group/${group.groupId}/quiz/${passedQuiz.quizId}">${passedQuiz.name}</a>
                     </td>
+                    <td>${map['TOTAL']}</td>
                     <td>${map['OPENED']}</td>
                     <td>${map['PASSED']}</td>
                     <td>${map['CLOSED']}</td>

@@ -232,23 +232,29 @@ public class StudentController {
     @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
+        Long groupId = student.getGroupId();
 
-        List<PassedQuiz> commonPassedQuizzes = new ArrayList<>();
-        List<PassedQuiz> commonClosedQuizzes = new ArrayList<>();
-        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
-        for (Long quizId : commonGroupQuizIds) {
+        List<PassedQuiz> notSinglePassedQuizzes = new ArrayList<>();
+        List<PassedQuiz> notSingleClosedQuizzes = new ArrayList<>();
+        List<Quiz> studentQuizzes = quizDao.findStudentQuizzes(studentId);
+        for (Quiz quiz : studentQuizzes) {
+            Long quizId = quiz.getQuizId();
             StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+            Integer studentsNumber = userDao.findStudentsNumber(groupId, quizId);
+            if (studentsNumber.equals(1)) {
+                continue;
+            }
             switch (status) {
                 case PASSED:
-                    commonPassedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
+                    notSinglePassedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
                     break;
                 case CLOSED:
-                    commonClosedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
+                    notSingleClosedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
             }
         }
 
-        model.addAttribute("commonPassedQuizzes", commonPassedQuizzes);
-        model.addAttribute("commonClosedQuizzes", commonClosedQuizzes);
+        model.addAttribute("notSinglePassedQuizzes", notSinglePassedQuizzes);
+        model.addAttribute("notSingleClosedQuizzes", notSingleClosedQuizzes);
 
         List<PassedQuiz> passedQuizzes =
                 quizDao.findPassedQuizzes(studentId);
@@ -271,12 +277,12 @@ public class StudentController {
         model.addAttribute("quiz", quiz);
 
         User student = userDao.findUser(studentId);
-        List<User> studentsInGroup = userDao.findStudents(student.getGroupId());
-        model.addAttribute("studentsInGroup", studentsInGroup);
+        List<User> students = userDao.findStudents(student.getGroupId(), quizId);
+        model.addAttribute("students", students);
 
         List<PassedQuiz> studentsQuizzes = new ArrayList<>();
         List<StudentQuizStatus> statusList = new ArrayList<>();
-        for (User currentStudent : studentsInGroup) {
+        for (User currentStudent : students) {
             Long currentStudentId = currentStudent.getUserId();
             StudentQuizStatus status = quizDao.findStudentQuizStatus(currentStudentId, quizId);
             statusList.add(status);

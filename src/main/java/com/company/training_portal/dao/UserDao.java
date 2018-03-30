@@ -25,6 +25,8 @@ public interface UserDao {
 
     List<User> findStudents(Long groupId);
 
+    List<User> findStudents(Long groupId, Long quizId);
+
     List<User> findStudentsByTeacherId(Long teacherId);
 
     List<User> findAllStudents();
@@ -42,6 +44,8 @@ public interface UserDao {
     List<Long> findStudentIdsByGroupIdAndQuizId(Long quizId, Long groupId);
 
     Integer findStudentsNumber();
+
+    Integer findStudentsNumber(Long groupId, Long quizId);
 
     Integer findTeachersNumber();
 

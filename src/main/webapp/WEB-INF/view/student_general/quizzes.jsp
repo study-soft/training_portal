@@ -28,11 +28,12 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 27.5%">Name</th>
+                    <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
-                    <th style="width: 10%">Score</th>
+                    <th style="width: 7.5%">Score</th>
                     <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 30%">Author</th>
+                    <th style="width: 25%">Author</th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
@@ -41,6 +42,7 @@
                         <td>${openedQuiz.score}</td>
                         <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
                         <td>${openedQuiz.authorName}</td>
+                        <td></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -58,11 +60,12 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 27.5%">Name</th>
+                    <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
-                    <th style="width: 10%">Score</th>
+                    <th style="width: 7.5%">Score</th>
                     <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 30%">Author</th>
+                    <th style="width: 25%">Author</th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
@@ -71,6 +74,11 @@
                         <td>${passedQuiz.score}</td>
                         <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
                         <td>${passedQuiz.authorName}</td>
+                        <td>
+                            <form action="/student/quizzes/${passedQuiz.quizId}" method="post" style="margin: 0">
+                                <button type="submit" class="success-button"><i class="fa fa-close"></i> Close</button>
+                            </form>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -88,11 +96,12 @@
         <c:otherwise>
             <table class="table">
                 <tr>
-                    <th style="width: 27.5%">Name</th>
+                    <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
-                    <th style="width: 10%">Score</th>
+                    <th style="width: 7.5%">Score</th>
                     <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 30%">Author</th>
+                    <th style="width: 25%">Author</th>
+                    <th style="width: 10%"></th>
                 </tr>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
@@ -101,6 +110,7 @@
                         <td>${closedQuiz.score}</td>
                         <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
                         <td>${closedQuiz.authorName}</td>
+                        <td></td>
                     </tr>
                 </c:forEach>
             </table>

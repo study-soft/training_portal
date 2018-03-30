@@ -45,7 +45,7 @@
                         <td><duration:format value="${passedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
                         <c:choose>
-                            <c:when test="${fn:contains(commonPassedQuizzes, passedQuiz)}">
+                            <c:when test="${fn:contains(notSinglePassedQuizzes, passedQuiz)}">
                                 <td><a href="/student/results/${passedQuiz.quizId}">Compare</a></td>
                             </c:when>
                             <c:otherwise>
@@ -84,7 +84,7 @@
                         <td><duration:format value="${closedQuiz.timeSpent}"/></td>
                         <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
                         <c:choose>
-                            <c:when test="${fn:contains(commonClosedQuizzes, closedQuiz)}">
+                            <c:when test="${fn:contains(notSingleClosedQuizzes, closedQuiz)}">
                                 <td><a href="/student/results/${closedQuiz.quizId}">Compare</a></td>
                             </c:when>
                             <c:otherwise>

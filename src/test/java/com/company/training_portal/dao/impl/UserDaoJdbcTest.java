@@ -99,6 +99,17 @@ public class UserDaoJdbcTest {
     }
 
     @Test
+    public void test_find_students_by_groupId_and_quizId() {
+        List<User> testStudents = new ArrayList<>();
+        testStudents.add(userDao.findUser(3L));
+        testStudents.add(userDao.findUser(4L));
+
+        List<User> students = userDao.findStudents(1L, 11L);
+
+        assertEquals(testStudents, students);
+    }
+
+    @Test
     public void test_find_students_by_teacherId() {
         List<User> testStudents = new ArrayList<>();
         testStudents.add(userDao.findUser(5L));
@@ -178,6 +189,15 @@ public class UserDaoJdbcTest {
     public void test_find_teachers_number() {
         Integer teachersNumber = userDao.findTeachersNumber();
         assertThat(teachersNumber, is(2));
+    }
+
+    @Test
+    public void test_find_students_number_by_groupId_and_quizId() {
+        Integer studentsNumber1 = userDao.findStudentsNumber(1L, 1L);
+        Integer studentsNumber2 = userDao.findStudentsNumber(1L, 12L);
+
+        assertThat(studentsNumber1, is(6));
+        assertThat(studentsNumber2, is(2));
     }
 
     @Test

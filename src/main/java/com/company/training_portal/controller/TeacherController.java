@@ -385,7 +385,9 @@ public class TeacherController {
                 .build();
         groupDao.editGroup(editedGroup);
 
-        redirectAttributes.addFlashAttribute("editSuccess", true);
+        if (!oldGroup.equals(editedGroup)) {
+            redirectAttributes.addFlashAttribute("editSuccess", true);
+        }
         model.clear();
         return "redirect:/teacher/groups/" + groupId;
     }
@@ -414,28 +416,8 @@ public class TeacherController {
         List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
         model.addAttribute("groups", groups);
 
-        List<User> teacherSingleStudents = new ArrayList<>();
-        List<Group> singleStudentGroups = new ArrayList<>();
-        List<User> teacherStudents = userDao.findStudentsByTeacherId(teacherId);
-        for (User student : teacherStudents) {
-            List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
-            List<Long> studentQuizIds = quizDao.findQuizzes(student.getUserId(), teacherId)
-                    .stream()
-                    .map(Quiz::getQuizId)
-                    .collect(Collectors.toList());
-            if (!commonGroupQuizIds.containsAll(studentQuizIds)) {
-                teacherSingleStudents.add(student);
-                Long groupId = student.getGroupId();
-                if (groupId == 0) {
-                    singleStudentGroups.add(null);
-                } else {
-                    singleStudentGroups.add(groupDao.findGroup(groupId));
-                }
-            }
-        }
-
-        model.addAttribute("singleStudentGroups", singleStudentGroups);
-        model.addAttribute("students", teacherSingleStudents);
+        List<User> teacherStudents = userDao.findStudentsWithoutGroup(teacherId);
+        model.addAttribute("students", teacherStudents);
 
         return "teacher/teacher-results";
     }
@@ -443,37 +425,42 @@ public class TeacherController {
     @RequestMapping("/teacher/results/group/{groupId}")
     public String showGroupResults(@ModelAttribute("teacherId") Long teacherId,
                                    @PathVariable("groupId") Long groupId, Model model) {
-        List<Quiz> quizzes = quizDao.findCommonGroupQuizzes(groupId, teacherId);
+        List<Quiz> groupQuizzes = quizDao.findGroupQuizzes(groupId, teacherId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
         model.addAttribute("studentsNumber", studentsNumber);
 
         List<Quiz> closedQuizzes = new ArrayList<>();
+        List<Quiz> passedQuizzes = new ArrayList<>();
         List<LocalDateTime> closingDates = new ArrayList<>();
-        List<Map<String, Integer>> students = new ArrayList<>();
+        List<Map<String, Integer>> quizStudents = new ArrayList<>();
 
-        for (Quiz quiz : quizzes) {
+        for (Quiz quiz : groupQuizzes) {
             Long quizId = quiz.getQuizId();
             Integer closedStudents =
                     userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
-            if (closedStudents.equals(studentsNumber)) {
+            Map<StudentQuizStatus, Integer> enumMap =
+                    quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
+            Map<String, Integer> stringMap = new HashMap<>();
+            enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
+            Integer totalStudents = stringMap
+                    .values()
+                    .stream()
+                    .reduce(0, (x, y) -> x + y);
+            stringMap.put("TOTAL", totalStudents);
+            if (closedStudents.equals(totalStudents)) {
                 closedQuizzes.add(quiz);
                 LocalDateTime closingDate = quizDao.findClosingDate(groupId, quizId);
                 closingDates.add(closingDate);
             } else {
-                Map<StudentQuizStatus, Integer> enumMap =
-                        quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
-                Map<String, Integer> stringMap = new HashMap<>();
-                enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
-                students.add(stringMap);
+                passedQuizzes.add(quiz);
+                quizStudents.add(stringMap);
             }
         }
-        quizzes.removeAll(closedQuizzes);
-        List<Quiz> passedQuizzes = new ArrayList<>(quizzes);
 
         model.addAttribute("closedQuizzes", closedQuizzes);
         model.addAttribute("closingDates", closingDates);
-        model.addAttribute("students", students);
         model.addAttribute("passedQuizzes", passedQuizzes);
+        model.addAttribute("quizStudents", quizStudents);
 
         Group group = groupDao.findGroup(groupId);
         model.addAttribute("group", group);
@@ -487,15 +474,14 @@ public class TeacherController {
                                        @PathVariable("groupId") Long groupId,
                                        @PathVariable("quizId") Long quizId,
                                        Model model) {
-        List<User> students = userDao.findStudents(groupId);
         Group group = groupDao.findGroup(groupId);
         Quiz quiz = quizDao.findQuiz(quizId);
-
-        model.addAttribute("students", students);
+        List<User> students = userDao.findStudents(groupId, quizId);
         model.addAttribute("group", group);
         model.addAttribute("quiz", quiz);
+        model.addAttribute("students", students);
 
-        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
+        Integer studentsNumber = userDao.findStudentsNumber(groupId, quizId);
         Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
 
         if (closedStudents.equals(studentsNumber)) {

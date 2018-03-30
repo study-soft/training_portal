@@ -24,6 +24,8 @@ public interface QuizDao {
 
     List<Quiz> findPublishedQuizzes(Long teacherId);
 
+    List<Quiz> findGroupQuizzes(Long groupId, Long teacherId);
+
     List<Quiz> findStudentQuizzes(Long studentId);
 
     Integer findQuizzesNumber(Long authorId);
@@ -41,8 +43,6 @@ public interface QuizDao {
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
     List<Long> findCommonGroupQuizIds(Long groupId);
-
-    List<Quiz> findCommonGroupQuizzes(Long groupId, Long teacherId);
 
     Integer findResult(Long studentId, Long quizId);
 

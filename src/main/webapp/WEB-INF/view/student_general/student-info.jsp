@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
+<%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -62,18 +64,22 @@
             <table class="table">
                 <tr>
                     <th>Name</th>
-                    <th>Status</th>
                     <th>Result</th>
                     <th>Attempt</th>
+                    <th>Time spent</th>
+                    <th>Passed</th>
+                    <th>Status</th>
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
                         <td id="${openedQuiz.quizId}">
                             <a href="/student/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a>
                         </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>OPENED</td>
-                        <td></td>
-                        <td></td>
                     </tr>
                 </c:forEach>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
@@ -81,9 +87,11 @@
                         <td id="${passedQuiz.quizId}">
                             <a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
                         </td>
-                        <td>PASSED</td>
                         <td>${passedQuiz.result}/${passedQuiz.score}</td>
                         <td>${passedQuiz.attempt}</td>
+                        <td><duration:format value="${passedQuiz.timeSpent}"/></td>
+                        <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
+                        <td>PASSED</td>
                     </tr>
                 </c:forEach>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
@@ -91,9 +99,11 @@
                         <td id="${closedQuiz.quizId}">
                             <a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a>
                         </td>
-                        <td>CLOSED</td>
                         <td>${closedQuiz.result}/${closedQuiz.score}</td>
                         <td>${closedQuiz.attempt}</td>
+                        <td><duration:format value="${closedQuiz.timeSpent}"/></td>
+                        <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
+                        <td>CLOSED</td>
                     </tr>
                 </c:forEach>
             </table>

@@ -129,6 +129,19 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
+    public void test_find_unpublished_quizzes_by_teacherId() {
+        List<Quiz> testUnpublishedQuizzes = new ArrayList<>();
+        testUnpublishedQuizzes.add(quizDao.findQuiz(9L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(10L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(13L));
+        testUnpublishedQuizzes.add(quizDao.findQuiz(14L));
+
+        List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(1L);
+
+        assertEquals(testUnpublishedQuizzes, unpublishedQuizzes);
+    }
+
+    @Test
     public void test_find_published_quizzes_by_teacherId() {
         List<Quiz> testPublishedQuizzes = new ArrayList<>();
         testPublishedQuizzes.add(quizDao.findQuiz(1L));
@@ -143,16 +156,17 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_unpublished_quizzes_by_teacherId() {
-        List<Quiz> testUnpublishedQuizzes = new ArrayList<>();
-        testUnpublishedQuizzes.add(quizDao.findQuiz(9L));
-        testUnpublishedQuizzes.add(quizDao.findQuiz(10L));
-        testUnpublishedQuizzes.add(quizDao.findQuiz(13L));
-        testUnpublishedQuizzes.add(quizDao.findQuiz(14L));
+    public void test_find_group_quizzes() {
+        List<Quiz> testGroupQuizzes = new ArrayList<>();
+        testGroupQuizzes.add(quizDao.findQuiz(2L));
+        testGroupQuizzes.add(quizDao.findQuiz(5L));
+        testGroupQuizzes.add(quizDao.findQuiz(12L));
+        testGroupQuizzes.add(quizDao.findQuiz(1L));
+        testGroupQuizzes.add(quizDao.findQuiz(11L));
 
-        List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(1L);
+        List<Quiz> groupQuizzes = quizDao.findGroupQuizzes(1L, 1L);
 
-        assertEquals(testUnpublishedQuizzes, unpublishedQuizzes);
+        assertEquals(testGroupQuizzes, groupQuizzes);
     }
 
     @Test
@@ -235,18 +249,6 @@ public class QuizDaoJdbcTest {
         List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(1L);
 
         assertEquals(testCommonGroupQuizIds, commonGroupQuizIds);
-    }
-
-    @Test
-    public void test_find_common_group_quizzes_by_groupId_and_teacherId() {
-        List<Quiz> testCommonGroupQuizzes = new ArrayList<>();
-        testCommonGroupQuizzes.add(quizDao.findQuiz(1L));
-        testCommonGroupQuizzes.add(quizDao.findQuiz(2L));
-        testCommonGroupQuizzes.add(quizDao.findQuiz(5L));
-
-        List<Quiz> commonGroupQuizzes = quizDao.findCommonGroupQuizzes(1L, 1L);
-
-        assertEquals(testCommonGroupQuizzes, commonGroupQuizzes);
     }
 
     @Test

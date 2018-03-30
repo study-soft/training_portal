@@ -46,7 +46,7 @@
     <c:choose>
         <c:when test="${empty students}">
             <div>There is no students without group.</div>
-            <div><input type="button" value="Back" onclick="window.history.go(-1);"></div>
+            <div><input type="button" class="btn btn-primary" value="Back" onclick="window.history.go(-1);"></div>
         </c:when>
         <c:otherwise>
             <span class="error">${noStudents}</span>

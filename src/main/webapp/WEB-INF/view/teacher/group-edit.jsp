@@ -12,19 +12,19 @@
     <form action="/teacher/groups/${group.groupId}/edit" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div>
-            <label for="name">Name<span class="error">*</span>:</label>
+            <label for="name" class="col-form-label">Name<span class="error">*</span>:</label>
         </div>
         <div>
-            <input type="text" name="name" id="name" value="${group.name}">
+            <input type="text" name="name" id="name" value="${group.name}" class="col-4 form-control">
             <span class="error">${emptyName}</span>
             <span class="error">${groupExists}</span>
         </div>
         <div>
-            <label for="description">Description:</label>
+            <label for="description" class="col-form-label">Description:</label>
         </div>
         <div>
-            <textarea rows="6" cols="40" name="description" id="description"
-                      placeholder="Description">${group.description}</textarea>
+            <textarea rows="6" cols="40" name="description" id="description" placeholder="Description"
+                      class="col-6 form-control">${group.description}</textarea>
         </div>
         <div class="highlight-primary">
             <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
@@ -37,28 +37,26 @@
                 <div>There is no students in this group.</div>
             </c:when>
             <c:otherwise>
-                <div class="col-6">
-                    <table class="table">
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        <th></th>
+                    </tr>
+                    <c:forEach items="${students}" var="student" varStatus="status">
                         <tr>
-                            <th>Name</th>
-                            <th>E-mail</th>
-                            <th></th>
+                            <td>
+                                <label for="student${status.index}">${student.lastName} ${student.firstName}</label>
+                            </td>
+                            <td>
+                                <label for="student${status.index}">${student.email}</label>
+                            </td>
+                            <td>
+                                <label for="student${status.index}">${student.phoneNumber}</label>
+                            </td>
                         </tr>
-                        <c:forEach items="${students}" var="student" varStatus="status">
-                            <tr>
-                                <td>
-                                    <label for="student${status.index}">${student.lastName} ${student.firstName}</label>
-                                </td>
-                                <td>
-                                    <label for="student${status.index}">${student.email}</label>
-                                </td>
-                                <td>
-                                    <label for="student${status.index}">${student.phoneNumber}</label>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
+                    </c:forEach>
+                </table>
             </c:otherwise>
         </c:choose>
         <div>

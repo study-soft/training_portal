@@ -7,6 +7,7 @@ VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '073-003-0
 -- Table: groups
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('IS-4', 'Program engineering', '2018-03-02', 1);
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('AM-4', 'Applied Mathematics', '2017-03-02', 2);
+INSERT INTO groups (name, description, creation_date, author_id) VALUES ('Informatics', NULL, '2017-03-30', 1);
 
 -- Table: users (students)
 /*3*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)

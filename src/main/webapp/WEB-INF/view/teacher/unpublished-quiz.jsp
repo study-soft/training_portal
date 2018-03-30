@@ -16,6 +16,17 @@
             $("#close").click(function () {
                 $("#edit-success").fadeOut("slow");
             });
+
+            $("#back").click(function () {
+                var previousUri = document.referrer;
+                var createQuizUri = "http://" + "${header["host"]}" + "/teacher/quizzes/create";
+                var editQuizUri = "http://" + "${header["host"]}" + "/teacher/quizzes/" + ${unpublishedQuiz.quizId} +"/edit";
+                if (previousUri === createQuizUri || previousUri === editQuizUri) {
+                    window.history.go(-2);
+                } else {
+                    window.history.go(-1);
+                }
+            });
         });
     </script>
 </head>
@@ -36,7 +47,7 @@
             </div>
         </div>
         <div class="col-4">
-            <a href="#" class="btn btn-success">Publish</a>
+            <a href="#" class="btn btn-success"><i class="fa fa-share-square-o"></i> Publish</a>
         </div>
     </div>
     <c:if test="${unpublishedQuiz.description ne null}">
@@ -106,11 +117,15 @@
              width="25" height="25" class="icon-one-row">
         Students will see explanation after all group close this quiz
     </div>
-    <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
+    <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">Edit</a>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete" class="btn btn-danger">Delete</a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">
+        <i class="fa fa-edit"></i> Edit
+    </a>
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete" class="btn btn-danger">
+        <i class="fa fa-trash-o"></i> Delete
+    </a>
 </div>
 <br>
 </body>

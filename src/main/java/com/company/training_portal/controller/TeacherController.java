@@ -90,18 +90,24 @@ public class TeacherController {
 
     @RequestMapping("/teacher/groups")
     public String showTeacherGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
-        List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
+        List<Group> activeGroups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
         List<Group> teacherGroups = groupDao.findGroups(teacherId);
+        activeGroups.addAll(teacherGroups);
+        Set<Group> allGroupsSet = new HashSet<>(activeGroups);
+        List<Group> allGroups = new ArrayList<>(allGroupsSet);
+        Collections.sort(allGroups);
+
         List<Long> teacherGroupsIds = teacherGroups.stream()
                 .map(Group::getGroupId)
                 .collect(Collectors.toList());
+
         List<Integer> studentsNumber = new ArrayList<>();
-        for (Group group : groups) {
+        for (Group group : allGroups) {
             Long groupId = group.getGroupId();
             studentsNumber.add(groupDao.findStudentsNumberInGroup(groupId));
         }
 
-        model.addAttribute("groups", groups);
+        model.addAttribute("groups", allGroups);
         model.addAttribute("teacherGroupsIds", teacherGroupsIds);
         model.addAttribute("studentsNumber", studentsNumber);
 
@@ -603,7 +609,10 @@ public class TeacherController {
         quizDao.editQuiz(oldQuiz.getQuizId(), editedQuiz.getName(), editedQuiz.getDescription(),
                 editedQuiz.getExplanation(), editedPassingTime);
 
-        redirectAttributes.addFlashAttribute("editSuccess", true);
+        Quiz newQuiz = quizDao.findQuiz(quizId);
+        if (!oldQuiz.equals(newQuiz)) {
+            redirectAttributes.addFlashAttribute("editSuccess", true);
+        }
         model.clear();
 
         return "redirect:/teacher/quizzes/" + quizId;

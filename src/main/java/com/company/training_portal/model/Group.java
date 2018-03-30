@@ -2,7 +2,7 @@ package com.company.training_portal.model;
 
 import java.time.LocalDate;
 
-public class Group {
+public class Group implements Comparable<Group> {
 
     private Long groupId;
     private String name;
@@ -94,6 +94,11 @@ public class Group {
                 ", creationDate=" + creationDate +
                 ", authorId=" + authorId +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Group group) {
+        return this.name.compareTo(group.name);
     }
 
     public static final class GroupBuilder {

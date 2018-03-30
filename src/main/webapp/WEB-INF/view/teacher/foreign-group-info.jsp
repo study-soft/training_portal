@@ -10,7 +10,9 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${group.name}</h2>
-    <div class="col-6"><strong>Description: </strong>${group.description}</div>
+    <c:if test="${group.description ne null}">
+        <div class="col-6"><strong>Description: </strong>${group.description}</div>
+    </c:if>
     <table class="col-6 table-info">
         <tr>
             <td>Creation date</td>

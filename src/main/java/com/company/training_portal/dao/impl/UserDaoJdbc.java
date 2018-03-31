@@ -72,6 +72,7 @@ public class UserDaoJdbc implements UserDao {
         return user;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public String findUserName(Long userId) {
         String name = template.queryForObject(FIND_USER_NAME_BY_USER_ID,
@@ -147,6 +148,7 @@ public class UserDaoJdbc implements UserDao {
         return students;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> findStudentsWithoutGroup(Long teacherId) {
         List<User> students = template.query(FIND_STUDENTS_WITHOUT_GROUP_BY_TEACHER_ID,
@@ -501,7 +503,8 @@ public class UserDaoJdbc implements UserDao {
     "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +
     "USERS.DATE_OF_BIRTH, USERS.PHONE_NUMBER, USERS.PHOTO, USERS.LOGIN, USERS.PASSWORD, USERS.USER_ROLE " +
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? AND USERS.USER_ROLE = 'STUDENT';";
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? AND USERS.USER_ROLE = 'STUDENT' " +
+    "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
 
     private static final String FIND_STUDENTS_BY_TEACHER_ID =
     "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +

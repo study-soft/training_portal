@@ -12,6 +12,12 @@
                     $(this).css("background-color", "#a7f9aa");
                 }
             });
+
+            $("td[id]").each(function () {
+                if (this.id === "OPENED") {
+                    $(this).text("");
+                }
+            });
         });
     </script>
 </head>
@@ -31,20 +37,13 @@
                     <th>Status</th>
                 </tr>
                 <c:forEach items="${students}" var="student" varStatus="status">
+                    <c:set var="i" value="${status.index}"/>
                     <tr id="${student.userId}">
                         <td><a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                        <c:choose>
-                            <c:when test="${statusList[status.index] ne 'OPENED'}">
-                                <td>${studentsQuizzes[status.index].result}
-                                    / ${studentsQuizzes[status.index].score}</td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-                        <td>${studentsQuizzes[status.index].attempt}</td>
-                        <td><duration:format value="${studentsQuizzes[status.index].timeSpent}"/></td>
-                        <td>${statusList[status.index]}</td>
+                        <td id="${statusList[i]}">${studentsQuizzes[i].result} / ${studentsQuizzes[i].score}</td>
+                        <td>${studentsQuizzes[i].attempt}</td>
+                        <td><duration:format value="${studentsQuizzes[i].timeSpent}"/></td>
+                        <td>${statusList[i]}</td>
                     </tr>
                 </c:forEach>
             </table>

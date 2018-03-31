@@ -42,7 +42,7 @@ public interface QuizDao {
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
-    List<Long> findCommonGroupQuizIds(Long groupId);
+    List<Long> findCommonQuizIds(Long studentId1, Long studentId2);
 
     Integer findResult(Long studentId, Long quizId);
 

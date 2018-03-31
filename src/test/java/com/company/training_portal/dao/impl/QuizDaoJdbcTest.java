@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
@@ -243,12 +244,17 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_find_common_group_quiz_ids_by_groupId() {
-        List<Long> testCommonGroupQuizIds = new ArrayList<>(asList(1L, 2L, 3L, 4L, 5L, 6L));
+    public void test_find_common_quizzes_for_two_students() {
+        List<Quiz> student1Quizzes = quizDao.findStudentQuizzes(3L);
+        List<Quiz> students2Quizzes = quizDao.findStudentQuizzes(11L);
+        student1Quizzes.retainAll(students2Quizzes);
+        List<Long> testCommonQuizIds = student1Quizzes.stream()
+                .map(Quiz::getQuizId)
+                .collect(Collectors.toList());
 
-        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(1L);
+        List<Long> commonQuizIds = quizDao.findCommonQuizIds(3L, 11L);
 
-        assertEquals(testCommonGroupQuizIds, commonGroupQuizIds);
+        assertEquals(testCommonQuizIds, commonQuizIds);
     }
 
     @Test

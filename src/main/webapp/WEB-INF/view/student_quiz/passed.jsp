@@ -87,7 +87,7 @@
         <div class="non-first-row">Also you can try again but score will be less</div>
     </div>
     <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-    <c:if test="${isCommon}">
+    <c:if test="${allStudents ne 1}">
         <a href="/student/results/${passedQuiz.quizId}" class="btn btn-primary">Results</a>
     </c:if>
     <a href="/student/quizzes/${passedQuiz.quizId}/repass" id="repass" class="btn btn-success">Repass</a>

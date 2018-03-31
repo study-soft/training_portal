@@ -74,7 +74,8 @@ public class StudentController {
                                   @PathVariable("groupMateId") Long groupMateId,
                                   Model model) {
         User student = userDao.findUser(studentId);
-        List<User> groupMates = userDao.findStudents(student.getGroupId());
+        Long groupId = student.getGroupId();
+        List<User> groupMates = userDao.findStudents(groupId);
         List<Long> groupMatesIds = groupMates.stream()
                 .map(User::getUserId)
                 .collect(Collectors.toList());
@@ -82,16 +83,16 @@ public class StudentController {
             User groupMate = userDao.findUser(groupMateId);
             model.addAttribute("student", groupMate);
 
-            if (student.getGroupId() != 0) {
-                Group group = groupDao.findGroup(student.getGroupId());
+            if (groupId != 0) {
+                Group group = groupDao.findGroup(groupId);
                 model.addAttribute("group", group);
             }
 
             List<OpenedQuiz> openedQuizzes = new ArrayList<>();
             List<PassedQuiz> passedQuizzes = new ArrayList<>();
             List<PassedQuiz> closedQuizzes = new ArrayList<>();
-            List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
-            for (Long quizId : commonGroupQuizIds) {
+            List<Long> commonQuizIds = quizDao.findCommonQuizIds(studentId, groupMateId);
+            for (Long quizId : commonQuizIds) {
                 StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
                 switch (status) {
                     case OPENED:
@@ -189,13 +190,9 @@ public class StudentController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         User student = userDao.findUser(studentId);
-        List<Long> commonGroupQuizIds = quizDao.findCommonGroupQuizIds(student.getGroupId());
-
-        if (commonGroupQuizIds.contains(quizId)) {
-            model.addAttribute("isCommon", true);
-        } else {
-            model.addAttribute("isCommon", false);
-        }
+        Long groupId = student.getGroupId();
+        Integer allStudents = userDao.findStudentsNumber(groupId, quizId);
+        model.addAttribute("allStudents", allStudents);
 
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         switch (status) {
@@ -208,12 +205,9 @@ public class StudentController {
                 model.addAttribute("passedQuiz", passedQuiz);
                 return "student_quiz/passed";
             case CLOSED:
-                Long groupId = userDao.findUser(studentId).getGroupId();
                 Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
-                Integer allStudents = groupDao.findStudentsNumberInGroup(groupId);
                 PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
                 model.addAttribute("closedStudents", closedStudents);
-                model.addAttribute("allStudents", allStudents);
                 model.addAttribute("closedQuiz", closedQuiz);
                 return "student_quiz/closed";
         }

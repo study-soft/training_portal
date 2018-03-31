@@ -11,7 +11,7 @@
             var closedStudents = "${closedStudents}";
             var allStudents = "${allStudents}";
             var answers = $("#answers");
-            if ("${isCommon}" === "true" && closedStudents !== allStudents) {
+            if ("${allStudents}" !== "1" && closedStudents !== allStudents) {
                 var message = "You have to wait until all students in your group close this quiz. " +
                     "Closed students: ${closedStudents} / ${allStudents}";
                 answers.addClass("d-inline-block");
@@ -116,7 +116,7 @@
             <a href="/student/quizzes/${closedQuiz.quizId}/answers"
                class="btn btn-primary disabled"><i class="fa fa-ban error"></i> Answers</a>
         </span>
-    <c:if test="${isCommon}">
+    <c:if test="${allStudents ne 1}">
         <a href="/student/results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
     </c:if>
 </div>

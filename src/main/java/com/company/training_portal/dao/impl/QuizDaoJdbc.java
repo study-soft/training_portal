@@ -29,7 +29,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.util.Utils.durationToTimeUnits;
@@ -220,29 +219,13 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     @Transactional(readOnly = true)
-    @SuppressWarnings("Duplicates")
     @Override
-    public List<Long> findCommonGroupQuizIds(Long groupId) {
-        Map<Long, Integer> allQuizIds = template.query(
-                FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID,
-                new Object[]{groupId}, new ResultSetExtractor<Map<Long, Integer>>() {
-                    @Override
-                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Long, Integer> allQuizIds = new HashMap<>();
-                        while (rs.next()) {
-                            allQuizIds.put(rs.getLong("quiz_id"),
-                                    rs.getInt("count"));
-                        }
-                        return allQuizIds;
-                    }
-                });
-        Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
-        List<Long> commonGroupQuizIds = allQuizIds.keySet()
-                .stream()
-                .filter(k -> allQuizIds.get(k).equals(studentsNumber))
-                .collect(Collectors.toList());
-        logger.info("Found all common group quizzes by groupId '" + groupId + "': " + commonGroupQuizIds);
-        return commonGroupQuizIds;
+    public List<Long> findCommonQuizIds(Long studentId1, Long studentId2) {
+        List<Long> quizIds = template.queryForList(FIND_COMMON_QUIZ_IDS_FOR_TWO_STUDENTS,
+                new Object[]{studentId1, studentId2}, Long.class);
+        logger.info("Found common quizIds for students with id '" +
+                studentId1 + "' and '" + studentId2 + "': " + quizIds);
+        return quizIds;
     }
 
     @Transactional(readOnly = true)
@@ -692,13 +675,11 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE J.USER_ID = ? AND QUIZZES.AUTHOR_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_GROUP_QUIZ_IDS_AND_THEIR_COUNT_BY_GROUP_ID =
-    "SELECT QUIZZES.QUIZ_ID, COUNT(QUIZZES.QUIZ_ID) AS COUNT " +
-    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
-    "WHERE GROUP_ID = ? " +
-    "GROUP BY QUIZZES.QUIZ_ID " +
-    "ORDER BY QUIZZES.NAME;";
+    private static final String FIND_COMMON_QUIZ_IDS_FOR_TWO_STUDENTS =
+    "SELECT QUIZZES_1.QUIZ_ID " +
+    "FROM QUIZZES QUIZZES_1 INNER JOIN USER_QUIZ_JUNCTIONS J_1 ON QUIZZES_1.QUIZ_ID = J_1.QUIZ_ID, " +
+    "QUIZZES QUIZZES_2 INNER JOIN USER_QUIZ_JUNCTIONS J_2 ON QUIZZES_2.QUIZ_ID = J_2.QUIZ_ID " +
+    "WHERE J_1.USER_ID = ? AND J_2.USER_ID = ? AND QUIZZES_1.QUIZ_ID = QUIZZES_2.QUIZ_ID;";
 
     private static final String FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT RESULT FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";

@@ -37,9 +37,6 @@ public interface QuizDao {
     // key: teacherQuizStatus, value: number of quizzes
     Map<TeacherQuizStatus, Integer> findQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId);
 
-    // key: quizId, value: result
-    Map<Long, Integer> findAllStudentResults(Long studentId);
-
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
     List<Long> findCommonQuizIds(Long studentId1, Long studentId2);
@@ -89,8 +86,6 @@ public interface QuizDao {
                                         Integer attempt, StudentQuizStatus studentQuizStatus);
 
     void editTeacherQuizStatus(TeacherQuizStatus teacherQuizStatus, Long quizId);
-
-    void editQuiz(Quiz quiz);
 
     void editQuiz(Long quizId, String name, String description,
                   String explanation, Duration passingTime);

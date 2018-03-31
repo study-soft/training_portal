@@ -58,14 +58,8 @@ public class QuizDaoJdbc implements QuizDao {
     @Transactional(readOnly = true)
     @Override
     public Quiz findQuiz(Long quizId) {
-        Quiz quiz;
-        try {
-            quiz = template.queryForObject(FIND_QUIZ_WITH_QUESTIONS_BY_QUIZ_ID,
-                    new Object[]{quizId}, this::mapQuiz);
-        } catch (EmptyResultDataAccessException e) {
-            quiz = template.queryForObject(FIND_QUIZ_WITHOUT_QUESTIONS_BY_QUIZ_ID,
-                    new Object[]{quizId}, this::mapQuiz);
-        }
+        Quiz quiz = template.queryForObject(FIND_QUIZ_BY_QUIZ_ID,
+                new Object[]{quizId}, this::mapQuiz);
         logger.info("Quiz found by quizId: " + quiz);
         return quiz;
     }
@@ -185,25 +179,6 @@ public class QuizDaoJdbc implements QuizDao {
                 });
         logger.info("All quizzes number and teacher statuses by authorId found:");
         results.forEach((k, v) -> logger.info("status: " + k + ", value: " + v));
-        return results;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Map<Long, Integer> findAllStudentResults(Long studentId) {
-        Map<Long, Integer> results = template.query(FIND_ALL_STUDENT_RESULTS, new Object[]{studentId},
-                new ResultSetExtractor<Map<Long, Integer>>() {
-                    @Override
-                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Long, Integer> results = new HashMap<>();
-                        while (rs.next()) {
-                            results.put(rs.getLong(1), rs.getInt(2));
-                        }
-                        return results;
-                    }
-                });
-        logger.info("All student results by studentId found:");
-        results.forEach((k, v) -> logger.info("quizId: " + k + ", result: " + v));
         return results;
     }
 
@@ -483,12 +458,6 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional
     @Override
-    public void editQuiz(Quiz quiz) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Transactional
-    @Override
     public void editQuiz(Long quizId, String name, String description,
                          String explanation, Duration passingTime) {
         List<Integer> timeUnits = durationToTimeUnits(passingTime);
@@ -566,19 +535,18 @@ public class QuizDaoJdbc implements QuizDao {
                 .build();
     }
 
-    private static final String FIND_QUIZ_WITH_QUESTIONS_BY_QUIZ_ID =
-    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
+    private static final String FIND_QUIZ_BY_QUIZ_ID =
+    "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +
-    "SUM(QUESTIONS.SCORE) AS SCORE, COUNT(QUESTIONS.QUESTION_ID) AS QUESTIONS_NUMBER, " +
+    "CASE WHEN EXISTS(SELECT * FROM QUESTIONS WHERE QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID) " +
+    "THEN SUM(QUESTIONS.SCORE) ELSE 0 END AS SCORE, " +
+    "CASE WHEN EXISTS(SELECT * FROM QUESTIONS WHERE QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID) " +
+    "THEN COUNT(QUESTIONS.QUESTION_ID) ELSE 0 END AS QUESTIONS_NUMBER, " +
     "QUIZZES.TEACHER_QUIZ_STATUS AS TEACHER_QUIZ_STATUS " +
-    "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
+    "FROM QUIZZES LEFT JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "WHERE QUIZZES.QUIZ_ID = ? " +
     "GROUP BY QUIZZES.QUIZ_ID;"; // Need group by for case when no quiz for such quizId
-
-    private static final String FIND_QUIZ_WITHOUT_QUESTIONS_BY_QUIZ_ID =
-    "SELECT *, 0 AS SCORE, 0 AS QUESTIONS_NUMBER " +
-    "FROM QUIZZES WHERE QUIZ_ID = ?;";
 
     private static final String FIND_QUIZ_NAME_IF_EXISTS =
     "SELECT NAME FROM QUIZZES WHERE QUIZZES.NAME = ?;";
@@ -658,11 +626,6 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String FIND_QUIZZES_NUMBER_BY_AUTHOR_ID_WITH_TEACHER_QUIZ_STATUS =
     "SELECT TEACHER_QUIZ_STATUS, COUNT(QUIZ_ID) " +
     "FROM QUIZZES WHERE AUTHOR_ID = ? GROUP BY TEACHER_QUIZ_STATUS;";
-
-    private static final String FIND_ALL_STUDENT_RESULTS =
-    "SELECT QUIZZES.QUIZ_ID, J.RESULT " +
-    "FROM QUIZZES INNER JOIN USER_QUIZ_JUNCTIONS J ON QUIZZES.QUIZ_ID = J.QUIZ_ID " +
-    "WHERE J.USER_ID = ?;";
 
     private static final String FIND_QUIZZES_BY_STUDENT_ID_AND_AUTHOR_ID =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
@@ -832,11 +795,6 @@ public class QuizDaoJdbc implements QuizDao {
 
     private static final String EDIT_TEACHER_QUIZ_STATUS_BY_QUIZ_ID =
     "UPDATE QUIZZES SET TEACHER_QUIZ_STATUS = ? WHERE QUIZ_ID = ?;";
-
-    private static final String EDIT_QUIZ =
-    "UPDATE QUIZZES " +
-    "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, CREATION_DATE = ?, PASSING_TIME = ?, AUTHOR_ID = ?, TEACHER_QUIZ_STATUS = ? " +
-    "WHERE QUIZ_ID = ?;";
 
     private static final String EDIT_QUIZ_BY_QUIZ_ID_NAME_DESCRIPTION_EXPLANATION_PASSING_TIME =
     "UPDATE QUIZZES " +

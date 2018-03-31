@@ -169,23 +169,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findStudentIdsWithoutGroup() {
-        List<Long> studentIds = template.queryForList(FIND_STUDENT_IDS_WITHOUT_GROUP, Long.class);
-        logger.info("Found studentIds without group: " + studentIds);
-        return studentIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Long> findStudentIdsByGroupIdAndQuizId(Long groupId, Long quizId) {
-        List<Long> studentIds = template.queryForList(FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID,
-                new Object[]{groupId, quizId}, Long.class);
-        logger.info("Found student ids by groupId and quizId: " + studentIds);
-        return studentIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public Integer findStudentsNumber() {
         Integer studentsNumber = template.queryForObject(FIND_STUDENTS_NUMBER, Integer.class);
         logger.info("Found students number: " + studentsNumber);
@@ -238,30 +221,6 @@ public class UserDaoJdbc implements UserDao {
                 new Object[]{groupId, quizId}, Integer.class);
         logger.info("Final results number by groupId and quizId found: " + resultsNumber);
         return resultsNumber;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId,
-                                                                         Long quizId) {
-        Map<Long, Integer> results = template.query(
-                FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID,
-                new Object[]{groupId, quizId}, new ResultSetExtractor<Map<Long, Integer>>() {
-                    @Override
-                    public Map<Long, Integer> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                        Map<Long, Integer> results = new HashMap<>();
-                        while (rs.next()) {
-                            Long studentId = rs.getLong(1);
-                            Integer result = rs.getInt(2);
-                            results.put(studentId, result);
-                        }
-                        return results;
-                    }
-                });
-        logger.info("Found studentIds and results by groupId and quizId: ");
-        results.forEach((studentId, result) ->
-                logger.info("studentId: " + studentId + ", result: " + result));
-        return results;
     }
 
     @Transactional(readOnly = true)
@@ -533,14 +492,6 @@ public class UserDaoJdbc implements UserDao {
     "GROUP BY USERS.USER_ID " +
     "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
 
-    private static final String FIND_STUDENT_IDS_WITHOUT_GROUP =
-    "SELECT USER_ID FROM USERS WHERE USER_ROLE = 'STUDENT' AND GROUP_ID IS NULL;";
-
-    private static final String FIND_STUDENT_IDS_BY_GROUP_ID_AND_QUIZ_ID =
-    "SELECT USERS.USER_ID " +
-    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
-
     private static final String FIND_STUDENTS_NUMBER =
     "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'STUDENT';";
 
@@ -567,11 +518,6 @@ public class UserDaoJdbc implements UserDao {
     "SELECT COUNT(J.RESULT) " +
     "FROM USER_QUIZ_JUNCTIONS J INNER JOIN USERS ON J.USER_ID = USERS.USER_ID " +
     "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ? AND J.STUDENT_QUIZ_STATUS = 'CLOSED';";
-
-    private static final String FIND_STUDENT_IDS_AND_RESULTS_BY_GROUP_ID_AND_QUIZ_ID =
-    "SELECT USERS.USER_ID, J.RESULT " +
-    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
-    "WHERE USERS.GROUP_ID IS ? AND J.QUIZ_ID = ?;";
 
     private static final String FIND_USER_BY_LOGIN_AND_PASSWORD =
     "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;";

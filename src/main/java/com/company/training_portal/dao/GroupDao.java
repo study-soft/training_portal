@@ -26,7 +26,6 @@ public interface GroupDao {
 
     Long addGroup(Group group);
 
-    //todo: make user cases of editGroup(Group group)
     void editGroup(Group group);
 
     void deleteGroup(Long groupId);

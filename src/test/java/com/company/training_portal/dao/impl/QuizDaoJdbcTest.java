@@ -98,7 +98,7 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void find_all_quizzes() {
+    public void find_all_quizzes_with_questions() {
         List<Quiz> testQuizzes = new ArrayList<>();
         testQuizzes.add(quizDao.findQuiz(1L));
         testQuizzes.add(quizDao.findQuiz(2L));
@@ -112,7 +112,6 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuiz(10L));
         testQuizzes.add(quizDao.findQuiz(11L));
         testQuizzes.add(quizDao.findQuiz(12L));
-        testQuizzes.add(quizDao.findQuiz(13L));
 
         List<Quiz> quizzes = quizDao.findAllQuizzesWithQuestions();
 
@@ -179,6 +178,8 @@ public class QuizDaoJdbcTest {
         testQuizzes.add(quizDao.findQuiz(4L));
         testQuizzes.add(quizDao.findQuiz(5L));
         testQuizzes.add(quizDao.findQuiz(6L));
+        testQuizzes.add(quizDao.findQuiz(11L));
+        testQuizzes.add(quizDao.findQuiz(12L));
 
         List<Quiz> quizzes = quizDao.findStudentQuizzes(4L);
 
@@ -188,7 +189,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_quizzes_number_by_authorId() {
         Integer quizzesNumber = quizDao.findQuizzesNumber(1L);
-        assertThat(quizzesNumber, is(5));
+        assertThat(quizzesNumber, is(9));
     }
 
     @Test
@@ -209,25 +210,10 @@ public class QuizDaoJdbcTest {
     public void test_find_quizzes_number_by_authorId_with_teacherQuizStatus() {
         Map<TeacherQuizStatus, Integer> testResults = new HashMap<>();
         testResults.put(PUBLISHED, 5);
-        testResults.put(TeacherQuizStatus.UNPUBLISHED, 2);
+        testResults.put(TeacherQuizStatus.UNPUBLISHED, 4);
 
         Map<TeacherQuizStatus, Integer> results
                 = quizDao.findQuizzesNumberByAuthorIdWithTeacherQuizStatus(1L);
-
-        assertEquals(testResults, results);
-    }
-
-    @Test
-    public void test_find_all_student_results() {
-        Map<Long, Integer> testResults = new HashMap<>();
-        testResults.put(1L, 20);
-        testResults.put(2L, 8);
-        testResults.put(3L, 1);
-        testResults.put(4L, 2);
-        testResults.put(5L, 0);
-        testResults.put(6L, 0);
-
-        Map<Long, Integer> results = quizDao.findAllStudentResults(3L);
 
         assertEquals(testResults, results);
     }
@@ -237,6 +223,7 @@ public class QuizDaoJdbcTest {
         List<Quiz> testQuizzes = new ArrayList<>();
         testQuizzes.add(quizDao.findQuiz(1L));
         testQuizzes.add(quizDao.findQuiz(2L));
+        testQuizzes.add(quizDao.findQuiz(11L));
         testQuizzes.add(quizDao.findQuiz(5L));
 
         List<Quiz> quizzes = quizDao.findQuizzes(3L, 1L);
@@ -383,26 +370,9 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_opened_quizzes_by_studentId() {
         List<OpenedQuiz> testOpenedQuizzes = new ArrayList<>();
-        testOpenedQuizzes.add(new OpenedQuiz.OpenedQuizBuilder()
-                .quizId(6L)
-                .quizName("Generics")
-                .description("Try your generics skills")
-                .passingTime(Duration.of(750, SECONDS))
-                .authorName("Peterson Angel")
-                .questionsNumber(1)
-                .score(3)
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 31, 30))
-                .build());
-        testOpenedQuizzes.add(new OpenedQuiz.OpenedQuizBuilder()
-                .quizId(5L)
-                .quizName("Input output")
-                .description("Try your IO skills")
-                .passingTime(Duration.of(15, MINUTES))
-                .authorName("Bronson Andrew")
-                .questionsNumber(2)
-                .score(5)
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 24, 0))
-                .build());
+        testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 11L));
+        testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 6L));
+        testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 5L));
 
         List<OpenedQuiz> openedQuizzes =
                 quizDao.findOpenedQuizzes(4L);
@@ -413,36 +383,9 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_passed_quizzes_by_studentId() {
         List<PassedQuiz> testPassedQuizzes = new ArrayList<>();
-        testPassedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
-                .quizId(4L)
-                .quizName("Multithreading")
-                .description("Try your multithreading skills")
-                .explanation("Hope you had multithreading fun :)")
-                .authorName("Peterson Angel")
-                .result(3)
-                .score(4)
-                .questionsNumber(1)
-                .attempt(2)
-                .passingTime(Duration.of(10, SECONDS))
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 8, 0))
-                .finishDate(LocalDateTime.of(2018, 3, 11, 0, 16, 4))
-                .timeSpent(Duration.ofSeconds(364))
-                .build());
-        testPassedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
-                .quizId(1L)
-                .quizName("Procedural")
-                .description("Try your procedural skills")
-                .explanation("Hope you had procedural fun :)")
-                .authorName("Bronson Andrew")
-                .result(10)
-                .score(30)
-                .questionsNumber(12)
-                .attempt(1)
-                .passingTime(Duration.of(10, MINUTES))
-                .submitDate(LocalDateTime.of(2018, 3, 8, 0, 13, 0))
-                .finishDate(LocalDateTime.of(2018, 3, 5, 0, 4, 10))
-                .timeSpent(Duration.ofSeconds(242))
-                .build());
+        testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 12L));
+        testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 4L));
+        testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 1L));
 
         List<PassedQuiz> passedQuizzes
                 = quizDao.findPassedQuizzes(4L);
@@ -452,47 +395,20 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_find_closed_quizzes_by_studentId() {
-        List<PassedQuiz> testFinishedQuizzes = new ArrayList<>();
-        testFinishedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
-                .quizId(3L)
-                .quizName("Collections")
-                .description("Try your collections skills")
-                .explanation("Hope you had fun with collections :)")
-                .authorName("Peterson Angel")
-                .result(2)
-                .score(3)
-                .questionsNumber(2)
-                .attempt(2)
-                .passingTime(Duration.of(15, MINUTES))
-                .submitDate(LocalDateTime.of(2018, 3, 6, 0, 14, 0))
-                .finishDate(LocalDateTime.of(2018, 3, 11, 0, 5, 0))
-                .timeSpent(Duration.ofMinutes(5L))
-                .build());
-        testFinishedQuizzes.add(new PassedQuiz.PassedQuizBuilder()
-                .quizId(2L)
-                .quizName("Exceptions")
-                .description("Try your exceptions skills")
-                .explanation("Hope you had fun with exceptions :)")
-                .authorName("Bronson Andrew")
-                .result(5)
-                .score(8)
-                .questionsNumber(3)
-                .attempt(1)
-                .passingTime(Duration.of(10, MINUTES))
-                .submitDate(LocalDateTime.of(2018, 3, 5, 0, 0, 0))
-                .finishDate(LocalDateTime.of(2018, 3, 5, 0, 3, 4))
-                .timeSpent(Duration.ofSeconds(183))
-                .build());
+        List<PassedQuiz> testClosedQuizzes = new ArrayList<>();
+        testClosedQuizzes.add(quizDao.findClosedQuiz(4L, 3L));
+        testClosedQuizzes.add(quizDao.findClosedQuiz(4L, 2L));
 
-        List<PassedQuiz> finishedQuizzes
+        List<PassedQuiz> closedQuizzes
                 = quizDao.findClosedQuizzes(4L);
 
-        assertEquals(testFinishedQuizzes, finishedQuizzes);
+        assertEquals(testClosedQuizzes, closedQuizzes);
     }
 
     @Test
     public void test_find_opened_quizzes_by_studentId_and_teacherId() {
         List<OpenedQuiz> testOpenedQuizzes = new ArrayList<>();
+        testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 11L));
         testOpenedQuizzes.add(quizDao.findOpenedQuiz(4L, 5L));
 
         List<OpenedQuiz> openedQuizzes = quizDao.findOpenedQuizzes(4L, 1L);
@@ -503,6 +419,7 @@ public class QuizDaoJdbcTest {
     @Test
     public void test_find_passed_quizzes_by_studentId_and_teacherId() {
         List<PassedQuiz> testPassedQuizzes = new ArrayList<>();
+        testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 12L));
         testPassedQuizzes.add(quizDao.findPassedQuiz(4L, 1L));
 
         List<PassedQuiz> passedQuizzes = quizDao.findPassedQuizzes(4L, 1L);

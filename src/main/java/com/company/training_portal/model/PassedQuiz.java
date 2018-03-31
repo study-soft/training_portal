@@ -158,7 +158,7 @@ public class PassedQuiz extends OpenedQuiz {
         if (!score.equals(that.score)) return false;
         if (!questionsNumber.equals(that.questionsNumber)) return false;
         if (!attempt.equals(that.attempt)) return false;
-        if (!passingTime.equals(that.passingTime)) return false;
+        if (passingTime != null ? !passingTime.equals(that.passingTime) : that.passingTime != null) return false;
         if (!submitDate.equals(that.submitDate)) return false;
         if (!finishDate.equals(that.finishDate)) return false;
         return timeSpent != null ? timeSpent.equals(that.timeSpent) : that.timeSpent == null;
@@ -175,7 +175,7 @@ public class PassedQuiz extends OpenedQuiz {
         result1 = 31 * result1 + score.hashCode();
         result1 = 31 * result1 + questionsNumber.hashCode();
         result1 = 31 * result1 + attempt.hashCode();
-        result1 = 31 * result1 + passingTime.hashCode();
+        result1 = 31 * result1 + (passingTime != null ? passingTime.hashCode() : 0);
         result1 = 31 * result1 + submitDate.hashCode();
         result1 = 31 * result1 + finishDate.hashCode();
         result1 = 31 * result1 + (timeSpent != null ? timeSpent.hashCode() : 0);

@@ -101,7 +101,7 @@ public class OpenedQuiz {
         if (!quizId.equals(that.quizId)) return false;
         if (!quizName.equals(that.quizName)) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (!passingTime.equals(that.passingTime)) return false;
+        if (passingTime != null ? !passingTime.equals(that.passingTime) : that.passingTime != null) return false;
         if (!authorName.equals(that.authorName)) return false;
         if (!questionsNumber.equals(that.questionsNumber)) return false;
         if (!score.equals(that.score)) return false;
@@ -113,7 +113,7 @@ public class OpenedQuiz {
         int result = quizId.hashCode();
         result = 31 * result + quizName.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + passingTime.hashCode();
+        result = 31 * result + (passingTime != null ? passingTime.hashCode() : 0);
         result = 31 * result + authorName.hashCode();
         result = 31 * result + questionsNumber.hashCode();
         result = 31 * result + score.hashCode();

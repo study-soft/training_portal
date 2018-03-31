@@ -37,12 +37,6 @@ public interface UserDao {
 
     List<User> findAllTeachers();
 
-    @Deprecated
-    List<Long> findStudentIdsWithoutGroup();
-
-    @Deprecated
-    List<Long> findStudentIdsByGroupIdAndQuizId(Long quizId, Long groupId);
-
     Integer findStudentsNumber();
 
     Integer findStudentsNumber(Long groupId, Long quizId);
@@ -54,10 +48,6 @@ public interface UserDao {
     Integer findResultsNumber(Long groupId, Long quizId);
 
     Integer findFinalResultsNumber(Long groupId, Long quizId);
-
-    // key: studentId, value: result
-    @Deprecated
-    Map<Long, Integer> findStudentIdsAndResultsByGroupIdAndQuizId(Long groupId, Long quizId);
 
     boolean userExistsByLogin(String login);
 
@@ -89,7 +79,6 @@ public interface UserDao {
                                     LocalDateTime finishDate, LocalDateTime startDate,
                                     Integer attempt, StudentQuizStatus studentQuizStatus);
 
-    //todo: make use cases of editUser(User user)
     void editUser(Long userId, String firstName, String lastName, String email, LocalDate dateOfBirth,
                   String phoneNumber, String password);
 

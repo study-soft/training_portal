@@ -724,7 +724,9 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/hello")
     @ResponseBody
-    public String hello(@PathVariable("quizId") Long quizId) {
+    public String hello(@PathVariable("quizId") Long quizId,
+                        @RequestParam Map<String, String> params) {
+        logger.info("params: " + params);
         return "hello";
     }
 }

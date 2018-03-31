@@ -353,7 +353,7 @@ VALUES (8, '(a == 1)', 'expression', 'a = b + 1;', 'statement', '{a = 0; b = a +
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
 VALUES (26, 'textarea', 'Defines a multiline input control', 'select', 'Defines a drop-down list',
-'option', 'Defines an option in a drop-down list', 'input', '	Defines an input control');
+'option', 'Defines an option in a drop-down list', 'input', 'Defines an input control');
 
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)

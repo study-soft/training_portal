@@ -126,7 +126,6 @@
                 }
 
                 var questionType = $("#type").val();
-                alert("questionType from form: " + questionType);
                 switch (questionType) {
                     case "ONE_ANSWER":
                         $("input[name*='answer']").each(function () {
@@ -225,7 +224,7 @@
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", questionId)
                                     .attr("type", "ONE_ANSWER");
-                                var correct = $("input[type=radio][name='correct']").val();
+                                var correct = $("input[type=radio][name='correct']:checked").val();
                                 var container = $("#addedAnswersContainer");
                                 container.removeAttr("id");
                                 $("input[name*='answer']").each(function () {
@@ -252,6 +251,7 @@
                                     .attr("href", questionId)
                                     .attr("type", "FEW_ANSWERS");
                                 var container = $("#addedAnswersContainer");
+                                container.removeAttr("id");
                                 var corrects = [];
                                 $("input[type='checkbox']:checked").each(function () {
                                     corrects.push($(this).val());
@@ -281,6 +281,7 @@
                                     .attr("type", "ACCORDANCE");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
+                                container.removeAttr("id");
                                 var table = container
                                     .removeAttr("id")
                                     .prepend('<table class="col-6 table-info"></table>')
@@ -306,6 +307,7 @@
                                     .attr("type", "SEQUENCE");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
+                                container.removeAttr("id");
                                 var table = container
                                     .removeAttr("id")
                                     .prepend('<table class="col-6 table-info"></table>')
@@ -332,7 +334,7 @@
                                     .attr("type", "NUMBER");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
-                                    container.removeAttr("id")
+                                container.removeAttr("id")
                                     .prepend(
                                         '                <table class="col-6 table-info">\n' +
                                         '                    <tr>\n' +
@@ -445,7 +447,6 @@
 
                 var header = $(this).closest(".question-header");
                 var answers = header.next();
-                alert("type: " + $(this).attr("type"));
                 var questionType = $(this).attr("type");
 
                 answers.after(baseEditQuestionForm);
@@ -455,12 +456,107 @@
 
                 switch (questionType) {
                     case "ONE_ANSWER":
+                        var container = $("#answersContainer");
+                        var counter = 0;
+                        answers.find("[class*=correct]").each(function () {
+                            var answer =
+                                '<div id="' + counter + '" class="row margin-row">\n' +
+                                '    <div class="col-auto">\n' +
+                                '        <div class="custom-control custom-radio shifted-down">\n' +
+                                '            <input type="radio" id="status' + counter + '" name="correct" value="answer' + counter + '"\n' +
+                                '                 class="custom-control-input">\n' +
+                                '            <label for="status' + counter + '" class="custom-control-label"></label>\n' +
+                                '        </div>\n' +
+                                '    </div>\n' +
+                                '    <div class="col-9">\n' +
+                                '        <input type="text" id="answer' + counter + '" name="answer' + counter + '"\n' +
+                                '               class="form-control is-invalid">\n' +
+                                '    </div>\n';
+                            if (counter > 1) {
+                                answer +=
+                                    '    <div class="col-1">\n' +
+                                    '        <button type="button" class="answer-delete" value="' + counter + '"><i\n' +
+                                    '              class="fa fa-close"></i></button>\n' +
+                                    '    </div>\n';
+                            }
+                            answer += '</div>\n';
+                            container.append(answer);
+                            var currentAnswer = container.find(":text").last();
+                            if ($(this).attr("class") === "correct") {
+                                container.find(":radio").last().prop("checked", true);
+                                currentAnswer.removeClass("is-invalid").addClass("is-valid");
+                            }
+                            currentAnswer.val($(this).text());
+                            counter++;
+                        });
                         break;
                     case "FEW_ANSWERS":
+                        $("#addAnswer").val("fewAnswers");
+                        var container = $("#answersContainer");
+                        var counter = 0;
+                        answers.find("[class*=correct]").each(function () {
+                            var answer =
+                                '<div id="' + counter + '" class="row margin-row">\n' +
+                                '    <div class="col-auto">\n' +
+                                '        <div class="custom-control custom-checkbox shifted-down">\n' +
+                                '            <input type="checkbox" id="status' + counter + '"\n ' +
+                                '                name="correct' + counter + '" value="answer' + counter + '"\n' +
+                                '                class="custom-control-input">\n' +
+                                '            <label for="status' + counter + '" class="custom-control-label"></label>\n' +
+                                '        </div>\n' +
+                                '     </div>\n' +
+                                '     <div class="col-9">\n' +
+                                '         <input type="text" id="answer' + counter + '" name="answer' + counter + '"\n ' +
+                                '             class="form-control is-invalid">\n' +
+                                '     </div>\n';
+                            if (counter > 1) {
+                                answer +=
+                                    '    <div class="col-1">\n' +
+                                    '        <button type="button" class="answer-delete" value="' + counter + '"><i\n' +
+                                    '              class="fa fa-close"></i></button>\n' +
+                                    '    </div>\n';
+                            }
+                            answer += '</div>\n';
+                            container.append(answer);
+                            var currentAnswer = container.find(":text").last();
+                            if ($(this).attr("class") === "correct") {
+                                container.find(":checkbox").last().prop("checked", true);
+                                currentAnswer.removeClass("is-invalid").addClass("is-valid");
+                            }
+                            currentAnswer.val($(this).text());
+                            counter++;
+                        });
                         break;
                     case "ACCORDANCE":
                         $("#addAnswer").remove();
                         var container = $("#answersContainer");
+                        container.append('<div class="row">\n' +
+                            '                <div class="col-6">\n' +
+                            '                    <strong>Left side</strong>\n' +
+                            '                </div>\n' +
+                            '                <div class="col-6">\n' +
+                            '                    <strong>Right side</strong>\n' +
+                            '                </div>\n' +
+                            '            </div>\n');
+                        var counter = 0;
+                        answers.find("td:first-child").each(function () {
+                            container.append(
+                                '<div class="row margin-row">\n' +
+                                '    <div class="col-6">\n' +
+                                '        <input type="text" class="form-control" name="left' + counter + '">\n' +
+                                '    </div>\n' +
+                                '    <div class="col-6">\n' +
+                                '        <input type="text" class="form-control" name="right' + counter + '">\n' +
+                                '    </div>\n' +
+                                '</div>\n');
+                            container.find("input[name='left" + counter + "']").val($(this).text());
+                            counter++;
+                        });
+                        counter = 0;
+                        answers.find("td:last-child").each(function () {
+                            container.find("input[name='right" + counter + "']").val($(this).text());
+                            counter++;
+                        });
                         break;
                     case "SEQUENCE":
                         $("#addAnswer").remove();
@@ -867,7 +963,7 @@
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="ONE_ANSWER"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="ONE_ANSWER"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -892,7 +988,7 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <div><strong>Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>
@@ -910,7 +1006,7 @@
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="FEW_ANSWERS"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="FEW_ANSWERS"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -935,7 +1031,7 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <div><strong>Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>
@@ -953,7 +1049,7 @@
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="ACCORDANCE"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="ACCORDANCE"><i class="fa fa-edit"></i> Edit</a>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -974,7 +1070,7 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <div><strong>Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>
@@ -1012,7 +1108,7 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong> Explanation: </strong>${question.explanation}</div>
+                <div><strong>Explanation: </strong>${question.explanation}</div>
             </div>
         </c:forEach>
     </c:if>

@@ -147,6 +147,23 @@ public class QuestionDaoJdbcTest {
         assertEquals(testQuestion, question);
     }
 
+    @Test
+    public void test_edit_question() {
+        Question testQuestion = new Question.QuestionBuilder()
+                .quizId(1L)
+                .body("body")
+                .explanation("explanation")
+                .questionType(QuestionType.ONE_ANSWER)
+                .score(2)
+                .questionId(1L)
+                .build();
+        questionDao.editQuestion(testQuestion);
+
+        Question question = questionDao.findQuestion(1L);
+
+        assertEquals(testQuestion, question);
+    }
+
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_question_by_questionId() {
         questionDao.deleteQuestion(1L);

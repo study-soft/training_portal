@@ -151,7 +151,10 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override
     public void editQuestion(Question question) {
-        throw new UnsupportedOperationException();
+        template.update(EDIT_QUESTION, question.getQuizId(), question.getBody(),
+                question.getExplanation(), question.getQuestionType().getQuestionType(),
+                question.getScore(), question.getQuestionId());
+        logger.info("Edited question: " + question);
     }
 
     @Transactional
@@ -220,6 +223,11 @@ public class QuestionDaoJdbc implements QuestionDao {
     private static final String ADD_QUESTION =
     "INSERT INTO QUESTIONS (QUIZ_ID, BODY, EXPLANATION, QUESTION_TYPE, SCORE) " +
     "VALUES (?, ?, ?, ?, ?);";
+
+    private static final String EDIT_QUESTION =
+    "UPDATE QUESTIONS " +
+    "SET QUIZ_ID = ?, BODY = ?, EXPLANATION = ?, QUESTION_TYPE = ?, SCORE = ? " +
+    "WHERE QUESTION_ID = ?;";
 
     private static final String DELETE_QUESTION =
     "DELETE FROM QUESTIONS WHERE QUESTION_ID = ?;";

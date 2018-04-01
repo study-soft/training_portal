@@ -170,16 +170,6 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void test_find_all_student_ids_by_groupId_and_quizId() {
-        List<Long> testStudentIds = new ArrayList<>(Arrays.asList(3L, 4L));
-
-        List<Long> studentIds =
-                userDao.findStudentIdsByGroupIdAndQuizId(1L, 1L);
-
-        assertEquals(testStudentIds, studentIds);
-    }
-
-    @Test
     public void test_find_students_number() {
         Integer studentsNumber = userDao.findStudentsNumber();
         assertThat(studentsNumber, is(6));
@@ -219,25 +209,6 @@ public class UserDaoJdbcTest {
         Integer finalResultsNumber =
                 userDao.findFinalResultsNumber(1L, 1L);
         assertThat(finalResultsNumber, is(1));
-    }
-
-    @Test
-    public void test_find_student_ids_without_group() {
-        List<Long> testStudentIds = new ArrayList<>(Arrays.asList(7L, 8L));
-        List<Long> studentIds = userDao.findStudentIdsWithoutGroup();
-        assertEquals(testStudentIds, studentIds);
-    }
-
-    @Test
-    public void test_find_studentIds_and_results_by_groupId_and_quizId() {
-        Map<Long, Integer> testResults = new HashMap<>();
-        testResults.put(3L, 19);
-        testResults.put(4L, 24);
-
-        Map<Long, Integer> results =
-                userDao.findStudentIdsAndResultsByGroupIdAndQuizId(1L, 1L);
-
-        assertEquals(testResults, results);
     }
 
     @Test

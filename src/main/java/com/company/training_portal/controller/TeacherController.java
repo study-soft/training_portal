@@ -609,7 +609,7 @@ public class TeacherController {
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
     @ResponseBody
     public ResponseEntity<?> editQuestion(@PathVariable("quizId") Long quizId,
-                               @RequestParam Map<String, String> params) {
+                                          @RequestParam Map<String, String> params) {
         logger.info(params);
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
         Integer score = Integer.valueOf(params.get("points"));
@@ -629,11 +629,29 @@ public class TeacherController {
         params.remove("question");
         params.remove("explanation");
 
-        Long questionId = questionDao.addQuestion(question);
+        boolean editingQuestion = true;
+        Long questionId;
+        String paramQuestionId = params.get("questionId");
+        logger.info("paramQuestionId: " + paramQuestionId);
+        if (paramQuestionId == null) {
+            editingQuestion = false;
+            questionId = questionDao.addQuestion(question);
+        } else {
+            questionId = Long.valueOf(paramQuestionId);
+            question.setQuestionId(questionId);
+            questionDao.editQuestion(question);
+            params.remove("questionId");
+        }
+
         switch (questionType) {
             case ONE_ANSWER:
+                if (editingQuestion) {
+                    answerSimpleDao.deleteAnswersSimple(questionId);
+                }
+
                 String correctAnswer = params.get("correct");
                 params.remove("correct");
+
                 for (String answer : params.keySet()) {
                     boolean correct = false;
                     String answerBody = params.get(answer);
@@ -649,6 +667,10 @@ public class TeacherController {
                 }
                 break;
             case FEW_ANSWERS:
+                if (editingQuestion) {
+                    answerSimpleDao.deleteAnswersSimple(questionId);
+                }
+
                 Set<String> answers = new LinkedHashSet<>();
                 Set<String> correctAnswers = new HashSet<>();
                 for (String key : params.keySet()) {
@@ -686,8 +708,11 @@ public class TeacherController {
                         .leftSide(leftSide)
                         .rightSide(rightSide)
                         .build();
-
-                answerAccordanceDao.addAnswerAccordance(answerAccordance);
+                if (editingQuestion) {
+                    answerAccordanceDao.editAnswerAccordance(answerAccordance);
+                } else {
+                    answerAccordanceDao.addAnswerAccordance(answerAccordance);
+                }
                 break;
             case SEQUENCE:
                 List<String> correctList = new ArrayList<>();
@@ -699,8 +724,11 @@ public class TeacherController {
                         .questionId(questionId)
                         .correctList(correctList)
                         .build();
-
-                answerSequenceDao.addAnswerSequence(answerSequence);
+                if (editingQuestion) {
+                    answerSequenceDao.editAnswerSequence(answerSequence);
+                } else {
+                    answerSequenceDao.addAnswerSequence(answerSequence);
+                }
                 break;
             case NUMBER:
                 Integer number = Integer.valueOf(params.get("number"));
@@ -708,7 +736,11 @@ public class TeacherController {
                         .questionId(questionId)
                         .correct(number)
                         .build();
-                answerNumberDao.addAnswerNumber(answerNumber);
+                if (editingQuestion) {
+                    answerNumberDao.editAnswerNumber(answerNumber);
+                } else {
+                    answerNumberDao.addAnswerNumber(answerNumber);
+                }
                 break;
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -717,16 +749,16 @@ public class TeacherController {
     @RequestMapping("/teacher/quizzes/{quizId}/questions/delete")
     @ResponseBody
     public ResponseEntity<?> deleteQuestion(@PathVariable("quizId") Long quizId,
-                                 @RequestParam("questionId") Long questionId) {
+                                            @RequestParam("questionId") Long questionId) {
         questionDao.deleteQuestion(questionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/hello")
     @ResponseBody
-    public String hello(@PathVariable("quizId") Long quizId,
-                        @RequestParam Map<String, String> params) {
-        logger.info("params: " + params);
-        return "hello";
+    public ResponseEntity<?> hello(@PathVariable("quizId") Long quizId,
+                                   @RequestParam Map<String, String> params) {
+        logger.info(params);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

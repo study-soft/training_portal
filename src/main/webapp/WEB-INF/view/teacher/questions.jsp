@@ -5,6 +5,8 @@
     <title>Questions</title>
     <c:import url="../fragment/head.jsp"/>
     <script>
+        var oldHeader;
+        var oldAnswers;
         <%--// question one answer--%>
         $(document).ready(function () {
             var rowOneAnswer = '<div id="new-row" class="row margin-row">\n' +
@@ -108,6 +110,9 @@
                 } else if (!points.val().match(/[0-9]+/)) {
                     points.after('<div class="error">Only digits allowed</div>')
                     validationSuccess = false;
+                } else if (points.val().length > 9) {
+                    points.after('<div class="error">Length must be less than 10 characters</div>')
+                    validationSuccess = false;
                 }
 
                 var question = $("#question");
@@ -161,6 +166,9 @@
                         } else if (!number.val().match(/[0-9]+/)) {
                             number.after('<div class="error">Only digits allowed</div>');
                             validationSuccess = false;
+                        } else if (number.val().length > 9) {
+                            number.after('<div class="error">Length must be less than 10 characters</div>')
+                            validationSuccess = false;
                         }
                         break;
                 }
@@ -208,13 +216,18 @@
                 if (questionId) {
                     data += "&questionId=" + questionId;
                 }
+                if ($("#type").prop("disabled")) {
+                    data += "&type=" + questionType;
+                }
                 alert(data);
                 $.ajax({
                     type: form.attr("method"),
                     url: form.attr("action"),
                     data: data,
-                    error: function () {
-                        alert("Some error");
+                    error: function(xhr, status, error) {
+                        console.log("status:" + status + "\nresponse message: " +
+                            xhr.responseText + "\nerror: " + error);
+                        alert("Some error. See in console");
                     },
                     success: function () {
                         alert("success");
@@ -354,7 +367,7 @@
             });
 
             var baseEditQuestionForm =
-                '   <form id="questionForm" action="/teacher/quizzes/' + window.location.pathname.split("/")[3] + '/questions/hello" method="post">\n' +
+                '   <form id="questionForm" action="/teacher/quizzes/' + window.location.pathname.split("/")[3] + '/questions/update" method="post">\n' +
                 '        <div class="question-header">\n' +
                 '            <div class="row">\n' +
                 '                <div class="col-8">\n' +
@@ -409,7 +422,7 @@
                 '                </div>\n' +
                 '            </div>\n' +
                 '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
+                '                <button id="cancel" type="button" class="btn btn-primary">Cancel</button>\n' +
                 '                <button id="save" type="submit" class="btn btn-success" value="">Save</button>\n' +
                 '            </div>\n' +
                 '        </div>\n' +
@@ -443,13 +456,20 @@
 
             $(document).on("click", "a:contains(Edit)", function (event) {
                 event.preventDefault();
-                $("#questionForm").remove();
+
+                var form = $("#questionForm");
+                if (form.length !== 0) {
+                    form.after(oldHeader);
+                    oldHeader.after(oldAnswers);
+                    form.remove();
+                }
 
                 var header = $(this).closest(".question-header");
                 var answers = header.next();
                 var questionType = $(this).attr("type");
 
                 answers.after(baseEditQuestionForm);
+                $("#cancel").val("editingQuestion");
                 $("#type").val(questionType);
                 $("#points").val(header.find("h6").text().replace(" points", ""));
                 $("#question").val(header.find("h5").text());
@@ -585,8 +605,17 @@
                 $("#explanation").val(answers.find("strong:contains(Explanation)")
                     .parent().text().replace("Explanation: ", ""));
                 $("#save").val($(this).attr("href"));
-                header.remove();
-                answers.remove();
+                oldHeader = header.detach();
+                oldAnswers = answers.detach();
+            });
+
+            $(document).on("click", "#cancel", function () {
+                var form = $("#questionForm");
+                if ($(this).val() === "editingQuestion") {
+                    form.after(oldHeader);
+                    oldHeader.after(oldAnswers);
+                }
+                form.remove();
             });
 
             var oneAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
@@ -609,28 +638,7 @@
                 '                        </div>\n' +
                 '                    </c:if>\n' +
                 '                </div>\n' +
-                '            </c:forEach>\n' +
-                '                <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
-                '                    <div class="form-group">\n' +
-                '                        <label for="explanation" class="col-form-label">\n' +
-                '                            <strong>Explanation</strong>\n' +
-                '                        </label>\n' +
-                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
-                '                                  placeholder="Explanation"></textarea>\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
-                '                    <button id="addAnswer" type="button" class="btn btn-success" style="width: 140px"\n' +
-                '                            value="oneAnswer">\n' +
-                '                        <i class="fa fa-plus"></i> Add answer\n' +
-                '                    </button>\n' +
-                '                </div>\n' +
-                '            </div>\n' +
-                '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
-                '                <button type="submit" class="btn btn-success">Save</button>\n' +
-                '            </div>';
+                '            </c:forEach>\n';
 
             var fewAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
                 '                <div id="${status.index}" class="row margin-row">\n' +
@@ -652,28 +660,7 @@
                 '                        </div>\n' +
                 '                    </c:if>\n' +
                 '                </div>\n' +
-                '            </c:forEach>\n' +
-                '                <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
-                '                    <div class="form-group">\n' +
-                '                        <label for="explanation" class="col-form-label">\n' +
-                '                            <strong>Explanation</strong>\n' +
-                '                        </label>\n' +
-                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
-                '                                  placeholder="Explanation"></textarea>\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
-                '                    <button id="addAnswer" type="button" class="btn btn-success" style="width: 140px"\n' +
-                '                            value="fewAnswers">\n' +
-                '                        <i class="fa fa-plus"></i> Add answer\n' +
-                '                    </button>\n' +
-                '                </div>\n' +
-                '            </div>\n' +
-                '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
-                '                <button type="submit" class="btn btn-success">Save</button>\n' +
-                '            </div>';
+                '            </c:forEach>\n';
 
             var accordanceAnswers = '<div class="row">\n' +
                 '                <div class="col-6">\n' +
@@ -692,22 +679,7 @@
                 '                        <input type="text" class="form-control" name="right${status.index}">\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '            </c:forEach>\n' +
-                '                <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
-                '                    <div class="form-group">\n' +
-                '                        <label for="explanation" class="col-form-label">\n' +
-                '                            <strong>Explanation</strong>\n' +
-                '                        </label>\n' +
-                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
-                '                                  placeholder="Explanation"></textarea>\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '            </div>\n' +
-                '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
-                '                <button type="submit" class="btn btn-success">Save</button>\n' +
-                '            </div>';
+                '            </c:forEach>\n';
 
             var sequenceAnswers = '<div><strong>Sequence</strong></div>\n' +
                 '            <c:forEach begin="0" end="3" varStatus="status">\n' +
@@ -719,22 +691,7 @@
                 '                        <input type="text" class="form-control" name="sequence${status.index}">\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '            </c:forEach>' +
-                '                <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
-                '                    <div class="form-group">\n' +
-                '                        <label for="explanation" class="col-form-label">\n' +
-                '                            <strong>Explanation</strong>\n' +
-                '                        </label>\n' +
-                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
-                '                                  placeholder="Explanation"></textarea>\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '            </div>\n' +
-                '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
-                '                <button type="submit" class="btn btn-success">Save</button>\n' +
-                '            </div>';
+                '            </c:forEach>';
 
             var numberAnswers = '<div class="form-group form-inline">\n' +
                 '                <label for="number">\n' +
@@ -743,24 +700,24 @@
                 '                <div class="col">\n' +
                 '                    <input type="text" class="form-control" id="number" name="number">\n' +
                 '                </div>\n' +
-                '            </div>' +
-                '                <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
-                '                    <div class="form-group">\n' +
-                '                        <label for="explanation" class="col-form-label">\n' +
-                '                            <strong>Explanation</strong>\n' +
-                '                        </label>\n' +
-                '                        <textarea name="explanation" id="explanation" rows="2" class="form-control"\n' +
-                '                                  placeholder="Explanation"></textarea>\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '            </div>\n' +
-                '            <div class="text-center">\n' +
-                '                <button type="button" class="btn btn-primary">Cancel</button>\n' +
-                '                <button type="submit" class="btn btn-success">Save</button>\n' +
-                '            </div>';
+                '            </div>\n';
 
-            $("#type").on("change", function () {
+            $("#addQuestion").click(function () {
+
+                var form = $("#questionForm");
+                if (form.length !== 0) {
+                    form.after(oldHeader);
+                    oldHeader.after(oldAnswers);
+                    form.remove();
+                }
+                var url = "/teacher/quizzes/" + window.location.pathname.split("/")[3] + "/questions/update";
+                $("#pageHeaderRow").after(baseEditQuestionForm);
+                $("#questionForm").attr("action", url);
+                $("#type").prop("disabled", false);
+                $("#answersContainer").append(oneAnswers);
+            });
+
+            $(document).on("change", "#type", function () {
                 var answersContainer = $("#answersContainer");
                 answersContainer.empty();
                 var questionType = $(this).val();
@@ -937,13 +894,13 @@
     <%--</div>--%>
     <%--</form>--%>
 
-    <div class="row">
+    <div id="pageHeaderRow" class="row">
         <div class="col-6">
             <h2>Answers for quiz '${quiz.name}'</h2>
         </div>
         <div class="col-4"></div>
         <div class="col-2 shifted-down-20px">
-            <button type="button" class="btn btn-success btn-wide">
+            <button id="addQuestion" type="button" class="btn btn-success btn-wide">
                 <i class="fa fa-plus"></i>
                 Add question
             </button>

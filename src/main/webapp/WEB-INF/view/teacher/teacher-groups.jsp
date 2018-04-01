@@ -27,9 +27,9 @@
             <div class="col-4">
                 <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
             </div>
-            <div class="col-5"></div>
-            <div class="col-3">
-                <a href="/teacher/groups/create" class="btn btn-success float-right" style="width: 125px">
+            <div class="col-6"></div>
+            <div class="col-2">
+                <a href="/teacher/groups/create" class="btn btn-success btn-wide">
                     <i class="fa fa-group"></i> New group
                 </a>
             </div>

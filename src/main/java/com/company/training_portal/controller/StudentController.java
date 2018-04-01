@@ -220,7 +220,7 @@ public class StudentController {
     public String closeQuiz(@ModelAttribute("studentId") Long studentId,
                             @PathVariable("quizId") Long quizId,
                             RedirectAttributes redirectAttributes) {
-        quizDao.closeQuiz(studentId, quizId);
+        quizDao.closeQuizToStudent(studentId, quizId);
         redirectAttributes.addFlashAttribute("closeSuccess", true);
         return "redirect:/student/quizzes/" + quizId;
     }
@@ -229,7 +229,7 @@ public class StudentController {
     @ResponseBody
     public ResponseEntity<?> closeQuiz(@ModelAttribute("studentId") Long studentId,
                                        @PathVariable("quizId") Long quizId) {
-        quizDao.closeQuiz(studentId, quizId);
+        quizDao.closeQuizToStudent(studentId, quizId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

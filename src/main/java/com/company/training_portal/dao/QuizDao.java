@@ -90,7 +90,11 @@ public interface QuizDao {
     void editQuiz(Long quizId, String name, String description,
                   String explanation, Duration passingTime);
 
-    void closeQuiz(Long studentId, Long quizId);
+    void editStudentsInfoWithOpenedQuizStatus(Long groupId, Long quizId);
+
+    void closeQuizToStudent(Long studentId, Long quizId);
+
+    void closeQuizToGroup(Long groupId, Long quizId);
 
     void deleteUnpublishedQuiz(Long quizId);
 }

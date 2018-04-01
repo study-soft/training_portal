@@ -17,32 +17,30 @@
                 }
             });
 
-            $("button:contains(Close)").click(function (event) {
-                event.preventDefault();
+            $("button:contains(Close)").click(function () {
                 var studentName = $(this).val();
                 var studentId = $(this).parents("tr").attr("id").replace("selectedStudent", "");
                 $("#yes").val(studentId);
                 $(".modal-body").text("Are you sure you want to close " +
-                    "'${quiz.name}' quiz to the " + studentName + "?");
+                    "'${quiz.name}' quiz to " + studentName + "?");
                 $("#modal").modal();
             });
 
             $("#yes").click(function () {
+                $("#modal").modal("toggle");
                 var studentId = $("#yes").val();
                 $.ajax({
                     type: "POST",
                     url: "/teacher/results/group/${group.groupId}/quiz/${quiz.quizId}/close",
                     data: "studentId=" + studentId,
                     success: function (closedQuizInfo) {
-                        alert("success");
-                        var lastColumn = $("#selectedStudent" + studentId).children().last();
-                        lastColumn.prev().text("CLOSED");
-                        if (lastColumn.prev().text() === "OPENED") {
-                            lastColumn.prev().prev().text(closedQuizInfo[3]);
-                            lastColumn.prev().prev().prev().text(closedQuizInfo[2]);
-                            lastColumn.prev().prev().prev().prev().text(closedQuizInfo[1]);
-                            lastColumn.prev().prev().prev().prev().prev().text(closedQuizInfo[0]);
+                        var selectedRow = $("#selectedStudent" + studentId).children();
+                        if (selectedRow.last().prev().text() === "OPENED") {
+                            for (var i = 0; i < 4; i++) {
+                                selectedRow[i].text(closedQuizInfo[i]);
+                            }
                         }
+                        selectedRow.last().prev().text("CLOSED");
                     }
                 });
             });
@@ -68,16 +66,14 @@
             <c:set var="i" value="${status.index}"/>
             <tr id="selectedStudent${student.userId}">
                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                <td id="/${statusList[i]}">${passedResults[i].result} / ${passedResults[i].score}</td>
-                <td>${passedResults[i].attempt}</td>
-                <td><duration:format value="${passedResults[i].timeSpent}"/></td>
-                <td><localDateTime:format value="${passedResults[i].finishDate}"/></td>
+                <td id="/${statusList[i]}">${results[i].result} / ${results[i].score}</td>
+                <td>${results[i].attempt}</td>
+                <td><duration:format value="${results[i].timeSpent}"/></td>
+                <td><localDateTime:format value="${results[i].finishDate}"/></td>
                 <td>${statusList[i]}</td>
                 <td id="${statusList[i]}">
-                    <form action="#" method="post" class="no-margin">
-                        <button type="submit" class="danger-button"
-                                value="${student.lastName} ${student.firstName}"></button>
-                    </form>
+                    <button type="button" class="danger-button"
+                            value="${student.lastName} ${student.firstName}"></button>
                 </td>
             </tr>
         </c:forEach>
@@ -98,7 +94,7 @@
                 <div class="modal-footer">
                     <form id="deleteForm" action="" method="post">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" id="yes" class="btn btn-primary" value="">Yes</button>
+                        <button type="button" id="yes" class="btn btn-primary" value="">Yes</button>
                     </form>
                 </div>
             </div>

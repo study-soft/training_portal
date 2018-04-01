@@ -467,11 +467,26 @@ public class QuizDaoJdbc implements QuizDao {
                 quizId);
     }
 
+    @Override
+    public void editStudentsInfoWithOpenedQuizStatus(Long groupId, Long quizId) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        template.update(EDIT_STUDENTS_INFO_WITH_OPENED_QUIZ_STATUS,
+                currentTime, currentTime, groupId, quizId);
+        logger.info("Edited students info with opened quiz status by groupId = " +
+                groupId + " and quizId = " + quizId);
+    }
+
     @Transactional
     @Override
-    public void closeQuiz(Long studentId, Long quizId) {
-        template.update(CLOSE_QUIZ, studentId, quizId);
+    public void closeQuizToStudent(Long studentId, Long quizId) {
+        template.update(CLOSE_QUIZ_TO_STUDENT, studentId, quizId);
         logger.info("Closed quiz by studentId = " + studentId + " and quizId = " + quizId);
+    }
+
+    @Override
+    public void closeQuizToGroup(Long groupId, Long quizId) {
+        template.update(CLOSE_QUIZ_TO_GROUP, groupId, quizId);
+        logger.info("Closed quiz by groupId = " + groupId + " and quizId = " + quizId);
     }
 
     @Transactional
@@ -801,10 +816,23 @@ public class QuizDaoJdbc implements QuizDao {
     "SET NAME = ?, DESCRIPTION = ?, EXPLANATION = ?, PASSING_TIME = ? " +
     "WHERE QUIZ_ID = ?;";
 
-    private static final String CLOSE_QUIZ =
+    private static final String EDIT_STUDENTS_INFO_WITH_OPENED_QUIZ_STATUS =
+    "UPDATE USER_QUIZ_JUNCTIONS " +
+    "SET RESULT = 0, START_DATE = ?, FINISH_DATE = ?, ATTEMPT = 0, STUDENT_QUIZ_STATUS = 'CLOSED' " +
+    "WHERE USER_ID IN (SELECT USERS.USER_ID " +
+            "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+            "WHERE GROUP_ID = ?) " +
+    "AND QUIZ_ID = ? AND STUDENT_QUIZ_STATUS = 'OPENED';";
+
+    private static final String CLOSE_QUIZ_TO_STUDENT =
     "UPDATE USER_QUIZ_JUNCTIONS " +
     "SET STUDENT_QUIZ_STATUS = 'CLOSED' " +
     "WHERE USER_ID = ? AND QUIZ_ID = ?;";
+
+    private static final String CLOSE_QUIZ_TO_GROUP =
+    "UPDATE USER_QUIZ_JUNCTIONS " +
+    "SET STUDENT_QUIZ_STATUS = 'CLOSED' " +
+    "WHERE USER_ID IN (SELECT USER_ID FROM USERS WHERE GROUP_ID = ?) AND QUIZ_ID = ?;";
 
     private static final String DELETE_UNPUBLISHED_QUIZ =
     "DELETE FROM QUIZZES WHERE QUIZ_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED';";

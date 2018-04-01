@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
+import static com.company.training_portal.model.enums.StudentQuizStatus.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
@@ -32,6 +33,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -535,11 +537,37 @@ public class QuizDaoJdbcTest {
     }
 
     @Test
-    public void test_close_quiz() {
-        quizDao.closeQuiz(4L, 4L);
+    public void edit_students_info_with_opened_quiz_status() {
+        quizDao.editStudentsInfoWithOpenedQuizStatus(1L, 1L);
+        List<User> students = userDao.findStudents(1L, 1L);
+        for (User student : students) {
+            Long studentId = student.getUserId();
+            Integer result = quizDao.findResult(studentId, 1L);
+            if (result.equals(0)) {
+                Integer attempt = quizDao.findAttempt(studentId, 1L);
+                Integer finishDate = quizDao.findFinishDate(studentId, 1L).getSecond();
+                assertThat(attempt, is(0));
+                assertThat(finishDate, is(LocalDateTime.now().getSecond()));
+            }
+        }
+    }
+
+    @Test
+    public void test_close_quiz_to_student() {
+        quizDao.closeQuizToStudent(4L, 4L);
         StudentQuizStatus studentQuizStatus =
                 quizDao.findStudentQuizStatus(4L, 4L);
         assertThat(studentQuizStatus, is(CLOSED));
+    }
+
+    @Test
+    public void test_close_quiz_to_group() {
+        quizDao.closeQuizToGroup(1L, 1L);
+        List<User> students = userDao.findStudents(1L, 1L);
+        for (User student : students) {
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(student.getUserId(), 1L);
+            assertThat(status, is(CLOSED));
+        }
     }
 
     @Test(expected = EmptyResultDataAccessException.class)

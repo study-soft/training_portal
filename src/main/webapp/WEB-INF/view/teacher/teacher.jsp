@@ -37,10 +37,10 @@
     </div>
     <h2>Hello, teacher! Welcome to the training portal!</h2>
     <div>
-        <a href="/teacher/groups/create" class="btn btn-success" style="width: 125px">
+        <a href="/teacher/groups/create" class="btn btn-success btn-wide">
             <i class="fa fa-group"></i> New group
         </a>
-        <a href="/teacher/quizzes/create" class="btn btn-success" style="width: 125px">
+        <a href="/teacher/quizzes/create" class="btn btn-success btn-wide">
             <i class="fa fa-book"></i> New quiz
         </a>
     </div>

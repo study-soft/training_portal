@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.util.Utils.formatDateTime;
-import static com.company.training_portal.util.Utils.formatDuration;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
 @Controller
@@ -482,54 +481,51 @@ public class TeacherController {
         model.addAttribute("quiz", quiz);
         model.addAttribute("students", students);
 
-        Integer studentsNumber = userDao.findStudentsNumber(groupId, quizId);
-        Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
-
-        if (closedStudents.equals(studentsNumber)) {
-            List<PassedQuiz> closedResults = new ArrayList<>();
-            for (User student : students) {
-                Long studentId = student.getUserId();
-                PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
-                closedResults.add(closedQuiz);
+        List<PassedQuiz> results = new ArrayList<>();
+        List<String> statusList = new ArrayList<>();
+        for (User student : students) {
+            Long studentId = student.getUserId();
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+            statusList.add(status.getStudentQuizStatus());
+            switch (status) {
+                case OPENED:
+                    PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder()
+                            .quizId(quizId)
+                            .build();
+                    results.add(openedQuiz);
+                    break;
+                case PASSED:
+                    PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+                    results.add(passedQuiz);
+                    break;
+                case CLOSED:
+                    PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+                    results.add(closedQuiz);
+                    break;
             }
-            model.addAttribute("closedResults", closedResults);
-            return "teacher/results-group-closed-quiz";
-        } else {
-            List<PassedQuiz> passedResults = new ArrayList<>();
-            List<String> statusList = new ArrayList<>();
-            for (User student : students) {
-                Long studentId = student.getUserId();
-                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-                statusList.add(status.getStudentQuizStatus());
-                switch (status) {
-                    case OPENED:
-                        PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder()
-                                .quizId(quizId)
-                                .build();
-                        passedResults.add(openedQuiz);
-                        break;
-                    case PASSED:
-                        PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
-                        passedResults.add(passedQuiz);
-                        break;
-                    case CLOSED:
-                        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
-                        passedResults.add(closedQuiz);
-                        break;
-                }
-            }
-            model.addAttribute("passedResults", passedResults);
-            model.addAttribute("statusList", statusList);
-            return "teacher/results-group-passed-quiz";
         }
+        model.addAttribute("results", results);
+        model.addAttribute("statusList", statusList);
+        return "teacher/results-group-quiz";
+    }
+
+    @RequestMapping(value = "/teacher/results/group/{groupId}/close", method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> closeQuizToGroup(@PathVariable("groupId") Long groupId,
+                                         @RequestParam("quizId") Long quizId) {
+        quizDao.editStudentsInfoWithOpenedQuizStatus(groupId, quizId);
+        quizDao.closeQuizToGroup(groupId, quizId);
+        List<String> closedQuizInfo = new ArrayList<>();
+        closedQuizInfo.add(quizDao.findQuiz(quizId).getName());
+        closedQuizInfo.add(formatDateTime(LocalDateTime.now()));
+        return closedQuizInfo;
     }
 
     @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}/close", method = RequestMethod.POST)
     @ResponseBody
-    public List<String> closeStudent(@PathVariable("groupId") Long groupId,
-                                          @PathVariable("quizId") Long quizId,
-                                          @RequestParam("studentId") String studentIdString) {
-        Long studentId = Long.valueOf(studentIdString);
+    public List<String> closeQuizToStudent(@PathVariable("groupId") Long groupId,
+                                           @PathVariable("quizId") Long quizId,
+                                           @RequestParam("studentId") Long studentId) {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         switch (status) {
             case OPENED:
@@ -537,7 +533,7 @@ public class TeacherController {
                         LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
                 break;
             case PASSED:
-                quizDao.closeQuiz(studentId, quizId);
+                quizDao.closeQuizToStudent(studentId, quizId);
                 break;
             case CLOSED:
                 logger.error("Can not close already closed quiz");
@@ -782,14 +778,6 @@ public class TeacherController {
     public ResponseEntity<?> deleteQuestion(@PathVariable("quizId") Long quizId,
                                             @RequestParam("questionId") Long questionId) {
         questionDao.deleteQuestion(questionId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @RequestMapping("/teacher/quizzes/{quizId}/questions/hello")
-    @ResponseBody
-    public ResponseEntity<?> hello(@PathVariable("quizId") Long quizId,
-                                   @RequestParam Map<String, String> params) {
-        logger.info(params);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

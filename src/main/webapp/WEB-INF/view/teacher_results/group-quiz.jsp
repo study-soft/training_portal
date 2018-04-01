@@ -55,13 +55,13 @@
     <h3><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></h3>
     <table class="table">
         <tr>
-            <th style="width: 25%">Name</th>
-            <th style="width: 10%">Result</th>
-            <th style="width: 10%">Attempt</th>
-            <th style="width: 12.5%">Time spent</th>
-            <th style="width: 22.5%">Passed</th>
-            <th style="width: 10%">Status</th>
-            <th style="width: 10%"></th>
+            <th>Name</th>
+            <th>Result</th>
+            <th>Attempt</th>
+            <th>Time spent</th>
+            <th>Passed</th>
+            <th>Status</th>
+            <th></th>
         </tr>
         <c:forEach items="${students}" var="student" varStatus="status">
             <c:set var="i" value="${status.index}"/>

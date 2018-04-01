@@ -523,29 +523,17 @@ public class TeacherController {
 
     @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}/close", method = RequestMethod.POST)
     @ResponseBody
-    public List<String> closeQuizToStudent(@PathVariable("groupId") Long groupId,
+    public List<String> closeQuizToStudentFromStudents(@PathVariable("groupId") Long groupId,
                                            @PathVariable("quizId") Long quizId,
                                            @RequestParam("studentId") Long studentId) {
-        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-        switch (status) {
-            case OPENED:
-                quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
-                        LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
-                break;
-            case PASSED:
-                quizDao.closeQuizToStudent(studentId, quizId);
-                break;
-            case CLOSED:
-                logger.error("Can not close already closed quiz");
-                break;
-        }
-        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
-        List<String> closedQuizInfo = new ArrayList<>();
-        closedQuizInfo.add(String.valueOf(closedQuiz.getResult()));
-        closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
-        closedQuizInfo.add("00:00");
-        closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
-        return closedQuizInfo;
+        return closeQuizToStudent(studentId, quizId);
+    }
+
+    @RequestMapping(value = "/teacher/students/{studentId}/close", method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> closeQuizToStudentFromResults(@PathVariable("studentId") Long studentId,
+                                                       @RequestParam("quizId") Long quizId) {
+        return closeQuizToStudent(studentId, quizId);
     }
 
     @RequestMapping("/teacher/students/{studentId}")
@@ -566,7 +554,7 @@ public class TeacherController {
         model.addAttribute("passedQuizzes", passedQuizzes);
         model.addAttribute("closedQuizzes", closedQuizzes);
 
-        return "/student_general/student-info";
+        return "/teacher_results/student";
     }
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.GET)
@@ -779,5 +767,30 @@ public class TeacherController {
                                             @RequestParam("questionId") Long questionId) {
         questionDao.deleteQuestion(questionId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // INTERNALS===================================================
+
+    private List<String> closeQuizToStudent(Long studentId, Long quizId) {
+        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+        switch (status) {
+            case OPENED:
+                quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
+                        LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
+                break;
+            case PASSED:
+                quizDao.closeQuizToStudent(studentId, quizId);
+                break;
+            case CLOSED:
+                logger.error("Can not close already closed quiz");
+                break;
+        }
+        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+        List<String> closedQuizInfo = new ArrayList<>();
+        closedQuizInfo.add(String.valueOf(closedQuiz.getResult() + " / " + closedQuiz.getScore()));
+        closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
+        closedQuizInfo.add("00:00");
+        closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
+        return closedQuizInfo;
     }
 }

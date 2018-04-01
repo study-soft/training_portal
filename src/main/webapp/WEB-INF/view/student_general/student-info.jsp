@@ -7,15 +7,6 @@
 <head>
     <title>Student info</title>
     <c:import url="../fragment/head.jsp"/>
-    <script>
-        $(document).ready(function () {
-            if (${sessionScope.teacherId ne null}) {
-                $("td[id]").each(function () {
-                    $(this).find("a").attr("href", "/teacher/quizzes/" + this.id);
-                });
-            }
-        });
-    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -36,22 +27,14 @@
                 <td><localDate:format value="${student.dateOfBirth}"/></td>
             </tr>
         </c:if>
-        <tr>
-            <td>Group</td>
-            <td>${group.name}</td>
-        </tr>
+        <c:if test="${group ne null}">
+            <tr>
+                <td>Group</td>
+                <td>${group.name}</td>
+            </tr>
+        </c:if>
     </table>
-    <c:choose>
-        <c:when test="${sessionScope.studentId ne null}">
-            <h3>${student.firstName} passes next quizzes:</h3>
-        </c:when>
-        <c:when test="${sessionScope.teacherId ne null}">
-            <h3>You gave ${student.firstName} next quizzes:</h3>
-        </c:when>
-        <c:otherwise>
-            <div class="error">SOME ERROR</div>
-        </c:otherwise>
-    </c:choose>
+    <h3>${student.firstName} passes next quizzes:</h3>
     <c:choose>
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="highlight-primary">

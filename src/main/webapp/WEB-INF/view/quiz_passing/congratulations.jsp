@@ -33,7 +33,10 @@
     <c:if test="${quiz.explanation ne null}">
         <div class="col-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
     </c:if>
-    <div><a style="width: 125px" href="/student/quizzes/${quiz.quizId}" class="btn btn-primary">Back to quiz</a></div>
+    <a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a>
+    <form class="inline" action="/student/quizzes/${quiz.quizId}" method="post">
+        <input type="submit" value="Close" class="btn btn-success">
+    </form>
 </div>
 <br>
 </body>

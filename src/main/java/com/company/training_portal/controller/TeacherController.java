@@ -29,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.util.Utils.formatDateTime;
+import static com.company.training_portal.util.Utils.formatDuration;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
 @Controller
@@ -469,7 +471,6 @@ public class TeacherController {
     }
 
     @RequestMapping("/teacher/results/group/{groupId}/quiz/{quizId}")
-    @SuppressWarnings("Duplicates")
     public String showGroupQuizResults(@ModelAttribute("teacherId") Long teacherId,
                                        @PathVariable("groupId") Long groupId,
                                        @PathVariable("quizId") Long quizId,
@@ -502,7 +503,9 @@ public class TeacherController {
                 statusList.add(status.getStudentQuizStatus());
                 switch (status) {
                     case OPENED:
-                        PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder().build();
+                        PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder()
+                                .quizId(quizId)
+                                .build();
                         passedResults.add(openedQuiz);
                         break;
                     case PASSED:
@@ -519,6 +522,34 @@ public class TeacherController {
             model.addAttribute("statusList", statusList);
             return "teacher/results-group-passed-quiz";
         }
+    }
+
+    @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}/close", method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> closeStudent(@PathVariable("groupId") Long groupId,
+                                          @PathVariable("quizId") Long quizId,
+                                          @RequestParam("studentId") String studentIdString) {
+        Long studentId = Long.valueOf(studentIdString);
+        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+        switch (status) {
+            case OPENED:
+                quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
+                        LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
+                break;
+            case PASSED:
+                quizDao.closeQuiz(studentId, quizId);
+                break;
+            case CLOSED:
+                logger.error("Can not close already closed quiz");
+                break;
+        }
+        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+        List<String> closedQuizInfo = new ArrayList<>();
+        closedQuizInfo.add(String.valueOf(closedQuiz.getResult()));
+        closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
+        closedQuizInfo.add("00:00");
+        closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
+        return closedQuizInfo;
     }
 
     @RequestMapping("/teacher/students/{studentId}")

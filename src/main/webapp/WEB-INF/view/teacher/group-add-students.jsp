@@ -25,7 +25,11 @@
                             }
                             if ($('tr').length === 1) {
                                 $('table').remove();
-                                $('h3').after('<div>There is no students without group.</div>');
+                                $('h3').after('<div class="highlight-primary">\n' +
+                                    '                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                    '                     width="25" height="25" class="icon-one-row">\n' +
+                                    '                There is no students without group\n' +
+                                    '            </div>');
                                 $('input[type="submit"]').remove();
                             }
                         }

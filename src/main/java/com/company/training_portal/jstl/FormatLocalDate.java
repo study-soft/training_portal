@@ -6,6 +6,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.company.training_portal.util.Utils.formatDate;
 import static java.time.format.FormatStyle.MEDIUM;
 
 public class FormatLocalDate extends TagSupport {
@@ -53,9 +54,4 @@ public class FormatLocalDate extends TagSupport {
         init();
     }
 
-    private String formatDate(LocalDate localDate) {
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofLocalizedDate(MEDIUM);
-        return localDate.format(dateTimeFormatter);
-    }
 }

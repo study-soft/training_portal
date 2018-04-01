@@ -44,7 +44,13 @@
                     <td>${map['OPENED']}</td>
                     <td>${map['PASSED']}</td>
                     <td>${map['CLOSED']}</td>
-                    <td><a href="#" class="danger"><i class="fa fa-close"></i> Close all</a></td>
+                    <td>
+                        <form action="#" method="post" class="no-margin">
+                            <button type="submit" value="${group.groupId}" class="danger-button">
+                                <i class="fa fa-close"></i> Close all
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

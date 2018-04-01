@@ -13,8 +13,38 @@
                     $(this).text("");
                 }
                 if (this.id === "OPENED" || this.id === "PASSED") {
-                    $(this).find("a").html('<i class="fa fa-close"></i> Close');
+                    $(this).find("button").html('<i class="fa fa-close"></i> Close');
                 }
+            });
+
+            $("button:contains(Close)").click(function (event) {
+                event.preventDefault();
+                var studentName = $(this).val();
+                var studentId = $(this).parents("tr").attr("id").replace("selectedStudent", "");
+                $("#yes").val(studentId);
+                $(".modal-body").text("Are you sure you want to close " +
+                    "'${quiz.name}' quiz to the " + studentName + "?");
+                $("#modal").modal();
+            });
+
+            $("#yes").click(function () {
+                var studentId = $("#yes").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/teacher/results/group/${group.groupId}/quiz/${quiz.quizId}/close",
+                    data: "studentId=" + studentId,
+                    success: function (closedQuizInfo) {
+                        alert("success");
+                        var lastColumn = $("#selectedStudent" + studentId).children().last();
+                        lastColumn.prev().text("CLOSED");
+                        if (lastColumn.prev().text() === "OPENED") {
+                            lastColumn.prev().prev().text(closedQuizInfo[3]);
+                            lastColumn.prev().prev().prev().text(closedQuizInfo[2]);
+                            lastColumn.prev().prev().prev().prev().text(closedQuizInfo[1]);
+                            lastColumn.prev().prev().prev().prev().prev().text(closedQuizInfo[0]);
+                        }
+                    }
+                });
             });
         });
     </script>
@@ -36,18 +66,44 @@
         </tr>
         <c:forEach items="${students}" var="student" varStatus="status">
             <c:set var="i" value="${status.index}"/>
-            <tr>
+            <tr id="selectedStudent${student.userId}">
                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
                 <td id="/${statusList[i]}">${passedResults[i].result} / ${passedResults[i].score}</td>
                 <td>${passedResults[i].attempt}</td>
                 <td><duration:format value="${passedResults[i].timeSpent}"/></td>
                 <td><localDateTime:format value="${passedResults[i].finishDate}"/></td>
                 <td>${statusList[i]}</td>
-                <td id="${statusList[i]}"><a href="#" class="danger"></a></td>
+                <td id="${statusList[i]}">
+                    <form action="#" method="post" class="no-margin">
+                        <button type="submit" class="danger-button"
+                                value="${student.lastName} ${student.firstName}"></button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
     </table>
     <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog"
+         aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Attention</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" id="yes" class="btn btn-primary" value="">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <br>
 </body>

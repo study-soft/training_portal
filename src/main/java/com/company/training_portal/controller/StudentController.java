@@ -8,6 +8,8 @@ import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -223,6 +225,14 @@ public class StudentController {
         return "redirect:/student/quizzes/" + quizId;
     }
 
+    @RequestMapping(value = "/student/quizzes/{quizId}/close", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> closeQuiz(@ModelAttribute("studentId") Long studentId,
+                                       @PathVariable("quizId") Long quizId) {
+        quizDao.closeQuiz(studentId, quizId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
@@ -262,7 +272,6 @@ public class StudentController {
     }
 
     @RequestMapping("/student/results/{quizId}")
-    @SuppressWarnings("Duplicates")
     public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {

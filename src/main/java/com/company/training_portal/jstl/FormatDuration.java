@@ -7,6 +7,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 import java.time.Duration;
 
+import static com.company.training_portal.util.Utils.formatDuration;
+
 public class FormatDuration extends TagSupport {
 
     protected Object value;
@@ -51,20 +53,5 @@ public class FormatDuration extends TagSupport {
 
     public void release() {
         init();
-    }
-
-    private String formatDuration(Duration duration) {
-        StringBuilder result = new StringBuilder();
-        long totalSeconds = duration.toSeconds();
-        int seconds = (int) totalSeconds % 60;
-        int totalMinutes = (int) totalSeconds / 60;
-        int minutes = totalMinutes % 60;
-        int hours = totalMinutes / 60;
-        result.append(hours == 0 ? "" : hours + ":")
-                .append(minutes < 10 ? "0" : "")
-                .append(minutes)
-                .append(seconds < 10 ? ":0" : ":")
-                .append(seconds);
-        return result.toString();
     }
 }

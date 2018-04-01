@@ -5,6 +5,38 @@
 <head>
     <title>Quizzes</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $('button:contains(Close)').click(function (event) {
+                event.preventDefault();
+                var quizId = $(this).val();
+                var button = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "/student/quizzes/" + quizId + "/close",
+                    success: function () {
+                        var selectedRow = button.parents("tr");
+                        var quizName = selectedRow.children().first().find("a").text();
+                        var copiedSelectedRow = selectedRow.clone();
+                        selectedRow.remove();
+                        var passedQuizzes = $("#passedQuizzes");
+                        if (passedQuizzes.find("tr").length === 1) {
+                            passedQuizzes.after('<div class="highlight-primary">\n' +
+                                '                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '                     width="25" height="25" class="icon-one-row">\n' +
+                                '                You do not have passed quizzes\n' +
+                                '            </div>');
+                            passedQuizzes.remove();
+                        }
+                        alert("Quiz '" + quizName + "' successfully closed");
+                        var closedQuizzes = $("#closedQuizzes");
+                        closedQuizzes.append(copiedSelectedRow);
+                        closedQuizzes.find("td").last().remove();
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -32,8 +64,7 @@
                     <th style="width: 10%">Questions</th>
                     <th style="width: 7.5%">Score</th>
                     <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 35%">Author</th>
                 </tr>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
@@ -42,7 +73,6 @@
                         <td>${openedQuiz.score}</td>
                         <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
                         <td>${openedQuiz.authorName}</td>
-                        <td></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -58,7 +88,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
+            <table id="passedQuizzes" class="table">
                 <tr>
                     <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
@@ -69,14 +99,18 @@
                 </tr>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
-                        <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a></td>
+                        <td>
+                            <a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
+                        </td>
                         <td>${passedQuiz.questionsNumber}</td>
                         <td>${passedQuiz.score}</td>
                         <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
                         <td>${passedQuiz.authorName}</td>
                         <td>
-                            <form action="/student/quizzes/${passedQuiz.quizId}" method="post" style="margin: 0">
-                                <button type="submit" class="success-button"><i class="fa fa-close"></i> Close</button>
+                            <form action="/student/quizzes/${passedQuiz.quizId}" method="post" class="no-margin">
+                                <button type="submit" value="${passedQuiz.quizId}" class="success-button">
+                                    <i class="fa fa-close"></i> Close
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -94,14 +128,13 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
+            <table id="closedQuizzes" class="table">
                 <tr>
                     <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 7.5%">Score</th>
                     <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 35%">Author</th>
                 </tr>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
@@ -110,7 +143,6 @@
                         <td>${closedQuiz.score}</td>
                         <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
                         <td>${closedQuiz.authorName}</td>
-                        <td></td>
                     </tr>
                 </c:forEach>
             </table>

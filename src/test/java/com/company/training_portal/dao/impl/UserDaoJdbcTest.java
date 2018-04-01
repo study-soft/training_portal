@@ -169,6 +169,8 @@ public class UserDaoJdbcTest {
         assertEquals(testTeachers, teachers);
     }
 
+
+
     @Test
     public void test_find_students_number() {
         Integer studentsNumber = userDao.findStudentsNumber();

@@ -48,7 +48,6 @@ public class TeacherController {
     private Environment environment;
     private UserValidator userValidator;
     private QuizValidator quizValidator;
-    private StudentController studentController;
 
     private static final Logger logger = Logger.getLogger(TeacherController.class);
 
@@ -63,8 +62,7 @@ public class TeacherController {
                              AnswerNumberDao answerNumberDao,
                              Environment environment,
                              UserValidator userValidator,
-                             QuizValidator quizValidator,
-                             StudentController studentController) {
+                             QuizValidator quizValidator) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
@@ -76,7 +74,6 @@ public class TeacherController {
         this.environment = environment;
         this.userValidator = userValidator;
         this.quizValidator = quizValidator;
-        this.studentController = studentController;
     }
 
     @ModelAttribute("teacherId")

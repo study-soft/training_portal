@@ -3,26 +3,39 @@
 <html>
 <head>
     <title>Students</title>
+    <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("input[type=search]").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
 </head>
-<c:import url="../fragment/head.jsp"/>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Students which are passing your quizzes</h2>
-    <form>
-        <div class="row">
-            <div class="col-4">
-                <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
-            </div>
+    <div class="input-group">
+        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
-    </form>
+    </div>
+    <br>
     <table class="table">
+        <thead>
         <tr>
             <th>Name</th>
             <th>E-mail</th>
             <th>Phone number</th>
             <th>Group</th>
         </tr>
+        </thead>
+        <tbody>
         <c:forEach items="${students}" var="student" varStatus="status">
             <tr>
                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
@@ -31,6 +44,7 @@
                 <td><a href="/teacher/groups/${groups[status.index].groupId}">${groups[status.index].name}</a></td>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
     <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>

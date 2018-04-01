@@ -7,6 +7,16 @@
 <head>
     <title>Results</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("input[type=search]").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -29,6 +39,7 @@
         </c:when>
         <c:otherwise>
             <table class="table">
+                <thead>
                 <tr>
                     <th style="width: 35%">Name</th>
                     <th style="width: 10%">Result</th>
@@ -37,6 +48,8 @@
                     <th style="width: 22%">Passed</th>
                     <th style="width: 8%"></th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
                         <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a></td>
@@ -54,6 +67,7 @@
                         </c:choose>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>
@@ -68,6 +82,7 @@
         </c:when>
         <c:otherwise>
             <table class="table">
+                <thead>
                 <tr>
                     <th style="width: 35%">Name</th>
                     <th style="width: 10%">Result</th>
@@ -76,6 +91,8 @@
                     <th style="width: 22%">Passed</th>
                     <th style="width: 8%"></th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
                         <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
@@ -93,6 +110,7 @@
                         </c:choose>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>

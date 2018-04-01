@@ -15,6 +15,13 @@
                 $(".modal-body").text("Are you sure you want to delete group '" + groupName + "'?");
                 $("#modal").modal();
             });
+
+            $("input[type=search]").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
         });
     </script>
 </head>
@@ -25,7 +32,12 @@
     <form>
         <div class="row">
             <div class="col-4">
-                <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Search...">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
             </div>
             <div class="col-6"></div>
             <div class="col-2">
@@ -36,6 +48,7 @@
         </div>
     </form>
     <table class="table">
+        <thead>
         <tr>
             <th style="width: 40%">Name</th>
             <th style="width: 20%">Students</th>
@@ -43,6 +56,8 @@
             <th style="width: 10%"></th>
             <th style="width: 10%"></th>
         </tr>
+        </thead>
+        <tbody>
         <c:forEach items="${groups}" var="group" varStatus="status">
             <tr>
                 <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
@@ -51,7 +66,8 @@
                 <c:choose>
                     <c:when test="${fn:contains(teacherGroupsIds, group.groupId)}">
                         <td><a href="/teacher/groups/${group.groupId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
-                        <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a></td>
+                        <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a>
+                        </td>
                     </c:when>
                     <c:otherwise>
                         <td></td>
@@ -60,6 +76,7 @@
                 </c:choose>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
     <div>
         <input type="button" class="btn btn-primary" value="Back" onclick="window.history.go(-1);">

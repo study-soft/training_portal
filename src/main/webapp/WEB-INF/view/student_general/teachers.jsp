@@ -4,6 +4,16 @@
 <head>
     <title>Teachers</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("input[type=search]").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
@@ -26,11 +36,14 @@
         </c:when>
         <c:otherwise>
             <table class="table">
+                <thead>
                 <tr>
                     <th>Name</th>
                     <th>E-mail</th>
                     <th>Phone number</th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${teachers}" var="teacher">
                     <tr>
                         <td><a href="/student/teachers/${teacher.userId}">${teacher.lastName} ${teacher.firstName}</a>
@@ -39,6 +52,7 @@
                         <td>${teacher.phoneNumber}</td>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>

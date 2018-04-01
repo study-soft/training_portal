@@ -35,6 +35,13 @@
                     }
                 });
             });
+
+            $("input[type=search]").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
         });
     </script>
 </head>
@@ -59,6 +66,7 @@
         </c:when>
         <c:otherwise>
             <table class="table">
+                <thead>
                 <tr>
                     <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
@@ -66,6 +74,8 @@
                     <th style="width: 22.5%">Submit date</th>
                     <th style="width: 35%">Author</th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
                         <td><a href="/student/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a></td>
@@ -75,6 +85,7 @@
                         <td>${openedQuiz.authorName}</td>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>
@@ -89,6 +100,7 @@
         </c:when>
         <c:otherwise>
             <table id="passedQuizzes" class="table">
+                <thead>
                 <tr>
                     <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
@@ -97,6 +109,8 @@
                     <th style="width: 25%">Author</th>
                     <th style="width: 10%"></th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${passedQuizzes}" var="passedQuiz">
                     <tr>
                         <td>
@@ -113,6 +127,7 @@
                         </td>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>
@@ -127,6 +142,7 @@
         </c:when>
         <c:otherwise>
             <table id="closedQuizzes" class="table">
+                <thead>
                 <tr>
                     <th style="width: 25%">Name</th>
                     <th style="width: 10%">Questions</th>
@@ -134,6 +150,8 @@
                     <th style="width: 22.5%">Submit date</th>
                     <th style="width: 35%">Author</th>
                 </tr>
+                </thead>
+                <tbody>
                 <c:forEach items="${closedQuizzes}" var="closedQuiz">
                     <tr>
                         <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
@@ -143,6 +161,7 @@
                         <td>${closedQuiz.authorName}</td>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:otherwise>
     </c:choose>

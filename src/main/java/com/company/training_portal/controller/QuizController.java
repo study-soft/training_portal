@@ -3,7 +3,6 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
-import com.company.training_portal.model.enums.TeacherQuizStatus;
 import com.company.training_portal.validator.QuizValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
@@ -378,13 +376,13 @@ public class QuizController {
     @RequestMapping("/teacher/quizzes/{quizId}/questions")
     public String showQuestions(@PathVariable("quizId") Long quizId, ModelMap model) {
         showAnswers(quizId, model);
-        return "/teacher/questions";
+        return "teacher_quiz/questions";
     }
 
     @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.GET)
     public String showCreateQuiz(Model model) {
         model.addAttribute("quiz", new Quiz());
-        return "teacher/quiz-create";
+        return "teacher_quiz/quiz-create";
     }
 
     @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.POST)
@@ -412,7 +410,7 @@ public class QuizController {
             model.addAttribute("hours", hours);
             model.addAttribute("minutes", minutes);
             model.addAttribute("seconds", seconds);
-            return "teacher/quiz-create";
+            return "teacher_quiz/quiz-create";
         }
 
         Duration passingTime = null;

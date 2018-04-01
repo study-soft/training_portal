@@ -88,7 +88,7 @@ public class TeacherController {
     public String showTeacherHome(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
         model.addAttribute("teacher", teacher);
-        return "teacher/teacher";
+        return "teacher_general/teacher";
     }
 
     @RequestMapping("/teacher/groups")
@@ -114,7 +114,7 @@ public class TeacherController {
         model.addAttribute("teacherGroupsIds", teacherGroupsIds);
         model.addAttribute("studentsNumber", studentsNumber);
 
-        return "teacher/teacher-groups";
+        return "teacher_general/groups";
     }
 
     @RequestMapping("/teacher/groups/{groupId}")
@@ -134,9 +134,9 @@ public class TeacherController {
         model.addAttribute("students", students);
 
         if (teacherGroupsIds.contains(groupId)) {
-            return "teacher/own-group-info";
+            return "teacher_group/own-group-info";
         } else {
-            return "teacher/foreign-group-info";
+            return "teacher_group/foreign-group-info";
         }
     }
 
@@ -148,7 +148,7 @@ public class TeacherController {
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
         model.addAttribute("publishedQuizzes", publishedQuizzes);
 
-        return "teacher/teacher-quizzes";
+        return "teacher_general/quizzes";
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}")
@@ -169,12 +169,12 @@ public class TeacherController {
             switch (quiz.getTeacherQuizStatus()) {
                 case UNPUBLISHED:
                     model.addAttribute("unpublishedQuiz", quiz);
-                    return "teacher/unpublished-quiz";
+                    return "teacher_quiz/unpublished-quiz";
                 case PUBLISHED:
                     model.addAttribute("publishedQuiz", quiz);
-                    return "teacher/published-quiz";
+                    return "teacher_quiz/published-quiz";
             }
-            return "teacher/teacher";
+            return "teacher_general/teacher";
         } else {
             logger.info("access denied");
             return "access-denied";
@@ -185,7 +185,7 @@ public class TeacherController {
     public String showCreateGroup(Model model) {
         List<User> students = userDao.findStudentsWithoutGroup();
         model.addAttribute("students", students);
-        return "teacher/group-create";
+        return "teacher_group/group-create";
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.POST)
@@ -204,7 +204,7 @@ public class TeacherController {
             List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("emptyName", emptyName);
             model.addAttribute("students", students);
-            return "teacher/group-create";
+            return "teacher_group/group-create";
         }
         if (groupDao.groupExists(name)) {
             String groupExists = environment.getProperty("group.name.exists");
@@ -212,7 +212,7 @@ public class TeacherController {
             List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("groupExists", groupExists);
             model.addAttribute("students", students);
-            return "teacher/group-create";
+            return "teacher_group/group-create";
         }
 
         studentIdsMap.remove("name");
@@ -245,7 +245,7 @@ public class TeacherController {
         model.addAttribute("group", group);
         model.addAttribute("students", students);
 
-        return "teacher/group-add-students";
+        return "teacher_group/group-add-students";
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
@@ -287,9 +287,9 @@ public class TeacherController {
             groupDao.deleteGroup(groupId);
         } catch (EmptyResultDataAccessException e) {
             model.addAttribute("groupAlreadyDeleted", true);
-            return "teacher/group-deleted";
+            return "teacher_group/group-deleted";
         }
-        return "teacher/group-deleted";
+        return "teacher_group/group-deleted";
     }
 
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.GET)
@@ -348,7 +348,7 @@ public class TeacherController {
         model.addAttribute("group", group);
         model.addAttribute("students", students);
 
-        return "teacher/group-edit";
+        return "teacher_group/group-edit";
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.POST)
@@ -365,7 +365,7 @@ public class TeacherController {
             model.addAttribute("group", oldGroup);
             model.addAttribute("students", students);
             model.addAttribute("emptyName", emptyName);
-            return "teacher/group-edit";
+            return "teacher_group/group-edit";
         }
         String name = oldGroup.getName();
         if (!editedName.equals(name) && groupDao.groupExists(editedName)) {
@@ -374,7 +374,7 @@ public class TeacherController {
             model.addAttribute("group", oldGroup);
             model.addAttribute("students", students);
             model.addAttribute("groupExists", groupExists);
-            return "teacher/group-edit";
+            return "teacher_group/group-edit";
         }
 
         Group editedGroup = new Group.GroupBuilder()
@@ -409,7 +409,7 @@ public class TeacherController {
         model.addAttribute("students", students);
         model.addAttribute("groups", groups);
 
-        return "teacher/teacher-students";
+        return "teacher_general/students";
     }
 
     @RequestMapping("/teacher/results")
@@ -420,7 +420,7 @@ public class TeacherController {
         List<User> teacherStudents = userDao.findStudentsWithoutGroup(teacherId);
         model.addAttribute("students", teacherStudents);
 
-        return "teacher/teacher-results";
+        return "teacher_general/results";
     }
 
     @RequestMapping("/teacher/results/group/{groupId}")
@@ -466,7 +466,7 @@ public class TeacherController {
         Group group = groupDao.findGroup(groupId);
         model.addAttribute("group", group);
 
-        return "/teacher/results-group";
+        return "teacher_results/results-group";
     }
 
     @RequestMapping("/teacher/results/group/{groupId}/quiz/{quizId}")
@@ -506,7 +506,7 @@ public class TeacherController {
         }
         model.addAttribute("results", results);
         model.addAttribute("statusList", statusList);
-        return "teacher/results-group-quiz";
+        return "teacher_results/results-group-quiz";
     }
 
     @RequestMapping(value = "/teacher/results/group/{groupId}/close", method = RequestMethod.POST)
@@ -582,7 +582,7 @@ public class TeacherController {
             model.addAttribute("seconds", timeUnits.get(2));
         }
 
-        return "teacher/quiz-edit";
+        return "teacher_quiz/quiz-edit";
     }
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.POST)
@@ -611,7 +611,7 @@ public class TeacherController {
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("quiz", editedQuiz);
-            return "teacher/quiz-edit";
+            return "teacher_quiz/quiz-edit";
         }
 
         Duration editedPassingTime = null;

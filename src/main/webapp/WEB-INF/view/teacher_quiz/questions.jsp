@@ -896,7 +896,17 @@
 
     <div id="pageHeaderRow" class="row">
         <div class="col-6">
-            <h2>Answers for quiz '${quiz.name}'</h2>
+            <c:choose>
+                <c:when test="${numberOfQuestions ne 0}">
+                    <h2>Answers for quiz '${quiz.name}'</h2>
+                </c:when>
+                <c:otherwise>
+                    <div class="highlight-primary">
+                        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-one-row">
+                        There is no questions in '${quiz.name}' quiz
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="col-4"></div>
         <div class="col-2 shifted-down-20px">

@@ -107,11 +107,9 @@
                         <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
                         <td>${passedQuiz.authorName}</td>
                         <td>
-                            <form action="/student/quizzes/${passedQuiz.quizId}" method="post" class="no-margin">
-                                <button type="submit" value="${passedQuiz.quizId}" class="success-button">
-                                    <i class="fa fa-close"></i> Close
-                                </button>
-                            </form>
+                            <button type="submit" value="${passedQuiz.quizId}" class="success-button">
+                                <i class="fa fa-close"></i> Close
+                            </button>
                         </td>
                     </tr>
                 </c:forEach>

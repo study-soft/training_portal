@@ -466,7 +466,7 @@ public class TeacherController {
         Group group = groupDao.findGroup(groupId);
         model.addAttribute("group", group);
 
-        return "teacher_results/results-group";
+        return "teacher_results/group";
     }
 
     @RequestMapping("/teacher/results/group/{groupId}/quiz/{quizId}")
@@ -506,7 +506,7 @@ public class TeacherController {
         }
         model.addAttribute("results", results);
         model.addAttribute("statusList", statusList);
-        return "teacher_results/results-group-quiz";
+        return "teacher_results/group-quiz";
     }
 
     @RequestMapping(value = "/teacher/results/group/{groupId}/close", method = RequestMethod.POST)

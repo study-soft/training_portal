@@ -9,8 +9,8 @@
     <script>
         $(document).ready(function () {
             $("td[id]").each(function () {
-                if (this.id === "/OPENED") {
-                    $(this).text("");
+                if (this.id === "OPENED") {
+                    $(this).siblings().first().next().text("");
                 }
                 if (this.id === "OPENED" || this.id === "PASSED") {
                     $(this).find("button").html('<i class="fa fa-close"></i> Close');
@@ -37,9 +37,10 @@
                         var selectedRow = $("#selectedStudent" + studentId).children();
                         if (selectedRow.last().prev().text() === "OPENED") {
                             for (var i = 0; i < 4; i++) {
-                                selectedRow[i].text(closedQuizInfo[i]);
+                                $(selectedRow[i + 1]).text(closedQuizInfo[i]);
                             }
                         }
+                        selectedRow.last().empty();
                         selectedRow.last().prev().text("CLOSED");
                     }
                 });
@@ -66,7 +67,7 @@
             <c:set var="i" value="${status.index}"/>
             <tr id="selectedStudent${student.userId}">
                 <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                <td id="/${statusList[i]}">${results[i].result} / ${results[i].score}</td>
+                <td>${results[i].result} / ${results[i].score}</td>
                 <td>${results[i].attempt}</td>
                 <td><duration:format value="${results[i].timeSpent}"/></td>
                 <td><localDateTime:format value="${results[i].finishDate}"/></td>

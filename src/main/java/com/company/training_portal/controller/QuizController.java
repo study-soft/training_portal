@@ -23,6 +23,7 @@ import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 import static com.company.training_portal.util.Utils.roundOff;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
@@ -323,6 +324,8 @@ public class QuizController {
     public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
+        Integer numberOfQuestions = questionDao.findQuestionsNumber(quizId);
+        model.addAttribute("numberOfQuestions", numberOfQuestions);
 
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
@@ -376,6 +379,10 @@ public class QuizController {
     @RequestMapping("/teacher/quizzes/{quizId}/questions")
     public String showQuestions(@PathVariable("quizId") Long quizId, ModelMap model) {
         showAnswers(quizId, model);
+        Quiz quiz = quizDao.findQuiz(quizId);
+        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
+            return "student_quiz/answers";
+        }
         return "teacher_quiz/questions";
     }
 

@@ -10,6 +10,11 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Results</h2>
+    <div class="highlight-primary">
+        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+             width="25" height="25" class="icon-one-row">
+        There are results of groups and students which are passing your quizzes
+    </div>
     <c:choose>
         <c:when test="${empty groups && empty students}">
             <div class="highlight-primary">

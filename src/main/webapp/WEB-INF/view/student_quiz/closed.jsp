@@ -52,7 +52,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="close-success" class="col-4 mx-auto text-center correct edit-success">
+    <div id="close-success" class="col-4 mx-auto text-center correct update-success">
         Quiz successfully closed
         <button id="close" class="close">&times;</button>
     </div>

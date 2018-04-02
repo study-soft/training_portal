@@ -572,7 +572,7 @@ public class QuizDaoJdbcTest {
 
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_unpublished_quiz() {
-        quizDao.deleteUnpublishedQuiz(9L);
-        quizDao.findQuiz(9L);
+        quizDao.deleteUnpublishedQuiz(10L);
+        quizDao.findQuiz(10L);
     }
 }

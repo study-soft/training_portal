@@ -17,7 +17,7 @@
             }
 
             $(".close").click(function () {
-                $(".edit-success").fadeOut("slow");
+                $(".update-success").fadeOut("slow");
             });
 
             $("#back").click(function () {
@@ -68,11 +68,11 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="create-success" class="col-5 mx-auto text-center correct edit-success">
+    <div id="create-success" class="col-5 mx-auto text-center correct update-success">
         Group successfully created
         <button class="close">&times;</button>
     </div>
-    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
         Group information successfully changed
         <button class="close">&times;</button>
     </div>

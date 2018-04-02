@@ -31,7 +31,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>

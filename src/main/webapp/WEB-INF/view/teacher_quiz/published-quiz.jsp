@@ -12,16 +12,20 @@
 <div class="container">
     <h2>${publishedQuiz.name}</h2>
     <div class="row">
-        <div class="col-4">
+        <div class="col-auto">
             <div class="highlight-success">
                 <img src="${pageContext.request.contextPath}/resources/icon-success.png"
                      width="25" height="25" class="icon-one-row">
                 This quiz is published
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-auto">
+            <a href="#" class="btn btn-success">Republish</a>
+        </div>
+        <div class="col-auto">
             <a href="#" class="btn btn-danger">Unpublish</a>
         </div>
+        <div class="col-4"></div>
     </div>
     <c:if test="${publishedQuiz.description ne null}">
         <div><strong>Description: </strong>${publishedQuiz.description}</div>

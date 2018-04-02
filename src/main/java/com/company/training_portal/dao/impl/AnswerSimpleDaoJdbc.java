@@ -92,7 +92,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
     @Override
     public void deleteAnswersSimple(Long questionId) {
         template.update(DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID, questionId);
-        logger.info("Deleted answerSimple with questionId: " + questionId);
+        logger.info("Deleted answersSimple with questionId: " + questionId);
     }
 
     private AnswerSimple mapAnswerSimple(ResultSet rs, int rowNum) throws SQLException {

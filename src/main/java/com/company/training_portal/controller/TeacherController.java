@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.controller.SessionAttributes.DELETED_QUIZ;
 import static com.company.training_portal.util.Utils.formatDateTime;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
@@ -139,7 +141,11 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
-                                     Model model) {
+                                     @SessionAttribute(value = DELETED_QUIZ, required = false)
+                                             String deletedQuiz,
+                                     HttpSession session, Model model) {
+        model.addAttribute("deletedQuiz", deletedQuiz);
+        session.removeAttribute(DELETED_QUIZ);
         List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(teacherId);
         List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(teacherId);
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
@@ -521,15 +527,15 @@ public class TeacherController {
     @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}/close", method = RequestMethod.POST)
     @ResponseBody
     public List<String> closeQuizToStudentFromStudents(@PathVariable("groupId") Long groupId,
-                                           @PathVariable("quizId") Long quizId,
-                                           @RequestParam("studentId") Long studentId) {
+                                                       @PathVariable("quizId") Long quizId,
+                                                       @RequestParam("studentId") Long studentId) {
         return closeQuizToStudent(studentId, quizId);
     }
 
     @RequestMapping(value = "/teacher/students/{studentId}/close", method = RequestMethod.POST)
     @ResponseBody
     public List<String> closeQuizToStudentFromResults(@PathVariable("studentId") Long studentId,
-                                                       @RequestParam("quizId") Long quizId) {
+                                                      @RequestParam("quizId") Long quizId) {
         return closeQuizToStudent(studentId, quizId);
     }
 

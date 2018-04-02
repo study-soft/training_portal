@@ -27,31 +27,59 @@
                     window.history.go(-1);
                 }
             });
+
+            $("#delete").click(function () {
+                var quizName = $(this).siblings("h2").text();
+                $("#yes").val(quizName);
+                $("#deleteForm").attr("action", "/teacher/quizzes/${unpublishedQuiz.quizId}/delete");
+                $(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
+                $("#modal").modal();
+            });
         });
     </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-5 mx-auto text-center correct edit-success">
+    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
         Quiz information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
     <h2>${unpublishedQuiz.name}</h2>
-    <div class="row">
-        <div class="col-4">
-            <div class="highlight-danger">
-                <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-                     width="25" height="25" class="icon-one-row">
-                This quiz is not published
-            </div>
-        </div>
-        <div class="col-4">
-            <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publish" class="btn btn-success">
+    <c:choose>
+        <c:when test="${unpublishedQuiz.questionsNumber ne 0}">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="highlight-danger">
+                        <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                             width="25" height="25" class="icon-one-row">
+                        This quiz is not published
+                    </div>
+                </div>
+                <div class="col-4">
+                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publish" class="btn btn-success">
                 <i class="fa fa-share-square-o"></i> Publish
             </a>
-        </div>
-    </div>
+                </div>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="highlight-danger">
+                        <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                             width="25" height="25" class="icon-one-row">
+                        You do not have questions in this quiz
+                    </div>
+                </div>
+                <div class="col-4">
+                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-success btn-wide">
+                        <i class="fa fa-plus"></i> Add questions
+                    </a>
+                </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
     <c:if test="${unpublishedQuiz.description ne null}">
         <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
     </c:if>
@@ -125,9 +153,30 @@
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">
         <i class="fa fa-edit"></i> Edit
     </a>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/delete" class="btn btn-danger">
+    <button id="delete" class="btn btn-danger">
         <i class="fa fa-trash-o"></i> Delete
-    </a>
+    </button>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog"
+         aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Attention</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button id="yes" type="submit" name="deletedQuiz" value="" class="btn btn-primary">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <br>
 </body>

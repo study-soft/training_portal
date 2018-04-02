@@ -158,30 +158,30 @@ public class TeacherController {
     public String showTeacherQuiz(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
-        Quiz quiz = quizDao.findQuiz(quizId);
         List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
-
-        if (teacherQuizIds.contains(quiz.getQuizId())) {
-            logger.info("Access allowed");
-            Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
-            Map<String, Integer> stringQuestions = new HashMap<>();
-            questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
-
-            model.addAttribute("questions", stringQuestions);
-
-            switch (quiz.getTeacherQuizStatus()) {
-                case UNPUBLISHED:
-                    model.addAttribute("unpublishedQuiz", quiz);
-                    return "teacher_quiz/unpublished-quiz";
-                case PUBLISHED:
-                    model.addAttribute("publishedQuiz", quiz);
-                    return "teacher_quiz/published-quiz";
-            }
-            return "teacher_general/teacher";
-        } else {
+        if (!teacherQuizIds.contains(quizId)) {
             logger.info("access denied");
             return "access-denied";
         }
+
+        logger.info("Access allowed");
+        Quiz quiz = quizDao.findQuiz(quizId);
+        Map<QuestionType, Integer> questions = questionDao.findQuestionTypesAndCount(quizId);
+        Map<String, Integer> stringQuestions = new HashMap<>();
+        questions.forEach((k, v) -> stringQuestions.put(k.getQuestionType(), v));
+
+        model.addAttribute("questions", stringQuestions);
+
+        switch (quiz.getTeacherQuizStatus()) {
+            case UNPUBLISHED:
+                model.addAttribute("unpublishedQuiz", quiz);
+                return "teacher_quiz/unpublished-quiz";
+            case PUBLISHED:
+                model.addAttribute("publishedQuiz", quiz);
+                return "teacher_quiz/published-quiz";
+        }
+
+        return "teacher_general/teacher";
     }
 
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
@@ -624,10 +624,33 @@ public class TeacherController {
         return "redirect:/teacher/quizzes/" + quizId;
     }
 
-    @RequestMapping("/teacher/quizzes/{quizId}/publish")
-    public String showPublishQuiz(@PathVariable("quizId") Long quizId, Model model) {
+    @RequestMapping("/teacher/quizzes/{quizId}/publication")
+    public String showPublishQuiz(@ModelAttribute("teacherId") Long teacherId,
+                                  @PathVariable("quizId") Long quizId,
+                                  Model model) {
+        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
+        if (!teacherQuizIds.contains(quizId)) {
+            logger.info("access denied");
+            return "access-denied";
+        }
 
-        return "teacher_quiz/quiz-publish";
+        logger.info("access allowed");
+        Quiz quiz = quizDao.findQuiz(quizId);
+        List<Group> groups = groupDao.findGroupsForQuizPublication(quizId);
+        Map<Long, List<User>> students = new HashMap<>();
+        for (Group group : groups) {
+            Long groupId = group.getGroupId();
+            List<User> groupStudents = userDao.findStudents(groupId);
+            students.put(groupId, groupStudents);
+        }
+        List<User> studentsWithoutGroup = userDao.findStudentsWithoutGroupForQuizPublication(quizId);
+
+        model.addAttribute("quiz", quiz);
+        model.addAttribute("groups", groups);
+        model.addAttribute("students", students);
+        model.addAttribute("studentsWithoutGroup", studentsWithoutGroup);
+
+        return "teacher_quiz/quiz-publication";
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")

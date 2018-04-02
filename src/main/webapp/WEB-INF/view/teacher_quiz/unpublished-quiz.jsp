@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publish" class="btn btn-success">
+                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publication" class="btn btn-success">
                 <i class="fa fa-share-square-o"></i> Publish
             </a>
                 </div>

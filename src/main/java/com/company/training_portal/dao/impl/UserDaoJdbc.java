@@ -160,6 +160,27 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<User> findStudentsWithoutGroupForQuizPublication(Long quizId) {
+        List<User> students = template.query(FIND_STUDENTS_WITHOUT_GROUP_FOR_QUIZ_PUBLICATION,
+                new Object[]{quizId}, this::mapUser);
+        logger.info("Found students without group for quiz publication by quizId = " + quizId + ":");
+        students.forEach(logger::info);
+        return students;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<User> findStudentsForQuizPublication(Long groupId, Long quizId) {
+        List<User> students = template.query(FIND_STUDENTS_FOR_QUIZ_PUBLICATION_BY_GROUP_ID_AND_QUIZ_ID,
+                new Object[]{groupId, quizId}, this::mapUser);
+        logger.info("Found students for quiz publication by groupId = " +
+                groupId + " and quiz id = " + quizId + ":");
+        students.forEach(logger::info);
+        return students;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<User> findAllTeachers() {
         List<User> teachers = template.query(FIND_ALL_TEACHERS, this::mapUser);
         logger.info("All teachers found:");
@@ -489,6 +510,24 @@ public class UserDaoJdbc implements UserDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "INNER JOIN QUIZZES ON J.QUIZ_ID = QUIZZES.QUIZ_ID " +
     "WHERE QUIZZES.AUTHOR_ID = ? AND USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS NULL " +
+    "GROUP BY USERS.USER_ID " +
+    "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
+
+    private static final String FIND_STUDENTS_WITHOUT_GROUP_FOR_QUIZ_PUBLICATION =
+    "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +
+    "USERS.DATE_OF_BIRTH, USERS.PHONE_NUMBER, USERS.PHOTO, USERS.LOGIN, USERS.PASSWORD, USERS.USER_ROLE " +
+    "FROM USERS LEFT JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID IS NULL AND " +
+    "USERS.USER_ID NOT IN (SELECT J.USER_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.QUIZ_ID = ?) " +
+    "GROUP BY USERS.USER_ID " +
+    "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
+
+    private static final String FIND_STUDENTS_FOR_QUIZ_PUBLICATION_BY_GROUP_ID_AND_QUIZ_ID =
+    "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +
+    "USERS.DATE_OF_BIRTH, USERS.PHONE_NUMBER, USERS.PHOTO, USERS.LOGIN, USERS.PASSWORD, USERS.USER_ROLE " +
+    "FROM USERS LEFT JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.USER_ROLE = 'STUDENT' AND USERS.GROUP_ID = ? AND " +
+    "USERS.USER_ID NOT IN (SELECT J.USER_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.QUIZ_ID = ?) " +
     "GROUP BY USERS.USER_ID " +
     "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
 

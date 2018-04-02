@@ -34,6 +34,8 @@ VALUES (1, 'Katy', 'Walter', 'katy@example.com', NULL, '095-437-44-45', NULL, 'K
 VALUES (1, 'Jane', 'Nikolas', 'jane@example.com', NULL, '095-437-78-44', NULL, 'Jane', '123', 'STUDENT');
 /*14*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
 VALUES (1, 'Mary', 'Hendrix', 'mary@example.com', NULL, '095-437-44-44', NULL, 'Mary', '123', 'STUDENT');
+/*15*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
+VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '095-787-22-56', NULL, 'Jimmy', '123', 'STUDENT');
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)

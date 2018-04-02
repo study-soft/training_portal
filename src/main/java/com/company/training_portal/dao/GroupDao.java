@@ -13,6 +13,8 @@ public interface GroupDao {
 
     List<Group> findGroupsWhichTeacherGaveQuiz(Long teacherId);
 
+    List<Group> findGroupsForQuizPublication(Long quizId);
+
     List<Group> findAllGroups();
 
     Integer findGroupsNumber(Long authorId);

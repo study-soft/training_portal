@@ -618,6 +618,12 @@ public class TeacherController {
         return "redirect:/teacher/quizzes/" + quizId;
     }
 
+    @RequestMapping("/teacher/quizzes/{quizId}/publish")
+    public String showPublishQuiz(@PathVariable("quizId") Long quizId, Model model) {
+
+        return "teacher_quiz/quiz-publish";
+    }
+
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
     @ResponseBody
     public ResponseEntity<?> editQuestion(@PathVariable("quizId") Long quizId,

@@ -47,7 +47,9 @@
             </div>
         </div>
         <div class="col-4">
-            <a href="#" class="btn btn-success"><i class="fa fa-share-square-o"></i> Publish</a>
+            <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publish" class="btn btn-success">
+                <i class="fa fa-share-square-o"></i> Publish
+            </a>
         </div>
     </div>
     <c:if test="${unpublishedQuiz.description ne null}">

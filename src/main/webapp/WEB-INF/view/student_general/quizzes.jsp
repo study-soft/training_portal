@@ -29,9 +29,28 @@
                             passedQuizzes.remove();
                         }
                         alert("Quiz '" + quizName + "' successfully closed");
-                        var closedQuizzes = $("#closedQuizzes");
-                        closedQuizzes.append(copiedSelectedRow);
-                        closedQuizzes.find("td").last().remove();
+                        var closedQuizzesBody = $("#closedQuizzes").find("tbody");
+                        if (closedQuizzesBody.length === 0) {
+                            var info = $("#noClosedQuizzesInfo");
+                            info.after(
+                                '<table id="closedQuizzes" class="table">\n' +
+                                '    <thead>\n' +
+                                '    <tr>\n' +
+                                '        <th style="width: 25%">Name</th>\n' +
+                                '        <th style="width: 10%">Questions</th>\n' +
+                                '        <th style="width: 7.5%">Score</th>\n' +
+                                '        <th style="width: 22.5%">Submit date</th>\n' +
+                                '        <th style="width: 35%">Author</th>\n' +
+                                '    </tr>\n' +
+                                '    </thead>\n' +
+                                '    <tbody>\n' +
+                                '    </tbody>\n' +
+                                '</table>');
+                            info.remove();
+                            closedQuizzesBody = $("#closedQuizzes").find("tbody");
+                        }
+                        closedQuizzesBody.append(copiedSelectedRow);
+                        closedQuizzesBody.find("td").last().remove();
                     }
                 });
             });
@@ -134,7 +153,7 @@
     <h3>Closed quizzes</h3>
     <c:choose>
         <c:when test="${empty closedQuizzes}">
-            <div class="highlight-primary">
+            <div id="noClosedQuizzesInfo" class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
                 You do not have closed quizzes

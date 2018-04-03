@@ -4,7 +4,7 @@
 - Learning Management System is a system that is used to develop, manage and share online learning materials with common access.  
 - Users are divided into two roles: teachers and students.
 - The teacher has opportunity to unite students into groups and create quizzes with various types of questions and preview them as student. Then he publishes them to students and groups. As students pass quizzes, the teacher can watch student's results. Also, the teacher has opportunity to forcibly close quizzes with empty result to students who do not keep within the terms of passage.
-- The student has opportunity to be in a group and pass quizzes from various teachers published to him. After passing, the student can pass quiz again, but the overall score will be lower. When all students in the group have finally completed quiz, they can see answers to it. Also, the student can watch his results and compare them with results of groupmates.
+- The student has opportunity to be in a group and pass quizzes from various teachers published to him. After passing, the student can pass quiz again, but the overall score will be lower. When all students in the group have finally completed quiz, they can see answers to it. Also, the student can watch his results and compare them with results of group mates.
 - Quiz consists of different types of tasks:
 1. Questions with one correct answer.
 2. Questions with several correct answers.

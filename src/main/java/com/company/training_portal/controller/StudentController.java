@@ -229,7 +229,7 @@ public class StudentController {
     @ResponseBody
     public ResponseEntity<?> closeQuiz(@ModelAttribute("studentId") Long studentId,
                                        @PathVariable("quizId") Long quizId) {
-        quizDao.closeQuizToStudent(studentId, quizId);
+//        quizDao.closeQuizToStudent(studentId, quizId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

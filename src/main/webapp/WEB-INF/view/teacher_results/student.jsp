@@ -26,14 +26,74 @@
                     url: "/teacher/students/${student.userId}/close",
                     data: "quizId=" + quizId,
                     success: function (closedQuizInfo) {
-                        var selectedRow = $("#selectedQuiz" + quizId).children();
-                        if (selectedRow.last().prev().text() === "OPENED") {
-                            for (var i = 0; i < 4; i++) {
-                                $(selectedRow[i + 1]).text(closedQuizInfo[i]);
+                        var openedQuizzes = $("#openedQuizzes");
+                        var passedQuizzes = $("#passedQuizzes");
+                        var closedQuizzes = $("#closedQuizzes");
+
+                        // Insert closedQuizzes table header
+                        if (closedQuizzes.length === 0 && passedQuizzes.length === 0) {
+                            openedQuizzes.after('<h4>Closed</h4>\n' +
+                                '                <table id="closedQuizzes" class="table">\n' +
+                                '                    <tr>\n' +
+                                '                        <th style="width: 18%">Name</th>\n' +
+                                '                        <th style="width: 21%">Submitted</th>\n' +
+                                '                        <th style="width: 21%;">Passed</th>\n' +
+                                '                        <th style="width: 9%">Result</th>\n' +
+                                '                        <th style="width: 9%">Attempt</th>\n' +
+                                '                        <th style="width: 22%">Time spent</th>\n' +
+                                '                    </tr>\n' +
+                                '                </table>');
+                        } else if (closedQuizzes.length === 0) {
+                            passedQuizzes.after('<h4>Closed</h4>\n' +
+                                '                <table id="closedQuizzes" class="table">\n' +
+                                '                    <tr>\n' +
+                                '                        <th style="width: 18%">Name</th>\n' +
+                                '                        <th style="width: 21%">Submitted</th>\n' +
+                                '                        <th style="width: 21%;">Passed</th>\n' +
+                                '                        <th style="width: 9%">Result</th>\n' +
+                                '                        <th style="width: 9%">Attempt</th>\n' +
+                                '                        <th style="width: 22%">Time spent</th>\n' +
+                                '                    </tr>\n' +
+                                '                </table>');
+                        }
+
+                        // Insert row to closedQuizzes table
+                        if (closedQuizInfo.length === 0) {
+                            // Case passed
+                            var row = passedQuizzes.find("a[href*=" + quizId + "]").parents("tr");
+                            row.children().last().remove();
+                            var copy = row.clone();
+                            row.remove();
+                            $("#closedQuizzes").append(copy);
+                            if (passedQuizzes.find("tr").length === 1) {
+                                passedQuizzes.prev().remove();
+                                passedQuizzes.remove();
+                            }
+                        } else {
+                            // Case opened
+                            var row = openedQuizzes.find("a[href*=" + quizId + "]").parents("tr");
+                            var quizName = row.children().first().text();
+                            var submitted = row.children().first().next().text();
+                            var passed = closedQuizInfo[0];
+                            var result = closedQuizInfo[1];
+                            var attempt = closedQuizInfo[2];
+                            var timeSpent = closedQuizInfo[3];
+                            row.remove();
+                            $("#closedQuizzes").append('<tr>\n' +
+                                '                            <td>\n' +
+                                '                                <a href="/teacher/quizzes/' + quizId + '">' + quizName + '</a>\n' +
+                                '                            </td>\n' +
+                                '                            <td>' + submitted + '</td>\n' +
+                                '                            <td>' + passed + '</td>\n' +
+                                '                            <td>' + result + '</td>\n' +
+                                '                            <td>' + attempt + '</td>\n' +
+                                '                            <td>' + timeSpent + '</td>\n' +
+                                '                         </tr>');
+                            if (openedQuizzes.find("tr").length === 1) {
+                                openedQuizzes.prev().remove();
+                                openedQuizzes.remove();
                             }
                         }
-                        selectedRow.last().empty();
-                        selectedRow.last().prev().text("CLOSED");
                     }
                 });
             });
@@ -76,64 +136,87 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
-                <tr>
-                    <th>Name</th>
-                    <th>Result</th>
-                    <th>Attempt</th>
-                    <th>Time spent</th>
-                    <th>Passed</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-                <c:forEach items="${openedQuizzes}" var="openedQuiz">
-                    <tr id="selectedQuiz${openedQuiz.quizId}">
-                        <td>
-                            <a href="/teacher/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>OPENED</td>
-                        <td>
-                            <button class="danger-button" value="${openedQuiz.quizId}">
-                                <i class="fa fa-close"></i> Close
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                <c:forEach items="${passedQuizzes}" var="passedQuiz">
-                    <tr id="selectedQuiz${passedQuiz.quizId}">
-                        <td>
-                            <a href="/teacher/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
-                        </td>
-                        <td>${passedQuiz.result}/${passedQuiz.score}</td>
-                        <td>${passedQuiz.attempt}</td>
-                        <td><duration:format value="${passedQuiz.timeSpent}"/></td>
-                        <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                        <td>PASSED</td>
-                        <td>
-                            <button class="danger-button" value="${passedQuiz.quizId}">
-                                <i class="fa fa-close"></i> Close
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                <c:forEach items="${closedQuizzes}" var="closedQuiz">
+            <c:if test="${not empty openedQuizzes}">
+                <h4>Opened</h4>
+                <table id="openedQuizzes" class="table">
                     <tr>
-                        <td>
-                            <a href="/teacher/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a>
-                        </td>
-                        <td>${closedQuiz.result}/${closedQuiz.score}</td>
-                        <td>${closedQuiz.attempt}</td>
-                        <td><duration:format value="${closedQuiz.timeSpent}"/></td>
-                        <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
-                        <td>CLOSED</td>
-                        <td></td>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 21%">Submitted</th>
+                        <th colspan="4" style="width: 51%"></th>
+                        <th style="width: 10%;"></th>
                     </tr>
-                </c:forEach>
-            </table>
+                    <c:forEach items="${openedQuizzes}" var="openedQuiz">
+                        <tr>
+                            <td>
+                                <a href="/teacher/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a>
+                            </td>
+                            <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
+                            <td colspan="4"></td>
+                            <td>
+                                <button class="danger-button" value="${openedQuiz.quizId}">
+                                    <i class="fa fa-close"></i> Close
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
+            <c:if test="${not empty passedQuizzes}">
+                <h4>Passed</h4>
+                <table id="passedQuizzes" class="table">
+                    <tr>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 21%">Submitted</th>
+                        <th style="width: 21%;">Passed</th>
+                        <th style="width: 9%">Result</th>
+                        <th style="width: 9%">Attempt</th>
+                        <th style="width: 12%">Time spent</th>
+                        <th style="width: 10%"></th>
+                    </tr>
+                    <c:forEach items="${passedQuizzes}" var="passedQuiz">
+                        <tr>
+                            <td>
+                                <a href="/teacher/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
+                            </td>
+                            <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
+                            <td>${passedQuiz.result} / ${passedQuiz.score}</td>
+                            <td>${passedQuiz.attempt}</td>
+                            <td><duration:format value="${passedQuiz.timeSpent}"/></td>
+                            <td>
+                                <button class="danger-button" value="${passedQuiz.quizId}">
+                                    <i class="fa fa-close"></i> Close
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
+            <c:if test="${not empty closedQuizzes}">
+                <h4>Closed</h4>
+                <table id="closedQuizzes" class="table">
+                    <tr>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 21%">Submitted</th>
+                        <th style="width: 21%;">Passed</th>
+                        <th style="width: 9%">Result</th>
+                        <th style="width: 9%">Attempt</th>
+                        <th style="width: 22%">Time spent</th>
+                    </tr>
+                    <c:forEach items="${closedQuizzes}" var="closedQuiz">
+                        <tr>
+                            <td>
+                                <a href="/teacher/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a>
+                            </td>
+                            <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
+                            <td>${closedQuiz.result} / ${closedQuiz.score}</td>
+                            <td>${closedQuiz.attempt}</td>
+                            <td><duration:format value="${closedQuiz.timeSpent}"/></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
         </c:otherwise>
     </c:choose>
     <div>

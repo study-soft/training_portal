@@ -94,26 +94,25 @@ public class TeacherController {
 
     @RequestMapping("/teacher/groups")
     public String showTeacherGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
-        List<Group> activeGroups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
+        List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
         List<Group> teacherGroups = groupDao.findGroups(teacherId);
-        activeGroups.addAll(teacherGroups);
-        Set<Group> allGroupsSet = new HashSet<>(activeGroups);
-        List<Group> allGroups = new ArrayList<>(allGroupsSet);
-        Collections.sort(allGroups);
+        groups.removeAll(teacherGroups);
 
-        List<Long> teacherGroupsIds = teacherGroups.stream()
-                .map(Group::getGroupId)
-                .collect(Collectors.toList());
-
-        List<Integer> studentsNumber = new ArrayList<>();
-        for (Group group : allGroups) {
-            Long groupId = group.getGroupId();
-            studentsNumber.add(groupDao.findStudentsNumberInGroup(groupId));
+        List<Integer> studentsNumberForGroups = new ArrayList<>();
+        List<Integer> studentsNumberForTeacherGroups = new ArrayList<>();
+        for (Group group : groups) {
+            Integer studentsNumber = groupDao.findStudentsNumberInGroup(group.getGroupId());
+            studentsNumberForGroups.add(studentsNumber);
+        }
+        for (Group group : teacherGroups) {
+            Integer studentsNumber = groupDao.findStudentsNumberInGroup(group.getGroupId());
+            studentsNumberForTeacherGroups.add(studentsNumber);
         }
 
-        model.addAttribute("groups", allGroups);
-        model.addAttribute("teacherGroupsIds", teacherGroupsIds);
-        model.addAttribute("studentsNumber", studentsNumber);
+        model.addAttribute("groups", groups);
+        model.addAttribute("studentsNumberForGroups", studentsNumberForGroups);
+        model.addAttribute("teacherGroups", teacherGroups);
+        model.addAttribute("studentsNumberForTeacherGroups", studentsNumberForTeacherGroups);
 
         return "teacher_general/groups";
     }
@@ -824,10 +823,16 @@ public class TeacherController {
 
     private List<String> closeQuizToStudent(Long studentId, Long quizId) {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+        List<String> closedQuizInfo = new ArrayList<>();
         switch (status) {
             case OPENED:
                 quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
                         LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
+                PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
+                closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
+                closedQuizInfo.add(String.valueOf(closedQuiz.getResult() + " / " + closedQuiz.getScore()));
+                closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
+                closedQuizInfo.add("00:00");
                 break;
             case PASSED:
                 quizDao.closeQuizToStudent(studentId, quizId);
@@ -836,12 +841,6 @@ public class TeacherController {
                 logger.error("Can not close already closed quiz");
                 break;
         }
-        PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
-        List<String> closedQuizInfo = new ArrayList<>();
-        closedQuizInfo.add(String.valueOf(closedQuiz.getResult() + " / " + closedQuiz.getScore()));
-        closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
-        closedQuizInfo.add("00:00");
-        closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
         return closedQuizInfo;
     }
 }

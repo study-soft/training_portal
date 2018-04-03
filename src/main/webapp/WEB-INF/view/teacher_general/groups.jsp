@@ -4,13 +4,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Groups</title>
+    <title>Groups which are passing your quizzes</title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
             $("a:contains(Delete)").click(function (event) {
                 event.preventDefault();
-                var groupName = $(this).parent().prev().prev().prev().prev().text();
+                var groupName = $(this).parent("td").siblings().first().text();
                 $("#deleteForm").attr("action", $(this).attr("href"));
                 $(".modal-body").text("Are you sure you want to delete group '" + groupName + "'?");
                 $("#modal").modal();
@@ -47,6 +47,38 @@
             </div>
         </div>
     </form>
+    <h4>Your groups</h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width: 40%">Name</th>
+            <th style="width: 20%">Students</th>
+            <th style="width: 20%">Creation date</th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${teacherGroups}" var="group" varStatus="status">
+            <tr>
+                <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
+                <td>${studentsNumberForTeacherGroups[status.index]}</td>
+                <td><localDate:format value="${group.creationDate}"/></td>
+                <td>
+                    <a href="/teacher/groups/${group.groupId}/edit">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                </td>
+                <td>
+                    <a href="/teacher/groups/${group.groupId}/delete">
+                        <i class="fa fa-trash-o"></i> Delete
+                    </a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    <h4>Other groups</h4>
     <table class="table">
         <thead>
         <tr>
@@ -61,19 +93,10 @@
         <c:forEach items="${groups}" var="group" varStatus="status">
             <tr>
                 <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
-                <td>${studentsNumber[status.index]}</td>
+                <td>${studentsNumberForGroups[status.index]}</td>
                 <td><localDate:format value="${group.creationDate}"/></td>
-                <c:choose>
-                    <c:when test="${fn:contains(teacherGroupsIds, group.groupId)}">
-                        <td><a href="/teacher/groups/${group.groupId}/edit"><i class="fa fa-edit"></i> Edit</a></td>
-                        <td><a href="/teacher/groups/${group.groupId}/delete"><i class="fa fa-trash-o"></i> Delete</a>
-                        </td>
-                    </c:when>
-                    <c:otherwise>
-                        <td></td>
-                        <td></td>
-                    </c:otherwise>
-                </c:choose>
+                <td></td>
+                <td></td>
             </tr>
         </c:forEach>
         </tbody>

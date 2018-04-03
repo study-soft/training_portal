@@ -23,60 +23,38 @@
                 You do not have published quizzes
             </div>
         </c:when>
-        <c:when test="${empty groups}">
-            <div class="col-8">
-                <table class="table">
-                    <tr>
-                        <th>Students without group</th>
-                    </tr>
-                    <c:forEach items="${students}" var="student">
-                        <tr>
-                            <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </div>
-        </c:when>
-        <c:when test="${empty students}">
-            <div class="col-4">
-                <table class="table">
-                    <tr>
-                        <th>Groups</th>
-                    </tr>
-                    <c:forEach items="${groups}" var="group">
-                        <tr>
-                            <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </div>
-        </c:when>
         <c:otherwise>
             <div class="row">
-                <div class="col-4">
-                    <table class="table">
-                        <tr>
-                            <th>Groups</th>
-                        </tr>
-                        <c:forEach items="${groups}" var="group">
+                <c:if test="${not empty groups}">
+                    <div class="col-6">
+                        <table class="table">
                             <tr>
-                                <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
+                                <th>Groups</th>
                             </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-                <div class="col-8">
-                    <table class="table">
-                        <tr>
-                            <th>Students without group</th>
-                        </tr>
-                        <c:forEach items="${students}" var="student" varStatus="status">
+                            <c:forEach items="${groups}" var="group">
+                                <tr>
+                                    <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </c:if>
+                <c:if test="${not empty students}">
+                    <div class="col-6">
+                        <table class="table">
                             <tr>
-                                <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
+                                <th>Students without group</th>
                             </tr>
-                        </c:forEach>
-                    </table>
-                </div>
+                            <c:forEach items="${students}" var="student" varStatus="status">
+                                <tr>
+                                    <td>
+                                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </c:if>
             </div>
         </c:otherwise>
     </c:choose>

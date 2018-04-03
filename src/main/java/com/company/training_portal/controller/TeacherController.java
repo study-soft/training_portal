@@ -32,6 +32,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.DELETED_QUIZ;
+import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.util.Utils.formatDateTime;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
@@ -480,36 +483,37 @@ public class TeacherController {
                                        Model model) {
         Group group = groupDao.findGroup(groupId);
         Quiz quiz = quizDao.findQuiz(quizId);
-        List<User> students = userDao.findStudents(groupId, quizId);
         model.addAttribute("group", group);
         model.addAttribute("quiz", quiz);
-        model.addAttribute("students", students);
 
-        List<PassedQuiz> results = new ArrayList<>();
-        List<String> statusList = new ArrayList<>();
-        for (User student : students) {
-            Long studentId = student.getUserId();
-            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-            statusList.add(status.getStudentQuizStatus());
-            switch (status) {
-                case OPENED:
-                    PassedQuiz openedQuiz = new PassedQuiz.PassedQuizBuilder()
-                            .quizId(quizId)
-                            .build();
-                    results.add(openedQuiz);
-                    break;
-                case PASSED:
-                    PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
-                    results.add(passedQuiz);
-                    break;
-                case CLOSED:
-                    PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
-                    results.add(closedQuiz);
-                    break;
-            }
+        List<User> openedStudents = userDao.findStudents(groupId, quizId, OPENED);
+        List<User> passedStudents = userDao.findStudents(groupId, quizId, PASSED);
+        List<User> closedStudents = userDao.findStudents(groupId, quizId, CLOSED);
+        model.addAttribute("openedStudents", openedStudents);
+        model.addAttribute("passedStudents", passedStudents);
+        model.addAttribute("closedStudents", closedStudents);
+
+        List<OpenedQuiz> openedQuizzes = new ArrayList<>();
+        for (User student : openedStudents) {
+            OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(student.getUserId(), quizId);
+            openedQuizzes.add(openedQuiz);
         }
-        model.addAttribute("results", results);
-        model.addAttribute("statusList", statusList);
+        model.addAttribute("openedQuizzes", openedQuizzes);
+
+        List<PassedQuiz> passedQuizzes = new ArrayList<>();
+        for (User student : passedStudents) {
+            PassedQuiz passedQuiz = quizDao.findPassedQuiz(student.getUserId(), quizId);
+            passedQuizzes.add(passedQuiz);
+        }
+        model.addAttribute("passedQuizzes", passedQuizzes);
+
+        List<PassedQuiz> closedQuizzes = new ArrayList<>();
+        for (User student : closedStudents) {
+            PassedQuiz closedQuiz = quizDao.findClosedQuiz(student.getUserId(), quizId);
+            closedQuizzes.add(closedQuiz);
+        }
+        model.addAttribute("closedQuizzes", closedQuizzes);
+
         return "teacher_results/group-quiz";
     }
 
@@ -827,7 +831,7 @@ public class TeacherController {
         switch (status) {
             case OPENED:
                 quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
-                        LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
+                        LocalDateTime.now(), 0, CLOSED);
                 PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
                 closedQuizInfo.add(formatDateTime(closedQuiz.getFinishDate()));
                 closedQuizInfo.add(String.valueOf(closedQuiz.getResult() + " / " + closedQuiz.getScore()));

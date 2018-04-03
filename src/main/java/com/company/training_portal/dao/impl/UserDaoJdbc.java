@@ -122,6 +122,19 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<User> findStudents(Long groupId, Long quizId, StudentQuizStatus status) {
+        List<User> students =
+                template.query(FIND_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID_AND_STUDENT_QUIZ_STATUS,
+                new Object[]{groupId, quizId, status.getStudentQuizStatus()},
+                this::mapUser);
+        logger.info("Found students by groupId '" + groupId + "', quizId '" + quizId +
+        "' and studentQuizStatus '" + status.getStudentQuizStatus() + "':");
+        students.forEach(logger::info);
+        return students;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<User> findStudentsByTeacherId(Long teacherId) {
         List<User> students = template.query(FIND_STUDENTS_BY_TEACHER_ID,
                 new Object[]{teacherId}, this::mapUser);
@@ -485,6 +498,13 @@ public class UserDaoJdbc implements UserDao {
     "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? AND USERS.USER_ROLE = 'STUDENT' " +
     "ORDER BY USERS.LAST_NAME, USERS.FIRST_NAME;";
+
+    private static final String FIND_STUDENTS_BY_GROUP_ID_AND_QUIZ_ID_AND_STUDENT_QUIZ_STATUS =
+    "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +
+    "USERS.DATE_OF_BIRTH, USERS.PHONE_NUMBER, USERS.PHOTO, USERS.LOGIN, USERS.PASSWORD, USERS.USER_ROLE " +
+    "FROM USERS INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE USERS.GROUP_ID = ? AND J.QUIZ_ID = ? " +
+    "AND J.STUDENT_QUIZ_STATUS = ? AND USERS.USER_ROLE = 'STUDENT';";
 
     private static final String FIND_STUDENTS_BY_TEACHER_ID =
     "SELECT USERS.USER_ID, USERS.GROUP_ID, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, " +

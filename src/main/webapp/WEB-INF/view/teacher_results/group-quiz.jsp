@@ -8,15 +8,6 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            $("td[id]").each(function () {
-                if (this.id === "OPENED") {
-                    $(this).siblings().first().next().text("");
-                }
-                if (this.id === "OPENED" || this.id === "PASSED") {
-                    $(this).find("button").html('<i class="fa fa-close"></i> Close');
-                }
-            });
-
             $("button:contains(Close)").click(function () {
                 var studentName = $(this).val();
                 var studentId = $(this).parents("tr").attr("id").replace("selectedStudent", "");
@@ -51,34 +42,108 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h3><a href="/teacher/groups/${group.groupId}">${group.name}</a></h3>
-    <h3><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></h3>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Result</th>
-            <th>Attempt</th>
-            <th>Time spent</th>
-            <th>Passed</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-        <c:forEach items="${students}" var="student" varStatus="status">
-            <c:set var="i" value="${status.index}"/>
-            <tr id="selectedStudent${student.userId}">
-                <td><a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a></td>
-                <td>${results[i].result} / ${results[i].score}</td>
-                <td>${results[i].attempt}</td>
-                <td><duration:format value="${results[i].timeSpent}"/></td>
-                <td><localDateTime:format value="${results[i].finishDate}"/></td>
-                <td>${statusList[i]}</td>
-                <td id="${statusList[i]}">
-                    <button type="button" class="danger-button"
-                            value="${student.lastName} ${student.firstName}"></button>
-                </td>
+    <h2><a href="/teacher/groups/${group.groupId}">${group.name}</a></h2>
+    <h2><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></h2>
+    <c:choose>
+        <c:when test="${not empty openedStudents or not empty passedStudents}">
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                There are students who pass this quiz with different quiz status
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                All students in this group closed this quiz
+            </div>
+        </c:otherwise>
+    </c:choose>
+    <c:if test="${not empty openedStudents}">
+        <h4>Opened</h4>
+        <table id="openedQuizzes" class="table">
+            <tr>
+                <th style="width: 18%">Name</th>
+                <th style="width: 21%">Submitted</th>
+                <th colspan="4" style="width: 51%"></th>
+                <th style="width: 10%"></th>
             </tr>
-        </c:forEach>
-    </table>
+            <c:forEach items="${openedStudents}" var="student" varStatus="status">
+                <c:set var="i" value="${status.index}"/>
+                <tr>
+                    <td>
+                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                    </td>
+                    <td><localDateTime:format value="${openedQuizzes[i].submitDate}"/></td>
+                    <td colspan="4"></td>
+                    <td>
+                        <button class="danger-button" value="${student.userId}">
+                            <i class="fa fa-close"></i> Close
+                        </button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
+    <c:if test="${not empty passedStudents}">
+        <h4>Passed</h4>
+        <table id="passedQuizzes" class="table">
+            <tr>
+                <th style="width: 18%">Name</th>
+                <th style="width: 21%">Submitted</th>
+                <th style="width: 21%;">Passed</th>
+                <th style="width: 9%">Result</th>
+                <th style="width: 9%">Attempt</th>
+                <th style="width: 12%">Time spent</th>
+                <th style="width: 10%"></th>
+            </tr>
+            <c:forEach items="${passedStudents}" var="student" varStatus="status">
+                <c:set var="i" value="${status.index}"/>
+                <tr>
+                    <td>
+                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                    </td>
+                    <td><localDateTime:format value="${passedQuizzes[i].submitDate}"/></td>
+                    <td><localDateTime:format value="${passedQuizzes[i].finishDate}"/></td>
+                    <td>${passedQuizzes[i].result} / ${passedQuizzes[i].score}</td>
+                    <td>${passedQuizzes[i].attempt}</td>
+                    <td><duration:format value="${passedQuizzes[i].timeSpent}"/></td>
+                    <td>
+                        <button class="danger-button" value="${student.userId}">
+                            <i class="fa fa-close"></i> Close
+                        </button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
+    <c:if test="${not empty closedStudents}">
+        <h4>Closed</h4>
+        <table id="closedQuizzes" class="table">
+            <tr>
+                <th style="width: 18%">Name</th>
+                <th style="width: 21%">Submitted</th>
+                <th style="width: 21%;">Passed</th>
+                <th style="width: 9%">Result</th>
+                <th style="width: 9%">Attempt</th>
+                <th style="width: 22%">Time spent</th>
+            </tr>
+            <c:forEach items="${closedStudents}" var="student" varStatus="status">
+                <c:set var="i" value="${status.index}"/>
+                <tr>
+                    <td>
+                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                    </td>
+                    <td><localDateTime:format value="${closedQuizzes[i].submitDate}"/></td>
+                    <td><localDateTime:format value="${closedQuizzes[i].finishDate}"/></td>
+                    <td>${closedQuizzes[i].result} / ${closedQuizzes[i].score}</td>
+                    <td>${closedQuizzes[i].attempt}</td>
+                    <td><duration:format value="${closedQuizzes[i].timeSpent}"/></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
     <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
 
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"

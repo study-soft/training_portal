@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -105,6 +106,17 @@ public class UserDaoJdbcTest {
         testStudents.add(userDao.findUser(4L));
 
         List<User> students = userDao.findStudents(1L, 11L);
+
+        assertEquals(testStudents, students);
+    }
+
+    @Test
+    public void test_find_students_by_groupId_and_quizId_and_studentQuizStatus() {
+        List<User> testStudents = new ArrayList<>();
+        testStudents.add(userDao.findUser(4L));
+        testStudents.add(userDao.findUser(13L));
+
+        List<User> students = userDao.findStudents(1L, 2L, CLOSED);
 
         assertEquals(testStudents, students);
     }

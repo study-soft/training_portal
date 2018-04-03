@@ -75,7 +75,7 @@ public interface QuizDao {
 
     boolean quizExistsByName(String name);
 
-    void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate);
+    void addPublishedQuizInfo(List<Long> studentIds, Long quizId);
 
     Long addQuiz(Quiz quiz);
 

@@ -4,83 +4,78 @@
 <head>
     <title>Publication</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            $("[id*='group']").change(function () {
+                var studentsCheckboxes = $(this).parents(".card").find("[id*='student']");
+                if ($(this).prop("checked")) {
+                    studentsCheckboxes.prop("checked", true);
+                } else {
+                    studentsCheckboxes.prop("checked", false);
+                }
+            });
+
+            $("[id*='collapse'] [id*='student']").change(function () {
+                var allChecked = true;
+                var section = $(this).parents("[id*='collapse']");
+                section.find("[id*='student']").each(function () {
+                    if ($(this).prop("checked") === false) {
+                        allChecked = false;
+                    }
+                });
+                
+                var groupCheckbox = $(this).parents(".card").find("[id*='group']");
+                if (allChecked) {
+                    groupCheckbox.prop("checked", true);
+                } else {
+                    groupCheckbox.prop("checked", false);
+                }
+            });
+
+            $("#publicationForm").submit(function () {
+                var checkboxes = $("[id*='group']:checked, [id*='student']:checked");
+                if (checkboxes.length === 0) {
+                    alert("Select anyone to whom you want to publish this quiz");
+                    return false;
+                }
+                $("[id*='group']:checked").prop("disabled", true);
+                return true;
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${quiz.name}</h2>
-    <form action="#" method="post">
-        <div class="row">
-            <div class="col-4">
-                <h4>Publication</h4>
+    <c:choose>
+        <c:when test="${empty groups && empty studentsWithoutGroup}">
+            <div class="highlight-primary">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25" class="icon-one-row">
+                There are no students and groups that you can publish quiz
             </div>
-            <div class="col-2">
-                <button type="submit" class="btn btn-success">
-                    <i class="fa fa-share-square-o"></i> Publish
-                </button>
-            </div>
-        </div>
-        <div class="highlight-primary">
-            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                 width="25" height="25" class="icon-one-row">
-            Select students or groups for whom you want to publish the quiz
-        </div>
-        <c:choose>
-            <c:when test="${empty groups && empty studentsWithoutGroup}">
+        </c:when>
+        <c:otherwise>
+            <form id="publicationForm" action="/teacher/quizzes/${quiz.quizId}/publication" method="post">
+                <div class="row">
+                    <div class="col-4">
+                        <h4>Publication</h4>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-share-square-o"></i> Publish
+                        </button>
+                    </div>
+                </div>
                 <div class="highlight-primary">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                          width="25" height="25" class="icon-one-row">
-                    There are no students and groups that you can publish quiz
+                    Select students or groups for whom you want to publish the quiz
                 </div>
-            </c:when>
-            <c:when test="${empty groups}">
-                <div class="col-8">
-                    <table class="table">
-                        <tr>
-                            <th style="width: 80%">Students without group</th>
-                            <th style="width: 20%"></th>
-                        </tr>
-                        <c:forEach items="${studentsWithoutGroup}" var="student" varStatus="status">
-                            <tr>
-                                <td>${student.lastName} ${student.firstName}</td>
-                                <td>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" id="student${status.index}" name="student${status.index}"
-                                               value="${student.userId}" class="custom-control-input">
-                                        <label for="student${status.index}" class="custom-control-label"></label>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-            </c:when>
-            <c:when test="${empty studentsWithoutGroup}">
-                <div class="col-4">
-                    <table class="table">
-                        <tr>
-                            <th style="width: 80%">Groups</th>
-                            <th style="width: 20%"></th>
-                        </tr>
-                        <c:forEach items="${groups}" var="group" varStatus="status">
-                            <tr>
-                                <td>${group.name}</td>
-                                <td>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" id="group${status.index}" name="group${status.index}"
-                                               value="${group.groupId}" class="custom-control-input">
-                                        <label for="group${status.index}" class="custom-control-label"></label>
-                                    </div>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-            </c:when>
-            <c:otherwise>
                 <div class="row">
-                    <div class="col-6">
-                        <div id="accordion">
+                    <c:if test="${not empty groups}">
+                        <div class="col-6">
                             <div class="accordion-header">Groups</div>
                             <c:forEach items="${groups}" var="group">
                                 <div class="card">
@@ -98,7 +93,7 @@
                                         </div>
                                     </div>
                                     <div id="collapse${group.groupId}" class="collapse"
-                                         aria-labelledby="heading${group.groupId}" data-parent="#accordion">
+                                         aria-labelledby="heading${group.groupId}">
                                         <div class="card-body">
                                             <c:forEach items="${students[group.groupId]}" var="student">
                                                 <div class="row">
@@ -108,8 +103,10 @@
                                                         <div class="custom-control custom-checkbox">
                                                             <input type="checkbox" id="student${student.userId}"
                                                                    name="student${student.userId}"
-                                                                   value="${student.userId}" class="custom-control-input">
-                                                            <label for="student${student.userId}" class="custom-control-label"></label>
+                                                                   value="${student.userId}"
+                                                                   class="custom-control-input">
+                                                            <label for="student${student.userId}"
+                                                                   class="custom-control-label"></label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -119,32 +116,35 @@
                                 </div>
                             </c:forEach>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <table class="table">
-                            <tr>
-                                <th style="width: 90%">Students without group</th>
-                                <th style="width: 10%"></th>
-                            </tr>
-                            <c:forEach items="${studentsWithoutGroup}" var="student">
+                    </c:if>
+                    <c:if test="${not empty studentsWithoutGroup}">
+                        <div class="col-6">
+                            <table class="table">
                                 <tr>
-                                    <td>${student.lastName} ${student.firstName}</td>
-                                    <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" id="student${student.userId}"
-                                                   name="student${student.userId}"
-                                                   value="${student.userId}" class="custom-control-input">
-                                            <label for="student${student.userId}" class="custom-control-label"></label>
-                                        </div>
-                                    </td>
+                                    <th style="width: 90%">Students without group</th>
+                                    <th style="width: 10%"></th>
                                 </tr>
-                            </c:forEach>
-                        </table>
-                    </div>
+                                <c:forEach items="${studentsWithoutGroup}" var="student">
+                                    <tr>
+                                        <td>${student.lastName} ${student.firstName}</td>
+                                        <td>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="student${student.userId}"
+                                                       name="student${student.userId}"
+                                                       value="${student.userId}" class="custom-control-input">
+                                                <label for="student${student.userId}"
+                                                       class="custom-control-label"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </div>
+                    </c:if>
                 </div>
-            </c:otherwise>
-        </c:choose>
-    </form>
+            </form>
+        </c:otherwise>
+    </c:choose>
     <button type="button" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>

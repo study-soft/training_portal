@@ -6,10 +6,38 @@
 <head>
     <title>Published quiz</title>
     <c:import url="../fragment/head.jsp"/>
+    <script>
+        $(document).ready(function () {
+            var publicationSuccess = "${publicationSuccess}";
+            if (publicationSuccess) {
+                $("#publication-success").fadeIn("slow");
+            }
+
+            $("#close").click(function () {
+                $("#publication-success").fadeOut("slow");
+            });
+
+            $("#back").click(function () {
+                var previousUri = document.referrer;
+                var publicationUri = "http://${header["host"]}${pageContext.request.contextPath}" +
+                    "/teacher/quizzes/${publishedQuiz.quizId}/publication";
+
+                if (previousUri === publicationUri) {
+                    window.location = "/teacher/quizzes";
+                } else {
+                    window.history.go(-1);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
+    <div id="publication-success" class="col-5 mx-auto text-center correct update-success">
+        Quiz has successfully published
+        <button id="close" class="close">&times;</button>
+    </div>
     <h2>${publishedQuiz.name}</h2>
     <div class="row">
         <div class="col-auto">
@@ -20,7 +48,7 @@
             </div>
         </div>
         <div class="col-auto">
-            <a href="#" class="btn btn-success">Republish</a>
+            <a href="/teacher/quizzes/${publishedQuiz.quizId}/publication" class="btn btn-success">Republish</a>
         </div>
         <div class="col-auto">
             <a href="#" class="btn btn-danger">Unpublish</a>
@@ -98,7 +126,7 @@
         You can see groups and students where quiz was published <a href="#">here <i
             class="fa fa-external-link"></i></a>
     </div>
-    <button onclick="window.history.go(-1);" class="btn btn-primary">Back</button>
+    <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
 </div>

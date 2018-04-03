@@ -448,23 +448,17 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_add_published_quiz_info() {
-        quizDao.addPublishedQuizInfo(5L, 1L,
-                LocalDateTime.of(2018, 3, 26, 11, 37, 0));
+        List<Long> studentIds = Arrays.asList(14L, 13L, 11L, 12L, 3L, 4L);
+        int testSubmitDateSeconds = LocalDateTime.now().getSecond();
+        quizDao.addPublishedQuizInfo(studentIds, 10L);
 
-        OpenedQuiz testOpenedQuiz = new OpenedQuiz.OpenedQuizBuilder()
-                .quizId(1L)
-                .quizName("Procedural")
-                .description("Try your procedural skills")
-                .passingTime(Duration.of(10, MINUTES))
-                .authorName("Bronson Andrew")
-                .submitDate(LocalDateTime.of(2018, 3, 26, 11, 37, 0))
-                .questionsNumber(12)
-                .score(30)
-                .build();
+        for (Long studentsId : studentIds) {
+            int submitDateSeconds = quizDao.findOpenedQuiz(studentsId, 10L)
+                    .getSubmitDate()
+                    .getSecond();
 
-        OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(5L, 1L);
-
-        assertEquals(testOpenedQuiz, openedQuiz);
+            assertEquals(testSubmitDateSeconds, submitDateSeconds);
+        }
     }
 
     @Test

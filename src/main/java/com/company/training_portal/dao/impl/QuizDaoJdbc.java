@@ -26,6 +26,7 @@ import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -386,15 +387,24 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional
     @Override
-    public void addPublishedQuizInfo(Long studentId, Long quizId, LocalDateTime submitDate) {
-        template.update(ADD_PUBLISHED_QUIZ_INFO,
-                studentId, quizId, submitDate, 0, OPENED.getStudentQuizStatus());
+    public void addPublishedQuizInfo(List<Long> studentIds, Long quizId) {
+        LocalDateTime submitDate = LocalDateTime.now();
+
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Long studentId : studentIds) {
+            batchArgs.add(new Object[]{studentId, quizId, Timestamp.valueOf(submitDate),
+                    0, OPENED.getStudentQuizStatus()});
+        }
+
+        template.batchUpdate(ADD_PUBLISHED_QUIZ_INFO, batchArgs);
         logger.info("Added published quiz info:");
-        logger.info("userId: " + studentId +
-                " quizId: " + quizId +
-                " submitDate: " + submitDate +
-                " attempt: 0" +
-                " studentQuizStatus: OPENED");
+        for (Long studentId : studentIds) {
+            logger.info("userId: " + studentId +
+                    " quizId: " + quizId +
+                    " submitDate: " + submitDate +
+                    " attempt: 0" +
+                    " studentQuizStatus: OPENED");
+        }
     }
 
     @Transactional

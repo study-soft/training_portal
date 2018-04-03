@@ -4,6 +4,7 @@ import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
+import com.company.training_portal.model.enums.TeacherQuizStatus;
 import com.company.training_portal.util.Utils;
 import com.company.training_portal.validator.QuizValidator;
 import com.company.training_portal.validator.UserValidator;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.DELETED_QUIZ;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.util.Utils.formatDateTime;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
@@ -624,10 +626,10 @@ public class TeacherController {
         return "redirect:/teacher/quizzes/" + quizId;
     }
 
-    @RequestMapping("/teacher/quizzes/{quizId}/publication")
-    public String showPublishQuiz(@ModelAttribute("teacherId") Long teacherId,
-                                  @PathVariable("quizId") Long quizId,
-                                  Model model) {
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/publication", method = RequestMethod.GET)
+    public String showQuizPublication(@ModelAttribute("teacherId") Long teacherId,
+                                      @PathVariable("quizId") Long quizId,
+                                      Model model) {
         List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
         if (!teacherQuizIds.contains(quizId)) {
             logger.info("access denied");
@@ -640,7 +642,7 @@ public class TeacherController {
         Map<Long, List<User>> students = new HashMap<>();
         for (Group group : groups) {
             Long groupId = group.getGroupId();
-            List<User> groupStudents = userDao.findStudents(groupId);
+            List<User> groupStudents = userDao.findStudentsForQuizPublication(groupId, quizId);
             students.put(groupId, groupStudents);
         }
         List<User> studentsWithoutGroup = userDao.findStudentsWithoutGroupForQuizPublication(quizId);
@@ -651,6 +653,23 @@ public class TeacherController {
         model.addAttribute("studentsWithoutGroup", studentsWithoutGroup);
 
         return "teacher_quiz/quiz-publication";
+    }
+
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/publication", method = RequestMethod.POST)
+    public String publishQuiz(@PathVariable("quizId") Long quizId,
+                              @RequestParam Map<String, String> studentIdsMap,
+                              RedirectAttributes redirectAttributes) {
+        quizDao.editTeacherQuizStatus(PUBLISHED, quizId);
+
+        List<Long> studentIds = studentIdsMap.values()
+                .stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+
+        quizDao.addPublishedQuizInfo(studentIds, quizId);
+        redirectAttributes.addFlashAttribute("publicationSuccess", true);
+
+        return "redirect:/teacher/quizzes/" + quizId;
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")

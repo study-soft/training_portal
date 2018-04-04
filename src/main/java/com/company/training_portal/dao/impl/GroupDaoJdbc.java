@@ -75,6 +75,16 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Group> findGroupsForWhichPublished(Long quizId) {
+        List<Group> groups = template.query(FIND_GROUPS_FOR_WHICH_PUBLISHED_BY_QUIZ_ID,
+                new Object[]{quizId}, this::mapGroup);
+        logger.info("Found all groups for which published by quizId '" + quizId + "':");
+        groups.forEach(logger::info);
+        return groups;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Group> findAllGroups() {
         List<Group> groups = template.query(FIND_ALL_GROUPS, this::mapGroup);
         logger.info("All groups found:");
@@ -209,6 +219,15 @@ public class GroupDaoJdbc implements GroupDao {
     "FROM GROUPS INNER JOIN USERS ON GROUPS.GROUP_ID = USERS.GROUP_ID " +
     "LEFT JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
     "WHERE USERS.USER_ID NOT IN (SELECT J.USER_ID FROM USER_QUIZ_JUNCTIONS J WHERE J.QUIZ_ID = ?) " +
+    "GROUP BY USERS.GROUP_ID " +
+    "ORDER BY GROUPS.NAME;";
+
+    private static final String FIND_GROUPS_FOR_WHICH_PUBLISHED_BY_QUIZ_ID =
+    "SELECT GROUPS.GROUP_ID, GROUPS.NAME, GROUPS.DESCRIPTION, " +
+    "GROUPS.CREATION_DATE, GROUPS.AUTHOR_ID " +
+    "FROM GROUPS INNER JOIN USERS ON GROUPS.GROUP_ID = USERS.GROUP_ID " +
+    "INNER JOIN USER_QUIZ_JUNCTIONS J ON USERS.USER_ID = J.USER_ID " +
+    "WHERE J.QUIZ_ID = ? " +
     "GROUP BY USERS.GROUP_ID " +
     "ORDER BY GROUPS.NAME;";
 

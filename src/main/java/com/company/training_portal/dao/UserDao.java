@@ -41,6 +41,10 @@ public interface UserDao {
 
     List<User> findStudentsForQuizPublication(Long groupId, Long quizId);
 
+    List<User> findStudentsWithoutGroupForWhomPublished(Long quizId);
+
+    List<User> findStudentsForWhomPublished(Long groupId, Long quizId);
+
     List<User> findAllTeachers();
 
     Integer findStudentsNumber();

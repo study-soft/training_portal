@@ -197,6 +197,28 @@ public class UserDaoJdbcTest {
     }
 
     @Test
+    public void test_find_students_without_group_for_whom_published_by_quizId() {
+        List<User> testStudents = new ArrayList<>();
+        testStudents.add(userDao.findUser(8L));
+        testStudents.add(userDao.findUser(7L));
+
+        List<User> students = userDao.findStudentsWithoutGroupForWhomPublished(5L);
+
+        assertEquals(testStudents, students);
+    }
+
+    @Test
+    public void test_find_students_for_whom_published_by_groupId_and_quizId() {
+        List<User> testStudents = new ArrayList<>();
+        testStudents.add(userDao.findUser(3L));
+        testStudents.add(userDao.findUser(4L));
+
+        List<User> students = userDao.findStudentsForWhomPublished(1L, 11L);
+
+        assertEquals(testStudents, students);
+    }
+
+    @Test
     public void test_find_all_teachers() {
         List<User> testTeachers = new ArrayList<>();
         testTeachers.add(userDao.findUser(1L));

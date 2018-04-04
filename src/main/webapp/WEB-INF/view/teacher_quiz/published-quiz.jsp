@@ -35,7 +35,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <div id="publication-success" class="col-5 mx-auto text-center correct update-success">
-        Quiz has successfully published
+        Quiz was successfully published
         <button id="close" class="close">&times;</button>
     </div>
     <h2>${publishedQuiz.name}</h2>
@@ -48,7 +48,8 @@
             </div>
         </div>
         <div class="col-auto">
-            <a href="/teacher/quizzes/${publishedQuiz.quizId}/publication" class="btn btn-success">Republish</a>
+            <a href="/teacher/quizzes/${publishedQuiz.quizId}/publication"
+               class="btn btn-success btn-wide">Publish again</a>
         </div>
         <div class="col-auto">
             <a href="#" class="btn btn-danger">Unpublish</a>
@@ -120,12 +121,52 @@
              width="25" height="25" class="icon-one-row">
         Students will see explanation after all group close this quiz
     </div>
-    <div class="highlight-primary">
-        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-             width="25" height="25" class="icon-one-row">
-        You can see groups and students where quiz was published <a href="#">here <i
-            class="fa fa-external-link"></i></a>
+
+    <h4>Groups and students where quiz was published</h4>
+    <div class="row">
+        <c:if test="${not empty groups}">
+            <div class="col-6">
+                <div class="accordion-header">Groups</div>
+                <c:forEach items="${groups}" var="group">
+                    <div class="card">
+                        <div class="card-header" id="heading${group.groupId}">
+                            <button type="button" class="btn-link" data-toggle="collapse"
+                                    data-target="#collapse${group.groupId}"
+                                    aria-expanded="false" aria-controls="collapse${group.groupId}">
+                                    ${group.name}
+                            </button>
+                        </div>
+                        <div id="collapse${group.groupId}" class="collapse"
+                             aria-labelledby="heading${group.groupId}">
+                            <div class="card-body">
+                                <c:forEach items="${students[group.groupId]}" var="student">
+                                    <div class="row">
+                                        <div class="col-1"></div>
+                                        <div class="col-11">${student.lastName} ${student.firstName}</div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+        <c:if test="${not empty studentsWithoutGroup}">
+            <div class="col-6">
+                <table class="table">
+                    <tr>
+                        <th>Students without group</th>
+                    </tr>
+                    <c:forEach items="${studentsWithoutGroup}" var="student">
+                        <tr>
+                            <td>${student.lastName} ${student.firstName}</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+        </c:if>
     </div>
+
     <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>

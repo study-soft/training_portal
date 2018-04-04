@@ -60,11 +60,11 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th style="width: 32%">Name</th>
+                    <th style="width: 30%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 8%">Score</th>
                     <th style="width: 15%;">Creation date</th>
-                    <th style="width: 15%"></th>
+                    <th style="width: 17%"></th>
                     <th style="width: 8%"></th>
                     <th style="width: 12%"></th>
                 </tr>
@@ -115,12 +115,12 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th style="width: 32%">Name</th>
+                    <th style="width: 30%">Name</th>
                     <th style="width: 10%">Questions</th>
                     <th style="width: 8%">Score</th>
                     <th style="width: 15%;">Creation date</th>
-                    <th style="width: 17.5%"></th>
-                    <th style="width: 17.5%"></th>
+                    <th style="width: 20%"></th>
+                    <th style="width: 17%"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -130,7 +130,11 @@
                         <td>${publishedQuiz.questionsNumber}</td>
                         <td>${publishedQuiz.score}</td>
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
-                        <td><a href="/teacher/quizzes/${publishedQuiz.quizId}/publication" class="success"><i class="fa fa-share-square-o"></i> Republish</a></td>
+                        <td>
+                            <a href="/teacher/quizzes/${publishedQuiz.quizId}/publication" class="success">
+                                <i class="fa fa-share-square-o"></i> Publish again
+                            </a>
+                        </td>
                         <td><a href="#" class="danger"><i class="fa fa-close"></i> Unpublish</a></td>
                     </tr>
                 </c:forEach>

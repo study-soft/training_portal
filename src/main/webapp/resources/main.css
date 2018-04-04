@@ -256,7 +256,7 @@ h5, h6 {
 .card-header {
     padding: 9px;
     background: none;
-    border-bottom: 1px solid #efefef;
+    border-top: 1px solid #dee2e6;
 }
 
 .card {
@@ -279,6 +279,10 @@ h5, h6 {
 
 .btn-wide {
     width: auto;
+}
+
+.btn-link {
+    border: none;
 }
 
 .btn:hover {

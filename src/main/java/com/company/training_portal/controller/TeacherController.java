@@ -181,7 +181,22 @@ public class TeacherController {
                 model.addAttribute("unpublishedQuiz", quiz);
                 return "teacher_quiz/unpublished-quiz";
             case PUBLISHED:
+                List<Group> groups = groupDao.findGroupsForWhichPublished(quizId);
+                Map<Long, List<User>> students = new HashMap<>();
+                for (Group group : groups) {
+                    Long groupId = group.getGroupId();
+                    List<User> groupStudents =
+                            userDao.findStudentsForWhomPublished(groupId, quizId);
+                    students.put(groupId, groupStudents);
+                }
+                List<User> studentsWithoutGroup =
+                        userDao.findStudentsWithoutGroupForWhomPublished(quizId);
+
                 model.addAttribute("publishedQuiz", quiz);
+                model.addAttribute("groups", groups);
+                model.addAttribute("students", students);
+                model.addAttribute("studentsWithoutGroup", studentsWithoutGroup);
+
                 return "teacher_quiz/published-quiz";
         }
 

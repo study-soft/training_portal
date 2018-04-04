@@ -66,6 +66,11 @@
                            rows="6" id="explanation" placeholder="Explanation"/>
             <form:errors path="explanation" cssClass="error"/>
         </div>
+        <div class="highlight-primary">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25" class="icon-one-row">
+            Students will see explanation after all group close this quiz
+        </div>
         <div class="row">
             <div class="col-2">
                 <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>

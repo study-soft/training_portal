@@ -15,6 +15,8 @@ public interface GroupDao {
 
     List<Group> findGroupsForQuizPublication(Long quizId);
 
+    List<Group> findGroupsForWhichPublished(Long quizId);
+
     List<Group> findAllGroups();
 
     Integer findGroupsNumber(Long authorId);

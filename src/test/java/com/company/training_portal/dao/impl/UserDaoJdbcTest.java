@@ -340,50 +340,6 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void test_add_student_info_about_quiz() {
-        userDao.addStudentInfoAboutQuiz(3L, 100L, 56,
-                LocalDateTime.of(2018, 3, 7, 20, 48),
-                LocalDateTime.of(2018, 4, 8, 21, 40),
-                LocalDateTime.of(2018, 4, 8, 21, 49),
-                StudentQuizStatus.PASSED);
-
-        Integer result = quizDao.findResult(3L, 100L);
-        LocalDateTime submitDate = quizDao.findSubmitDate(3L, 100L);
-        LocalDateTime startDate = quizDao.findStartDate(3L, 100L);
-        LocalDateTime finishDate = quizDao.findFinishDate(3L, 100L);
-        Integer attempt = quizDao.findAttempt(3L, 100L);
-        StudentQuizStatus studentQuizStatus = quizDao.findStudentQuizStatus(3L, 5L);
-
-        assertThat(result, is(56));
-        assertThat(submitDate, is(LocalDateTime.of(2018, 3, 7, 20, 48)));
-        assertThat(startDate, is(LocalDateTime.of(2018, 4, 8, 21, 40)));
-        assertThat(finishDate, is(LocalDateTime.of(2018, 4, 8, 21, 49)));
-        assertThat(attempt, is(0));
-        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
-    }
-
-    @Test
-    public void test_update_student_info_about_quiz() {
-        userDao.updateStudentInfoAboutQuiz(4L, 1L, 56,
-                LocalDateTime.of(2018, 1, 10, 10, 2),
-                LocalDateTime.of(2018, 1, 10, 10, 10),
-                1, StudentQuizStatus.PASSED);
-
-        Integer result = quizDao.findResult(4L, 1L);
-        LocalDateTime startDate = quizDao.findStartDate(4L, 1L);
-        LocalDateTime finishDate = quizDao.findFinishDate(4L, 1L);
-        Integer reopenCounter = quizDao.findAttempt(4L, 1L);
-        StudentQuizStatus studentQuizStatus =
-                quizDao.findStudentQuizStatus(4L, 1L);
-
-        assertThat(result, is(56));
-        assertThat(startDate, is(LocalDateTime.of(2018, 1, 10, 10, 2)));
-        assertThat(finishDate, is(LocalDateTime.of(2018, 1, 10, 10, 10)));
-        assertThat(reopenCounter, is(1));
-        assertThat(studentQuizStatus, is(StudentQuizStatus.PASSED));
-    }
-
-    @Test
     public void test_edit_user() {
         userDao.editUser(4L, "firstName", "lastName",
                 "email@example.com", LocalDate.of(2000, 3, 25),

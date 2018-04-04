@@ -407,42 +407,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Transactional
     @Override
-    public void addStudentInfoAboutQuiz(
-            Long studentId, Long quizId, Integer result, LocalDateTime submitDate,
-            LocalDateTime startDate, LocalDateTime finishDate, StudentQuizStatus studentQuizStatus) {
-        template.update(ADD_STUDENT_INFO_ABOUT_QUIZ, studentId, quizId, result,
-                Timestamp.valueOf(submitDate), Timestamp.valueOf(startDate),
-                Timestamp.valueOf(finishDate), studentQuizStatus.getStudentQuizStatus());
-        logger.info("Added student info about quiz:");
-        logger.info("studentId: " + studentId +
-                ", quizId: " + quizId +
-                ", result: " + result +
-                ", submitDate: " + submitDate.toString() +
-                ", startDate: " + startDate.toString() +
-                ", finishDate: " + finishDate.toString() +
-                ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
-    }
-
-    @Transactional
-    @Override
-    public void updateStudentInfoAboutQuiz(
-            Long studentId, Long quizId, Integer result, LocalDateTime startDate,
-            LocalDateTime finishDate, Integer attempt, StudentQuizStatus studentQuizStatus) {
-        template.update(UPDATE_STUDENT_INFO_ABOUT_QUIZ,
-                result, Timestamp.valueOf(startDate), Timestamp.valueOf(finishDate),
-                attempt, studentQuizStatus.getStudentQuizStatus(), studentId, quizId);
-        logger.info("Updated student info about quiz:");
-        logger.info("studentId: " + studentId +
-        ", quizId: " + quizId +
-        ", result: " + result +
-        ", startDate: " + startDate +
-        ", finishDate: " + finishDate.toString() +
-        ", attempt: " + attempt +
-        ", studentQuizStatus: " + studentQuizStatus.getStudentQuizStatus());
-    }
-
-    @Transactional
-    @Override
     public void editUser(Long userId, String firstName, String lastName, String email,
                          LocalDate dateOfBirth, String phoneNumber, String password) {
         Date birthDate = null;
@@ -629,16 +593,6 @@ public class UserDaoJdbc implements UserDao {
     "UPDATE USERS " +
     "SET GROUP_ID = ? " +
     "WHERE USER_ID = ? AND USER_ROLE = 'STUDENT';";
-
-    private static final String ADD_STUDENT_INFO_ABOUT_QUIZ =
-    "INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, " +
-    "START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS) " +
-    "VALUES (?, ?, ?, ?, ?, ?, 0, ?);";
-
-    private static final String UPDATE_STUDENT_INFO_ABOUT_QUIZ =
-    "UPDATE USER_QUIZ_JUNCTIONS " +
-    "SET RESULT = ?, START_DATE = ?, FINISH_DATE = ?, ATTEMPT = ?, STUDENT_QUIZ_STATUS = ? " +
-    "WHERE USER_ID = ? AND QUIZ_ID = ?;";
 
     private static final String EDIT_USER =
     "UPDATE USERS " +

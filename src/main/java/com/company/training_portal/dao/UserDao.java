@@ -79,16 +79,6 @@ public interface UserDao {
 
     void addStudentsToGroup(Long groupId, List<Long> studentIds);
 
-    @Deprecated
-    void addStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
-                                 LocalDateTime submitDate, LocalDateTime startDate,
-                                 LocalDateTime finishDate, StudentQuizStatus studentQuizStatus);
-
-    @Deprecated
-    void updateStudentInfoAboutQuiz(Long studentId, Long quizId, Integer result,
-                                    LocalDateTime finishDate, LocalDateTime startDate,
-                                    Integer attempt, StudentQuizStatus studentQuizStatus);
-
     void editUser(Long userId, String firstName, String lastName, String email, LocalDate dateOfBirth,
                   String phoneNumber, String password);
 

@@ -141,8 +141,8 @@
                 <table id="openedQuizzes" class="table">
                     <tr>
                         <th style="width: 18%">Name</th>
-                        <th style="width: 21%">Submitted</th>
-                        <th colspan="4" style="width: 51%"></th>
+                        <th style="width: 32%">Submitted</th>
+                        <th colspan="4" style="width: 40%"></th>
                         <th style="width: 10%;"></th>
                     </tr>
                     <c:forEach items="${openedQuizzes}" var="openedQuiz">
@@ -173,18 +173,18 @@
                         <th style="width: 12%">Time spent</th>
                         <th style="width: 10%"></th>
                     </tr>
-                    <c:forEach items="${passedQuizzes}" var="passedQuiz">
+                    <c:forEach items="${passedQuizzes}" var="quiz">
                         <tr>
                             <td>
-                                <a href="/teacher/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
+                                <a href="/teacher/quizzes/${quiz.quizId}">${quiz.quizName}</a>
                             </td>
-                            <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
-                            <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                            <td>${passedQuiz.result} / ${passedQuiz.score}</td>
-                            <td>${passedQuiz.attempt}</td>
-                            <td><duration:format value="${passedQuiz.timeSpent}"/></td>
+                            <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${quiz.finishDate}"/></td>
+                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.attempt}</td>
+                            <td><duration:format value="${quiz.timeSpent}"/></td>
                             <td>
-                                <button class="danger-button" value="${passedQuiz.quizId}">
+                                <button class="danger-button" value="${quiz.quizId}">
                                     <i class="fa fa-close"></i> Close
                                 </button>
                             </td>
@@ -203,16 +203,16 @@
                         <th style="width: 9%">Attempt</th>
                         <th style="width: 22%">Time spent</th>
                     </tr>
-                    <c:forEach items="${closedQuizzes}" var="closedQuiz">
+                    <c:forEach items="${closedQuizzes}" var="quiz">
                         <tr>
                             <td>
-                                <a href="/teacher/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a>
+                                <a href="/teacher/quizzes/${quiz.quizId}">${quiz.quizName}</a>
                             </td>
-                            <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
-                            <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
-                            <td>${closedQuiz.result} / ${closedQuiz.score}</td>
-                            <td>${closedQuiz.attempt}</td>
-                            <td><duration:format value="${closedQuiz.timeSpent}"/></td>
+                            <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${quiz.finishDate}"/></td>
+                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.attempt}</td>
+                            <td><duration:format value="${quiz.timeSpent}"/></td>
                         </tr>
                     </c:forEach>
                 </table>

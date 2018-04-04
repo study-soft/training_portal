@@ -30,91 +30,121 @@
     </div>
     <h3>Passed quizzes</h3>
     <c:choose>
-        <c:when test="${empty passedQuizzes}">
+        <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
-                You do not have passed quizzes
+                You do not have results
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th style="width: 35%">Name</th>
-                    <th style="width: 10%">Result</th>
-                    <th style="width: 10%">Attempt</th>
-                    <th style="width: 15%">Time spent</th>
-                    <th style="width: 22%">Passed</th>
-                    <th style="width: 8%"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${passedQuizzes}" var="passedQuiz">
+            <c:if test="${not empty openedQuizzes}">
+                <h4>Opened quizzes</h4>
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a></td>
-                        <td>${passedQuiz.result} / ${passedQuiz.score}</td>
-                        <td>${passedQuiz.attempt}</td>
-                        <td><duration:format value="${passedQuiz.timeSpent}"/></td>
-                        <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
-                        <c:choose>
-                            <c:when test="${fn:contains(notSinglePassedQuizzes, passedQuiz)}">
-                                <td><a href="/student/results/${passedQuiz.quizId}">Compare</a></td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 32%">Submitted</th>
+                        <th colspan="4" style="width: 40%"></th>
+                        <th style="width: 10%"></th>
                     </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${openedQuizzes}" var="quiz">
+                        <tr>
+                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                            <td colspan="4"></td>
+                            <c:choose>
+                                <c:when test="${fn:contains(notSingleOpenedQuizzes, quiz)}">
+                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td></td>
+                                </c:otherwise>
+                            </c:choose>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+            <c:if test="${not empty passedQuizzes}">
+                <h4>Passed quizzes</h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 21%">Submitted</th>
+                        <th style="width: 21%">Passed</th>
+                        <th style="width: 9%;">Result</th>
+                        <th style="width: 9%">Attempt</th>
+                        <th style="width: 12%">Time spent</th>
+                        <th style="width: 10%"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${passedQuizzes}" var="quiz">
+                        <tr>
+                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${quiz.finishDate}"/></td>
+                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.attempt}</td>
+                            <td><duration:format value="${quiz.timeSpent}"/></td>
+                            <c:choose>
+                                <c:when test="${fn:contains(notSinglePassedQuizzes, quiz)}">
+                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td></td>
+                                </c:otherwise>
+                            </c:choose>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+            <c:if test="${not empty closedQuizzes}">
+                <h4>Closed quizzes</h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="width: 18%">Name</th>
+                        <th style="width: 21%">Submitted</th>
+                        <th style="width: 21%">Passed</th>
+                        <th style="width: 9%;">Result</th>
+                        <th style="width: 9%">Attempt</th>
+                        <th style="width: 12%">Time spent</th>
+                        <th style="width: 10%"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${closedQuizzes}" var="quiz">
+                        <tr>
+                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                            <td><localDateTime:format value="${quiz.finishDate}"/></td>
+                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.attempt}</td>
+                            <td><duration:format value="${quiz.timeSpent}"/></td>
+                            <c:choose>
+                                <c:when test="${fn:contains(notSingleClosedQuizzes, quiz)}">
+                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td></td>
+                                </c:otherwise>
+                            </c:choose>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
         </c:otherwise>
     </c:choose>
-    <h3>Closed quizzes</h3>
-    <c:choose>
-        <c:when test="${empty closedQuizzes}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have closed quizzes
-            </div>
-        </c:when>
-        <c:otherwise>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th style="width: 35%">Name</th>
-                    <th style="width: 10%">Result</th>
-                    <th style="width: 10%">Attempt</th>
-                    <th style="width: 15%">Time spent</th>
-                    <th style="width: 22%">Passed</th>
-                    <th style="width: 8%"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${closedQuizzes}" var="closedQuiz">
-                    <tr>
-                        <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
-                        <td>${closedQuiz.result} / ${closedQuiz.score}</td>
-                        <td>${closedQuiz.attempt}</td>
-                        <td><duration:format value="${closedQuiz.timeSpent}"/></td>
-                        <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
-                        <c:choose>
-                            <c:when test="${fn:contains(notSingleClosedQuizzes, closedQuiz)}">
-                                <td><a href="/student/results/${closedQuiz.quizId}">Compare</a></td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </c:otherwise>
-    </c:choose>
-    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <div>
+        <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    </div>
 </div>
 <br>
 </body>

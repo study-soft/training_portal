@@ -34,9 +34,9 @@
             <th>Name</th>
             <th>Status</th>
         </tr>
-        <c:forEach items="${quizzes}" var="passedQuiz" varStatus="status">
+        <c:forEach items="${quizzes}" var="quiz" varStatus="status">
             <tr>
-                <td><a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.name}</a></td>
+                <td><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></td>
                 <td>${statusList[status.index]}</td>
             </tr>
         </c:forEach>

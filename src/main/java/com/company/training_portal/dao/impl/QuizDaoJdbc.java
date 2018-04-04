@@ -124,7 +124,7 @@ public class QuizDaoJdbc implements QuizDao {
         List<Quiz> quizzes = template.query(
                 FIND_QUIZZES_BY_STUDENT_ID,
                 new Object[]{studentId}, this::mapQuiz);
-        logger.info("Found quizzes by studentId: " + quizzes);
+        logger.info("Found quizzes by studentId:");
         quizzes.forEach(logger::info);
         return quizzes;
     }

@@ -130,17 +130,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${passedQuizzes}" var="passedQuiz">
+                <c:forEach items="${passedQuizzes}" var="quiz">
                     <tr>
                         <td>
-                            <a href="/student/quizzes/${passedQuiz.quizId}">${passedQuiz.quizName}</a>
+                            <a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a>
                         </td>
-                        <td>${passedQuiz.questionsNumber}</td>
-                        <td>${passedQuiz.score}</td>
-                        <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>
-                        <td>${passedQuiz.authorName}</td>
+                        <td>${quiz.questionsNumber}</td>
+                        <td>${quiz.score}</td>
+                        <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                        <td>${quiz.authorName}</td>
                         <td>
-                            <button type="submit" value="${passedQuiz.quizId}" class="success-button">
+                            <button type="submit" value="${quiz.quizId}" class="success-button">
                                 <i class="fa fa-close"></i> Close
                             </button>
                         </td>
@@ -171,13 +171,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${closedQuizzes}" var="closedQuiz">
+                <c:forEach items="${closedQuizzes}" var="quiz">
                     <tr>
-                        <td><a href="/student/quizzes/${closedQuiz.quizId}">${closedQuiz.quizName}</a></td>
-                        <td>${closedQuiz.questionsNumber}</td>
-                        <td>${closedQuiz.score}</td>
-                        <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
-                        <td>${closedQuiz.authorName}</td>
+                        <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                        <td>${quiz.questionsNumber}</td>
+                        <td>${quiz.score}</td>
+                        <td><localDateTime:format value="${quiz.submitDate}"/></td>
+                        <td>${quiz.authorName}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

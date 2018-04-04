@@ -90,18 +90,18 @@
                 <th style="width: 12.5%;">Closed</th>
                 <th style="width: 20%"></th>
             </tr>
-            <c:forEach items="${passedQuizzes}" var="passedQuiz" varStatus="status">
+            <c:forEach items="${passedQuizzes}" var="quiz" varStatus="status">
                 <c:set var="map" value="${quizStudents[status.index]}"/>
                 <tr>
                     <td>
-                        <a href="/teacher/results/group/${group.groupId}/quiz/${passedQuiz.quizId}">${passedQuiz.name}</a>
+                        <a href="/teacher/results/group/${group.groupId}/quiz/${quiz.quizId}">${quiz.name}</a>
                     </td>
                     <td>${map['TOTAL']}</td>
                     <td>${map['OPENED']}</td>
                     <td>${map['PASSED']}</td>
                     <td>${map['CLOSED']}</td>
                     <td>
-                        <button type="button" value="${passedQuiz.quizId}" class="danger-button">
+                        <button type="button" value="${quiz.quizId}" class="danger-button">
                             <i class="fa fa-close"></i> Close all
                         </button>
                     </td>
@@ -116,10 +116,10 @@
                 <th style="width: 50%">Name</th>
                 <th style="width: 50%">Closing date</th>
             </tr>
-            <c:forEach items="${closedQuizzes}" var="closedQuiz" varStatus="status">
+            <c:forEach items="${closedQuizzes}" var="quiz" varStatus="status">
                 <tr>
                     <td>
-                        <a href="/teacher/results/group/${group.groupId}/quiz/${closedQuiz.quizId}">${closedQuiz.name}</a>
+                        <a href="/teacher/results/group/${group.groupId}/quiz/${quiz.quizId}">${quiz.name}</a>
                     </td>
                     <td><localDateTime:format value="${closingDates[status.index]}"/></td>
                 </tr>

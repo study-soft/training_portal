@@ -212,7 +212,9 @@
             </c:forEach>
         </table>
     </c:if>
-    <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
+    <div>
+        <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
+    </div>
 
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"
          aria-labelledby="modalLabel" aria-hidden="true">

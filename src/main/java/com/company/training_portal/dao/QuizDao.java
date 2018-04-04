@@ -24,7 +24,7 @@ public interface QuizDao {
 
     List<Quiz> findPublishedQuizzes(Long teacherId);
 
-    List<Quiz> findGroupQuizzes(Long groupId, Long teacherId);
+    List<Quiz> findPublishedQuizzes(Long groupId, Long teacherId);
 
     List<Quiz> findStudentQuizzes(Long studentId);
 

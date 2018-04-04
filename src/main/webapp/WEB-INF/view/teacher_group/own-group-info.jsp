@@ -90,9 +90,18 @@
             <td>${studentsNumber}</td>
         </tr>
     </table>
-    <h3>Students</h3>
+    <h4>You gave next quizzes to this group</h4>
+    <table class="col-6 table-info">
+        <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
+            <tr>
+                <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
+                <td>${statuses[status.index]}</td>
+            </tr>
+        </c:forEach>
+    </table>
+    <h4>Students</h4>
     <c:choose>
-        <c:when test="${empty students}">
+        <c:when test="${empty studentsList}">
             <div class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
@@ -100,18 +109,14 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table id="studentsTable" class="table">
-                <tr>
-                    <th style="width: 50%">Name</th>
-                    <th style="width: 50%"></th>
-                </tr>
-                <c:forEach items="${students}" var="student" varStatus="status">
+            <table id="studentsTable" class="col-6 table-info">
+                <c:forEach items="${studentsList}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td id="studentName"><a
                                 href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
                         </td>
                         <td>
-                            <a href="/teacher/groups/${group.groupId}/delete-student">
+                            <a href="/teacher/groups/${group.groupId}/delete-student" class="danger">
                                 <i class="fa fa-user-times"></i> Delete
                             </a>
                             <input type="hidden" name="studentId" value="${student.userId}">

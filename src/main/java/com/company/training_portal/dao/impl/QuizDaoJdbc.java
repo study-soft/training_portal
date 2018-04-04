@@ -110,8 +110,8 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Quiz> findGroupQuizzes(Long groupId, Long teacherId) {
-        List<Quiz> quizzes = template.query(FIND_GROUP_QUIZZES,
+    public List<Quiz> findPublishedQuizzes(Long groupId, Long teacherId) {
+        List<Quiz> quizzes = template.query(FIND_PUBLISHED_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID,
                 new Object[]{groupId, teacherId}, this::mapQuiz);
         logger.info("Found quizzes by groupId '" + groupId + "':");
         quizzes.forEach(logger::info);
@@ -613,7 +613,7 @@ public class QuizDaoJdbc implements QuizDao {
     "WHERE QUIZZES.AUTHOR_ID = ? AND QUIZZES.TEACHER_QUIZ_STATUS = 'PUBLISHED' " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_GROUP_QUIZZES =
+    private static final String FIND_PUBLISHED_QUIZZES_BY_GROUP_ID_AND_TEACHER_ID =
     "SELECT DISTINCT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
     "QUIZZES.PASSING_TIME AS PASSING_TIME, QUIZZES.AUTHOR_ID AS AUTHOR_ID, " +

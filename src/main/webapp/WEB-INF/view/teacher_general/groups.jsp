@@ -51,11 +51,11 @@
     <table class="table">
         <thead>
         <tr>
-            <th style="width: 40%">Name</th>
+            <th style="width: 30%">Name</th>
             <th style="width: 20%">Students</th>
             <th style="width: 20%">Creation date</th>
-            <th style="width: 10%"></th>
-            <th style="width: 10%"></th>
+            <th style="width: 15%"></th>
+            <th style="width: 15%"></th>
         </tr>
         </thead>
         <tbody>
@@ -70,7 +70,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="/teacher/groups/${group.groupId}/delete">
+                    <a href="/teacher/groups/${group.groupId}/delete" class="danger">
                         <i class="fa fa-trash-o"></i> Delete
                     </a>
                 </td>
@@ -82,11 +82,10 @@
     <table class="table">
         <thead>
         <tr>
-            <th style="width: 40%">Name</th>
+            <th style="width: 30%">Name</th>
             <th style="width: 20%">Students</th>
             <th style="width: 20%">Creation date</th>
-            <th style="width: 10%"></th>
-            <th style="width: 10%"></th>
+            <th style="width: 30%">Author name</th>
         </tr>
         </thead>
         <tbody>
@@ -95,8 +94,7 @@
                 <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
                 <td>${studentsNumberForGroups[status.index]}</td>
                 <td><localDate:format value="${group.creationDate}"/></td>
-                <td></td>
-                <td></td>
+                <td>${authors[status.index].lastName} ${authors[status.index].firstName}</td>
             </tr>
         </c:forEach>
         </tbody>

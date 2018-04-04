@@ -25,7 +25,9 @@
     <h2>Create quiz</h2>
     <form:form action="/teacher/quizzes/create" method="post" modelAttribute="quiz">
         <div class="form-group">
-            <form:label path="name" for="name"><strong>Name</strong><span class="error">*</span></form:label>
+            <form:label path="name" for="name">
+                <strong>Name<span class="error">*</span></strong>
+            </form:label>
             <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="Name"/>
             <form:errors path="name" cssClass="error"/>
         </div>
@@ -55,13 +57,17 @@
             </div>
         </div>
         <div class="form-group">
-            <form:label path="description" for="description"><strong>Description</strong></form:label>
+            <form:label path="description" for="description">
+                <strong>Description</strong>
+            </form:label>
             <form:textarea path="description" cssClass="col col-md-6 form-control"
                            rows="6" id="description" placeholder="Description"/>
             <form:errors path="description" cssClass="error"/>
         </div>
         <div class="form-group">
-            <form:label path="explanation" for="explanation"><strong>Explanation</strong></form:label>
+            <form:label path="explanation" for="explanation">
+                <strong>Explanation</strong>
+            </form:label>
             <form:textarea path="explanation" cssClass="col col-md-6 form-control"
                            rows="6" id="explanation" placeholder="Explanation"/>
             <form:errors path="explanation" cssClass="error"/>

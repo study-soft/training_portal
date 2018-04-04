@@ -13,7 +13,9 @@
     <form action="/teacher/groups/create" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div>
-            <label for="name" class="col-form-label">Name<span class="error">*</span>:</label>
+            <label for="name" class="col-form-label">
+                <strong>Name<span class="error">*</span></strong>
+            </label>
         </div>
         <div>
             <input type="text" name="name" id="name" class="col-4 form-control">
@@ -21,7 +23,7 @@
             <span class="error">${groupExists}</span>
         </div>
         <div>
-            <label for="description" class="col-form-label">Description:</label>
+            <label for="description" class="col-form-label"><strong>Description</strong></label>
         </div>
         <div>
             <textarea rows="6" name="description" id="description" class="col-6 form-control"></textarea>

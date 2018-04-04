@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.model.enums.QuestionType.ONE_ANSWER;
-import static com.company.training_portal.model.enums.StudentQuizStatus.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
@@ -33,7 +32,6 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -166,7 +164,7 @@ public class QuizDaoJdbcTest {
         testGroupQuizzes.add(quizDao.findQuiz(1L));
         testGroupQuizzes.add(quizDao.findQuiz(11L));
 
-        List<Quiz> groupQuizzes = quizDao.findGroupQuizzes(1L, 1L);
+        List<Quiz> groupQuizzes = quizDao.findPublishedQuizzes(1L, 1L);
 
         assertEquals(testGroupQuizzes, groupQuizzes);
     }

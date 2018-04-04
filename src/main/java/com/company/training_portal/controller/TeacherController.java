@@ -101,9 +101,12 @@ public class TeacherController {
 
         List<Integer> studentsNumberForGroups = new ArrayList<>();
         List<Integer> studentsNumberForTeacherGroups = new ArrayList<>();
+        List<User> authors = new ArrayList<>();
         for (Group group : groups) {
             Integer studentsNumber = groupDao.findStudentsNumberInGroup(group.getGroupId());
             studentsNumberForGroups.add(studentsNumber);
+            User author = userDao.findUser(group.getAuthorId());
+            authors.add(author);
         }
         for (Group group : teacherGroups) {
             Integer studentsNumber = groupDao.findStudentsNumberInGroup(group.getGroupId());
@@ -112,6 +115,7 @@ public class TeacherController {
 
         model.addAttribute("groups", groups);
         model.addAttribute("studentsNumberForGroups", studentsNumberForGroups);
+        model.addAttribute("authors", authors);
         model.addAttribute("teacherGroups", teacherGroups);
         model.addAttribute("studentsNumberForTeacherGroups", studentsNumberForTeacherGroups);
 
@@ -128,11 +132,28 @@ public class TeacherController {
 
         Group group = groupDao.findGroup(groupId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
-        List<User> students = userDao.findStudents(groupId);
+        List<User> studentsList = userDao.findStudents(groupId);
+        List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(groupId, teacherId);
+
+        List<String> statuses = new ArrayList<>();
+        for (Quiz quiz : publishedQuizzes) {
+            Long quizId = quiz.getQuizId();
+            Integer studentsNumberForQuiz =
+                    userDao.findStudentsNumber(groupId, quizId);
+            Integer closedStudents =
+                    userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
+            if (closedStudents.equals(studentsNumberForQuiz)) {
+                statuses.add("Closed");
+            } else {
+                statuses.add("Passes");
+            }
+        }
 
         model.addAttribute("group", group);
         model.addAttribute("studentsNumber", studentsNumber);
-        model.addAttribute("students", students);
+        model.addAttribute("studentsList", studentsList);
+        model.addAttribute("publishedQuizzes", publishedQuizzes);
+        model.addAttribute("statuses", statuses);
 
         if (teacherGroupsIds.contains(groupId)) {
             return "teacher_group/own-group-info";
@@ -442,7 +463,7 @@ public class TeacherController {
     @RequestMapping("/teacher/results/group/{groupId}")
     public String showGroupResults(@ModelAttribute("teacherId") Long teacherId,
                                    @PathVariable("groupId") Long groupId, Model model) {
-        List<Quiz> groupQuizzes = quizDao.findGroupQuizzes(groupId, teacherId);
+        List<Quiz> groupQuizzes = quizDao.findPublishedQuizzes(groupId, teacherId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
         model.addAttribute("studentsNumber", studentsNumber);
 

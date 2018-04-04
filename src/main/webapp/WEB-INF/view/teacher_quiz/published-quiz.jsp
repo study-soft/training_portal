@@ -142,7 +142,11 @@
                                 <c:forEach items="${students[group.groupId]}" var="student">
                                     <div class="row">
                                         <div class="col-1"></div>
-                                        <div class="col-11">${student.lastName} ${student.firstName}</div>
+                                        <div class="col-11">
+                                            <a href="/teacher/students/${student.userId}">
+                                                    ${student.lastName} ${student.firstName}
+                                            </a>
+                                        </div>
                                     </div>
                                 </c:forEach>
                             </div>
@@ -159,7 +163,11 @@
                     </tr>
                     <c:forEach items="${studentsWithoutGroup}" var="student">
                         <tr>
-                            <td>${student.lastName} ${student.firstName}</td>
+                            <td>
+                                <a href="/teacher/students/${student.userId}">
+                                        ${student.lastName} ${student.firstName}
+                                </a>
+                            </td>
                         </tr>
                     </c:forEach>
                 </table>

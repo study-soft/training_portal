@@ -1,6 +1,7 @@
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -34,7 +35,12 @@
     <c:if test="${quiz.explanation ne null}">
         <div class="col-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
     </c:if>
-    <div><a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary">Back to quiz</a></div>
+    <sec:authorize access="hasRole('ROLE_STUDENT')">
+        <div><a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a></div>
+    </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_TEACHER')">
+        <div><a href="/teacher/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a></div>
+    </sec:authorize>
 </div>
 <br>
 </body>

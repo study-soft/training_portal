@@ -28,6 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return new SecurityUser(user.getLogin(), user.getPassword(), true,
                 true, true, true,
-                AuthorityUtils.createAuthorityList(user.getUserRole().getRole()), user.getUserId());
+                AuthorityUtils.createAuthorityList("ROLE_" + user.getUserRole().getRole()), user.getUserId());
     }
 }

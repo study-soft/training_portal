@@ -33,7 +33,7 @@
     </div>
     <div>
         <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
-        <a href="/student/quizzes/${openedQuiz.quizId}/initialize" class="btn btn-success">Start</a>
+        <a href="/quizzes/${openedQuiz.quizId}/initialize" class="btn btn-success">Start</a>
     </div>
 </div>
 <br>

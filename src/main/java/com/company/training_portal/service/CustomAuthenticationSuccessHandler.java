@@ -25,10 +25,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-            if (role.equals(UserRole.TEACHER.getRole())) {
+            if (role.equals("ROLE_TEACHER")) {
                 response.sendRedirect("/teacher");
                 return;
-            } else if (role.equals(UserRole.STUDENT.getRole())) {
+            } else if (role.equals("ROLE_STUDENT")) {
                 response.sendRedirect("/student");
                 return;
             }

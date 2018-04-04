@@ -3,10 +3,13 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.Quiz;
+import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUIZ;
 import static com.company.training_portal.controller.SessionAttributes.RESULT;
@@ -74,10 +79,15 @@ public class UserController {
     }
 
     @RequestMapping("/quiz-passing-logout")
-    public String writeResultToDB(@SessionAttribute("studentId") Long studentId,
+    public String writeResultToDB(@AuthenticationPrincipal SecurityUser securityUser,
+                                  @SessionAttribute("studentId") Long studentId,
                                   @SessionAttribute(value = CURRENT_QUIZ, required = false) Quiz quiz,
                                   @SessionAttribute(value = "result", required = false) Double result) {
-        if (result != null) {
+        List<String> userRoles = securityUser.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        if (userRoles.contains("ROLE_STUDENT") && result != null) {
             Long quizId = quiz.getQuizId();
             Integer attempt = quizDao.findAttempt(studentId, quizId);
             Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));

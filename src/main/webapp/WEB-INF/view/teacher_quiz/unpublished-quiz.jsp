@@ -156,7 +156,7 @@
     </div>
     <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
+    <a href="/quizzes/${unpublishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">
         <i class="fa fa-edit"></i> Edit
     </a>

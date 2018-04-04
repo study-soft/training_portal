@@ -32,7 +32,7 @@
 <div class="container">
     <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
     <h2>${sessionScope.currentQuiz.name}</h2>
-    <form action="/student/quizzes/${question.quizId}/passing" method="post">
+    <form action="/quizzes/${question.quizId}/passing" method="post">
         <div class="row">
             <div class="col-8">
                 Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
@@ -71,7 +71,7 @@
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -95,7 +95,7 @@
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -122,7 +122,7 @@
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -150,7 +150,7 @@
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -168,7 +168,7 @@
                     <div class="col-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
                 <div>Result: ${sessionScope.result}</div>
@@ -193,7 +193,7 @@
             <div class="modal-body"></div>
             <div class="modal-footer">
                 <form id="congratulationsForm" method="post"
-                      action="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
+                      action="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <input type="submit" id="yes" class="btn btn-primary" value="Yes">
                 </form>

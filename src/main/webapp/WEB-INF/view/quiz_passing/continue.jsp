@@ -12,8 +12,8 @@
     <h2>Attention</h2>
     <div>
         You should
-        <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing"> continue</a> or
-        <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"> finish</a>
+        <a href="/quizzes/${sessionScope.currentQuiz.quizId}/passing"> continue</a> or
+        <a href="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"> finish</a>
         <strong> ${sessionScope.currentQuiz.name}</strong> quiz
     </div>
     <div>You have answered only ${sessionScope.currentQuestionSerial} / ${sessionScope.questionsNumber} questions yet</div>

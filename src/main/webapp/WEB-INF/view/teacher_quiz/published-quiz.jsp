@@ -122,7 +122,7 @@
         Students will see explanation after all group close this quiz
     </div>
 
-    <h4>Groups and students where quiz was published</h4>
+    <h4>Groups and students to whom quiz was published</h4>
     <div class="row">
         <c:if test="${not empty groups}">
             <div class="col-6">
@@ -169,7 +169,7 @@
 
     <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="/teacher/quizzes/${publishedQuiz.quizId}/preview" class="btn btn-primary">Preview</a>
+    <a href="/quizzes/${publishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
 </div>
 <br>
 </body>

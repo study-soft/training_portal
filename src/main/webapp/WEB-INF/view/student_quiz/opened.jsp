@@ -14,8 +14,8 @@
                     event.preventDefault();
                     var currentQuestion = "${sessionScope.currentQuestionSerial}";
                     var questionsNumber = "${sessionScope.questionsNumber - 1}";
-                    var html = 'You should <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/passing">continue</a> ' +
-                        'or <a href="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">finish</a> ' +
+                    var html = 'You should <a href="/quizzes/${sessionScope.currentQuiz.quizId}/passing">continue</a> ' +
+                        'or <a href="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">finish</a> ' +
                         '<strong>' + currentQuiz + '</strong> quiz' +
                         '<br> You have answered only ' + currentQuestion + " / " +
                         questionsNumber + ' questions yet';
@@ -81,7 +81,7 @@
             <div class="modal-body"></div>
             <div class="modal-footer">
                 <form id="congratulationsForm" method="post"
-                      action="/student/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
+                      action="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <input type="submit" id="yes" class="btn btn-primary" value="Yes">
                 </form>

@@ -8,5 +8,4 @@ public class SessionAttributes {
     public static final String CURRENT_QUESTION_SERIAL = "currentQuestionSerial";
     public static final String CURRENT_QUIZ = "currentQuiz";
     public static final String TIME_LEFT = "timeLeft";
-    public static final String DELETED_QUIZ = "deletedQuiz";
 }

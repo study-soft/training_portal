@@ -9,9 +9,15 @@
     <script>
         $(document).ready(function () {
             $("button:contains(Close)").click(function () {
-                var studentName = $(this).val();
-                var studentId = $(this).parents("tr").attr("id").replace("selectedStudent", "");
-                $("#yes").val(studentId);
+                const studentId = $(this).val();
+                var firstTd = $(this).parent().siblings().first();
+                const studentName = firstTd.find("a").text();
+                const submitDate = firstTd.next().text();
+
+                $("#yes").data("studentId", studentId)
+                    .data("studentName", studentName)
+                    .data("submitDate", submitDate);
+
                 $(".modal-body").text("Are you sure you want to close " +
                     "'${quiz.name}' quiz to " + studentName + "?");
                 $("#modal").modal();
@@ -19,20 +25,81 @@
 
             $("#yes").click(function () {
                 $("#modal").modal("toggle");
-                var studentId = $("#yes").val();
+
+                const studentId = $(this).data("studentId");
+                const studentName = $(this).data("studentName");
+                const submitDate = $(this).data("submitDate");
+                const groupId = window.location.pathname.split("/")[4];
+
                 $.ajax({
                     type: "POST",
-                    url: "/teacher/results/group/${group.groupId}/quiz/${quiz.quizId}/close",
+                    url: "/teacher/results/group/" + groupId + "/quiz/${quiz.quizId}/close",
                     data: "studentId=" + studentId,
                     success: function (closedQuizInfo) {
-                        var selectedRow = $("#selectedStudent" + studentId).children();
-                        if (selectedRow.last().prev().text() === "OPENED") {
-                            for (var i = 0; i < 4; i++) {
-                                $(selectedRow[i + 1]).text(closedQuizInfo[i]);
+                        if ($("#closedQuizzes").length === 0) {
+                            $("#insertClosedQuizzesHere").after(
+                                '<h4>Closed</h4>\n' +
+                                '<table id="closedQuizzes" class="table">\n' +
+                                '    <tr>\n' +
+                                '        <th style="width: 18%">Name</th>\n' +
+                                '        <th style="width: 21%">Submitted</th>\n' +
+                                '        <th style="width: 21%;">Passed</th>\n' +
+                                '        <th style="width: 9%">Result</th>\n' +
+                                '        <th style="width: 9%">Attempt</th>\n' +
+                                '        <th style="width: 22%">Time spent</th>\n' +
+                                '    </tr>\n' +
+                                '</table>\n');
+                        }
+
+                        if (closedQuizInfo.length !== 0) {
+                            // closing opened quiz
+                            const finishDate = closedQuizInfo[0];
+                            const result = closedQuizInfo[1];
+                            const attempt = closedQuizInfo[2];
+                            const timeSpent = closedQuizInfo[3];
+
+                            $("#closedQuizzes").append(
+                                '<tr>\n' +
+                                '    <td>\n' +
+                                '        <a href="/teacher/students/' + studentId + '">' + studentName + '</a>\n' +
+                                '    </td>\n' +
+                                '    <td>' + submitDate + '</td>\n' +
+                                '    <td>' + finishDate + '</td>\n' +
+                                '    <td>' + result + '</td>\n' +
+                                '    <td>' + attempt + '</td>\n' +
+                                '    <td>' + timeSpent + '</td>\n' +
+                                '</tr>\n');
+
+                            const openedQuizzes = $("#openedQuizzes");
+                            openedQuizzes.find("a:contains(" + studentName + ")")
+                                .parents("tr").remove();
+                            if (openedQuizzes.find("tr").length === 1) {
+                                openedQuizzes.prev().remove();
+                                openedQuizzes.remove();
+                            }
+                        } else {
+                            // closing passed quiz
+                            const passedQuizzes = $("#passedQuizzes");
+                            const selectedRow = passedQuizzes
+                                .find("a:contains(" + studentName + ")")
+                                .parents("tr");
+                            const rowToInsert = selectedRow.clone();
+                            rowToInsert.find("td").last().remove();
+
+                            $("#closedQuizzes").append(rowToInsert);
+
+                            selectedRow.remove();
+                            if (passedQuizzes.find("tr").length === 1) {
+                                passedQuizzes.prev().remove();
+                                passedQuizzes.remove();
                             }
                         }
-                        selectedRow.last().empty();
-                        selectedRow.last().prev().text("CLOSED");
+
+                        if ($("#passedQuizzes").length === 0 && $("#openedQuizzes").length === 0) {
+                            $("#info").html('<img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '                     width="25" height="25" class="icon-one-row">\n' +
+                                '                All students in this group closed this quiz');
+                        }
                     }
                 });
             });
@@ -46,10 +113,10 @@
     <h2><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></h2>
     <c:choose>
         <c:when test="${not empty openedStudents or not empty passedStudents}">
-            <div class="highlight-primary">
+            <div id="info" class="highlight-primary">
                 <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                      width="25" height="25" class="icon-one-row">
-                There are students who pass this quiz with different quiz status
+                Here are students who pass this quiz with different quiz status
             </div>
         </c:when>
         <c:otherwise>
@@ -118,6 +185,7 @@
             </c:forEach>
         </table>
     </c:if>
+    <span id="insertClosedQuizzesHere"></span>
     <c:if test="${not empty closedStudents}">
         <h4>Closed</h4>
         <table id="closedQuizzes" class="table">
@@ -158,10 +226,8 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <form id="deleteForm" action="" method="post">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="button" id="yes" class="btn btn-primary" value="">Yes</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" id="yes" class="btn btn-primary" value="">Yes</button>
                 </div>
             </div>
         </div>

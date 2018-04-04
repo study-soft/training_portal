@@ -23,7 +23,7 @@
                         allChecked = false;
                     }
                 });
-                
+
                 var groupCheckbox = $(this).parents(".card").find("[id*='group']");
                 if (allChecked) {
                     groupCheckbox.prop("checked", true);
@@ -59,14 +59,28 @@
         <c:otherwise>
             <form id="publicationForm" action="/teacher/quizzes/${quiz.quizId}/publication" method="post">
                 <div class="row">
-                    <div class="col-4">
-                        <h4>Publication</h4>
-                    </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-share-square-o"></i> Publish
-                        </button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${quiz.teacherQuizStatus eq 'UNPUBLISHED'}">
+                            <div class="col-4">
+                                <h4>Publication</h4>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fa fa-share-square-o"></i> Publish
+                                </button>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="col-4">
+                                <h4>Republication</h4>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-success btn-wide">
+                                    <i class="fa fa-share-square-o"></i> Republish
+                                </button>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="highlight-primary">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"

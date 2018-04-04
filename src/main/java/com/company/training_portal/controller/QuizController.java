@@ -406,7 +406,8 @@ public class QuizController {
                                      String minutes,
                              @RequestParam(value = "seconds", required = false)
                                      String seconds,
-                             BindingResult bindingResult, ModelMap model) {
+                             BindingResult bindingResult, ModelMap model,
+                             RedirectAttributes redirectAttributes) {
         quizValidator.validate(quiz, bindingResult);
         if (enabled != null) {
             quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
@@ -444,18 +445,19 @@ public class QuizController {
                 .build();
 
         Long newQuizId = quizDao.addQuiz(newQuiz);
+        redirectAttributes.addFlashAttribute("createSuccess", true);
         model.clear();
 
-        return "redirect: /teacher/quizzes/" + newQuizId;
+        return "redirect:/teacher/quizzes/" + newQuizId;
     }
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/delete", method = RequestMethod.POST)
     public String deleteQuiz(@PathVariable("quizId") Long quizId,
                              @RequestParam("deletedQuiz") String deletedQuiz,
-                             HttpSession session) {
-        session.setAttribute(DELETED_QUIZ, deletedQuiz);
+                             RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("deletedQuiz", deletedQuiz);
         quizDao.deleteUnpublishedQuiz(quizId);
-        return "redirect: /teacher/quizzes";
+        return "redirect:/teacher/quizzes";
     }
 
     //    INTERNALS===================================================================

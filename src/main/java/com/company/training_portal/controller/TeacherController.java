@@ -4,7 +4,6 @@ import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
-import com.company.training_portal.model.enums.TeacherQuizStatus;
 import com.company.training_portal.util.Utils;
 import com.company.training_portal.validator.QuizValidator;
 import com.company.training_portal.validator.UserValidator;
@@ -31,7 +30,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.company.training_portal.controller.SessionAttributes.DELETED_QUIZ;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
@@ -145,11 +143,7 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
-                                     @SessionAttribute(value = DELETED_QUIZ, required = false)
-                                             String deletedQuiz,
                                      HttpSession session, Model model) {
-        model.addAttribute("deletedQuiz", deletedQuiz);
-        session.removeAttribute(DELETED_QUIZ);
         List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(teacherId);
         List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(teacherId);
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);

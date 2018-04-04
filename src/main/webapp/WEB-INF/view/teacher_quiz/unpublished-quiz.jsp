@@ -13,14 +13,21 @@
                 $("#edit-success").fadeIn("slow");
             }
 
+            var createSuccess = "${createSuccess}";
+            if (createSuccess) {
+                $("#edit-success").html('Quiz successfully created\n' +
+                    '        <button id="close" class="close">&times;</button>')
+                    .fadeIn("slow");
+            }
+
             $("#close").click(function () {
                 $("#edit-success").fadeOut("slow");
             });
 
             $("#back").click(function () {
                 var previousUri = document.referrer;
-                var createQuizUri = "http://" + "${header["host"]}" + "/teacher/quizzes/create";
-                var editQuizUri = "http://" + "${header["host"]}" + "/teacher/quizzes/" + ${unpublishedQuiz.quizId} +"/edit";
+                var createQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/create";
+                var editQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/" + ${unpublishedQuiz.quizId} +"/edit";
                 if (previousUri === createQuizUri || previousUri === editQuizUri) {
                     window.history.go(-2);
                 } else {

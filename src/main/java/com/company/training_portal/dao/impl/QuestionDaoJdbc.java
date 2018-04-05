@@ -98,34 +98,6 @@ public class QuestionDaoJdbc implements QuestionDao {
         return questionTypes;
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Question> findQuestions(Long quizId, Integer score) {
-        List<Question> questions = template.query(FIND_QUESTIONS_BY_QUIZ_ID_AND_SCORE,
-                new Object[]{quizId, score}, this::mapQuestion);
-        logger.info("Questions found by quizId and score:");
-        questions.forEach(logger::info);
-        return questions;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Integer findQuestionsNumber(Long quizId) {
-        Integer questionsNumber = template.queryForObject(FIND_QUESTIONS_NUMBER_BY_QUIZ_ID,
-                new Object[]{quizId}, Integer.class);
-        logger.info("Found questions number: " + questionsNumber);
-        return questionsNumber;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Integer findQuizScore(Long quizId) {
-        Integer score = template.queryForObject(FIND_QUIZ_SCORE_BY_QUIZ_ID,
-                new Object[]{quizId}, Integer.class);
-        logger.info("Found quiz score by quizId: " + score);
-        return score;
-    }
-
     @Transactional
     @Override
     public Long addQuestion(Question question) {

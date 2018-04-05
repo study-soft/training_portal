@@ -36,6 +36,7 @@ import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.util.Utils.formatDateTime;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
+import static java.util.Arrays.asList;
 
 @Controller
 @PropertySource("classpath:validationMessages.properties")
@@ -136,12 +137,14 @@ public class TeacherController {
         List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(groupId, teacherId);
 
         List<String> statuses = new ArrayList<>();
+        Map<Long, List<Integer>> studentsProgress = new HashMap<>();
         for (Quiz quiz : publishedQuizzes) {
             Long quizId = quiz.getQuizId();
             Integer studentsNumberForQuiz =
                     userDao.findStudentsNumber(groupId, quizId);
             Integer closedStudents =
                     userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
+            studentsProgress.put(quizId, asList(closedStudents, studentsNumberForQuiz));
             if (closedStudents.equals(studentsNumberForQuiz)) {
                 statuses.add("Closed");
             } else {
@@ -154,6 +157,7 @@ public class TeacherController {
         model.addAttribute("studentsList", studentsList);
         model.addAttribute("publishedQuizzes", publishedQuizzes);
         model.addAttribute("statuses", statuses);
+        model.addAttribute("studentsProgress", studentsProgress);
 
         if (teacherGroupsIds.contains(groupId)) {
             return "teacher_group/own-group-info";
@@ -198,19 +202,36 @@ public class TeacherController {
             case PUBLISHED:
                 List<Group> groups = groupDao.findGroupsForWhichPublished(quizId);
                 Map<Long, List<User>> students = new HashMap<>();
+                Map<Long, List<StudentQuizStatus>> statuses = new HashMap<>();
                 for (Group group : groups) {
                     Long groupId = group.getGroupId();
                     List<User> groupStudents =
                             userDao.findStudentsForWhomPublished(groupId, quizId);
                     students.put(groupId, groupStudents);
+                    List<StudentQuizStatus> statusList = new ArrayList<>();
+                    for (User student : groupStudents) {
+                        StudentQuizStatus status =
+                                quizDao.findStudentQuizStatus(student.getUserId(), quizId);
+                        statusList.add(status);
+                    }
+                    statuses.put(groupId, statusList);
                 }
+
                 List<User> studentsWithoutGroup =
                         userDao.findStudentsWithoutGroupForWhomPublished(quizId);
+                List<StudentQuizStatus> statusesWithoutGroup = new ArrayList<>();
+                for (User student : studentsWithoutGroup) {
+                    StudentQuizStatus status =
+                            quizDao.findStudentQuizStatus(student.getUserId(), quizId);
+                    statusesWithoutGroup.add(status);
+                }
 
                 model.addAttribute("publishedQuiz", quiz);
                 model.addAttribute("groups", groups);
                 model.addAttribute("students", students);
+                model.addAttribute("statuses", statuses);
                 model.addAttribute("studentsWithoutGroup", studentsWithoutGroup);
+                model.addAttribute("statusesWithoutGroup", statusesWithoutGroup);
 
                 return "teacher_quiz/published-quiz";
         }

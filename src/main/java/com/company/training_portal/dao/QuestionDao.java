@@ -17,15 +17,6 @@ public interface QuestionDao {
     // key: questionType, value: count of question type
     Map<QuestionType, Integer> findQuestionTypesAndCount(Long quizId);
 
-    @Deprecated(forRemoval = true)
-    List<Question> findQuestions(Long quizId, Integer score);
-
-    @Deprecated(forRemoval = true)
-    Integer findQuestionsNumber(Long quizId);
-
-    @Deprecated(forRemoval = true)
-    Integer findQuizScore(Long quizId);
-
     Long addQuestion(Question question);
 
     void editQuestion(Question question);

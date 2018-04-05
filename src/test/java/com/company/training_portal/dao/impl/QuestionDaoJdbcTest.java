@@ -103,35 +103,6 @@ public class QuestionDaoJdbcTest {
     }
 
     @Test
-    public void test_find_questions_by_quizId_and_score() {
-        List<Question> testQuestions = new ArrayList<>();
-        testQuestions.add(questionDao.findQuestion(1L));
-        testQuestions.add(questionDao.findQuestion(6L));
-        testQuestions.add(questionDao.findQuestion(11L));
-        testQuestions.add(questionDao.findQuestion(12L));
-
-        List<Question> questions = questionDao.findQuestions(1L, 1);
-
-        assertEquals(testQuestions, questions);
-    }
-
-    @Test
-    public void test_find_questions_number_by_quizId() {
-        List<Question> questions = questionDao.findQuestions(1L);
-        assertThat(questions.size(), is(questionDao.findQuestionsNumber(1L)));
-    }
-
-    @Test
-    public void test_find_quiz_score_by_quiz_id() {
-        Integer testScore = 0;
-        List<Question> questions = questionDao.findQuestions(1L);
-        for(Question question : questions) {
-            testScore += question.getScore();
-        }
-        assertThat(testScore, is(questionDao.findQuizScore(1L)));
-    }
-
-    @Test
     public void test_add_question() {
         Question testQuestion = new Question.QuestionBuilder()
                 .quizId(1L)

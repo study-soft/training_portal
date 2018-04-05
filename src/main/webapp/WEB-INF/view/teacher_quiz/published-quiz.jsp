@@ -139,13 +139,16 @@
                         <div id="collapse${group.groupId}" class="collapse"
                              aria-labelledby="heading${group.groupId}">
                             <div class="card-body">
-                                <c:forEach items="${students[group.groupId]}" var="student">
+                                <c:forEach items="${students[group.groupId]}" var="student" varStatus="status">
                                     <div class="row">
                                         <div class="col-1"></div>
-                                        <div class="col-11">
+                                        <div class="col-7">
                                             <a href="/teacher/students/${student.userId}">
                                                     ${student.lastName} ${student.firstName}
                                             </a>
+                                        </div>
+                                        <div class="col-4">
+                                            ${statuses[group.groupId][status.index]}
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -159,15 +162,17 @@
             <div class="col-6">
                 <table class="table">
                     <tr>
-                        <th>Students without group</th>
+                        <th style="width: 70%;">Students without group</th>
+                        <th style="width: 30%"></th>
                     </tr>
-                    <c:forEach items="${studentsWithoutGroup}" var="student">
+                    <c:forEach items="${studentsWithoutGroup}" var="student" varStatus="status">
                         <tr>
                             <td>
                                 <a href="/teacher/students/${student.userId}">
                                         ${student.lastName} ${student.firstName}
                                 </a>
                             </td>
+                            <td>${statusesWithoutGroup[status.index]}</td>
                         </tr>
                     </c:forEach>
                 </table>

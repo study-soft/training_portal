@@ -104,8 +104,6 @@ public class QuizController {
     public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
-        Integer numberOfQuestions = questionDao.findQuestionsNumber(quizId);
-        model.addAttribute("numberOfQuestions", numberOfQuestions);
 
         List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
         List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);

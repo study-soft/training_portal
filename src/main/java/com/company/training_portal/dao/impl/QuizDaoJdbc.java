@@ -499,6 +499,12 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("Closed quiz by groupId = " + groupId + " and quizId = " + quizId);
     }
 
+    @Override
+    public void closeQuizToAll(Long teacherId) {
+        template.update(CLOSE_QUIZ_TO_ALL_BY_TEACHER_ID, teacherId);
+        logger.info("Closed quiz to all by teacherId '" + teacherId + "'");
+    }
+
     @Transactional
     @Override
     public void deleteUnpublishedQuiz(Long quizId) {
@@ -842,7 +848,14 @@ public class QuizDaoJdbc implements QuizDao {
     private static final String CLOSE_QUIZ_TO_GROUP =
     "UPDATE USER_QUIZ_JUNCTIONS " +
     "SET STUDENT_QUIZ_STATUS = 'CLOSED' " +
-    "WHERE USER_ID IN (SELECT USER_ID FROM USERS WHERE GROUP_ID = ?) AND QUIZ_ID = ?;";
+    "WHERE USER_ID IN (SELECT USER_ID FROM USERS WHERE GROUP_ID = ?) AND QUIZ_ID = ? " +
+    "AND STUDENT_QUIZ_STATUS IN ('OPENED', 'PASSED');";
+
+    private static final String CLOSE_QUIZ_TO_ALL_BY_TEACHER_ID =
+    "UPDATE USER_QUIZ_JUNCTIONS J " +
+    "SET STUDENT_QUIZ_STATUS = 'CLOSED' " +
+    "WHERE J.QUIZ_ID IN (SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?) " +
+    "AND STUDENT_QUIZ_STATUS IN ('OPENED', 'PASSED');";
 
     private static final String DELETE_UNPUBLISHED_QUIZ =
     "DELETE FROM QUIZZES WHERE QUIZ_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED';";

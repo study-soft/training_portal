@@ -897,7 +897,7 @@
     <div id="pageHeaderRow" class="row">
         <div class="col-6">
             <c:choose>
-                <c:when test="${numberOfQuestions ne 0}">
+                <c:when test="${quiz.questionsNumber ne 0}">
                     <h2>Answers for quiz '${quiz.name}'</h2>
                 </c:when>
                 <c:otherwise>

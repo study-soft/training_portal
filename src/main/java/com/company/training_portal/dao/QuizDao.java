@@ -7,7 +7,6 @@ import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.TeacherQuizStatus;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ public interface QuizDao {
 
     List<Quiz> findStudentQuizzes(Long studentId);
 
+    @Deprecated
     Integer findQuizzesNumber(Long authorId);
 
     // key: studentQuizStatus, value: number of students
@@ -35,6 +35,7 @@ public interface QuizDao {
             Long authorId, Long groupId, Long quizId);
 
     // key: teacherQuizStatus, value: number of quizzes
+    @Deprecated
     Map<TeacherQuizStatus, Integer> findQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId);
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);
@@ -79,6 +80,7 @@ public interface QuizDao {
 
     Long addQuiz(Quiz quiz);
 
+    // Need test
     void editStartDate(LocalDateTime startDate, Long studentId, Long quizId);
 
     void editStudentInfoAboutOpenedQuiz(Long studentId, Long quizId,
@@ -95,6 +97,8 @@ public interface QuizDao {
     void closeQuizToStudent(Long studentId, Long quizId);
 
     void closeQuizToGroup(Long groupId, Long quizId);
+
+    void closeQuizToAll(Long teacherId);
 
     void deleteUnpublishedQuiz(Long quizId);
 }

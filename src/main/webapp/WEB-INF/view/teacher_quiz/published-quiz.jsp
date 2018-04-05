@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,7 +9,7 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var publicationSuccess = "${publicationSuccess}";
+            const publicationSuccess = "${publicationSuccess}";
             if (publicationSuccess) {
                 $("#publication-success").fadeIn("slow");
             }
@@ -18,8 +19,8 @@
             });
 
             $("#back").click(function () {
-                var previousUri = document.referrer;
-                var publicationUri = "http://${header["host"]}${pageContext.request.contextPath}" +
+                const previousUri = document.referrer;
+                const publicationUri = "http://${header["host"]}${pageContext.request.contextPath}" +
                     "/teacher/quizzes/${publishedQuiz.quizId}/publication";
 
                 if (previousUri === publicationUri) {
@@ -27,6 +28,51 @@
                 } else {
                     window.history.go(-1);
                 }
+            });
+
+            $("#unpublish").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "${publishedQuiz.quizId}/students-number",
+                    error: function (xhr) {
+                        alert("Some error. See log in console");
+                        console.log(xhr.responseText);
+                    },
+                    success: function (studentsNumber) {
+                        const closedStudents = studentsNumber.closedStudents;
+                        const totalStudents = studentsNumber.totalStudents;
+                        const modalBody = $(".modal-body");
+                        if (closedStudents === totalStudents) {
+                            modalBody.text("All students have closed this quiz. \n" +
+                                "If you unpublish it results of all students will be lost. Continue?");
+                        } else {
+                            modalBody.text("Only " + closedStudents + " / " + totalStudents + " students " +
+                                "closed this quiz. If you unpublish it, the results of all students " +
+                                "will be lost and the remaining students will not be able " +
+                                "to pass this quiz. Continue?");
+                        }
+                        modalBody.append(
+                            '<br>\n' +
+                            '<br>\n' +
+                            '<div class="col-9 form-group">\n' +
+                            '    <label class="col-form-label" for="password">Enter password to confirm action</label>\n' +
+                            '    <input type="password" class="form-control modal-input" id="password" name="password">\n' +
+                            '</div>');
+                        $("#modal").modal();
+                    }
+                });
+            });
+
+            $("#unpublishForm").submit(function () {
+                const password = "${password}";
+                const inputPassword = $("#password").val();
+                if (inputPassword !== password) {
+                    const modalBody = $(".modal-body");
+                    modalBody.find(".error").remove();
+                    modalBody.append('<div class="error">Incorrect password</div>');
+                    return false;
+                }
+                return true;
             });
         });
     </script>
@@ -52,7 +98,7 @@
                class="btn btn-success btn-wide">Publish again</a>
         </div>
         <div class="col-auto">
-            <a href="#" class="btn btn-danger">Unpublish</a>
+            <button type="button" id="unpublish" class="btn btn-danger">Unpublish</button>
         </div>
         <div class="col-4"></div>
     </div>
@@ -148,7 +194,7 @@
                                             </a>
                                         </div>
                                         <div class="col-4">
-                                            ${statuses[group.groupId][status.index]}
+                                                ${statuses[group.groupId][status.index]}
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -185,5 +231,26 @@
     <a href="/quizzes/${publishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
 </div>
 <br>
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title red" id="modalLabel">Danger</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <form id="unpublishForm" action="/teacher/quizzes/${publishedQuiz.quizId}/unpublish" method="post">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" id="yes" class="btn btn-primary">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -34,6 +34,7 @@ import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
+import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 import static com.company.training_portal.util.Utils.formatDateTime;
 import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 import static java.util.Arrays.asList;
@@ -232,6 +233,7 @@ public class TeacherController {
                 model.addAttribute("statuses", statuses);
                 model.addAttribute("studentsWithoutGroup", studentsWithoutGroup);
                 model.addAttribute("statusesWithoutGroup", statusesWithoutGroup);
+                model.addAttribute("password", userDao.findUser(teacherId).getPassword());
 
                 return "teacher_quiz/published-quiz";
         }
@@ -724,6 +726,22 @@ public class TeacherController {
         redirectAttributes.addFlashAttribute("publicationSuccess", true);
 
         return "redirect:/teacher/quizzes/" + quizId;
+    }
+    
+    @RequestMapping(value = "teacher/quizzes/{quizId}/students-number", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Integer> getStudentsNumber(@PathVariable("quizId") Long quizId) {
+        Map<String, Integer> studentsNumber = new HashMap<>();
+        studentsNumber.put("closedStudents", userDao.findStudentsNumberWhoClosedQuiz(quizId));
+        studentsNumber.put("totalStudents", userDao.findStudentsNumberToWhomQuizWasPublished(quizId));
+        return studentsNumber;
+    }
+
+    @RequestMapping(value = "teacher/quizzes/{quizId}/unpublish", method = RequestMethod.POST)
+    public String unpublishQuiz(@PathVariable("quizId") Long quizId) {
+        quizDao.deleteStudentsInfoAboutQuiz(quizId);
+        quizDao.editTeacherQuizStatus(UNPUBLISHED, quizId);
+        return "redirect:/teacher/quizzes/{quizId}";
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")

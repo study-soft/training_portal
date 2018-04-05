@@ -165,6 +165,10 @@ h5, h6 {
     color: red;
 }
 
+.red {
+    color: red;
+}
+
 .accordion-header {
     background-color: #0380ff;
     color: white;
@@ -211,6 +215,10 @@ h5, h6 {
     margin: 10px 0;
 }
 
+.modal-input {
+    border: 1px solid #7C8994;
+}
+
 /********************* ICONS ************************/
 
 .icon-one-row {
@@ -239,16 +247,6 @@ h5, h6 {
     font-size: 24px;
     position: relative;
     top: 3px;
-}
-
-.arrow-up {
-    position: relative;
-    margin-top: 2px;
-}
-
-.arrow-down {
-    position: relative;
-    margin-top: 2px;
 }
 
 /********************* BOOTSTRAP OVERRIDING *********************/

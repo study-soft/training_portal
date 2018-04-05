@@ -101,4 +101,6 @@ public interface QuizDao {
     void closeQuizToAll(Long teacherId);
 
     void deleteUnpublishedQuiz(Long quizId);
+
+    void deleteStudentsInfoAboutQuiz(Long quizId);
 }

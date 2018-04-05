@@ -232,6 +232,26 @@ public class UserDaoJdbc implements UserDao {
         return studentsNumber;
     }
 
+    @Override
+    public Integer findStudentsNumberToWhomQuizWasPublished(Long quizId) {
+        Integer studentsNumber = template.queryForObject(
+                FIND_STUDENTS_NUMBER_TO_WHOM_QUIZ_WAS_PUBLISHED,
+                new Object[]{quizId}, Integer.class);
+        logger.info("Found students number to whom quiz was published by quizId = " +
+                quizId + ": " + studentsNumber);
+        return studentsNumber;
+    }
+
+    @Override
+    public Integer findStudentsNumberWhoClosedQuiz(Long quizId) {
+        Integer studentsNumber = template.queryForObject(
+                FIND_STUDENTS_NUMBER_WHO_CLOSED_QUIZ,
+                new Object[]{quizId}, Integer.class);
+        logger.info("Found students number who closed quiz by quizId = " +
+                quizId + ": " + studentsNumber);
+        return studentsNumber;
+    }
+
     @Transactional(readOnly = true)
     @Override
     public Integer findStudentsNumber(Long groupId, Long quizId) {
@@ -556,6 +576,13 @@ public class UserDaoJdbc implements UserDao {
 
     private static final String FIND_STUDENTS_NUMBER =
     "SELECT COUNT(USER_ID) FROM USERS WHERE USER_ROLE = 'STUDENT';";
+
+    private static final String FIND_STUDENTS_NUMBER_TO_WHOM_QUIZ_WAS_PUBLISHED =
+    "SELECT COUNT(USER_ID) FROM USER_QUIZ_JUNCTIONS WHERE QUIZ_ID = ?;";
+
+    private static final String FIND_STUDENTS_NUMBER_WHO_CLOSED_QUIZ =
+    "SELECT COUNT(USER_ID) FROM USER_QUIZ_JUNCTIONS " +
+    "WHERE QUIZ_ID = ? AND STUDENT_QUIZ_STATUS = 'CLOSED';";
 
     private static final String FIND_STUDENTS_NUMBER_BY_GROUP_ID_AND_QUIZ_ID =
     "SELECT COUNT(USERS.USER_ID) " +

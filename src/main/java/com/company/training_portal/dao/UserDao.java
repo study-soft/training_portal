@@ -55,6 +55,10 @@ public interface UserDao {
     @Deprecated(forRemoval = true)
     Integer findStudentsNumber();
 
+    Integer findStudentsNumberToWhomQuizWasPublished(Long quizId);
+
+    Integer findStudentsNumberWhoClosedQuiz(Long quizId);
+
     Integer findStudentsNumber(Long groupId, Long quizId);
 
     @Deprecated(forRemoval = true)

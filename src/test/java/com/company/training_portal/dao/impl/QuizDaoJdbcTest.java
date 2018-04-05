@@ -604,4 +604,10 @@ public class QuizDaoJdbcTest {
         quizDao.deleteUnpublishedQuiz(10L);
         quizDao.findQuiz(10L);
     }
+
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void test_delete_students_info_about_quiz() {
+        quizDao.deleteStudentsInfoAboutQuiz(1L);
+        quizDao.findResult(4L, 1L);
+    }
 }

@@ -238,9 +238,15 @@ public class UserDaoJdbcTest {
     }
 
     @Test
-    public void test_find_teachers_number() {
-        Integer teachersNumber = userDao.findTeachersNumber();
-        assertThat(teachersNumber, is(2));
+    public void test_find_students_number_to_whom_quiz_was_published() {
+        Integer studentsNumber = userDao.findStudentsNumberToWhomQuizWasPublished(1L);
+        assertThat(studentsNumber, is(7));
+    }
+
+    @Test
+    public void test_find_students_number_who_closed_quiz() {
+        Integer studentsNumber = userDao.findStudentsNumberWhoClosedQuiz(1L);
+        assertThat(studentsNumber, is(3));
     }
 
     @Test
@@ -250,6 +256,12 @@ public class UserDaoJdbcTest {
 
         assertThat(studentsNumber1, is(6));
         assertThat(studentsNumber2, is(2));
+    }
+
+    @Test
+    public void test_find_teachers_number() {
+        Integer teachersNumber = userDao.findTeachersNumber();
+        assertThat(teachersNumber, is(2));
     }
 
     @Test

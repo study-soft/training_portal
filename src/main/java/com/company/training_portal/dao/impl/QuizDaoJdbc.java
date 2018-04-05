@@ -513,6 +513,12 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("Deleted quiz with quizId " + quizId);
     }
 
+    @Override
+    public void deleteStudentsInfoAboutQuiz(Long quizId) {
+        template.update(DELETE_STUDENTS_INFO_ABOUT_QUIZ, quizId);
+        logger.info("Deleted students info about quiz by quizId = " + quizId);
+    }
+
     private Quiz mapQuiz(ResultSet rs, int rowNum) throws SQLException {
         return new Quiz.QuizBuilder()
                 .quizId(rs.getLong("quiz_id"))
@@ -859,4 +865,7 @@ public class QuizDaoJdbc implements QuizDao {
 
     private static final String DELETE_UNPUBLISHED_QUIZ =
     "DELETE FROM QUIZZES WHERE QUIZ_ID = ? AND TEACHER_QUIZ_STATUS = 'UNPUBLISHED';";
+
+    private static final String DELETE_STUDENTS_INFO_ABOUT_QUIZ =
+    "DELETE FROM USER_QUIZ_JUNCTIONS WHERE QUIZ_ID = ?;";
 }

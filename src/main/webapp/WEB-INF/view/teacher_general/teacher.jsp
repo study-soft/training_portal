@@ -7,13 +7,13 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var editSuccess = "${editSuccess}";
+            const editSuccess = "${editSuccess}";
             if (editSuccess) {
-                $("#edit-success").fadeIn("slow");
+                $("#update-success").fadeIn("slow");
             }
 
             $("#close").click(function () {
-                $("#edit-success").fadeOut("slow");
+                $("#update-success").fadeOut("slow");
             });
 
             $("#switcher").click(function (event) {
@@ -31,7 +31,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="update-success" class="col-5 mx-auto text-center correct update-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>

@@ -98,8 +98,6 @@ public interface QuizDao {
 
     void closeQuizToGroup(Long groupId, Long quizId);
 
-    void closeQuizToAll(Long teacherId);
-
     void deleteUnpublishedQuiz(Long quizId);
 
     void deleteStudentsInfoAboutQuiz(Long quizId);

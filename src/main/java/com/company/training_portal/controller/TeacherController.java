@@ -169,11 +169,14 @@ public class TeacherController {
 
     @RequestMapping("/teacher/quizzes")
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
-                                     HttpSession session, Model model) {
+                                     Model model) {
         List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(teacherId);
         List<Quiz> publishedQuizzes = quizDao.findPublishedQuizzes(teacherId);
+        String password = userDao.findUser(teacherId).getPassword();
+
         model.addAttribute("unpublishedQuizzes", unpublishedQuizzes);
         model.addAttribute("publishedQuizzes", publishedQuizzes);
+        model.addAttribute("password", password);
 
         return "teacher_general/quizzes";
     }
@@ -737,11 +740,23 @@ public class TeacherController {
         return studentsNumber;
     }
 
-    @RequestMapping(value = "teacher/quizzes/{quizId}/unpublish", method = RequestMethod.POST)
-    public String unpublishQuiz(@PathVariable("quizId") Long quizId) {
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/unpublish", method = RequestMethod.POST)
+    public String unpublishQuiz(@PathVariable("quizId") Long quizId,
+                                RedirectAttributes redirectAttributes) {
         quizDao.deleteStudentsInfoAboutQuiz(quizId);
         quizDao.editTeacherQuizStatus(UNPUBLISHED, quizId);
+        redirectAttributes.addFlashAttribute("unpublishSuccess", true);
         return "redirect:/teacher/quizzes/{quizId}";
+    }
+
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/unpublish-from-quizzes", method = RequestMethod.POST)
+    public String unpublishQuizFromQuizzes(@PathVariable("quizId") Long quizId,
+                                           RedirectAttributes redirectAttributes) {
+        quizDao.deleteStudentsInfoAboutQuiz(quizId);
+        quizDao.editTeacherQuizStatus(UNPUBLISHED, quizId);
+        String unpublishedQuizName = quizDao.findQuiz(quizId).getName();
+        redirectAttributes.addFlashAttribute("unpublishedQuiz", unpublishedQuizName);
+        return "redirect:/teacher/quizzes";
     }
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")

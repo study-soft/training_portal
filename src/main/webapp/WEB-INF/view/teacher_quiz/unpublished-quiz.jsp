@@ -8,26 +8,32 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var editSuccess = "${editSuccess}";
+            const editSuccess = "${editSuccess}";
+            const unpublishSuccess = "${unpublishSuccess}";
             if (editSuccess) {
-                $("#edit-success").fadeIn("slow");
+                $("#update-success").fadeIn("slow");
+            }
+            if (unpublishSuccess) {
+                $("#update-success").html(
+                    'Quiz successfully unpublished\n' +
+                    '<button id="close" class="close">&times;</button>').fadeIn("slow");
             }
 
-            var createSuccess = "${createSuccess}";
+            const createSuccess = "${createSuccess}";
             if (createSuccess) {
-                $("#edit-success").html('Quiz successfully created\n' +
+                $("#update-success").html('Quiz successfully created\n' +
                     '        <button id="close" class="close">&times;</button>')
                     .fadeIn("slow");
             }
 
             $("#close").click(function () {
-                $("#edit-success").fadeOut("slow");
+                $("#update-success").fadeOut("slow");
             });
 
             $("#back").click(function () {
-                var previousUri = document.referrer;
-                var createQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/create";
-                var editQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/" + ${unpublishedQuiz.quizId} +"/edit";
+                const previousUri = document.referrer;
+                const createQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/create";
+                const editQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/" + ${unpublishedQuiz.quizId} +"/edit";
                 if (previousUri === createQuizUri || previousUri === editQuizUri) {
                     window.history.go(-2);
                 } else {
@@ -36,7 +42,7 @@
             });
 
             $("#delete").click(function () {
-                var quizName = $(this).siblings("h2").text();
+                const quizName = $(this).siblings("h2").text();
                 $("#yes").val(quizName);
                 $("#deleteForm").attr("action", "/teacher/quizzes/${unpublishedQuiz.quizId}/delete");
                 $(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
@@ -48,7 +54,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="update-success" class="col-5 mx-auto text-center correct update-success">
         Quiz information successfully changed
         <button id="close" class="close">&times;</button>
     </div>

@@ -8,28 +8,93 @@
     <script>
         $(document).ready(function () {
             $("input[type=search]").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
+                const value = $(this).val().toLowerCase();
                 $("tbody tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
 
             $("button:contains(Delete)").click(function () {
-                var quizName = $(this).parent("td").siblings().first().text();
-                var quizId = $(this).val();
+                const quizName = $(this).parent("td").siblings().first().text();
+                const quizId = $(this).val();
                 $("#yes").val(quizName);
                 $("#deleteForm").attr("action", "/teacher/quizzes/" + quizId + "/delete");
+                $("#modalLabel").removeClass("red").text("Attention");
                 $(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
                 $("#modal").modal();
             });
 
-            var deletedQuiz = "${deletedQuiz}";
+            const deletedQuiz = "${deletedQuiz}";
+            const unpublishedQuiz = "${unpublishedQuiz}";
             if (deletedQuiz) {
-                $("#delete-success").fadeIn("slow");
+                $("#delete-success").html(
+                    'Quiz \'${deletedQuiz}\' was successfully deleted\n' +
+                    '<button id="close" class="close">&times;</button>').fadeIn("slow");
+            }
+            if (unpublishedQuiz) {
+                $("#delete-success").html(
+                    'Quiz \'${unpublishedQuiz}\' was successfully unpublished\n' +
+                    '<button id="close" class="close">&times;</button>').fadeIn("slow");
             }
 
             $("#close").click(function () {
                 $("#delete-success").fadeOut("slow");
+            });
+
+            $("a:contains(Unpublish)").click(function (event) {
+                event.preventDefault();
+                const unpublishUrl = $(this).attr("href");
+                const quizId = unpublishUrl.split("/")[3];
+                $("#deleteForm").data("quizId", quizId).data("unpublication", true);
+
+                $.ajax({
+                    type: "GET",
+                    url: unpublishUrl,
+                    error: function (xhr) {
+                        alert("Some error. See log in console");
+                        console.log(xhr.responseText);
+                    },
+                    success: function (studentsNumber) {
+                        const closedStudents = studentsNumber.closedStudents;
+                        const totalStudents = studentsNumber.totalStudents;
+                        const modalBody = $(".modal-body");
+                        $("#modalLabel").addClass("red").text("Danger");
+                        if (closedStudents === totalStudents) {
+                            modalBody.text("All students have closed this quiz. \n" +
+                                "If you unpublish it results of all students will be lost. Continue?");
+                        } else {
+                            modalBody.text("Only " + closedStudents + " / " + totalStudents + " students " +
+                                "closed this quiz. If you unpublish it, the results of all students " +
+                                "will be lost and the remaining students will not be able " +
+                                "to pass this quiz. Continue?");
+                        }
+                        modalBody.append(
+                            '<br>\n' +
+                            '<br>\n' +
+                            '<div class="col-9 form-group">\n' +
+                            '    <label class="col-form-label" for="password">Enter password to confirm action</label>\n' +
+                            '    <input type="password" class="form-control modal-input" id="password" name="password">\n' +
+                            '</div>');
+                        $("#modal").modal();
+                    }
+                });
+            });
+
+            $("#deleteForm").submit(function () {
+                if ($(this).data("unpublication")) {
+                    $(this).removeData("unpublication");
+                    const password = "${password}";
+                    const inputPassword = $("#password").val();
+                    if (inputPassword !== password) {
+                        const modalBody = $(".modal-body");
+                        modalBody.find(".error").remove();
+                        modalBody.append('<div class="error">Incorrect password</div>');
+                        return false;
+                    }
+                    const quizId = $(this).data("quizId");
+                    $(this).attr("action", "/teacher/quizzes/" + quizId + "/unpublish-from-quizzes");
+                    return true;
+                }
             });
         });
     </script>
@@ -135,7 +200,11 @@
                                 <i class="fa fa-share-square-o"></i> Publish again
                             </a>
                         </td>
-                        <td><a href="#" class="danger"><i class="fa fa-close"></i> Unpublish</a></td>
+                        <td>
+                            <a href="/teacher/quizzes/${publishedQuiz.quizId}/students-number" class="danger">
+                                <i class="fa fa-close"></i> Unpublish
+                            </a>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>

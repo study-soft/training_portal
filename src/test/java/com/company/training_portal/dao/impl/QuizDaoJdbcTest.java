@@ -570,35 +570,6 @@ public class QuizDaoJdbcTest {
         }
     }
 
-    @Test
-    public void test_close_quiz_to_all_by_teacherId() {
-        quizDao.closeQuizToAll(1L);
-        List<User> students = userDao.findStudentsWithoutGroup(1L);
-        List<Group> groups = groupDao.findGroups(1L);
-        for (Group group : groups) {
-            List<User> groupStudents = userDao.findStudents(group.getGroupId());
-            students.addAll(groupStudents);
-        }
-        for (User student : students) {
-            Long studentId = student.getUserId();
-            List<Quiz> studentQuizzes = quizDao.findStudentQuizzes(studentId);
-            List<Long> studentQuizIds = studentQuizzes
-                    .stream()
-                    .map(Quiz::getQuizId)
-                    .collect(Collectors.toList());
-            List<Quiz> teacherQuizzes = quizDao.findPublishedQuizzes(1L);
-            List<Long> teacherQuizIds = teacherQuizzes
-                    .stream()
-                    .map(Quiz::getQuizId)
-                    .collect(Collectors.toList());
-            studentQuizIds.retainAll(teacherQuizIds);
-            for (Long quizId : studentQuizIds) {
-                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-                assertThat(status, is(CLOSED));
-            }
-        }
-    }
-
     @Test(expected = EmptyResultDataAccessException.class)
     public void test_delete_unpublished_quiz() {
         quizDao.deleteUnpublishedQuiz(10L);

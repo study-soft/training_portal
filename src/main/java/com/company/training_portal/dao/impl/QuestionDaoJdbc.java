@@ -133,15 +133,21 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Override
     public void deleteQuestion(Long questionId) {
         Question question = findQuestion(questionId);
-        if (question.getQuestionType().equals(QuestionType.ONE_ANSWER) ||
-                question.getQuestionType().equals(QuestionType.FEW_ANSWERS)) {
-            answerSimpleDao.deleteAnswersSimple(questionId);
-        } else if (question.getQuestionType().equals(QuestionType.ACCORDANCE)) {
-            answerAccordanceDao.deleteAnswerAccordance(questionId);
-        } else if (question.getQuestionType().equals(QuestionType.SEQUENCE)) {
-            answerSequenceDao.deleteAnswerSequence(questionId);
-        } else if (question.getQuestionType().equals(QuestionType.NUMBER)) {
-            answerNumberDao.deleteAnswerNumber(questionId);
+        switch (question.getQuestionType()) {
+            case ONE_ANSWER:
+                answerSimpleDao.deleteAnswersSimple(questionId);
+                break;
+            case FEW_ANSWERS:
+                answerSimpleDao.deleteAnswersSimple(questionId);
+                break;
+            case ACCORDANCE:
+                answerAccordanceDao.deleteAnswerAccordance(questionId);
+                break;
+            case SEQUENCE:
+                answerSequenceDao.deleteAnswerSequence(questionId);
+            case NUMBER:
+                answerNumberDao.deleteAnswerNumber(questionId);
+                break;
         }
         template.update(DELETE_QUESTION, questionId);
         logger.info("Deleted questions with questionId: " + questionId);

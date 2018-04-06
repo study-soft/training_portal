@@ -18,7 +18,7 @@
             </label>
         </div>
         <div>
-            <input type="text" name="name" id="name" class="col-4 form-control">
+            <input type="text" name="name" id="name" class="col-md-4 form-control">
             <span class="error">${emptyName}</span>
             <span class="error">${groupExists}</span>
         </div>
@@ -26,7 +26,7 @@
             <label for="description" class="col-form-label"><strong>Description</strong></label>
         </div>
         <div>
-            <textarea rows="6" name="description" id="description" class="col-6 form-control"></textarea>
+            <textarea rows="6" name="description" id="description" class="col-lg-6 form-control"></textarea>
         </div>
         <h3>Students to add:</h3>
         <c:choose>

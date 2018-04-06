@@ -34,20 +34,20 @@
     <h2>${sessionScope.currentQuiz.name}</h2>
     <form action="/quizzes/${question.quizId}/passing" method="post">
         <div class="row">
-            <div class="col-8">
+            <div class="col-sm-8">
                 Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
             </div>
-            <div class="col-4">
+            <div class="col-sm-4">
                 <c:if test="${sessionScope.timeLeft ne null}">
                     Time left: <duration:format value="${sessionScope.timeLeft}"/>
                 </c:if>
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
+            <div class="col-sm-8">
                 <h5>${question.body}</h5>
             </div>
-            <div class="col-4">
+            <div class="col-sm-4">
                 <h6>${question.score} points</h6>
             </div>
         </div>
@@ -64,11 +64,11 @@
                     <br>
                 </c:forEach>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
                         <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
@@ -88,11 +88,11 @@
                     <br>
                 </c:forEach>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
                         <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
@@ -103,8 +103,8 @@
             <c:when test="${question.questionType eq 'ACCORDANCE'}">
                 <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
                     <div class="row">
-                        <div class="col-4">${left}</div>
-                        <div class="col-4">
+                        <div class="col-md-4">${left}</div>
+                        <div class="col-md-4">
                             <select name="accordance${status.index}" class="form-control">
                                 <option selected>select...</option>
                                 <c:forEach items="${answers.rightSide}" var="right">
@@ -115,11 +115,11 @@
                     </div>
                 </c:forEach>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
                         <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
@@ -131,7 +131,7 @@
                 <c:forEach begin="0" end="3" varStatus="status">
                     <div class="row">
                         <div class="col-auto">${status.index + 1}.</div>
-                        <div class="col-4">
+                        <div class="col-md-4">
                             <select name="sequence${status.index}" id="sequence${status.index}"
                                     class="form-control">
                                 <option selected>select...</option>
@@ -143,11 +143,11 @@
                     </div>
                 </c:forEach>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
                         <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
@@ -156,16 +156,16 @@
                 <div>Result: ${sessionScope.result}</div>
             </c:when>
             <c:when test="${question.questionType eq 'NUMBER'}">
-                <div class="col-4">
+                <div class="col-sm-4">
                     <input type="text" name="number" class="form-control" style="margin-left: -10px"
                            placeholder="Enter number">
                 </div>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
                         <input id="submit" type="submit" value="Next" class="btn btn-success">
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                             <%--suppress XmlDuplicatedId --%>
                         <input type="submit" id="finish" value="Finish" class="btn btn-danger"
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>

@@ -10,7 +10,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Teacher information</h2>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
             <td>${teacher.lastName} ${teacher.firstName}</td>
@@ -29,18 +29,20 @@
         </tr>
     </table>
     <h3>${teacher.firstName} gave you next quizzes:</h3>
-    <table style="width: 50%" class="table">
-        <tr>
-            <th>Name</th>
-            <th>Status</th>
-        </tr>
-        <c:forEach items="${quizzes}" var="quiz" varStatus="status">
+    <div class="col-lg-6">
+        <table class="table">
             <tr>
-                <td><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></td>
-                <td>${statusList[status.index]}</td>
+                <th>Name</th>
+                <th>Status</th>
             </tr>
-        </c:forEach>
-    </table>
+            <c:forEach items="${quizzes}" var="quiz" varStatus="status">
+                <tr>
+                    <td><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></td>
+                    <td>${statusList[status.index]}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
     <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 <br>

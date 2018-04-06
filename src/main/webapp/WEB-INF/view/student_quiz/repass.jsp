@@ -22,7 +22,7 @@
 <div class="container">
     <h2>${passedQuiz.quizName}</h2>
     <h3>Information about result</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
             <td>${passedQuiz.result} / ${passedQuiz.score}</td>
@@ -37,7 +37,7 @@
         </tr>
     </table>
     <h3>Information about passing</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <c:if test="${passedQuiz.passingTime ne null}">
             <tr>
                 <td>Passing time</td>

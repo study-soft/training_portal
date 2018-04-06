@@ -11,9 +11,9 @@
 <div class="container">
     <h2>${group.name}</h2>
     <c:if test="${group.description ne null}">
-        <div class="col-6"><strong>Description: </strong>${group.description}</div>
+        <div class="col-lg-6"><strong>Description: </strong>${group.description}</div>
     </c:if>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${group.creationDate}"/></td>
@@ -24,7 +24,7 @@
         </tr>
     </table>
     <h4>You gave next quizzes to this group</h4>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
             <tr>
                 <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
@@ -43,7 +43,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="col-6 table-info">
+            <table class="col-lg-6 table-info">
                 <c:forEach items="${studentsList}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td>

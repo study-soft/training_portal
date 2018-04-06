@@ -59,28 +59,14 @@
         <c:otherwise>
             <form id="publicationForm" action="/teacher/quizzes/${quiz.quizId}/publication" method="post">
                 <div class="row">
-                    <c:choose>
-                        <c:when test="${quiz.teacherQuizStatus eq 'UNPUBLISHED'}">
-                            <div class="col-4">
-                                <h4>Publication</h4>
-                            </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fa fa-share-square-o"></i> Publish
-                                </button>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="col-4">
-                                <h4>Republication</h4>
-                            </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn btn-success btn-wide">
-                                    <i class="fa fa-share-square-o"></i> Republish
-                                </button>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                    <div class="col-sm-4">
+                        <h4>Publication</h4>
+                    </div>
+                    <div class="col-sm-2 align-self-end">
+                        <button type="submit" class="btn btn-success" style="margin-bottom: 20px">
+                            <i class="fa fa-share-square-o"></i> Publish
+                        </button>
+                    </div>
                 </div>
                 <div class="highlight-primary">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
@@ -89,7 +75,7 @@
                 </div>
                 <div class="row">
                     <c:if test="${not empty groups}">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="accordion-header">Groups</div>
                             <c:forEach items="${groups}" var="group">
                                 <div class="card">
@@ -111,8 +97,9 @@
                                         <div class="card-body">
                                             <c:forEach items="${students[group.groupId]}" var="student">
                                                 <div class="row">
-                                                    <div class="col-1"></div>
-                                                    <div class="col-9">${student.lastName} ${student.firstName}</div>
+                                                    <div class="col-9 offset-1">
+                                                            ${student.lastName} ${student.firstName}
+                                                    </div>
                                                     <div class="col-2">
                                                         <div class="custom-control custom-checkbox">
                                                             <input type="checkbox" id="student${student.userId}"
@@ -132,7 +119,7 @@
                         </div>
                     </c:if>
                     <c:if test="${not empty studentsWithoutGroup}">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <table class="table">
                                 <tr>
                                     <th style="width: 90%">Students without group</th>

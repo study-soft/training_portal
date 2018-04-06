@@ -23,6 +23,5 @@ public interface QuestionDao {
 
     void deleteQuestion(Long questionId);
 
-    // Need test
     void deleteQuestions(Long quizId);
 }

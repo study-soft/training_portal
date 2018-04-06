@@ -66,7 +66,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2><a href="/teacher/groups/${group.groupId}">${group.name}</a></h2>
-    <div class="col-6">
+    <div class="col-sm-6">
         <table class="table-info">
             <tr>
                 <td>Number of students</td>

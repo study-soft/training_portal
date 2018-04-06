@@ -17,7 +17,7 @@
              width="25" height="25" class="icon-one-row">
         You have passed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt
     </div>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
             <td>${quiz.result} / ${quiz.score}</td>
@@ -32,7 +32,7 @@
         </tr>
     </table>
     <c:if test="${quiz.explanation ne null}">
-        <div class="col-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
+        <div class="col-lg-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
     </c:if>
     <sec:authorize access="hasRole('ROLE_TEACHER')">
         <a href="/teacher/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a>

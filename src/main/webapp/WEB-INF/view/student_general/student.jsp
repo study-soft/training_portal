@@ -27,13 +27,13 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="edit-success" class="col-lg-5 mx-auto text-center correct update-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
     <h2>Hello, student! Welcome to the training portal!</h2>
     <h3><i class="fa fa-graduation-cap"></i> Student information</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
             <td>${student.lastName} ${student.firstName}</td>
@@ -54,8 +54,8 @@
         </c:if>
     </table>
     <h4 class="inline"><i class="fa fa-lock"></i> Login and password</h4>
-    <a href="" id="switcher" style="margin-left: 10px;">show</a>
-    <table id="credentials" class="col-6 table-info hidden">
+    <a href="" id="switcher" style="padding-left: 15px;">show</a>
+    <table id="credentials" class="col-lg-6 table-info hidden">
         <tr>
             <td>Login</td>
             <td>${student.login}</td>
@@ -71,7 +71,7 @@
     <h3><i class="fa fa-group"></i> Group information</h3>
     <c:choose>
         <c:when test="${group eq null}">
-            <div class="col-6 highlight-danger">
+            <div class="col-lg-6 highlight-danger">
                 <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
                      width="25" height="25" class="icon-two-rows">
                 <div class="inline">You do not belong to any group</div>
@@ -79,7 +79,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="col-6 table-info">
+            <table class="col-lg-6 table-info">
                 <tr>
                     <td>Name</td>
                     <td>${group.name}</td>

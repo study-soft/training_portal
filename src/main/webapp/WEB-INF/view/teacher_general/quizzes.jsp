@@ -102,13 +102,13 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="delete-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="delete-success" class="col-lg-5 mx-auto text-center correct update-success">
         Quiz '${deletedQuiz}' successfully deleted
         <button id="close" class="close">&times;</button>
     </div>
     <br>
     <div class="input-group">
-        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <input type="search" class="col-lg-4 form-control" placeholder="Search...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>

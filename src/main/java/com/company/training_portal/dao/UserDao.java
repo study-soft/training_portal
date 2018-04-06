@@ -34,7 +34,7 @@ public interface UserDao {
 
     List<User> findStudentsByTeacherId(Long teacherId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     List<User> findAllStudents();
 
     List<User> findStudentsWithoutGroup();
@@ -49,10 +49,10 @@ public interface UserDao {
 
     List<User> findStudentsForWhomPublished(Long groupId, Long quizId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     List<User> findAllTeachers();
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     Integer findStudentsNumber();
 
     Integer findStudentsNumberToWhomQuizWasPublished(Long quizId);
@@ -61,15 +61,15 @@ public interface UserDao {
 
     Integer findStudentsNumber(Long groupId, Long quizId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     Integer findTeachersNumber();
 
     Integer findStudentsNumberInGroupWithClosedQuiz(Long groupId, Long quizId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     Integer findResultsNumber(Long groupId, Long quizId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     Integer findFinalResultsNumber(Long groupId, Long quizId);
 
     boolean userExistsByLogin(String login);

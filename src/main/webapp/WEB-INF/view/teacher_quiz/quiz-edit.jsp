@@ -81,8 +81,7 @@
             <div class="col-2">
                 <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
             </div>
-            <div class="col-3"></div>
-            <div class="col-1">
+            <div class="col-1 offset-3">
                 <input type="submit" class="btn btn-success" value="Save">
             </div>
         </div>

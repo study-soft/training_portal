@@ -31,16 +31,15 @@
     <h2>Groups</h2>
     <form>
         <div class="row">
-            <div class="col-4">
-                <div class="input-group">
+            <div class="col-auto col-md-4">
+                <div class="input-group shifted-down-10px">
                     <input type="search" class="form-control" placeholder="Search...">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
             </div>
-            <div class="col-6"></div>
-            <div class="col-2">
+            <div class="col-md-2 offset-lg-6">
                 <a href="/teacher/groups/create" class="btn btn-success btn-wide">
                     <i class="fa fa-group"></i> New group
                 </a>

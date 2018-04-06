@@ -54,7 +54,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="update-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="update-success" class="col-lg-5 mx-auto text-center correct update-success">
         Quiz information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
@@ -69,10 +69,10 @@
                         This quiz is not published
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-auto">
                     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publication" class="btn btn-success">
-                <i class="fa fa-share-square-o"></i> Publish
-            </a>
+                        <i class="fa fa-share-square-o"></i> Publish
+                    </a>
                 </div>
             </div>
         </c:when>
@@ -85,7 +85,7 @@
                         You do not have questions in this quiz
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-auto">
                     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-success btn-wide">
                         <i class="fa fa-plus"></i> Add questions
                     </a>
@@ -96,7 +96,7 @@
     <c:if test="${unpublishedQuiz.description ne null}">
         <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
     </c:if>
-    <table class="table-info col-6">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>

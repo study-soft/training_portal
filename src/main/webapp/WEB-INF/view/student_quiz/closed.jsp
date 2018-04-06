@@ -52,7 +52,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="close-success" class="col-4 mx-auto text-center correct update-success">
+    <div id="close-success" class="col-sm-4 mx-auto text-center correct update-success">
         Quiz successfully closed
         <button id="close" class="close">&times;</button>
     </div>
@@ -62,7 +62,7 @@
         This quiz is closed
     </div>
     <h3>Information about result</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
             <td>${closedQuiz.result} / ${closedQuiz.score}</td>
@@ -82,9 +82,9 @@
     </table>
     <h3>Information about quiz</h3>
     <c:if test="${closedQuiz.description ne null}">
-        <div class="col-6"><strong>Description: </strong>${closedQuiz.description}</div>
+        <div class="col-lg-6"><strong>Description: </strong>${closedQuiz.description}</div>
     </c:if>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Submitted</td>
             <td><localDateTime:format value="${closedQuiz.submitDate}"/></td>
@@ -109,7 +109,7 @@
         </tr>
     </table>
     <c:if test="${closedQuiz.explanation ne null}">
-        <div class="col-6"><strong>Explanation: </strong>${closedQuiz.explanation}</div>
+        <div class="col-lg-6"><strong>Explanation: </strong>${closedQuiz.explanation}</div>
     </c:if>
     <button id="back" value="Back" class="btn btn-primary">Back</button>
     <span id="answers">

@@ -14,7 +14,7 @@
         <h2 style="display: inline">Training portal</h2>
     </div>
     <br>
-    <form:form action="/register" method="post" modelAttribute="user" cssClass="col-6 center">
+    <form:form action="/register" method="post" modelAttribute="user" cssClass="col-md-6 center">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-group row">
             <form:label path="login" for="login" cssClass="col-4 col-form-label">

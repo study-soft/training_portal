@@ -26,7 +26,7 @@
         <c:otherwise>
             <div class="row">
                 <c:if test="${not empty groups}">
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <table class="table">
                             <tr>
                                 <th>Groups</th>
@@ -40,7 +40,7 @@
                     </div>
                 </c:if>
                 <c:if test="${not empty students}">
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <table class="table">
                             <tr>
                                 <th>Students without group</th>

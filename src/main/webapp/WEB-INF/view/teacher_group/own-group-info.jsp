@@ -68,19 +68,19 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="create-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="create-success" class="col-lg-5 mx-auto text-center correct update-success">
         Group successfully created
         <button class="close">&times;</button>
     </div>
-    <div id="edit-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="edit-success" class="col-lg-5 mx-auto text-center correct update-success">
         Group information successfully changed
         <button class="close">&times;</button>
     </div>
     <h2>${group.name}</h2>
     <c:if test="${group.description ne null}">
-        <div class="col-6"><strong>Description: </strong>${group.description}</div>
+        <div class="col-lg-6"><strong>Description: </strong>${group.description}</div>
     </c:if>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${group.creationDate}"/></td>
@@ -91,7 +91,7 @@
         </tr>
     </table>
     <h4>You gave next quizzes to this group</h4>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
             <tr>
                 <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
@@ -110,7 +110,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table id="studentsTable" class="col-6 table-info">
+            <table id="studentsTable" class="col-lg-6 table-info">
                 <c:forEach items="${studentsList}" var="student" varStatus="status">
                     <tr id="${student.userId}">
                         <td id="studentName"><a

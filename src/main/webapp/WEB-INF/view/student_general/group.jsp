@@ -20,7 +20,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h3>${group.name}</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
             <td>${group.name}</td>
@@ -39,7 +39,7 @@
         </tr>
     </table>
     <h3>List of students</h3>
-    <div class="col-6">
+    <div class="col-lg-6">
         <table class="table">
             <tr>
                 <th>Name</th>

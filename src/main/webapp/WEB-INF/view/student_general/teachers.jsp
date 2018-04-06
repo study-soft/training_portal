@@ -20,7 +20,7 @@
 <div class="container">
     <h2>Teachers</h2>
     <div class="input-group">
-        <input type="search" class="col-4 form-control" placeholder="Search...">
+        <input type="search" class="col-sm-4 form-control" placeholder="Search...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>

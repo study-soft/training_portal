@@ -82,13 +82,6 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
         logger.info("Edited answerSimple: " + answerSimple);
     }
 
-    @Transactional
-    @Override
-    public void deleteAnswerSimple(Long answerSimpleId) {
-        template.update(DELETE_ANSWER_SIMPLE, answerSimpleId);
-        logger.info("Deleted answerSimple with id: " + answerSimpleId);
-    }
-
     @Override
     public void deleteAnswersSimple(Long questionId) {
         template.update(DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID, questionId);
@@ -115,9 +108,6 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
 
     private static final String EDIT_ANSWER_SIMPLE =
     "UPDATE ANSWERS_SIMPLE SET QUESTION_ID = ?, BODY = ?, CORRECT = ? WHERE ANSWER_SIMPLE_ID = ?;";
-
-    private static final String DELETE_ANSWER_SIMPLE =
-    "DELETE FROM ANSWERS_SIMPLE WHERE ANSWER_SIMPLE_ID = ?;";
 
     private static final String DELETE_ANSWERS_SIMPLE_BY_QUESTION_ID =
     "DELETE FROM ANSWERS_SIMPLE WHERE QUESTION_ID = ?;";

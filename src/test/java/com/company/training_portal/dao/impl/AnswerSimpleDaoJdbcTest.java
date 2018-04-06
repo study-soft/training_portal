@@ -87,10 +87,4 @@ public class AnswerSimpleDaoJdbcTest {
 
         assertEquals(testAnswerSimple, answerSimple);
     }
-
-    @Test(expected = EmptyResultDataAccessException.class)
-    public void test_delete_answer_simple() {
-        answerSimpleDao.deleteAnswerSimple(10L);
-        answerSimpleDao.findAnswerSimple(10L);
-    }
 }

@@ -80,7 +80,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="publication-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="publication-success" class="col-lg-5 mx-auto text-center correct update-success">
         Quiz was successfully published
         <button id="close" class="close">&times;</button>
     </div>
@@ -100,12 +100,11 @@
         <div class="col-auto">
             <button type="button" id="unpublish" class="btn btn-danger">Unpublish</button>
         </div>
-        <div class="col-4"></div>
     </div>
     <c:if test="${publishedQuiz.description ne null}">
         <div><strong>Description: </strong>${publishedQuiz.description}</div>
     </c:if>
-    <table class="table-info col-6">
+    <table class="table-info col-lg-6">
         <tr>
             <td>Creation date</td>
             <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
@@ -171,7 +170,7 @@
     <h4>Groups and students to whom quiz was published</h4>
     <div class="row">
         <c:if test="${not empty groups}">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="accordion-header">Groups</div>
                 <c:forEach items="${groups}" var="group">
                     <div class="card">
@@ -187,13 +186,12 @@
                             <div class="card-body">
                                 <c:forEach items="${students[group.groupId]}" var="student" varStatus="status">
                                     <div class="row">
-                                        <div class="col-1"></div>
-                                        <div class="col-7">
+                                        <div class="col-7 offset-1">
                                             <a href="/teacher/students/${student.userId}">
                                                     ${student.lastName} ${student.firstName}
                                             </a>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-auto align-self-end">
                                                 ${statuses[group.groupId][status.index]}
                                         </div>
                                     </div>
@@ -205,7 +203,7 @@
             </div>
         </c:if>
         <c:if test="${not empty studentsWithoutGroup}">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <table class="table">
                     <tr>
                         <th style="width: 70%;">Students without group</th>

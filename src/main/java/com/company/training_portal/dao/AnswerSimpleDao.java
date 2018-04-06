@@ -15,8 +15,5 @@ public interface AnswerSimpleDao {
     @Deprecated
     void editAnswerSimple(AnswerSimple answerSimple);
 
-    @Deprecated
-    void deleteAnswerSimple(Long answerSimpleId);
-
     void deleteAnswersSimple(Long questionId);
 }

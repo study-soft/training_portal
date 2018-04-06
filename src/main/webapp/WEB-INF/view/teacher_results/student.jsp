@@ -104,7 +104,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${student.lastName} ${student.firstName}</h2>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>E-mail</td>
             <td>${student.email}</td>

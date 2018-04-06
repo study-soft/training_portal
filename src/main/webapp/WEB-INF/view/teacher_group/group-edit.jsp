@@ -17,7 +17,7 @@
             </label>
         </div>
         <div>
-            <input type="text" name="name" id="name" value="${group.name}" class="col-4 form-control">
+            <input type="text" name="name" id="name" value="${group.name}" class="col-md-4 form-control">
             <span class="error">${emptyName}</span>
             <span class="error">${groupExists}</span>
         </div>
@@ -25,8 +25,8 @@
             <label for="description" class="col-form-label"><strong>Description</strong></label>
         </div>
         <div>
-            <textarea rows="6" cols="40" name="description" id="description" placeholder="Description"
-                      class="col-6 form-control">${group.description}</textarea>
+            <textarea rows="6" name="description" id="description" placeholder="Description"
+                      class="col-lg-6 form-control">${group.description}</textarea>
         </div>
         <div class="highlight-primary">
             <img src="${pageContext.request.contextPath}/resources/icon-primary.png"

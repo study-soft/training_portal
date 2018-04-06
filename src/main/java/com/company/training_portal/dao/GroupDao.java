@@ -17,7 +17,7 @@ public interface GroupDao {
 
     List<Group> findGroupsForWhichPublished(Long quizId);
 
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     List<Group> findAllGroups();
 
     @Deprecated
@@ -26,7 +26,7 @@ public interface GroupDao {
     Integer findStudentsNumberInGroup(Long groupId);
 
     //key: Group, value: numberOfStudents
-    @Deprecated(forRemoval = true)
+    @Deprecated()
     Map<Group, Integer> findAllGroupsAndStudentsNumberInThem();
 
     boolean groupExists(String groupName);

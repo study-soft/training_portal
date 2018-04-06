@@ -31,7 +31,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="update-success" class="col-5 mx-auto text-center correct update-success">
+    <div id="update-success" class="col-lg-5 mx-auto text-center correct update-success">
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
@@ -45,7 +45,7 @@
         </a>
     </div>
     <h3><i class="fa fa-user"></i> Teacher information</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
             <td>${teacher.lastName} ${teacher.firstName}</td>
@@ -63,8 +63,8 @@
         </tr>
     </table>
     <h4 class="inline"><i class="fa fa-lock"></i> Login and password</h4>
-    <a href="" id="switcher" style="margin-left: 10px;">show</a>
-    <table id="credentials" class="col-6 table-info hidden">
+    <a href="" id="switcher" style="padding-left: 15px;">show</a>
+    <table id="credentials" class="col-lg-6 table-info hidden">
         <tr>
             <td>Login</td>
             <td>${teacher.login}</td>

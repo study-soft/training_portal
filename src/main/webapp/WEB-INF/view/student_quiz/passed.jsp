@@ -35,7 +35,7 @@
         This quiz is passed
     </div>
     <h3>Information about result</h3>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
             <td>${passedQuiz.result} / ${passedQuiz.score}</td>
@@ -55,9 +55,9 @@
     </table>
     <h3>Information about quiz</h3>
     <c:if test="${passedQuiz.description ne null}">
-        <div class="col-6"><strong>Description: </strong>${passedQuiz.description}</div>
+        <div class="col-lg-6"><strong>Description: </strong>${passedQuiz.description}</div>
     </c:if>
-    <table class="col-6 table-info">
+    <table class="col-lg-6 table-info">
         <tr>
             <td>Submitted</td>
             <td><localDateTime:format value="${passedQuiz.submitDate}"/></td>

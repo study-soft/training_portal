@@ -14,7 +14,7 @@
     </div>
     <br>
     <br>
-    <form action="/login" method="post" class="col-6 center">
+    <form action="/login" method="post" class="col col-md-6 center">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <c:if test="${param.error ne null}">
             <p class="error">Invalid login or password</p>

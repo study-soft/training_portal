@@ -14,11 +14,10 @@
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col-md-9">
                         <h5>${question.body}</h5>
                     </div>
-                    <div class="col-1"></div>
-                    <div class="col-2">
+                    <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
                     </div>
                 </div>
@@ -27,12 +26,12 @@
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
-                            <div class="col-6">
+                            <div class="col-lg-6">
                                 <div class="correct">${answer.body}</div>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="col-6">
+                            <div class="col-lg-6">
                                 <div class="incorrect">${answer.body}</div>
                             </div>
                         </c:otherwise>
@@ -49,11 +48,10 @@
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col-md-9">
                         <h5>${question.body}</h5>
                     </div>
-                    <div class="col-1"></div>
-                    <div class="col-2">
+                    <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
                     </div>
                 </div>
@@ -62,12 +60,12 @@
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
-                            <div class="col-6">
+                            <div class="col-lg-6">
                                 <div class="correct">${answer.body}</div>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="col-6">
+                            <div class="col-lg-6">
                                 <div class="incorrect">${answer.body}</div>
                             </div>
                         </c:otherwise>
@@ -84,11 +82,10 @@
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col-md-9">
                         <h5>${question.body}</h5>
                     </div>
-                    <div class="col-1"></div>
-                    <div class="col-2">
+                    <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
                     </div>
                 </div>
@@ -96,7 +93,7 @@
             <div class="question-answers">
                 <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
                 <c:set var="rightSide" value="${quizAnswersAccordance[question.questionId].rightSide}" scope="page"/>
-                <table class="table-info">
+                <table class="col-lg-6 table-info">
                     <c:forEach items="${leftSide}" var="item" varStatus="status">
                         <tr>
                             <td>${item}</td>
@@ -115,18 +112,17 @@
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col-md-9">
                         <h5>${question.body}</h5>
                     </div>
-                    <div class="col-1"></div>
-                    <div class="col-2">
+                    <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
                     </div>
                 </div>
             </div>
             <div class="question-answers">
                 <c:set var="correctList" value="${quizAnswersSequence[question.questionId].correctList}" scope="page"/>
-                <table class="col-6 table-info">
+                <table class="col-lg-6 table-info">
                     <c:forEach items="${correctList}" var="item" varStatus="status">
                         <tr>
                             <td>${status.index + 1}</td>
@@ -143,19 +139,16 @@
     <c:if test="${not empty questionsNumber}">
         <h4 class="shifted-left">Questions with numerical answers</h4>
         <c:forEach items="${questionsNumber}" var="question">
-            <div class="question-header">
-                <div class="row">
-                    <div class="col-9">
-                        <h5>${question.body}</h5>
-                    </div>
-                    <div class="col-1"></div>
-                    <div class="col-2">
-                        <h6>${question.score} points</h6>
-                    </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <h5>${question.body}</h5>
+                </div>
+                <div class="col-md-2 offset-md-1">
+                    <h6>${question.score} points</h6>
                 </div>
             </div>
             <div class="question-answers">
-                <table class="col-6 table-info">
+                <table class="col-lg-6 table-info">
                     <tr>
                         <td>Answer</td>
                         <td>${quizAnswersNumber[question.questionId].correct}</td>

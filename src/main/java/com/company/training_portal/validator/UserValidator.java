@@ -2,6 +2,9 @@ package com.company.training_portal.validator;
 
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,7 +13,15 @@ import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 @Service
+@PropertySource("classpath:validationMessages.properties")
 public class UserValidator implements Validator {
+
+    private Environment environment;
+
+    @Autowired
+    public UserValidator(Environment environment) {
+        this.environment = environment;
+    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -59,6 +70,20 @@ public class UserValidator implements Validator {
         }
     }
 
+    public String validateNewPassword(String newPassword) {
+        String error = null;
+        if (newPassword == null || newPassword.isEmpty()) {
+            error = environment.getProperty("user.password.empty");
+        } else if (contains(newPassword, "\\s+")) {
+            error = environment.getProperty("password", "user.password.space");
+        } else if (newPassword.length() < 6) {
+            error = environment.getProperty("user.password.size");
+        } else if (!contains(newPassword, "[0-9]+") || !contains(newPassword, "[a-zA-Z]+")) {
+            error = environment.getProperty("user.password.format");
+        }
+        return error;
+    }
+
     public void validateEmail(String email, Errors errors) {
         if (email == null || email.isEmpty()) {
             errors.rejectValue("email", "user.email.empty");
@@ -70,7 +95,7 @@ public class UserValidator implements Validator {
     public void validatePhoneNumber(String phoneNumber, Errors errors) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
             errors.rejectValue("phoneNumber", "user.phoneNumber.empty");
-        } else if (!phoneNumber.matches("\\(?([0-9]{3})\\)?([ .-]?)([0-9]{3})\\2([0-9]{2})\\2([0-9]{2})")) {
+        } else if (!phoneNumber.matches("\\(?([0-9]{3})\\)?([ -]?)([0-9]{3})\\2([0-9]{2})\\2([0-9]{2})")) {
             errors.rejectValue("phoneNumber", "user.phoneNumber.format");
         }
     }

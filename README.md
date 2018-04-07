@@ -3,8 +3,8 @@
 ## Description
 - Learning Management System is a system that is used to develop, manage and share online learning materials with common access.  
 - Users are divided into two roles: teachers and students.
-- The teacher has opportunity to unite students into groups and create quizzes with various types of questions and preview them as student. Then he publishes them to students and groups. As students pass quizzes, the teacher can watch student's results. Also, the teacher has opportunity to forcibly close quizzes with empty result to students who do not keep within the terms of passage.
-- The student has opportunity to be in a group and pass quizzes from various teachers published to him. After passing, the student can pass quiz again, but the overall score will be lower. When all students in the group have finally completed quiz, they can see answers to it. Also, the student can watch his results and compare them with results of group mates.
+- Teacher has opportunity to unite students into groups and create quizzes with various types of questions and preview them as student. Then he publishes them to students and groups. As students pass quizzes, teacher can watch student's results. Also teacher has opportunity to forcibly close quizzes with empty result to students who do not keep within terms of passage.
+- Student has opportunity to be in a group and pass quizzes from various teachers published to him. After passing, student can pass quiz again, but the overall score will be lower. When all students in the group have finally completed quiz, they can see answers to it. Also, student can watch his results and compare them with results of group mates.
 - Quiz consists of different types of tasks:
 1. Questions with one correct answer.
 2. Questions with several correct answers.
@@ -12,10 +12,10 @@
 4. Questions for establishing sequence.
 5. Questions with a numerical answer.
 ## Benefits
-1. The system has an user friendly interface and responsive design.
-2. The user is fully aware of the information about educational flow, which is competently structured according to sections.
-3. The teacher has a convenient editor for creating groups, quizzes and questions to them with a built-in validation check.
-4. Student evaluation is automatic. Partially correct answers and attempt of passage influence on total score. When the whole group has finished quiz, students get access to correct answers, which allows them to learn from their mistakes and improve learning effectiveness.
+1. System has an user friendly interface and responsive design.
+2. User is fully aware of the information about educational flow, which is competently structured according to sections.
+3. Teacher has a convenient editor for creating groups, quizzes and questions to them with a built-in validation check.
+4. Student evaluation is automatic. Partially correct answers and attempt of passage influence on total score. When whole group has finished quiz, students get access to correct answers, which allows them to learn from their mistakes and improve learning effectiveness.
 ## Technologies used
 - Java 9 - backend programming language
 - Apache Tomcat 8.5.24 - application server

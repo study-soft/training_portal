@@ -12,6 +12,11 @@ import static java.time.format.FormatStyle.SHORT;
 
 public class Utils {
 
+    // Prevent creation of instances
+    private Utils() {
+        throw new AssertionError();
+    }
+
     public static int roundOff(double value) {
         return (value * 10) % 10 >= 5 ? (int) value + 1 : (int) value;
     }
@@ -58,5 +63,20 @@ public class Utils {
         DateTimeFormatter dateTimeFormatter =
                 DateTimeFormatter.ofLocalizedDateTime(MEDIUM, SHORT);
         return localDateTime.format(dateTimeFormatter);
+    }
+
+    public static String formatPhoneNumber(String target) {
+        String digits = target.replaceAll("\\D", "");
+//        String digits = Pattern.compile("[\\D]")
+//                .splitAsStream(target)
+//                .collect(Collectors.joining());
+        return "(" +
+                digits.substring(0, 3) +
+                ")-" +
+                digits.substring(3, 6) +
+                "-" +
+                digits.substring(6, 8) +
+                "-" +
+                digits.substring(8, 10);
     }
 }

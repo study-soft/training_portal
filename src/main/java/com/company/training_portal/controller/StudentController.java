@@ -4,6 +4,7 @@ import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
+import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +41,7 @@ public class StudentController {
     private AnswerAccordanceDao answerAccordanceDao;
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
-    private Validator userValidator;
+    private UserValidator userValidator;
 
     private static final Logger logger = Logger.getLogger(StudentController.class);
 
@@ -53,7 +54,7 @@ public class StudentController {
                              AnswerAccordanceDao answerAccordanceDao,
                              AnswerSequenceDao answerSequenceDao,
                              AnswerNumberDao answerNumberDao,
-                             @Qualifier("userValidator") Validator userValidator) {
+                             UserValidator userValidator) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
@@ -101,17 +102,22 @@ public class StudentController {
 
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("studentId") Long studentId,
+                              @RequestParam("newPassword") String newPassword,
                               @ModelAttribute("user") User editedStudent,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes, ModelMap model) {
         logger.info("Get student information from model attribute: " + editedStudent);
         User oldStudent = userDao.findUser(studentId);
-        model.addAttribute("oldStudent", oldStudent);
 
-        editedStudent.setLogin(oldStudent.getLogin());
-        editedStudent.setUserRole(oldStudent.getUserRole());
-
-        userValidator.validate(editedStudent, bindingResult);
+        String newPasswordIncorrectMsg = null;
+        if (!newPassword.isEmpty()) {
+            newPasswordIncorrectMsg = userValidator.validateNewPassword(newPassword);
+        }
+        userValidator.validateEmail(editedStudent.getEmail(), bindingResult);
+        userValidator.validatePhoneNumber(editedStudent.getPhoneNumber(), bindingResult);
+        userValidator.validateFirstName(editedStudent.getFirstName(), bindingResult);
+        userValidator.validateLastName(editedStudent.getLastName(), bindingResult);
+        userValidator.validateDateOfBirth(editedStudent.getDateOfBirth(), bindingResult);
 
         String editedEmail = editedStudent.getEmail();
         String email = oldStudent.getEmail();
@@ -123,16 +129,27 @@ public class StudentController {
         if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
             bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
         }
-        if (bindingResult.hasErrors()) {
+        String inputPassword = editedStudent.getPassword();
+        String password = oldStudent.getPassword();
+        if (!newPassword.isEmpty() && !inputPassword.equals(password)) {
+            bindingResult.rejectValue("password", "user.password.incorrect-old");
+            model.addAttribute("newPassword", newPassword);
+        }
+
+        if (bindingResult.hasErrors() || newPasswordIncorrectMsg != null) {
             model.addAttribute("user", editedStudent);
+            model.addAttribute("newPasswordIncorrect", newPasswordIncorrectMsg);
             return "edit-profile";
         }
 
         userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
                 editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
-                editedStudent.getPassword());
+                newPassword.isEmpty() ? oldStudent.getPassword() : newPassword);
 
-        redirectAttributes.addFlashAttribute("editSuccess", true);
+        User newTeacher = userDao.findUser(studentId);
+        if (!newTeacher.equals(oldStudent)) {
+            redirectAttributes.addFlashAttribute("editSuccess", true);
+        }
         model.clear();
         return "redirect:/student";
     }

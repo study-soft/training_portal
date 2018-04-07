@@ -1,3 +1,5 @@
+/******************************   GENERAL   *****************************/
+
 body {
     background-color: #ccfcf5;
 }
@@ -9,6 +11,8 @@ h1, h2, h3, h4 {
 h5, h6 {
     margin: 10px 0;
 }
+
+/******************************   TABLES   *******************************/
 
 .table {
     border-collapse: collapse;
@@ -64,6 +68,8 @@ h5, h6 {
 .table-info tr td:first-child {
     font-weight: bold;
 }
+
+/****************************   HIGHLIGHT  ********************************/
 
 .highlight-primary {
     border-left: 5px solid blue;
@@ -131,6 +137,16 @@ h5, h6 {
     color: red;
 }
 
+.accordion-header {
+    background-color: #0380ff;
+    color: white;
+    font-weight: bolder;
+    padding: 11px;
+    border: none;
+}
+
+/****************************   INSCRIPTIONS   ******************************/
+
 .success {
     color: #189e1d;
     text-decoration: none;
@@ -169,13 +185,7 @@ h5, h6 {
     color: red;
 }
 
-.accordion-header {
-    background-color: #0380ff;
-    color: white;
-    font-weight: bolder;
-    padding: 11px;
-    border: none;
-}
+/*******************************   DISPLAYING   **************************/
 
 .inline {
     display: inline;
@@ -219,7 +229,7 @@ h5, h6 {
     border: 1px solid #7C8994;
 }
 
-/********************* ICONS ************************/
+/*****************************   ICONS   *******************************/
 
 .icon-one-row {
     margin: 0 5px 0 10px;
@@ -249,7 +259,7 @@ h5, h6 {
     top: 3px;
 }
 
-/********************* BOOTSTRAP OVERRIDING *********************/
+/*********************   BOOTSTRAP OVERRIDING   *********************/
 
 .card-header {
     padding: 9px;

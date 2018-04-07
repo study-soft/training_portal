@@ -67,25 +67,30 @@ public class TeacherController {
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.GET)
     public String showEditProfile(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
+        teacher.setPassword("");
         model.addAttribute("user", teacher);
-        model.addAttribute("dateOfBirth", teacher.getDateOfBirth());
         return "edit-profile";
     }
 
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("teacherId") Long teacherId,
+                              @RequestParam("newPassword") String newPassword,
                               @ModelAttribute("user") User editedTeacher,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes,
                               ModelMap model) {
         logger.info("Get teacher from model attribute: " + editedTeacher);
         User oldTeacher = userDao.findUser(teacherId);
-        model.addAttribute("oldTeacher", oldTeacher);
 
-        editedTeacher.setLogin(oldTeacher.getLogin());
-        editedTeacher.setUserRole(oldTeacher.getUserRole());
-
-        userValidator.validate(editedTeacher, bindingResult);
+        String newPasswordIncorrectMsg = null;
+        if (!newPassword.isEmpty()) {
+            newPasswordIncorrectMsg = userValidator.validateNewPassword(newPassword);
+        }
+        userValidator.validateEmail(editedTeacher.getEmail(), bindingResult);
+        userValidator.validatePhoneNumber(editedTeacher.getPhoneNumber(), bindingResult);
+        userValidator.validateFirstName(editedTeacher.getFirstName(), bindingResult);
+        userValidator.validateLastName(editedTeacher.getLastName(), bindingResult);
+        userValidator.validateDateOfBirth(editedTeacher.getDateOfBirth(), bindingResult);
 
         String editedEmail = editedTeacher.getEmail();
         String email = oldTeacher.getEmail();
@@ -97,17 +102,30 @@ public class TeacherController {
         if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
             bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
         }
-        if (bindingResult.hasErrors()) {
+        String inputPassword = editedTeacher.getPassword();
+        String password = oldTeacher.getPassword();
+        if (!newPassword.isEmpty() && !inputPassword.equals(password)) {
+            bindingResult.rejectValue("password", "user.password.incorrect-old");
+            model.addAttribute("newPassword", newPassword);
+        }
+
+        logger.info("newPasswordIncorrectMsg: " + newPasswordIncorrectMsg);
+        if (bindingResult.hasErrors() || newPasswordIncorrectMsg != null) {
+            logger.info("binding result errors: " + bindingResult);
             model.addAttribute("user", editedTeacher);
+            model.addAttribute("newPasswordIncorrect", newPasswordIncorrectMsg);
             return "edit-profile";
         }
 
         userDao.editUser(oldTeacher.getUserId(), editedTeacher.getFirstName(),
                 editedTeacher.getLastName(), editedTeacher.getEmail(),
                 editedTeacher.getDateOfBirth(), editedTeacher.getPhoneNumber(),
-                editedTeacher.getPassword());
+                newPassword.isEmpty() ? oldTeacher.getPassword() : newPassword);
 
-        redirectAttributes.addFlashAttribute("editSuccess", true);
+        User newTeacher = userDao.findUser(teacherId);
+        if (!newTeacher.equals(oldTeacher)) {
+            redirectAttributes.addFlashAttribute("editSuccess", true);
+        }
         model.clear();
         return "redirect:/teacher";
     }

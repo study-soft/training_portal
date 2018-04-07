@@ -13,6 +13,7 @@ public class User implements Comparable<User> {
     private String firstName;
     private String lastName;
     private String email;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private byte[] photo;

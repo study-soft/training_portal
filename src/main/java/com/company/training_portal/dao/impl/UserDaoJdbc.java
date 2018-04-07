@@ -4,6 +4,7 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
+import com.company.training_portal.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.company.training_portal.util.Utils.formatPhoneNumber;
 
 @Repository
 public class UserDaoJdbc implements UserDao {
@@ -384,6 +387,7 @@ public class UserDaoJdbc implements UserDao {
     @Transactional
     @Override
     public Long registerUser(User user) {
+        user.setPhoneNumber(formatPhoneNumber(user.getPhoneNumber()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(new PreparedStatementCreator() {
                 @Override
@@ -430,17 +434,18 @@ public class UserDaoJdbc implements UserDao {
     public void editUser(Long userId, String firstName, String lastName, String email,
                          LocalDate dateOfBirth, String phoneNumber, String password) {
         Date birthDate = null;
+        String formattedPhoneNumber = formatPhoneNumber(phoneNumber);
         if (dateOfBirth != null) {
             birthDate = Date.valueOf(dateOfBirth);
         }
         template.update(EDIT_USER, firstName, lastName, email, birthDate,
-                phoneNumber, password, userId);
+                formattedPhoneNumber, password, userId);
         logger.info("Edited user by userId = " + userId +
                 ": firstName: " + firstName +
         ", lastName: " + lastName +
         ", email: " + email +
         ", dateOfBirth: " + dateOfBirth +
-        ", phoneNumber: " + phoneNumber +
+        ", phoneNumber: " + formattedPhoneNumber +
         ", password: " + password);
     }
 

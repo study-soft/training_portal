@@ -15,11 +15,26 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-group row">
             <form:label path="password" for="password" cssClass="col-4 col-form-label">
-                <strong>Password<span class="error">*</span></strong>
+                <strong>Old password<span class="error">*</span></strong>
             </form:label>
             <div class="col-8">
-                <form:input path="password" cssClass="form-control" id="password" placeholder="Password"/>
+                <form:password path="password" cssClass="form-control" id="password" placeholder="Password"/>
+                <small class="form-text text-muted">Enter old password</small>
                 <form:errors path="password" cssClass="error center"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-4 col-form-label" for="newPassword">
+                <strong>New password</strong>
+            </label>
+            <div class="col-8">
+                <input type="password" class="form-control" id="newPassword"
+                       name="newPassword" value="${newPassword}" placeholder="New password">
+                <small class="form-text text-muted">
+                    Should contains at least one letter and digit
+                    and be greater than 6 characters
+                </small>
+                <span class="error">${newPasswordIncorrect}</span>
             </div>
         </div>
         <div class="form-group row">
@@ -28,6 +43,7 @@
             </form:label>
             <div class="col-8">
                 <form:input path="email" cssClass="form-control" id="email" placeholder="Email"/>
+                <small class="form-text text-muted">Example: email@example.com</small>
                 <form:errors path="email" cssClass="error center"/>
             </div>
         </div>
@@ -37,6 +53,10 @@
             </form:label>
             <div class="col-8">
                 <form:input path="phoneNumber" cssClass="form-control" id="phoneNumber" placeholder="Phone number"/>
+                <small class="form-text text-muted">
+                    Example: (xxx)-xxx-xx-xx, (xxx)xxxxxxx, (xxx) xxx xx xx,
+                    xxx-xxx-xx-xx, xxx xxx xx xx, xxxxxxxxxx
+                </small>
                 <form:errors path="phoneNumber" cssClass="error center"/>
             </div>
         </div>
@@ -46,6 +66,7 @@
             </form:label>
             <div class="col-8">
                 <form:input path="firstName" cssClass="form-control" id="firstName" placeholder="First name"/>
+                <small class="form-text text-muted">Example: Silvester</small>
                 <form:errors path="firstName" cssClass="error center"/>
             </div>
         </div>
@@ -55,6 +76,7 @@
             </form:label>
             <div class="col-8">
                 <form:input path="lastName" cssClass="form-control" id="lastName" placeholder="Last name"/>
+                <small class="form-text text-muted">Example: Stallone</small>
                 <form:errors path="lastName" cssClass="error center"/>
             </div>
         </div>
@@ -62,7 +84,8 @@
             <label for="dateOfBirth" class="col-4 col-form-label"><strong>Date of birth</strong></label>
             <div class="col-8">
                 <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control"
-                       value="${dateOfBirth}">
+                       value="${user.dateOfBirth}">
+                <small class="form-text text-muted">Example: 05/10/1970</small>
                 <form:errors path="dateOfBirth" cssClass="error"/>
             </div>
         </div>

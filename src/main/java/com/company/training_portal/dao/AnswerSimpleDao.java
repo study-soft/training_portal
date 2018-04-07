@@ -12,7 +12,7 @@ public interface AnswerSimpleDao {
 
     Long addAnswerSimple(AnswerSimple answerSimple);
 
-    @Deprecated
+    // No usages
     void editAnswerSimple(AnswerSimple answerSimple);
 
     void deleteAnswersSimple(Long questionId);

@@ -17,16 +17,16 @@ public interface GroupDao {
 
     List<Group> findGroupsForWhichPublished(Long quizId);
 
-    @Deprecated()
+    // No usages
     List<Group> findAllGroups();
 
-    @Deprecated
+    // No usages
     Integer findGroupsNumber(Long authorId);
 
     Integer findStudentsNumberInGroup(Long groupId);
 
+    // No usages
     //key: Group, value: numberOfStudents
-    @Deprecated()
     Map<Group, Integer> findAllGroupsAndStudentsNumberInThem();
 
     boolean groupExists(String groupName);

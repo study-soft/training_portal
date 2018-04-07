@@ -15,15 +15,15 @@ public interface UserDao {
 
     User findUserByLogin(String login);
 
-    @Deprecated
+    // No usages
     User findUserByEmail(String email);
 
-    @Deprecated
+    // No usages
     User findUserByPhoneNumber(String phoneNumber);
 
     String findUserName(Long userId);
 
-    @Deprecated
+    // No usages
     List<User> findUsers(String firstName, String lastName, UserRole userRole);
 
     List<User> findStudents(Long groupId);
@@ -34,7 +34,7 @@ public interface UserDao {
 
     List<User> findStudentsByTeacherId(Long teacherId);
 
-    @Deprecated()
+    // No usages
     List<User> findAllStudents();
 
     List<User> findStudentsWithoutGroup();
@@ -49,10 +49,10 @@ public interface UserDao {
 
     List<User> findStudentsForWhomPublished(Long groupId, Long quizId);
 
-    @Deprecated()
+    // No usages
     List<User> findAllTeachers();
 
-    @Deprecated()
+    // No usages
     Integer findStudentsNumber();
 
     Integer findStudentsNumberToWhomQuizWasPublished(Long quizId);
@@ -61,15 +61,15 @@ public interface UserDao {
 
     Integer findStudentsNumber(Long groupId, Long quizId);
 
-    @Deprecated()
+    // No usages
     Integer findTeachersNumber();
 
     Integer findStudentsNumberInGroupWithClosedQuiz(Long groupId, Long quizId);
 
-    @Deprecated()
+    // No usages
     Integer findResultsNumber(Long groupId, Long quizId);
 
-    @Deprecated()
+    // No usages
     Integer findFinalResultsNumber(Long groupId, Long quizId);
 
     boolean userExistsByLogin(String login);
@@ -88,7 +88,7 @@ public interface UserDao {
 
     Long registerUser(User user);
 
-    @Deprecated
+    // No usages
     void addStudentToGroup(Long groupId, Long studentId);
 
     void addStudentsToGroup(Long groupId, List<Long> studentIds);

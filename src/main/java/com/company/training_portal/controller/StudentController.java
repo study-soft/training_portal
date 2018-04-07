@@ -1,9 +1,8 @@
 package com.company.training_portal.controller;
 
-import com.company.training_portal.dao.GroupDao;
-import com.company.training_portal.dao.QuizDao;
-import com.company.training_portal.dao.UserDao;
+import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
+import com.company.training_portal.model.enums.QuestionType;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL;
+import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
@@ -36,6 +35,11 @@ public class StudentController {
     private UserDao userDao;
     private GroupDao groupDao;
     private QuizDao quizDao;
+    private QuestionDao questionDao;
+    private AnswerSimpleDao answerSimpleDao;
+    private AnswerAccordanceDao answerAccordanceDao;
+    private AnswerSequenceDao answerSequenceDao;
+    private AnswerNumberDao answerNumberDao;
     private Validator userValidator;
 
     private static final Logger logger = Logger.getLogger(StudentController.class);
@@ -44,10 +48,20 @@ public class StudentController {
     public StudentController(UserDao userDao,
                              GroupDao groupDao,
                              QuizDao quizDao,
+                             QuestionDao questionDao,
+                             AnswerSimpleDao answerSimpleDao,
+                             AnswerAccordanceDao answerAccordanceDao,
+                             AnswerSequenceDao answerSequenceDao,
+                             AnswerNumberDao answerNumberDao,
                              @Qualifier("userValidator") Validator userValidator) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
+        this.questionDao = questionDao;
+        this.answerSimpleDao = answerSimpleDao;
+        this.answerAccordanceDao = answerAccordanceDao;
+        this.answerSequenceDao = answerSequenceDao;
+        this.answerNumberDao = answerNumberDao;
         this.userValidator = userValidator;
     }
 
@@ -55,6 +69,8 @@ public class StudentController {
     public Long getStudentId(@AuthenticationPrincipal SecurityUser securityUser) {
         return securityUser.getUserId();
     }
+
+    // STUDENT GENERAL ===============================================================
 
     @RequestMapping("/student")
     public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
@@ -73,6 +89,52 @@ public class StudentController {
         model.addAttribute("group", group);
 
         return "student_general/student";
+    }
+
+    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
+    public String showEditProfile(@ModelAttribute("studentId") Long studentId, Model model) {
+        User student = userDao.findUser(studentId);
+        model.addAttribute("user", student);
+        model.addAttribute("dateOfBirth", student.getDateOfBirth());
+        return "edit-profile";
+    }
+
+    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
+    public String editProfile(@ModelAttribute("studentId") Long studentId,
+                              @ModelAttribute("user") User editedStudent,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes, ModelMap model) {
+        logger.info("Get student information from model attribute: " + editedStudent);
+        User oldStudent = userDao.findUser(studentId);
+        model.addAttribute("oldStudent", oldStudent);
+
+        editedStudent.setLogin(oldStudent.getLogin());
+        editedStudent.setUserRole(oldStudent.getUserRole());
+
+        userValidator.validate(editedStudent, bindingResult);
+
+        String editedEmail = editedStudent.getEmail();
+        String email = oldStudent.getEmail();
+        if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
+            bindingResult.rejectValue("email", "user.email.exists");
+        }
+        String editedPhoneNumber = editedStudent.getPhoneNumber();
+        String phoneNumber = oldStudent.getPhoneNumber();
+        if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
+            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", editedStudent);
+            return "edit-profile";
+        }
+
+        userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
+                editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
+                editedStudent.getPassword());
+
+        redirectAttributes.addFlashAttribute("editSuccess", true);
+        model.clear();
+        return "redirect:/student";
     }
 
     @RequestMapping("/student/{groupMateId}")
@@ -121,6 +183,8 @@ public class StudentController {
         }
     }
 
+    // STUDENT GROUP =================================================================
+
     @RequestMapping("/student/group")
     public String showGroup(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
@@ -139,6 +203,8 @@ public class StudentController {
 
         return "student_general/group";
     }
+
+    // STUDENT TEACHERS ==============================================================
 
     @RequestMapping("/student/teachers")
     public String showStudentTeachers(@ModelAttribute("studentId") Long studentId, Model model) {
@@ -173,6 +239,8 @@ public class StudentController {
 
         return "student_general/teacher-info";
     }
+
+    // STUDENT QUIZZES ==============================================================
 
     @RequestMapping("/student/quizzes")
     public String showStudentQuizzes(@ModelAttribute("studentId") Long studentId, Model model) {
@@ -236,6 +304,90 @@ public class StudentController {
         quizDao.closeQuizToStudent(studentId, quizId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
+    public String showQuizStart(@ModelAttribute("studentId") Long studentId,
+                                @PathVariable("quizId") Long quizId,
+                                @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                        Integer currentQuestionSerial,
+                                ModelMap model) {
+        if (currentQuestionSerial != null) {
+            model.clear();
+            return "redirect:/quizzes/" + quizId + "continue";
+        }
+        OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
+        model.addAttribute("openedQuiz", openedQuiz);
+        return "student_quiz/start";
+    }
+
+    @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
+    public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
+                                 @PathVariable("quizId") Long quizId,
+                                 @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
+                                         Integer currentQuestionSerial,
+                                 ModelMap model) {
+        if (currentQuestionSerial != null) {
+            model.clear();
+            return "redirect:/quizzes/continue";
+        }
+        PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
+        model.addAttribute("passedQuiz", passedQuiz);
+        return "student_quiz/repass";
+    }
+
+    @RequestMapping("/student/quizzes/{quizId}/answers")
+    public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
+        Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, SEQUENCE);
+        List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
+        model.addAttribute("questionsOneAnswer", questionsOneAnswer);
+        model.addAttribute("questionsFewAnswers", questionsFewAnswers);
+        model.addAttribute("questionsAccordance", questionsAccordance);
+        model.addAttribute("questionsSequence", questionsSequence);
+        model.addAttribute("questionsNumber", questionsNumber);
+
+        Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
+        Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
+        Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
+        Map<Long, AnswerNumber> quizAnswersNumber = new HashMap<>();
+        List<Question> tests = new ArrayList<>();
+        tests.addAll(questionsOneAnswer);
+        tests.addAll(questionsFewAnswers);
+        for (Question question : tests) {
+            Long questionId = question.getQuestionId();
+            List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
+            quizAnswersSimple.put(questionId, answersSimple);
+        }
+        for (Question question : questionsAccordance) {
+            Long questionId = question.getQuestionId();
+            AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
+            quizAnswersAccordance.put(questionId, answerAccordance);
+        }
+        for (Question question : questionsSequence) {
+            Long questionId = question.getQuestionId();
+            AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
+            quizAnswersSequence.put(questionId, answerSequence);
+        }
+        for (Question question : questionsNumber) {
+            Long questionId = question.getQuestionId();
+            AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
+            quizAnswersNumber.put(questionId, answerNumber);
+        }
+
+        model.addAttribute("quizAnswersSimple", quizAnswersSimple);
+        model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
+        model.addAttribute("quizAnswersSequence", quizAnswersSequence);
+        model.addAttribute("quizAnswersNumber", quizAnswersNumber);
+
+        return "student_quiz/answers";
+    }
+
+    // STUDENT RESULTS
 
     @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
@@ -323,51 +475,5 @@ public class StudentController {
         model.addAttribute("closedQuizzes", closedQuizzes);
 
         return "student_general/compare-quiz-results";
-    }
-
-    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
-    public String showEditProfile(@ModelAttribute("studentId") Long studentId, Model model) {
-        User student = userDao.findUser(studentId);
-        model.addAttribute("user", student);
-        model.addAttribute("dateOfBirth", student.getDateOfBirth());
-        return "edit-profile";
-    }
-
-    @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
-    public String editProfile(@ModelAttribute("studentId") Long studentId,
-                              @ModelAttribute("user") User editedStudent,
-                              BindingResult bindingResult,
-                              RedirectAttributes redirectAttributes, ModelMap model) {
-        logger.info("Get student information from model attribute: " + editedStudent);
-        User oldStudent = userDao.findUser(studentId);
-        model.addAttribute("oldStudent", oldStudent);
-
-        editedStudent.setLogin(oldStudent.getLogin());
-        editedStudent.setUserRole(oldStudent.getUserRole());
-
-        userValidator.validate(editedStudent, bindingResult);
-
-        String editedEmail = editedStudent.getEmail();
-        String email = oldStudent.getEmail();
-        if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
-            bindingResult.rejectValue("email", "user.email.exists");
-        }
-        String editedPhoneNumber = editedStudent.getPhoneNumber();
-        String phoneNumber = oldStudent.getPhoneNumber();
-        if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
-            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
-        }
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user", editedStudent);
-            return "edit-profile";
-        }
-
-        userDao.editUser(oldStudent.getUserId(), editedStudent.getFirstName(), editedStudent.getLastName(),
-                editedStudent.getEmail(), editedStudent.getDateOfBirth(), editedStudent.getPhoneNumber(),
-                editedStudent.getPassword());
-
-        redirectAttributes.addFlashAttribute("editSuccess", true);
-        model.clear();
-        return "redirect:/student";
     }
 }

@@ -34,8 +34,8 @@ public interface QuizDao {
     Map<StudentQuizStatus, Integer> findStudentsNumberWithStudentQuizStatus(
             Long authorId, Long groupId, Long quizId);
 
+    // No usages
     // key: teacherQuizStatus, value: number of quizzes
-    @Deprecated
     Map<TeacherQuizStatus, Integer> findQuizzesNumberByAuthorIdWithTeacherQuizStatus(Long authorId);
 
     List<Quiz> findQuizzes(Long studentId, Long authorId);

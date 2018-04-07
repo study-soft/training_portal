@@ -28,7 +28,6 @@
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
-    <h3>Passed quizzes</h3>
     <c:choose>
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="highlight-primary">

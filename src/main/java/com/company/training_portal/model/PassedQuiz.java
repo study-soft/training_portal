@@ -3,7 +3,7 @@ package com.company.training_portal.model;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class PassedQuiz extends OpenedQuiz {
+public class PassedQuiz {
     private Long quizId;
     private String quizName;
     private String description;

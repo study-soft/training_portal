@@ -3,23 +3,17 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
-import com.company.training_portal.validator.QuizValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,13 +22,10 @@ import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
-import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
-import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
 import static com.company.training_portal.util.Utils.roundOff;
-import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 
 @Controller
-public class QuizController {
+public class QuizPassingController {
 
     private QuizDao quizDao;
     private QuestionDao questionDao;
@@ -42,200 +33,28 @@ public class QuizController {
     private AnswerAccordanceDao answerAccordanceDao;
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
-    private QuizValidator quizValidator;
 
-    private Logger logger = Logger.getLogger(QuizController.class);
+    private Logger logger = Logger.getLogger(QuizPassingController.class);
 
     @Autowired
-    public QuizController(QuizDao quizDao,
-                          QuestionDao questionDao,
-                          AnswerSimpleDao answerSimpleDao,
-                          AnswerAccordanceDao answerAccordanceDao,
-                          AnswerSequenceDao answerSequenceDao,
-                          AnswerNumberDao answerNumberDao,
-                          QuizValidator quizValidator) {
+    public QuizPassingController(QuizDao quizDao,
+                                 QuestionDao questionDao,
+                                 AnswerSimpleDao answerSimpleDao,
+                                 AnswerAccordanceDao answerAccordanceDao,
+                                 AnswerSequenceDao answerSequenceDao,
+                                 AnswerNumberDao answerNumberDao) {
         this.quizDao = quizDao;
         this.questionDao = questionDao;
         this.answerSimpleDao = answerSimpleDao;
         this.answerAccordanceDao = answerAccordanceDao;
         this.answerSequenceDao = answerSequenceDao;
         this.answerNumberDao = answerNumberDao;
-        this.quizValidator = quizValidator;
     }
 
     @ModelAttribute("userId")
     public Long getUserId(@AuthenticationPrincipal SecurityUser securityUser) {
         return securityUser.getUserId();
     }
-
-    //    STUDENT ZONE===============================================================
-
-    @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
-    public String showQuizStart(@ModelAttribute("userId") Long studentId,
-                                @PathVariable("quizId") Long quizId,
-                                @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
-                                        Integer currentQuestionSerial,
-                                ModelMap model) {
-        if (currentQuestionSerial != null) {
-            model.clear();
-            return "redirect:/quizzes/" + quizId + "continue";
-        }
-        OpenedQuiz openedQuiz = quizDao.findOpenedQuiz(studentId, quizId);
-        model.addAttribute("openedQuiz", openedQuiz);
-        return "student_quiz/start";
-    }
-
-    @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
-    public String showQuizRepass(@ModelAttribute("userId") Long studentId,
-                                 @PathVariable("quizId") Long quizId,
-                                 @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
-                                         Integer currentQuestionSerial,
-                                 ModelMap model) {
-        if (currentQuestionSerial != null) {
-            model.clear();
-            return "redirect:/quizzes/continue";
-        }
-        PassedQuiz passedQuiz = quizDao.findPassedQuiz(studentId, quizId);
-        model.addAttribute("passedQuiz", passedQuiz);
-        return "student_quiz/repass";
-    }
-
-    @RequestMapping("/student/quizzes/{quizId}/answers")
-    public String showAnswers(@PathVariable("quizId") Long quizId, ModelMap model) {
-        Quiz quiz = quizDao.findQuiz(quizId);
-        model.addAttribute("quiz", quiz);
-
-        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
-        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
-        List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
-        List<Question> questionsSequence = questionDao.findQuestions(quizId, SEQUENCE);
-        List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
-        model.addAttribute("questionsOneAnswer", questionsOneAnswer);
-        model.addAttribute("questionsFewAnswers", questionsFewAnswers);
-        model.addAttribute("questionsAccordance", questionsAccordance);
-        model.addAttribute("questionsSequence", questionsSequence);
-        model.addAttribute("questionsNumber", questionsNumber);
-
-        Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
-        Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
-        Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
-        Map<Long, AnswerNumber> quizAnswersNumber = new HashMap<>();
-        List<Question> tests = new ArrayList<>();
-        tests.addAll(questionsOneAnswer);
-        tests.addAll(questionsFewAnswers);
-        for (Question question : tests) {
-            Long questionId = question.getQuestionId();
-            List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
-            quizAnswersSimple.put(questionId, answersSimple);
-        }
-        for (Question question : questionsAccordance) {
-            Long questionId = question.getQuestionId();
-            AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
-            quizAnswersAccordance.put(questionId, answerAccordance);
-        }
-        for (Question question : questionsSequence) {
-            Long questionId = question.getQuestionId();
-            AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
-            quizAnswersSequence.put(questionId, answerSequence);
-        }
-        for (Question question : questionsNumber) {
-            Long questionId = question.getQuestionId();
-            AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
-            quizAnswersNumber.put(questionId, answerNumber);
-        }
-
-        model.addAttribute("quizAnswersSimple", quizAnswersSimple);
-        model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
-        model.addAttribute("quizAnswersSequence", quizAnswersSequence);
-        model.addAttribute("quizAnswersNumber", quizAnswersNumber);
-
-        return "student_quiz/answers";
-    }
-
-    //    TEACHER ZONE===============================================================
-
-    @RequestMapping("/teacher/quizzes/{quizId}/questions")
-    public String showQuestions(@PathVariable("quizId") Long quizId, ModelMap model) {
-        showAnswers(quizId, model);
-        Quiz quiz = quizDao.findQuiz(quizId);
-        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
-            return "student_quiz/answers";
-        }
-        return "teacher_quiz/questions";
-    }
-
-    @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.GET)
-    public String showCreateQuiz(Model model) {
-        model.addAttribute("quiz", new Quiz());
-        return "teacher_quiz/quiz-create";
-    }
-
-    @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.POST)
-    public String createQuiz(@ModelAttribute("userId") Long teacherId,
-                             @ModelAttribute("quiz") Quiz quiz,
-                             @RequestParam(value = "enabled", required = false)
-                                     String enabled,
-                             @RequestParam(value = "hours", required = false)
-                                     String hours,
-                             @RequestParam(value = "minutes", required = false)
-                                     String minutes,
-                             @RequestParam(value = "seconds", required = false)
-                                     String seconds,
-                             BindingResult bindingResult, ModelMap model,
-                             RedirectAttributes redirectAttributes) {
-        quizValidator.validate(quiz, bindingResult);
-        if (enabled != null) {
-            quizValidator.validatePassingTime(hours, minutes, seconds, bindingResult);
-        }
-
-        if (quizDao.quizExistsByName(quiz.getName())) {
-            bindingResult.rejectValue("name", "quiz.name.exists");
-        }
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("hours", hours);
-            model.addAttribute("minutes", minutes);
-            model.addAttribute("seconds", seconds);
-            return "teacher_quiz/quiz-create";
-        }
-
-        Duration passingTime = null;
-        if (enabled != null) {
-            passingTime = timeUnitsToDuration(
-                    hours.isEmpty() ? 0 : Integer.valueOf(hours),
-                    minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
-                    seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
-        }
-        LocalDate creationDate = LocalDate.now();
-        Quiz newQuiz = new Quiz.QuizBuilder()
-                .name(quiz.getName())
-                .description(quiz.getDescription().isEmpty() ? null : quiz.getDescription())
-                .explanation(quiz.getExplanation().isEmpty() ? null : quiz.getExplanation())
-                .creationDate(creationDate)
-                .passingTime(passingTime)
-                .authorId(teacherId)
-                .questionsNumber(0)
-                .score(0)
-                .teacherQuizStatus(UNPUBLISHED)
-                .build();
-
-        Long newQuizId = quizDao.addQuiz(newQuiz);
-        redirectAttributes.addFlashAttribute("createSuccess", true);
-        model.clear();
-
-        return "redirect:/teacher/quizzes/" + newQuizId;
-    }
-
-    @RequestMapping(value = "/teacher/quizzes/{quizId}/delete", method = RequestMethod.POST)
-    public String deleteQuiz(@PathVariable("quizId") Long quizId,
-                             @RequestParam("deletedQuiz") String deletedQuiz,
-                             RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("deletedQuiz", deletedQuiz);
-        quizDao.deleteUnpublishedQuiz(quizId);
-        return "redirect:/teacher/quizzes";
-    }
-
-    //    QUIZ PASSING ZONE===========================================================
 
     @RequestMapping(value = "/quizzes/{quizId}/initialize", method = RequestMethod.GET)
     public String initializeQuiz(@ModelAttribute("userId") Long studentId,

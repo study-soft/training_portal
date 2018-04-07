@@ -74,7 +74,7 @@
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
-    <h3>Opened quizzes</h3>
+    <h4>Opened quizzes</h4>
     <c:choose>
         <c:when test="${empty openedQuizzes}">
             <div class="highlight-primary">
@@ -108,7 +108,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h3>Passed quizzes</h3>
+    <h4>Passed quizzes</h4>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
             <div class="highlight-primary">
@@ -150,7 +150,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h3>Closed quizzes</h3>
+    <h4>Closed quizzes</h4>
     <c:choose>
         <c:when test="${empty closedQuizzes}">
             <div id="noClosedQuizzesInfo" class="highlight-primary">

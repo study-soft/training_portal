@@ -5,6 +5,7 @@ import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
+import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,14 +34,14 @@ public class UserController {
 
     private UserDao userDao;
     private QuizDao quizDao;
-    private Validator userValidator;
+    private UserValidator userValidator;
 
     private static final Logger logger = Logger.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserDao userDao,
                           QuizDao quizDao,
-                          @Qualifier("userValidator") Validator userValidator) {
+                          UserValidator userValidator) {
         this.userDao = userDao;
         this.quizDao = quizDao;
         this.userValidator = userValidator;

@@ -7,6 +7,7 @@ import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import static com.company.training_portal.model.enums.StudentQuizStatus.*;
 
 @Controller
 @SessionAttributes("teacherId")
+@PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherResultsController {
 
     private UserDao userDao;

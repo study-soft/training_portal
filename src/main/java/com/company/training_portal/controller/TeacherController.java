@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +36,7 @@ import static java.util.Arrays.asList;
 
 @Controller
 @SessionAttributes("teacherId")
+@PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherController {
 
     private UserDao userDao;

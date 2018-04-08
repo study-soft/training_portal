@@ -11,31 +11,31 @@ INSERT INTO groups (name, description, creation_date, author_id) VALUES ('Inform
 
 -- Table: users (students)
 /*3*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '095-123-45-67', null, 'Anton', '123', 'STUDENT');
+VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '(095)-123-45-67', null, 'Anton', '123', 'STUDENT');
 /*4*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '095-98-76-54', null, 'Artem', '123', 'STUDENT');
+VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '(095)-498-76-54', null, 'Artem', '123', 'STUDENT');
 /*5*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '098-024-68-10', null, 'Mike', '123', 'STUDENT');
+VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '(098)-024-68-10', null, 'Mike', '123', 'STUDENT');
 /*6*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (2, 'Sarah', 'Stivens', 'sarah@example.com', '1998-03-01', '098-135-79-11', null, 'Sarah', '123', 'STUDENT');
+VALUES (2, 'Sarah', 'Stivens', 'sarah@example.com', '1998-03-01', '(098)-135-79-11', null, 'Sarah', '123', 'STUDENT');
 /*7*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '073-000-11-11', null, 'Jason', '123', 'STUDENT');
+VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '(073)-000-11-11', null, 'Jason', '123', 'STUDENT');
 /*8*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '073-000-11-22', null, 'William', '123', 'STUDENT');
+VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '(073)-000-11-22', null, 'William', '123', 'STUDENT');
 /*9*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '095-456-34-37', NULL, 'Jack', '123', 'STUDENT');
+VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '(095)-456-34-37', NULL, 'Jack', '123', 'STUDENT');
 /*10*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (NULL, 'Lily', 'Collins', 'lily@example.com', NULL, '095-437-78-45', NULL, 'Lily', '123', 'STUDENT');
+VALUES (NULL, 'Lily', 'Collins', 'lily@example.com', NULL, '(095)-437-78-45', NULL, 'Lily', '123', 'STUDENT');
 /*11*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Thomas', 'Scott', 'thomas@example.com', NULL, '095-444-78-45', NULL, 'Thomas', '123', 'STUDENT');
+VALUES (1, 'Thomas', 'Scott', 'thomas@example.com', NULL, '(095)-444-78-45', NULL, 'Thomas', '123', 'STUDENT');
 /*12*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Katy', 'Walter', 'katy@example.com', NULL, '095-437-44-45', NULL, 'Katy', '123', 'STUDENT');
+VALUES (1, 'Katy', 'Walter', 'katy@example.com', NULL, '(095)-437-44-45', NULL, 'Katy', '123', 'STUDENT');
 /*13*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Jane', 'Nikolas', 'jane@example.com', NULL, '095-437-78-44', NULL, 'Jane', '123', 'STUDENT');
+VALUES (1, 'Jane', 'Nikolas', 'jane@example.com', NULL, '(095)-437-78-44', NULL, 'Jane', '123', 'STUDENT');
 /*14*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Mary', 'Hendrix', 'mary@example.com', NULL, '095-437-44-44', NULL, 'Mary', '123', 'STUDENT');
+VALUES (1, 'Mary', 'Hendrix', 'mary@example.com', NULL, '(095)-437-44-44', NULL, 'Mary', '123', 'STUDENT');
 /*15*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '095-787-22-56', NULL, 'Jimmy', '123', 'STUDENT');
+VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '(095)-787-22-56', NULL, 'Jimmy', '123', 'STUDENT');
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)

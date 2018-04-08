@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Groups which are passing your quizzes</title>
+    <title>Groups</title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
@@ -47,57 +47,87 @@
         </div>
     </form>
     <h4>Your groups</h4>
-    <table class="table">
-        <thead>
-        <tr>
-            <th style="width: 30%">Name</th>
-            <th style="width: 20%">Students</th>
-            <th style="width: 20%">Creation date</th>
-            <th style="width: 15%"></th>
-            <th style="width: 15%"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${teacherGroups}" var="group" varStatus="status">
-            <tr>
-                <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
-                <td>${studentsNumberForTeacherGroups[status.index]}</td>
-                <td><localDate:format value="${group.creationDate}"/></td>
-                <td>
-                    <a href="/teacher/groups/${group.groupId}/edit">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-                </td>
-                <td>
-                    <a href="/teacher/groups/${group.groupId}/delete" class="danger">
-                        <i class="fa fa-trash-o"></i> Delete
-                    </a>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+    <c:choose>
+        <c:when test="${not empty teacherGroups}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 20%">Students</th>
+                    <th style="width: 20%">Creation date</th>
+                    <th style="width: 15%"></th>
+                    <th style="width: 15%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${teacherGroups}" var="group" varStatus="status">
+                    <tr>
+                        <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
+                        <td>${studentsNumberForTeacherGroups[status.index]}</td>
+                        <td><localDate:format value="${group.creationDate}"/></td>
+                        <td>
+                            <a href="/teacher/groups/${group.groupId}/edit">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/teacher/groups/${group.groupId}/delete" class="danger">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have groups
+                </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
     <h4>Other groups</h4>
-    <table class="table">
-        <thead>
-        <tr>
-            <th style="width: 30%">Name</th>
-            <th style="width: 20%">Students</th>
-            <th style="width: 20%">Creation date</th>
-            <th style="width: 30%">Author name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${groups}" var="group" varStatus="status">
-            <tr>
-                <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
-                <td>${studentsNumberForGroups[status.index]}</td>
-                <td><localDate:format value="${group.creationDate}"/></td>
-                <td>${authors[status.index].lastName} ${authors[status.index].firstName}</td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+    <c:choose>
+        <c:when test="${not empty groups}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 20%">Students</th>
+                    <th style="width: 20%">Creation date</th>
+                    <th style="width: 30%">Author name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${groups}" var="group" varStatus="status">
+                    <tr>
+                        <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
+                        <td>${studentsNumberForGroups[status.index]}</td>
+                        <td><localDate:format value="${group.creationDate}"/></td>
+                        <td>${authors[status.index].lastName} ${authors[status.index].firstName}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    No other groups here
+                </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
     <div>
         <input type="button" class="btn btn-primary" value="Back" onclick="window.history.go(-1);">
     </div>

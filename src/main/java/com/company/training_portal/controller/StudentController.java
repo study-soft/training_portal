@@ -415,23 +415,25 @@ public class StudentController {
         List<PassedQuiz> notSinglePassedQuizzes = new ArrayList<>();
         List<PassedQuiz> notSingleClosedQuizzes = new ArrayList<>();
         List<Quiz> studentQuizzes = quizDao.findStudentQuizzes(studentId);
-        for (Quiz quiz : studentQuizzes) {
-            Long quizId = quiz.getQuizId();
-            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-            Integer studentsNumber = userDao.findStudentsNumber(groupId, quizId);
-            if (studentsNumber.equals(1)) {
-                continue;
-            }
-            switch (status) {
-                case OPENED:
-                    notSingleOpenedQuizzes.add(quizDao.findOpenedQuiz(studentId, quizId));
-                    break;
-                case PASSED:
-                    notSinglePassedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
-                    break;
-                case CLOSED:
-                    notSingleClosedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
-                    break;
+        if (!groupId.equals(0L)) {
+            for (Quiz quiz : studentQuizzes) {
+                Long quizId = quiz.getQuizId();
+                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+                Integer studentsNumber = userDao.findStudentsNumber(groupId, quizId);
+                if (studentsNumber.equals(1)) {
+                    continue;
+                }
+                switch (status) {
+                    case OPENED:
+                        notSingleOpenedQuizzes.add(quizDao.findOpenedQuiz(studentId, quizId));
+                        break;
+                    case PASSED:
+                        notSinglePassedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
+                        break;
+                    case CLOSED:
+                        notSingleClosedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
+                        break;
+                }
             }
         }
 

@@ -8,11 +8,11 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var closedStudents = "${closedStudents}";
-            var allStudents = "${allStudents}";
-            var answers = $("#answers");
+            const closedStudents = "${closedStudents}";
+            const allStudents = "${allStudents}";
+            const answers = $("#answers");
             if ("${allStudents}" !== "1" && closedStudents !== allStudents) {
-                var message = "You have to wait until all students in your group close this quiz. " +
+                const message = "You have to wait until all students in your group close this quiz. " +
                     "Closed students: ${closedStudents} / ${allStudents}";
                 answers.addClass("d-inline-block");
                 answers.attr("tabindex", "0");
@@ -57,11 +57,16 @@
         <button id="close" class="close">&times;</button>
     </div>
     <h2>${closedQuiz.quizName}</h2>
-    <div class="highlight-primary">
-        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-one-row">
-        This quiz is closed
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            This quiz is closed
+        </div>
     </div>
-    <h3>Information about result</h3>
+    <h4>Information about result</h4>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
@@ -80,7 +85,7 @@
             <td><localDateTime:format value="${closedQuiz.finishDate}"/></td>
         </tr>
     </table>
-    <h3>Information about quiz</h3>
+    <h4>Information about quiz</h4>
     <c:if test="${closedQuiz.description ne null}">
         <div class="col-lg-6"><strong>Description: </strong>${closedQuiz.description}</div>
     </c:if>
@@ -113,9 +118,9 @@
     </c:if>
     <button id="back" value="Back" class="btn btn-primary">Back</button>
     <span id="answers">
-            <a href="/student/quizzes/${closedQuiz.quizId}/answers"
-               class="btn btn-primary disabled"><i class="fa fa-ban error"></i> Answers</a>
-        </span>
+        <a href="/student/quizzes/${closedQuiz.quizId}/answers"
+           class="btn btn-primary disabled"><i class="fa fa-ban red"></i> Answers</a>
+    </span>
     <c:if test="${allStudents ne 1}">
         <a href="/student/results/${closedQuiz.quizId}" class="btn btn-primary">Results</a>
     </c:if>

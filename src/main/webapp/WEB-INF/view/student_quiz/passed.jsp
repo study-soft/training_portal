@@ -30,11 +30,16 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${passedQuiz.quizName}</h2>
-    <div class="highlight-success">
-        <img src="/resources/icon-success.png" width="25" height="25" class="icon-one-row">
-        This quiz is passed
+    <div class="row no-gutters align-items-center highlight-success">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-success.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            This quiz is passed
+        </div>
     </div>
-    <h3>Information about result</h3>
+    <h4>Information about result</h4>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
@@ -53,7 +58,7 @@
             <td><localDateTime:format value="${passedQuiz.finishDate}"/></td>
         </tr>
     </table>
-    <h3>Information about quiz</h3>
+    <h4>Information about quiz</h4>
     <c:if test="${passedQuiz.description ne null}">
         <div class="col-lg-6"><strong>Description: </strong>${passedQuiz.description}</div>
     </c:if>
@@ -81,10 +86,15 @@
             <td>${passedQuiz.authorName}</td>
         </tr>
     </table>
-    <div class="highlight-primary">
-        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-two-rows">
-        <div class="inline">If you are satisfied with your result, you need to close quiz</div>
-        <div class="non-first-row">Also you can try again but score will be less</div>
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            If you are satisfied with your result, you need to close quiz
+            <br>Also you can tru again but score will be less
+        </div>
     </div>
     <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
     <c:if test="${allStudents ne 1}">

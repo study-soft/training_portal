@@ -71,11 +71,15 @@
     <h3><i class="fa fa-group"></i> Group information</h3>
     <c:choose>
         <c:when test="${group eq null}">
-            <div class="col-lg-6 highlight-danger">
-                <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-                     width="25" height="25" class="icon-two-rows">
-                <div class="inline">You do not belong to any group</div>
-                <div class="non-first-row">Say your teachers to add you</div>
+            <div class="row no-gutters align-items-center highlight-danger">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not belong to any group
+                    <br>Say you teachers to add you
+                </div>
             </div>
         </c:when>
         <c:otherwise>

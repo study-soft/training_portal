@@ -10,17 +10,25 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Results</h2>
-    <div class="highlight-primary">
-        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-             width="25" height="25" class="icon-one-row">
-        There are results of groups and students which are passing your quizzes
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            There are results of groups and students which are passing your quizzes
+        </div>
     </div>
     <c:choose>
         <c:when test="${empty groups && empty students}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have published quizzes
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have published quizzes
+                </div>
             </div>
         </c:when>
         <c:otherwise>

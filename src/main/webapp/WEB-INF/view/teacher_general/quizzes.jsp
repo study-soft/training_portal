@@ -119,7 +119,15 @@
     <h3>Unpublished quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
-            You do not have any unpublished quizzes
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have unpublished quizzes
+                </div>
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">
@@ -174,7 +182,15 @@
     <h3>Published quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
-            You do not have any published quizzes
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have published quizzes
+                </div>
+            </div>
         </c:when>
         <c:otherwise>
             <table class="table">

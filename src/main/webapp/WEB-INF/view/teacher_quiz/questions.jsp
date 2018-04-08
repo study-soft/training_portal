@@ -901,9 +901,14 @@
                     <h2>Answers for quiz '${quiz.name}'</h2>
                 </c:when>
                 <c:otherwise>
-                    <div class="highlight-primary">
-                        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-one-row">
-                        There is no questions in '${quiz.name}' quiz
+                    <div class="row no-gutters align-items-center highlight-primary">
+                        <div class="col-auto mr-3">
+                            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                                 width="25" height="25">
+                        </div>
+                        <div class="col">
+                            There is no questions in '${quiz.name}' quiz
+                        </div>
                     </div>
                 </c:otherwise>
             </c:choose>

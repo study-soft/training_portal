@@ -25,10 +25,14 @@
                             }
                             if ($('tr').length === 1) {
                                 $('table').remove();
-                                $('h3').after('<div class="highlight-primary">\n' +
-                                    '                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
-                                    '                     width="25" height="25" class="icon-one-row">\n' +
-                                    '                There is no students without group\n' +
+                                $('h3').after('<div class="row no-gutters align-items-center highlight-primary">\n' +
+                                    '                <div class="col-auto mr-3">\n' +
+                                    '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                    '                         width="25" height="25">\n' +
+                                    '                </div>\n' +
+                                    '                <div class="col">\n' +
+                                    '                    There is no students without group\n' +
+                                    '                </div>\n' +
                                     '            </div>');
                                 $('input[type="submit"]').remove();
                             }

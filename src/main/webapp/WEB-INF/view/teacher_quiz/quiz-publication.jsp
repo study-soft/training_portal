@@ -50,10 +50,14 @@
     <h2>${quiz.name}</h2>
     <c:choose>
         <c:when test="${empty groups && empty studentsWithoutGroup}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                There are no students and groups that you can publish quiz
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    There is no students and groups that you can publish quiz
+                </div>
             </div>
         </c:when>
         <c:otherwise>
@@ -68,10 +72,14 @@
                         </button>
                     </div>
                 </div>
-                <div class="highlight-primary">
-                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                         width="25" height="25" class="icon-one-row">
-                    Select students or groups for whom you want to publish the quiz
+                <div class="row no-gutters align-items-center highlight-primary">
+                    <div class="col-auto mr-3">
+                        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                             width="25" height="25">
+                    </div>
+                    <div class="col">
+                        Select students or groups for whom you want to publish quiz
+                    </div>
                 </div>
                 <div class="row">
                     <c:if test="${not empty groups}">

@@ -24,22 +24,41 @@
         </tr>
     </table>
     <h4>You gave next quizzes to this group</h4>
-    <table class="col-lg-6 table-info">
-        <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
-            <tr>
-                <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
-                <td>${statuses[status.index]}</td>
-                <td>${studentsProgress[quiz.quizId][0]} / ${studentsProgress[quiz.quizId][1]}</td>
-            </tr>
-        </c:forEach>
-    </table>
+    <c:choose>
+        <c:when test="${empty publishedQuizzes}">
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You did not give quizzes to this group
+                </div>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <table class="col-lg-6 table-info">
+                <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
+                    <tr>
+                        <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
+                        <td>${statuses[status.index]}</td>
+                        <td>${studentsProgress[quiz.quizId][0]} / ${studentsProgress[quiz.quizId][1]}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </c:otherwise>
+    </c:choose>
     <h4>Students</h4>
     <c:choose>
         <c:when test="${empty studentsList}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                There is no students in group
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    There is no students in this group
+                </div>
             </div>
         </c:when>
         <c:otherwise>

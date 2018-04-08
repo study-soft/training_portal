@@ -26,10 +26,15 @@
             <td>${openedQuiz.score}</td>
         </tr>
     </table>
-    <div class="highlight-primary">
-        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-two-rows">
-        <div class="inline">If you press "Start" you will begin passing the quiz</div>
-        <div class="non-first-row">If you do not want to pass it than press "Back"</div>
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            If you press "Start" you will begin passing the quiz
+            <br>If you do not want to pass it than press "Back"
+        </div>
     </div>
     <div>
         <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>

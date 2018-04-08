@@ -30,6 +30,28 @@
                 $("#update-success").fadeOut("slow");
             });
 
+            if ("${unpublishedQuiz.questionsNumber}" === "0") {
+                const warning = $("#warning");
+                warning.text("You have no questions in this quiz");
+
+                const publish = $("#publish");
+                const message = "Add questions to this quiz then you can publish it";
+                publish.find("a").addClass("disabled");
+                publish.find("i").removeClass("fa fa-share-square-o");
+                publish.find("i").addClass("fa fa-ban red");
+                publish.attr("tabindex", "0");
+                publish.attr("data-toggle", "tooltip");
+                publish.attr("data-placement", "bottom");
+                publish.attr("title", message);
+                publish.tooltip();
+
+                publish.parent().after('<div class="col-auto">\n' +
+                    '                <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-success btn-wide">\n' +
+                    '                    <i class="fa fa-plus"></i> Add questions\n' +
+                    '                </a>\n' +
+                    '           </div>');
+            }
+
             $("#back").click(function () {
                 const previousUri = document.referrer;
                 const createQuizUri = "http://${header["host"]}${pageContext.request.contextPath}/teacher/quizzes/create";
@@ -59,40 +81,26 @@
         <button id="close" class="close">&times;</button>
     </div>
     <h2>${unpublishedQuiz.name}</h2>
-    <c:choose>
-        <c:when test="${unpublishedQuiz.questionsNumber ne 0}">
-            <div class="row">
-                <div class="col-auto">
-                    <div class="highlight-danger">
-                        <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-                             width="25" height="25" class="icon-one-row">
-                        This quiz is not published
-                    </div>
+    <div class="row">
+        <div class="col-auto">
+            <div class="row no-gutters align-items-center highlight-danger">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                         width="25" height="25">
                 </div>
-                <div class="col-auto">
-                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publication" class="btn btn-success">
-                        <i class="fa fa-share-square-o"></i> Publish
-                    </a>
+                <div id="warning" class="col">
+                    This quiz is not published
                 </div>
             </div>
-        </c:when>
-        <c:otherwise>
-            <div class="row">
-                <div class="col-auto">
-                    <div class="highlight-danger">
-                        <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-                             width="25" height="25" class="icon-one-row">
-                        You do not have questions in this quiz
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-success btn-wide">
-                        <i class="fa fa-plus"></i> Add questions
-                    </a>
-                </div>
-            </div>
-        </c:otherwise>
-    </c:choose>
+        </div>
+        <div class="col-auto">
+            <span id="publish">
+                <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publication" class="btn btn-success">
+                    <i class="fa fa-share-square-o"></i> Publish
+                </a>
+            </span>
+        </div>
+    </div>
     <c:if test="${unpublishedQuiz.description ne null}">
         <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
     </c:if>
@@ -155,10 +163,14 @@
     <c:if test="${unpublishedQuiz.explanation ne null}">
         <div><strong>Explanation: </strong>${unpublishedQuiz.explanation}</div>
     </c:if>
-    <div class="highlight-primary">
-        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-             width="25" height="25" class="icon-one-row">
-        Students will see explanation after all group close this quiz
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            Students will see explanation after all group close this quiz
+        </div>
     </div>
     <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>

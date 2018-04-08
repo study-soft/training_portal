@@ -31,8 +31,16 @@
         <h3>Students to add:</h3>
         <c:choose>
             <c:when test="${empty students}">
-                <div>There is no students without a group.</div>
-                <div>You can create an empty group and later add students to it that do not belong to any group</div>
+                <div class="row no-gutters align-items-center highlight-primary">
+                    <div class="col-auto mr-3">
+                        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                             width="25" height="25">
+                    </div>
+                    <div class="col">
+                        There is no students without group
+                        <br>You can create an empty group and later add students to it
+                    </div>
+                </div>
             </c:when>
             <c:otherwise>
                 <table class="table">

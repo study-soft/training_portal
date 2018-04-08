@@ -21,10 +21,14 @@
                         selectedRow.remove();
                         var passedQuizzes = $("#passedQuizzes");
                         if (passedQuizzes.find("tr").length === 1) {
-                            passedQuizzes.after('<div class="highlight-primary">\n' +
-                                '                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
-                                '                     width="25" height="25" class="icon-one-row">\n' +
-                                '                You do not have passed quizzes\n' +
+                            passedQuizzes.after('<div class="row no-gutters align-items-center highlight-primary">\n' +
+                                '                <div class="col-auto mr-3">\n' +
+                                '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '                         width="25" height="25">\n' +
+                                '                </div>\n' +
+                                '                <div class="col">\n' +
+                                '                    You do not have passed quizzes\n' +
+                                '                </div>\n' +
                                 '            </div>');
                             passedQuizzes.remove();
                         }
@@ -77,10 +81,14 @@
     <h4>Opened quizzes</h4>
     <c:choose>
         <c:when test="${empty openedQuizzes}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have opened quizzes. Say your teachers to give you some
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have opened quizzes
+                </div>
             </div>
         </c:when>
         <c:otherwise>
@@ -111,10 +119,14 @@
     <h4>Passed quizzes</h4>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have passed quizzes
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have passed quizzes
+                </div>
             </div>
         </c:when>
         <c:otherwise>
@@ -153,10 +165,14 @@
     <h4>Closed quizzes</h4>
     <c:choose>
         <c:when test="${empty closedQuizzes}">
-            <div id="noClosedQuizzesInfo" class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have closed quizzes
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have closed quizzes
+                </div>
             </div>
         </c:when>
         <c:otherwise>

@@ -28,10 +28,14 @@
     <br>
     <c:choose>
         <c:when test="${empty teachers}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                You do not have teachers
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    You do not have teachers
+                </div>
             </div>
         </c:when>
         <c:otherwise>

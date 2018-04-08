@@ -12,10 +12,14 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Oops... Time is up</h2>
-    <div class="highlight-danger">
-        <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
-             width="25" height="25" class="icon-one-row">
-        You have forcibly completed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt
+    <div class="row no-gutters align-items-center highlight-danger">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            You have forcibly completed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt
+        </div>
     </div>
     <table class="col-lg-6 table-info">
         <tr>

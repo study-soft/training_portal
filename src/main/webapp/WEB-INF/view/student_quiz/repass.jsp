@@ -21,7 +21,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${passedQuiz.quizName}</h2>
-    <h3>Information about result</h3>
+    <h4>Information about result</h4>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
@@ -36,7 +36,7 @@
             <td>${passedQuiz.attempt}</td>
         </tr>
     </table>
-    <h3>Information about passing</h3>
+    <h4>Information about passing</h4>
     <table class="col-lg-6 table-info">
         <c:if test="${passedQuiz.passingTime ne null}">
             <tr>
@@ -53,12 +53,16 @@
             <td>${passedQuiz.score}</td>
         </tr>
     </table>
-    <div class="highlight-primary">
-        <img src="/resources/icon-primary.png" width="25" height="25" class="icon-four-rows">
-        <div class="inline">If you press "Repass" you will begin repassing the quiz</div>
-        <div id="attempt" class="non-first-row">Your total score will be less on ${passedQuiz.attempt * 10}%</div>
-        <div class="non-first-row">If you press "Close" you will close quiz with current result</div>
-        <div class="non-first-row">If you do not want to repass it than press "Back"</div>
+    <div class="row no-gutters align-items-center highlight-primary">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            If you press "Repass" you will begin repassing the quiz
+            <br><span id="attempt">Your total score will be less on ${passedQuiz.attempt * 10}%</span>
+            <br>If you do not want to repass quiz than press "Back"
+        </div>
     </div>
     <div>
         <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>

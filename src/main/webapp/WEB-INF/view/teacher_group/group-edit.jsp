@@ -28,15 +28,27 @@
             <textarea rows="6" name="description" id="description" placeholder="Description"
                       class="col-lg-6 form-control">${group.description}</textarea>
         </div>
-        <div class="highlight-primary">
-            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                 width="25" height="25" class="icon-one-row">
-            Save changes to add or remove students from this group
+        <div class="row no-gutters align-items-center highlight-primary">
+            <div class="col-auto mr-3">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25">
+            </div>
+            <div class="col">
+                Save changes to add or remove students from this group
+            </div>
         </div>
-        <h3>Students in group:</h3>
+        <h4>Students in group</h4>
         <c:choose>
             <c:when test="${empty students}">
-                <div>There is no students in this group.</div>
+                <div class="row no-gutters align-items-center highlight-primary">
+                    <div class="col-auto mr-3">
+                        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                             width="25" height="25">
+                    </div>
+                    <div class="col">
+                        There is no students in this group
+                    </div>
+                </div>
             </c:when>
             <c:otherwise>
                 <table class="table">

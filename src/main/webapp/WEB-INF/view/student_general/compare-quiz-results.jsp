@@ -29,17 +29,25 @@
     <h3><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></h3>
     <c:choose>
         <c:when test="${not empty openedStudents or not empty passedStudents}">
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                Here are students who pass this quiz with different quiz status
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    Here are students who pass this quiz with different quiz status
+                </div>
             </div>
         </c:when>
         <c:otherwise>
-            <div class="highlight-primary">
-                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                     width="25" height="25" class="icon-one-row">
-                All students in this group closed this quiz
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    All students in this group closed this quiz
+                </div>
             </div>
         </c:otherwise>
     </c:choose>

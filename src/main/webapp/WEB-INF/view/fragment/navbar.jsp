@@ -32,7 +32,7 @@
                 <li class="nav-item">
                         <%--suppress XmlDuplicatedId --%>
                     <a id="logout" href="/logout" class="nav-link">Log out<i
-                            class="fa fa-sign-out nav-link nav-icon inline"></i></a>
+                            class="fa fa-sign-out nav-link nav-icon inline" style="margin-left: 3px"></i></a>
                 </li>
             </ul>
         </div>
@@ -67,7 +67,7 @@
                 <li class="nav-item">
                         <%--suppress XmlDuplicatedId --%>
                     <a id="logout" href="/quiz-passing-logout" class="nav-link">Log out<i
-                            class="fa fa-sign-out nav-link nav-icon inline"></i></a>
+                            class="fa fa-sign-out nav-link nav-icon inline" style="margin-left: 3px"></i></a>
                 </li>
             </ul>
         </div>

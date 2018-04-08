@@ -30,11 +30,16 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>${openedQuiz.quizName}</h2>
-    <div class="highlight-success">
-        <img src="/resources/icon-success.png" width="25" height="25" class="icon-one-row">
-        This quiz is opened
+    <div class="row no-gutters align-items-center highlight-success">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-success.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            This quiz is opened
+        </div>
     </div>
-    <h3>Information about quiz</h3>
+    <h4>Information about quiz</h4>
     <c:if test="${openedQuiz.description ne null}">
         <div class="col-lg-6"><strong>Description: </strong>${openedQuiz.description}</div>
     </c:if>

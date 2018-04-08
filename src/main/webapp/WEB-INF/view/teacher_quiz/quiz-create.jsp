@@ -72,10 +72,14 @@
                            rows="6" id="explanation" placeholder="Explanation"/>
             <form:errors path="explanation" cssClass="error"/>
         </div>
-        <div class="highlight-primary">
-            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                 width="25" height="25" class="icon-one-row">
-            Students will see explanation after all group close this quiz
+        <div class="row no-gutters align-items-center highlight-primary">
+            <div class="col-auto mr-3">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25">
+            </div>
+            <div class="col">
+                Students will see explanation after all group close this quiz
+            </div>
         </div>
         <div class="row">
             <div class="col-2">

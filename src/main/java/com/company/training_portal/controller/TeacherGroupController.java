@@ -43,9 +43,9 @@ public class TeacherGroupController {
 
     @Autowired
     public TeacherGroupController(UserDao userDao,
-                             GroupDao groupDao,
-                             QuizDao quizDao,
-                             Environment environment) {
+                                  GroupDao groupDao,
+                                  QuizDao quizDao,
+                                  Environment environment) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
@@ -91,10 +91,7 @@ public class TeacherGroupController {
     @RequestMapping("/teacher/groups/{groupId}")
     public String showGroupInfo(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("groupId") Long groupId, Model model) {
-        List<Group> teacherGroups = groupDao.findGroups(teacherId);
-        List<Long> teacherGroupsIds = teacherGroups.stream()
-                .map(Group::getGroupId)
-                .collect(Collectors.toList());
+        List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(teacherId);
 
         Group group = groupDao.findGroup(groupId);
         Integer studentsNumber = groupDao.findStudentsNumberInGroup(groupId);
@@ -124,7 +121,7 @@ public class TeacherGroupController {
         model.addAttribute("statuses", statuses);
         model.addAttribute("studentsProgress", studentsProgress);
 
-        if (teacherGroupsIds.contains(groupId)) {
+        if (teacherGroupIds.contains(groupId)) {
             return "teacher_group/own-group-info";
         } else {
             return "teacher_group/foreign-group-info";
@@ -190,7 +187,12 @@ public class TeacherGroupController {
     }
 
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
-    public String showAddStudents(@PathVariable("groupId") Long groupId, Model model) {
+    public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
+                                  @PathVariable("groupId") Long groupId, Model model) {
+        if (checkGroupAccessDenied(teacherId, groupId)) {
+            return "access-denied";
+        }
+
         Group group = groupDao.findGroup(groupId);
         List<User> students = userDao.findStudentsWithoutGroup();
 
@@ -224,7 +226,12 @@ public class TeacherGroupController {
     // GROUP EDIT ==================================================================
 
     @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.GET)
-    public String showEditGroup(@PathVariable("groupId") Long groupId, Model model) {
+    public String showEditGroup(@ModelAttribute("teacherId") Long teacherId,
+                                @PathVariable("groupId") Long groupId, Model model) {
+        if (checkGroupAccessDenied(teacherId, groupId)) {
+            return "access-denied";
+        }
+
         Group group = groupDao.findGroup(groupId);
         List<User> students = userDao.findStudents(groupId);
 
@@ -299,5 +306,16 @@ public class TeacherGroupController {
             return "teacher_group/group-deleted";
         }
         return "teacher_group/group-deleted";
+    }
+
+    // INTERNALS =========================================================================
+
+    private boolean checkGroupAccessDenied(Long teacherId, Long groupId) {
+        List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(teacherId);
+        if (teacherGroupIds.contains(groupId)) {
+            return false;
+        }
+        logger.info("Access denied");
+        return true;
     }
 }

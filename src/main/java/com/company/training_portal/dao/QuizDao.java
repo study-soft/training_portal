@@ -17,7 +17,6 @@ public interface QuizDao {
 
     List<Quiz> findAllQuizzesWithQuestions();
 
-    List<Long> findTeacherQuizIds(Long authorId);
 
     List<Quiz> findUnpublishedQuizzes(Long teacherId);
 
@@ -27,7 +26,7 @@ public interface QuizDao {
 
     List<Quiz> findStudentQuizzes(Long studentId);
 
-    @Deprecated
+    // No usages
     Integer findQuizzesNumber(Long authorId);
 
     // key: studentQuizStatus, value: number of students
@@ -41,6 +40,10 @@ public interface QuizDao {
     List<Quiz> findQuizzes(Long studentId, Long authorId);
 
     List<Long> findCommonQuizIds(Long studentId1, Long studentId2);
+
+    List<Long> findTeacherQuizIds(Long authorId);
+
+    List<Long> findStudentQuizIds(Long studentId);
 
     Integer findResult(Long studentId, Long quizId);
 

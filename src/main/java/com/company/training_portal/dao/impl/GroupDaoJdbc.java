@@ -94,6 +94,15 @@ public class GroupDaoJdbc implements GroupDao {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Long> findTeacherGroupIds(Long teacherId) {
+        List<Long> groupIds = template.queryForList(FIND_TEACHER_GROUP_IDS,
+                new Object[]{teacherId}, Long.class);
+        logger.info("Found teacher group ids by teacherId = " + teacherId + ": " + groupIds);
+        return groupIds;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Integer findGroupsNumber(Long authorId) {
         Integer groupsNumber = template.queryForObject(FIND_GROUPS_NUMBER_BY_AUTHOR_ID,
                 new Object[]{authorId}, Integer.class);
@@ -232,6 +241,9 @@ public class GroupDaoJdbc implements GroupDao {
     "ORDER BY GROUPS.NAME;";
 
     private static final String FIND_ALL_GROUPS = "SELECT * FROM GROUPS;";
+
+    private static final String FIND_TEACHER_GROUP_IDS =
+    "SELECT GROUP_ID FROM GROUPS WHERE AUTHOR_ID = ?;";
 
     private static final String FIND_GROUPS_NUMBER_BY_AUTHOR_ID =
     "SELECT COUNT(GROUP_ID) FROM GROUPS WHERE AUTHOR_ID = ?;";

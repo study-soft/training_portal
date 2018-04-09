@@ -105,6 +105,13 @@ public class GroupDaoJdbcTest {
     }
 
     @Test
+    public void test_teacher_group_ids() {
+        List<Long> testTeacherGroupIds = List.of(1L, 3L);
+        List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(1L);
+        assertEquals(testTeacherGroupIds, teacherGroupIds);
+    }
+
+    @Test
     public void test_find_groups_number_by_authorId() {
         Integer groupsNumber = groupDao.findGroupsNumber(1L);
         assertThat(groupsNumber, is(1));

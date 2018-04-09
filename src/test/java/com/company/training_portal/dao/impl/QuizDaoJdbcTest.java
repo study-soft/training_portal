@@ -44,15 +44,10 @@ public class QuizDaoJdbcTest {
 
     @Autowired
     private QuizDao quizDao;
-
     @Autowired
     private QuestionDao questionDao;
-
     @Autowired
     private UserDao userDao;
-
-    @Autowired
-    private GroupDao groupDao;
 
     public void setQuizDao(QuizDao quizDao) {
         this.quizDao = quizDao;
@@ -64,10 +59,6 @@ public class QuizDaoJdbcTest {
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
-    }
-
-    public void setGroupDao(GroupDao groupDao) {
-        this.groupDao = groupDao;
     }
 
     @Test
@@ -250,6 +241,20 @@ public class QuizDaoJdbcTest {
         List<Long> commonQuizIds = quizDao.findCommonQuizIds(3L, 11L);
 
         assertEquals(testCommonQuizIds, commonQuizIds);
+    }
+
+    @Test
+    public void test_find_teacher_quiz_ids() {
+        List<Long> testTeacherQuizIds = List.of(3L, 4L, 6L, 7L, 8L);
+        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(2L);
+        assertEquals(testTeacherQuizIds, teacherQuizIds);
+    }
+
+    @Test
+    public void test_find_student_quiz_ids() {
+        List<Long> testStudentQuizIds = List.of(3L, 5L, 6L, 11L);
+        List<Long> studentQuizIds = quizDao.findStudentQuizIds(5L);
+        assertEquals(testStudentQuizIds, studentQuizIds);
     }
 
     @Test

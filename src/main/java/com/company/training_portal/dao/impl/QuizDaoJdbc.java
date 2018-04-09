@@ -76,15 +76,6 @@ public class QuizDaoJdbc implements QuizDao {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> findTeacherQuizIds(Long authorId) {
-        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID,
-                new Object[]{authorId}, Long.class);
-        logger.info("All quizIds by authorId found: " + quizIds);
-        return quizIds;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public List<Quiz> findUnpublishedQuizzes(Long teacherId) {
         List<Quiz> quizzesWithQuestions = template.query(
                 FIND_UNPUBLISHED_QUIZZES_WITH_QUESTIONS_BY_AUTHOR_ID,
@@ -202,6 +193,23 @@ public class QuizDaoJdbc implements QuizDao {
         logger.info("Found common quizIds for students with id '" +
                 studentId1 + "' and '" + studentId2 + "': " + quizIds);
         return quizIds;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Long> findTeacherQuizIds(Long authorId) {
+        List<Long> quizIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID,
+                new Object[]{authorId}, Long.class);
+        logger.info("All quizIds by authorId found: " + quizIds);
+        return quizIds;
+    }
+
+    @Override
+    public List<Long> findStudentQuizIds(Long studentId) {
+        List<Long> studentIds = template.queryForList(FIND_ALL_QUIZ_IDS_BY_STUDENT_ID,
+                new Object[]{studentId}, Long.class);
+        logger.info("Found student quizIds by studentId = " + studentId + ": " + studentIds);
+        return studentIds;
     }
 
     @Transactional(readOnly = true)
@@ -591,9 +599,6 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES INNER JOIN QUESTIONS ON QUIZZES.QUIZ_ID = QUESTIONS.QUIZ_ID " +
     "GROUP BY QUIZZES.QUIZ_ID;";
 
-    private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
-    "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
-
     private static final String FIND_UNPUBLISHED_QUIZZES_WITH_QUESTIONS_BY_AUTHOR_ID =
     "SELECT QUIZZES.QUIZ_ID AS QUIZ_ID, QUIZZES.NAME AS_NAME, QUIZZES.DESCRIPTION AS DESCRIPTION, " +
     "QUIZZES.EXPLANATION AS EXPLANATION, QUIZZES.CREATION_DATE AS CREATION_DATE, " +
@@ -674,6 +679,12 @@ public class QuizDaoJdbc implements QuizDao {
     "FROM QUIZZES QUIZZES_1 INNER JOIN USER_QUIZ_JUNCTIONS J_1 ON QUIZZES_1.QUIZ_ID = J_1.QUIZ_ID, " +
     "QUIZZES QUIZZES_2 INNER JOIN USER_QUIZ_JUNCTIONS J_2 ON QUIZZES_2.QUIZ_ID = J_2.QUIZ_ID " +
     "WHERE J_1.USER_ID = ? AND J_2.USER_ID = ? AND QUIZZES_1.QUIZ_ID = QUIZZES_2.QUIZ_ID;";
+
+    private static final String FIND_ALL_QUIZ_IDS_BY_AUTHOR_ID =
+    "SELECT QUIZ_ID FROM QUIZZES WHERE AUTHOR_ID = ?;";
+
+    private static final String FIND_ALL_QUIZ_IDS_BY_STUDENT_ID =
+    "SELECT QUIZ_ID FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ?;";
 
     private static final String FIND_RESULT_BY_STUDENT_ID_AND_QUIZ_ID =
     "SELECT RESULT FROM USER_QUIZ_JUNCTIONS WHERE USER_ID = ? AND QUIZ_ID = ?;";

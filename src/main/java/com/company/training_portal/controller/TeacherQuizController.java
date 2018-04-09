@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.company.training_portal.model.enums.QuestionType.*;
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
 import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
@@ -36,7 +36,7 @@ import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 @Controller
 @PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
-@PreAuthorize("hasRole('ROLE_TEACHER')")
+//@PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherQuizController {
 
     private QuizDao quizDao;
@@ -100,9 +100,7 @@ public class TeacherQuizController {
     public String showTeacherQuiz(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
-        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
-        if (!teacherQuizIds.contains(quizId)) {
-            logger.info("access denied");
+        if (checkQuizAccessDenied(teacherId, quizId)) {
             return "access-denied";
         }
 
@@ -165,9 +163,7 @@ public class TeacherQuizController {
     public String showQuizPublication(@ModelAttribute("teacherId") Long teacherId,
                                       @PathVariable("quizId") Long quizId,
                                       Model model) {
-        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
-        if (!teacherQuizIds.contains(quizId)) {
-            logger.info("access denied");
+        if (checkQuizAccessDenied(teacherId, quizId)) {
             return "access-denied";
         }
 
@@ -333,7 +329,12 @@ public class TeacherQuizController {
     // QUIZ EDIT ======================================================================
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.GET)
-    public String showEditQuiz(@PathVariable("quizId") Long quizId, Model model) {
+    public String showEditQuiz(@ModelAttribute("teacherId") Long teacherId,
+                               @PathVariable("quizId") Long quizId, Model model) {
+        if (checkQuizAccessDenied(teacherId, quizId)) {
+            return "access-denied";
+        }
+
         Quiz quiz = quizDao.findQuiz(quizId);
         model.addAttribute("quiz", quiz);
 
@@ -410,9 +411,59 @@ public class TeacherQuizController {
     // QUESTION SHOW ===============================================================
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions")
-    public String showQuestions(@PathVariable("quizId") Long quizId, ModelMap model) {
-        studentController.showAnswers(quizId, model);
+    public String showQuestions(@ModelAttribute("teacherId") Long teacherId,
+                                @PathVariable("quizId") Long quizId, ModelMap model) {
+        if (checkQuizAccessDenied(teacherId, quizId)) {
+            return "access-denied";
+        }
+
         Quiz quiz = quizDao.findQuiz(quizId);
+        model.addAttribute("quiz", quiz);
+
+        List<Question> questionsOneAnswer = questionDao.findQuestions(quizId, ONE_ANSWER);
+        List<Question> questionsFewAnswers = questionDao.findQuestions(quizId, FEW_ANSWERS);
+        List<Question> questionsAccordance = questionDao.findQuestions(quizId, ACCORDANCE);
+        List<Question> questionsSequence = questionDao.findQuestions(quizId, SEQUENCE);
+        List<Question> questionsNumber = questionDao.findQuestions(quizId, QuestionType.NUMBER);
+        model.addAttribute("questionsOneAnswer", questionsOneAnswer);
+        model.addAttribute("questionsFewAnswers", questionsFewAnswers);
+        model.addAttribute("questionsAccordance", questionsAccordance);
+        model.addAttribute("questionsSequence", questionsSequence);
+        model.addAttribute("questionsNumber", questionsNumber);
+
+        Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
+        Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
+        Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
+        Map<Long, AnswerNumber> quizAnswersNumber = new HashMap<>();
+        List<Question> tests = new ArrayList<>();
+        tests.addAll(questionsOneAnswer);
+        tests.addAll(questionsFewAnswers);
+        for (Question question : tests) {
+            Long questionId = question.getQuestionId();
+            List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(questionId);
+            quizAnswersSimple.put(questionId, answersSimple);
+        }
+        for (Question question : questionsAccordance) {
+            Long questionId = question.getQuestionId();
+            AnswerAccordance answerAccordance = answerAccordanceDao.findAnswerAccordance(questionId);
+            quizAnswersAccordance.put(questionId, answerAccordance);
+        }
+        for (Question question : questionsSequence) {
+            Long questionId = question.getQuestionId();
+            AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(questionId);
+            quizAnswersSequence.put(questionId, answerSequence);
+        }
+        for (Question question : questionsNumber) {
+            Long questionId = question.getQuestionId();
+            AnswerNumber answerNumber = answerNumberDao.findAnswerNumber(questionId);
+            quizAnswersNumber.put(questionId, answerNumber);
+        }
+
+        model.addAttribute("quizAnswersSimple", quizAnswersSimple);
+        model.addAttribute("quizAnswersAccordance", quizAnswersAccordance);
+        model.addAttribute("quizAnswersSequence", quizAnswersSequence);
+        model.addAttribute("quizAnswersNumber", quizAnswersNumber);
+
         if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
             return "student_quiz/answers";
         }
@@ -572,6 +623,15 @@ public class TeacherQuizController {
     }
 
     // INTERNALS===================================================
+
+    private boolean checkQuizAccessDenied(Long teacherId, Long quizId) {
+        List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
+        if (teacherQuizIds.contains(quizId)) {
+            return false;
+        }
+        logger.info("Access denied");
+        return true;
+    }
 
     private List<String> closeQuizToStudent(Long studentId, Long quizId) {
         StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);

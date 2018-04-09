@@ -20,6 +20,8 @@ public interface GroupDao {
     // No usages
     List<Group> findAllGroups();
 
+    List<Long> findTeacherGroupIds(Long teacherId);
+
     // No usages
     Integer findGroupsNumber(Long authorId);
 

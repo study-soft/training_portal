@@ -7,7 +7,6 @@ import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -430,7 +428,7 @@ public class StudentController {
         return "student_quiz/answers";
     }
 
-    // STUDENT RESULTS
+    // STUDENT RESULTS ==================================================================
 
     @RequestMapping("/student/results")
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {

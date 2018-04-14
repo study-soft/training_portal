@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,7 @@ import static com.company.training_portal.util.Utils.timeUnitsToDuration;
 @Controller
 @PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
-//@PreAuthorize("hasRole('ROLE_TEACHER')")
+@PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherQuizController {
 
     private QuizDao quizDao;
@@ -48,7 +49,6 @@ public class TeacherQuizController {
     private AnswerSequenceDao answerSequenceDao;
     private AnswerNumberDao answerNumberDao;
     private QuizValidator quizValidator;
-    private StudentController studentController;
 
     private Logger logger = Logger.getLogger(QuizPassingController.class);
 
@@ -61,8 +61,7 @@ public class TeacherQuizController {
                                  AnswerAccordanceDao answerAccordanceDao,
                                  AnswerSequenceDao answerSequenceDao,
                                  AnswerNumberDao answerNumberDao,
-                                 QuizValidator quizValidator,
-                                 StudentController studentController) {
+                                 QuizValidator quizValidator) {
         this.quizDao = quizDao;
         this.userDao = userDao;
         this.groupDao = groupDao;
@@ -72,7 +71,6 @@ public class TeacherQuizController {
         this.answerSequenceDao = answerSequenceDao;
         this.answerNumberDao = answerNumberDao;
         this.quizValidator = quizValidator;
-        this.studentController = studentController;
     }
 
     @ModelAttribute("teacherId")

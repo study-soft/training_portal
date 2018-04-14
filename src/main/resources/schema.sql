@@ -2,7 +2,7 @@
 -- Table: answers_accordance
 DROP TABLE IF EXISTS answers_accordance;
 CREATE TABLE answers_accordance (
-  question_id bigint,
+  question_id BIGINT PRIMARY KEY ,
   left_side_1 VARCHAR(255) NOT NULL,
   right_side_1 VARCHAR(255) NOT NULL,
   left_side_2 VARCHAR(255) NOT NULL,
@@ -10,80 +10,73 @@ CREATE TABLE answers_accordance (
   left_side_3 VARCHAR(255) NOT NULL,
   right_side_3 VARCHAR(255) NOT NULL,
   left_side_4 VARCHAR(255) NOT NULL,
-  right_side_4 VARCHAR(255) NOT NULL,
-  CONSTRAINT answer_accordance_pk PRIMARY KEY (question_id)
+  right_side_4 VARCHAR(255) NOT NULL
 );
 
 -- Table: answers_number
 DROP TABLE IF EXISTS answers_number;
 CREATE TABLE answers_number (
-  question_id bigint,
-  correct int NOT NULL,
-  CONSTRAINT answer_number_pk PRIMARY KEY (question_id)
+  question_id BIGINT PRIMARY KEY ,
+  correct int NOT NULL
 );
 
 -- Table: answers_sequence
 DROP TABLE IF EXISTS answers_sequence;
 CREATE TABLE answers_sequence (
-  question_id bigint,
+  question_id BIGINT PRIMARY KEY,
   item_1 VARCHAR(255) NOT NULL,
   item_2 VARCHAR(255) NOT NULL,
   item_3 VARCHAR(255) NOT NULL,
-  item_4 VARCHAR(255) NOT NULL,
-  CONSTRAINT answer_sequence_pk PRIMARY KEY (question_id)
+  item_4 VARCHAR(255) NOT NULL
 );
 
 -- Table: answers_simple
 DROP TABLE IF EXISTS answers_simple;
 CREATE TABLE answers_simple (
-  answer_simple_id bigint NOT NULL AUTO_INCREMENT,
+  answer_simple_id bigint PRIMARY KEY AUTO_INCREMENT,
   question_id bigint NOT NULL,
   body varchar(255) NOT NULL,
-  correct bool NOT NULL,
-  CONSTRAINT answer_simple_pk PRIMARY KEY (answer_simple_id)
+  correct bool NOT NULL
 );
 
 -- Table: groups
 DROP TABLE IF EXISTS groups;
 CREATE TABLE groups (
-  group_id bigint NOT NULL AUTO_INCREMENT,
+  group_id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name varchar(255) UNIQUE NOT NULL,
-  description varchar(65535) NULL,
+  description TEXT(65535) NULL,
   creation_date date NOT NULL,
-  author_id BIGINT NOT NULL,
-  CONSTRAINT group_pk PRIMARY KEY (group_id)
+  author_id BIGINT NOT NULL
 );
 
 -- Table: questions
 DROP TABLE IF EXISTS questions;
 CREATE TABLE questions (
-  question_id bigint NOT NULL AUTO_INCREMENT,
+  question_id BIGINT PRIMARY KEY AUTO_INCREMENT,
   quiz_id bigint NOT NULL,
-  body varchar(65535) NOT NULL,
-  explanation varchar(65535) NULL,
+  body TEXT(65535) NOT NULL,
+  explanation TEXT(65535) NULL,
   question_type varchar(255) NOT NULL,
-  score int NOT NULL,
-  CONSTRAINT question_pk PRIMARY KEY (question_id)
+  score int NOT NULL
 );
 
 -- Table: quizzes
 DROP TABLE IF EXISTS quizzes;
 CREATE TABLE quizzes (
-  quiz_id bigint NOT NULL AUTO_INCREMENT,
+  quiz_id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name varchar(255) UNIQUE NOT NULL,
-  description varchar(65535) NULL,
-  explanation varchar(65535) NULL,
+  description TEXT(65535) NULL,
+  explanation TEXT(65535) NULL,
   creation_date date NOT NULL,
   passing_time time NULL,
   author_id bigint NOT NULL,
-  teacher_quiz_status VARCHAR(255) NOT NULL,
-  CONSTRAINT quiz_pk PRIMARY KEY (quiz_id)
+  teacher_quiz_status VARCHAR(255) NOT NULL
 );
 
 -- Table: users
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-  user_id bigint NOT NULL AUTO_INCREMENT,
+  user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
   group_id bigint NULL,
   first_name varchar(255) NOT NULL,
   last_name varchar(255) NOT NULL,
@@ -93,23 +86,26 @@ CREATE TABLE users (
   photo blob NULL,
   login varchar(255) UNIQUE NOT NULL,
   password varchar(255) NOT NULL,
-  user_role varchar(255) NOT NULL,
-  CONSTRAINT user_pk PRIMARY KEY (user_id)
+  user_role varchar(255) NOT NULL
 );
 
 -- Table: user_quiz_junctions
 DROP TABLE IF EXISTS user_quiz_junctions;
 CREATE TABLE user_quiz_junctions (
-  user_id bigint NOT NULL,
-  quiz_id bigint NOT NULL,
+  user_id BIGINT NOT NULL,
+  quiz_id BIGINT NOT NULL,
   result int NULL,
   submit_date datetime NOT NULL,
   start_date datetime NULL,
   finish_date datetime NULL,
   attempt int NOT NULL,
-  student_quiz_status varchar(255) NOT NULL,
-  CONSTRAINT user_quiz_junction_pk PRIMARY KEY (user_id, quiz_id)
+  student_quiz_status varchar(255) NOT NULL
 );
+
+-- primary keys
+-- user_quiz_junction
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_pk
+PRIMARY KEY (user_id, quiz_id);
 
 -- foreign keys
 -- Reference: User_Group (table: users)

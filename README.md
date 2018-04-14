@@ -24,7 +24,7 @@
 - Log4j 1.2.17 - logging events
 - JUnit 4.12, Spring 4.3 Test, H2 database 1.4.196 - testing
 - BoneCP 0.8.0 - connection pool
-- MySQL 6.0.6 - data storage
+- MySQL 5.1.39 - data storage
 - HTML 5, CSS 3, Bootstrap 4, JSP 2.2, JSTL 1.2 - frontend
 - JavaScript 5.1 - frontend programming language
 - JQuery 3.3.1 - JavaScript library

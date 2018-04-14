@@ -4,7 +4,6 @@ import com.company.training_portal.config.AppConfig;
 import com.company.training_portal.dao.QuizDao;
 import com.company.training_portal.dao.UserDao;
 import com.company.training_portal.model.User;
-import com.company.training_portal.model.enums.StudentQuizStatus;
 import com.company.training_portal.model.enums.UserRole;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
@@ -355,7 +353,7 @@ public class UserDaoJdbcTest {
     public void test_edit_user() {
         userDao.editUser(4L, "firstName", "lastName",
                 "email@example.com", LocalDate.of(2000, 3, 25),
-                "095-000-00-00", "password");
+                "095-000-00-00", "jdbc.password");
 
         User user = userDao.findUser(4L);
 
@@ -364,7 +362,7 @@ public class UserDaoJdbcTest {
         assertThat(user.getEmail(), is("email@example.com"));
         assertThat(user.getDateOfBirth(), is(LocalDate.of(2000, 3, 25)));
         assertThat(user.getPhoneNumber(), is("095-000-00-00"));
-        assertThat(user.getPassword(), is("password"));
+        assertThat(user.getPassword(), is("jdbc.password"));
     }
 
     @Test

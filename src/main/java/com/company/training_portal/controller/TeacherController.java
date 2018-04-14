@@ -2,15 +2,9 @@ package com.company.training_portal.controller;
 
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
-import com.company.training_portal.model.enums.QuestionType;
-import com.company.training_portal.model.enums.StudentQuizStatus;
-import com.company.training_portal.validator.QuizValidator;
 import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,18 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
-import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
-import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
-import static com.company.training_portal.model.enums.TeacherQuizStatus.PUBLISHED;
-import static com.company.training_portal.model.enums.TeacherQuizStatus.UNPUBLISHED;
-import static com.company.training_portal.util.Utils.formatDateTime;
-import static java.util.Arrays.asList;
 
 @Controller
 @SessionAttributes("teacherId")

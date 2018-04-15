@@ -119,14 +119,14 @@
                 if (!question.val()) {
                     question.after('<div class="error">Cannot be empty</div>');
                     validationSuccess = false;
-                } else if (question.val().match(/[<>]+/)) {
-                    question.after('<div class="error">Cannot contain "<" or ">"</div>');
+                } else if (question.val().length > 65535) {
+                    question.after('<div class="error">Cannot be greater than 65535 characters</div>');
                     validationSuccess = false;
                 }
 
                 var explanation = $("#explanation");
-                if (explanation.val().match(/[<>]+/)) {
-                    explanation.after('<div class="error">Cannot contain "<" or ">"</div>');
+                if (explanation.val().length > 65535) {
+                    explanation.after('<div class="error">Cannot be greater than 65535 characters</div>');
                     validationSuccess = false;
                 }
 
@@ -138,7 +138,7 @@
                         });
                         var countOfCorrect = $("input[type='radio'][name='correct']:checked").length;
                         if (countOfCorrect === 0) {
-                            alert("select correct answer");
+                            alert("Select correct answer");
                             validationSuccess = false;
                         }
                         break;
@@ -148,7 +148,7 @@
                         });
                         var countOfCorrect = $("input[type='checkbox']:checked").length;
                         if (countOfCorrect === 0) {
-                            alert("select correct answer");
+                            alert("Select correct answer");
                             validationSuccess = false;
                         }
                         break;
@@ -177,8 +177,8 @@
                     if (!answer.val()) {
                         answer.after('<div class="error">Cannot be empty</div>');
                         validationSuccess = false;
-                    } else if (answer.val().match(/[<>]+/)) {
-                        answer.after('<div class="error">Cannot contain "<" or ">"</div>');
+                    } else if (answer.val().length > 65535) {
+                        answer.after('<div class="error">Cannot be greater than 65535 characters</div>');
                         validationSuccess = false;
                     }
                 }
@@ -219,18 +219,25 @@
                 if ($("#type").prop("disabled")) {
                     data += "&type=" + questionType;
                 }
-                alert(data);
+                // alert(data);
                 $.ajax({
                     type: form.attr("method"),
                     url: form.attr("action"),
                     data: data,
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.log("status:" + status + "\nresponse message: " +
                             xhr.responseText + "\nerror: " + error);
                         alert("Some error. See in console");
                     },
                     success: function () {
-                        alert("success");
+                        // alert("success");
+
+                        const noQuestions = $("#noQuestionsInfo");
+                        if (noQuestions.length !== 0) {
+                            noQuestions.replaceWith('<h2 id="pageHeader">Questions for quiz ' +
+                                '\'<c:out value="${quiz.name}"/>\'</h2>');
+                        }
+
                         switch (questionType) {
                             case "ONE_ANSWER":
                                 form.after(baseQuestion);
@@ -452,6 +459,21 @@
                 var answers = header.next();
                 header.remove();
                 answers.remove();
+
+                if ($("a:contains(Delete)").length === 0) {
+                    $("#pageHeader").replaceWith(
+                        '<div id="noQuestionsInfo" class="row no-gutters align-items-center highlight-primary">\n' +
+                        '    <div class="col-auto mr-3">\n' +
+                        '        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                        '             width="25" height="25">\n' +
+                        '    </div>\n' +
+                        '    <div class="col">\n' +
+                        '         There is no questions in \'<c:out value="${quiz.name}"/>\' quiz\n' +
+                        '    </div>\n' +
+                        '</div>');
+
+                    $("h4.shifted-left").remove();
+                }
             });
 
             $(document).on("click", "a:contains(Edit)", function (event) {
@@ -746,162 +768,14 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <br>
-    <%--<form id="questionForm" action="/teacher/quizzes/${quiz.quizId}/questions/update" method="post">--%>
-    <%--<div class="question-header">--%>
-    <%--<div class="row">--%>
-    <%--<div class="col-8">--%>
-    <%--<div class="form-group form-inline">--%>
-    <%--<label for="type" class="col-xl-3 col-lg-4 col-md-6 col-form-label">--%>
-    <%--<strong>Select type</strong>--%>
-    <%--</label>--%>
-    <%--<select id="type" name="type" class="col-4 form-control">--%>
-    <%--<option value="ONE_ANSWER">One answer</option>--%>
-    <%--<option value="FEW_ANSWERS">Few answers</option>--%>
-    <%--<option value="ACCORDANCE">Accordance</option>--%>
-    <%--<option value="SEQUENCE">Sequence</option>--%>
-    <%--<option value="NUMBER">Numerical</option>--%>
-    <%--</select>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="col-4">--%>
-    <%--<div class="form-group form-inline">--%>
-    <%--<label for="points" class="col-3 col-form-label">--%>
-    <%--<strong>Points</strong>--%>
-    <%--</label>--%>
-    <%--<input type="text" id="points" name="points" class="col-6 form-control" placeholder="Points">--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="form-group">--%>
-    <%--<label for="question" class="col-form-label">--%>
-    <%--<strong>Question</strong>--%>
-    <%--</label>--%>
-    <%--<textarea name="question" id="question" rows="2" class="col-11 form-control"--%>
-    <%--placeholder="Question"></textarea>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--&lt;%&ndash;*********************     One answer     **********************&ndash;%&gt;--%>
-    <%--<div class="question-answers">--%>
-    <%--<h5 id="answersHeader">Answers</h5>--%>
-    <%--<span id="answersContainer">--%>
-    <%--<c:forEach begin="0" end="2" varStatus="status">--%>
-    <%--<div id="${status.index}" class="row margin-row">--%>
-    <%--<div class="col-auto">--%>
-    <%--<div class="custom-control custom-radio shifted-down-10px">--%>
-    <%--<input type="radio" id="status${status.index}" name="correct" value="answer${status.index}"--%>
-    <%--class="custom-control-input">--%>
-    <%--<label for="status${status.index}" class="custom-control-label"></label>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="col-9">--%>
-    <%--<input type="text" id="answer${status.index}" name="answer${status.index}"--%>
-    <%--class="form-control is-invalid">--%>
-    <%--</div>--%>
-    <%--<c:if test="${status.index eq 2}">--%>
-    <%--<div class="col-1">--%>
-    <%--<button type="button" class="answer-delete" value="${status.index}"><i--%>
-    <%--class="fa fa-close"></i></button>--%>
-    <%--</div>--%>
-    <%--</c:if>--%>
-    <%--</div>--%>
-    <%--</c:forEach>--%>
-    <%--********************************************************--%>
-    <%--*********************     Few answers     **************--%>
-    <%--<c:forEach begin="0" end="2" varStatus="status">--%>
-    <%--<div id="${status.index}" class="row margin-row">--%>
-    <%--<div class="col-auto">--%>
-    <%--<div class="custom-control custom-checkbox shifted-down">--%>
-    <%--<input type="checkbox" id="status${status.index}" value="incorrect"--%>
-    <%--class="custom-control-input">--%>
-    <%--<label for="status${status.index}" class="custom-control-label"></label>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="col-9">--%>
-    <%--<input type="text" id="answer${status.index}" class="form-control is-invalid">--%>
-    <%--</div>--%>
-    <%--<c:if test="${status.index eq 2}">--%>
-    <%--<div class="col-1">--%>
-    <%--<button type="button" class="answer-delete"><i class="fa fa-close"></i></button>--%>
-    <%--</div>--%>
-    <%--</c:if>--%>
-    <%--</div>--%>
-    <%--</c:forEach>--%>
-    <%--*******************************************************--%>
-    <%--*********************     Accordance     **************--%>
-    <%--<div class="row">--%>
-    <%--<div class="col-6">--%>
-    <%--<strong>Left side</strong>--%>
-    <%--</div>--%>
-    <%--<div class="col-6">--%>
-    <%--<strong>Right side</strong>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<c:forEach begin="0" end="3" varStatus="status">--%>
-    <%--<div class="row margin-row">--%>
-    <%--<div class="col-6">--%>
-    <%--<input type="text" class="form-control" name="left${status.index}">--%>
-    <%--</div>--%>
-    <%--<div class="col-6">--%>
-    <%--<input type="text" class="form-control" name="right${status.index}">--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--</c:forEach>--%>
-    <%--*******************************************************--%>
-    <%--*********************     Sequence     ****************--%>
-    <%--<div><strong>Sequence</strong></div>--%>
-    <%--<c:forEach begin="0" end="3" varStatus="status">--%>
-    <%--<div class="row margin-row">--%>
-    <%--<div class="col-auto">--%>
-    <%--${status.index + 1}.--%>
-    <%--</div>--%>
-    <%--<div class="col-6">--%>
-    <%--<input type="text" class="form-control" name="sequence${status.index}">--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--</c:forEach>--%>
-    <%--*******************************************************--%>
-    <%--*********************     Number     ******************--%>
-    <%--<div class="form-group form-inline">--%>
-    <%--<label for="number">--%>
-    <%--<strong>Number</strong>--%>
-    <%--</label>--%>
-    <%--<div class="col">--%>
-    <%--<input type="text" class="form-control" id="number" name="number">--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--*******************************************************--%>
-    <%--<div class="row">--%>
-    <%--<div class="col-xl-9 col-lg-8 col-md-6">--%>
-    <%--<div class="form-group">--%>
-    <%--<label for="explanation" class="col-form-label">--%>
-    <%--<strong>Explanation</strong>--%>
-    <%--</label>--%>
-    <%--<textarea name="explanation" id="explanation" rows="2" class="form-control"--%>
-    <%--placeholder="Explanation"></textarea>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="col-xl-3 col-lg-4 col-md-6">--%>
-    <%--<button id="addAnswer" type="button" class="btn btn-success btn-wide" value="oneAnswer">--%>
-    <%--<i class="fa fa-plus"></i> Add answer--%>
-    <%--</button>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="text-center">--%>
-    <%--<button type="button" class="btn btn-primary">Cancel</button>--%>
-    <%--<button type="submit" class="btn btn-success">Save</button>--%>
-    <%--</div>--%>
-    <%--</span>--%>
-    <%--</div>--%>
-    <%--</form>--%>
-
     <div id="pageHeaderRow" class="row">
         <div class="col-6">
             <c:choose>
                 <c:when test="${quiz.questionsNumber ne 0}">
-                    <h2>Answers for quiz '<c:out value="${quiz.name}"/>'</h2>
+                    <h2 id="pageHeader">Questions for quiz '<c:out value="${quiz.name}"/>'</h2>
                 </c:when>
                 <c:otherwise>
-                    <div class="row no-gutters align-items-center highlight-primary">
+                    <div id="noQuestionsInfo" class="row no-gutters align-items-center highlight-primary">
                         <div class="col-auto mr-3">
                             <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                                  width="25" height="25">

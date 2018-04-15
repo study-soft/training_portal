@@ -1,8 +1,21 @@
+-- Clear test data
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE ANSWERS_ACCORDANCE;
+TRUNCATE TABLE ANSWERS_NUMBER;
+TRUNCATE TABLE ANSWERS_SEQUENCE;
+TRUNCATE TABLE ANSWERS_SIMPLE;
+TRUNCATE TABLE GROUPS;
+TRUNCATE TABLE QUESTIONS;
+TRUNCATE TABLE QUIZZES;
+TRUNCATE TABLE USERS;
+TRUNCATE TABLE USER_QUIZ_JUNCTIONS;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- Table: users (teachers)
 /*1*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '073-000-00-11', null, 'Andrew', '123', 'TEACHER');
+VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '(073)-000-00-11', null, 'Andrew', '123', 'TEACHER');
 /*2*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '073-003-02-01', null, 'Angel', '123', 'TEACHER');
+VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '(073)-003-02-01', null, 'Angel', '123', 'TEACHER');
 
 -- Table: groups
 INSERT INTO groups (name, description, creation_date, author_id) VALUES ('IS-4', 'Program engineering', '2018-03-02', 1);

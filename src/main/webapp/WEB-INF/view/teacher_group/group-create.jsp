@@ -14,7 +14,7 @@
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div>
             <label for="name" class="col-form-label">
-                <strong>Name<span class="error">*</span></strong>
+                <strong>Name<span class="red">*</span></strong>
             </label>
         </div>
         <div>

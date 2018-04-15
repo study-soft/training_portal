@@ -19,11 +19,11 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h3>${group.name}</h3>
+    <h3><c:out value="${group.name}"/></h3>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
-            <td>${group.name}</td>
+            <td><c:out value="${group.name}"/></td>
         </tr>
         <tr>
             <td>Creation date</td>
@@ -38,7 +38,12 @@
             <td>${authorName}</td>
         </tr>
     </table>
-    <h3>List of students</h3>
+    <c:if test="${group.description ne null}">
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${group.description}"/>
+        </div>
+    </c:if>
+    <h4>List of students</h4>
     <div class="col-lg-6">
         <table class="table">
             <tr>

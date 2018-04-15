@@ -10,10 +10,9 @@
 <div class="container">
     <h2>Edit group</h2>
     <form action="/teacher/groups/${group.groupId}/edit" method="post">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div>
             <label for="name" class="col-form-label">
-                <strong>Name<span class="error">*</span></strong>
+                <strong>Name<span class="red">*</span></strong>
             </label>
         </div>
         <div>

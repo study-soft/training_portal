@@ -41,19 +41,16 @@ public class QuizDaoJdbc implements QuizDao {
 
     private QuestionDao questionDao;
     private UserDao userDao;
-    private GroupDao groupDao;
 
     private static final Logger logger = Logger.getLogger(QuizDaoJdbc.class);
 
     @Autowired
     public QuizDaoJdbc(DataSource dataSource,
                        QuestionDao questionDao,
-                       UserDao userDao,
-                       GroupDao groupDao) {
+                       UserDao userDao) {
         template = new JdbcTemplate(dataSource);
         this.questionDao = questionDao;
         this.userDao = userDao;
-        this.groupDao = groupDao;
     }
 
     @Transactional(readOnly = true)

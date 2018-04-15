@@ -20,17 +20,11 @@ public class GroupValidator implements Validator {
         validateDescription(group.getDescription(), errors);
     }
 
-    private boolean contains(String string, String regex) {
-        return Pattern.compile(regex).matcher(string).find();
-    }
-
     private void validateName(String name, Errors errors) {
         if (name == null || name.isEmpty()) {
             errors.rejectValue("name", "group.name.empty");
         } else if (name.length() > 255) {
             errors.rejectValue("name", "group.name.size");
-        } else if (contains(name, "[<>]+")) {
-            errors.rejectValue("description", "group.description.format");
         }
     }
 
@@ -39,8 +33,6 @@ public class GroupValidator implements Validator {
             return;
         } else if (description.length() > 65534) {
             errors.rejectValue("description", "group.description.size");
-        } else if (contains(description, "[<>]+")) {
-            errors.rejectValue("description", "group.description.format");
         }
     }
 }

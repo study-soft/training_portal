@@ -7,11 +7,11 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var currentQuestion = "${sessionScope.currentQuestionSerial}";
-            var questionsNumber = "${sessionScope.questionsNumber - 1}";
-            var finish = $("#finish");
+            const currentQuestion = "${sessionScope.currentQuestionSerial}";
+            const questionsNumber = "${sessionScope.questionsNumber - 1}";
+            const finish = $("#finish");
             if (currentQuestion === questionsNumber) {
-                var submit = $("#submit");
+                const submit = $("#submit");
                 submit.val("Finish");
                 submit.removeClass("btn btn-success").addClass("btn btn-primary");
                 finish.remove();
@@ -31,7 +31,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
-    <h2>${sessionScope.currentQuiz.name}</h2>
+    <h2><c:out value="${sessionScope.currentQuiz.name}"/></h2>
     <form action="/quizzes/${question.quizId}/passing" method="post">
         <div class="row">
             <div class="col-sm-8">
@@ -45,7 +45,7 @@
         </div>
         <div class="row">
             <div class="col-sm-8">
-                <h5>${question.body}</h5>
+                <h5><c:out value="${question.body}"/></h5>
             </div>
             <div class="col-sm-4">
                 <h6>${question.score} points</h6>
@@ -58,7 +58,7 @@
                         <input type="radio" id="answer${answer.answerSimpleId}"
                                name="oneAnswer" value="${answer.correct}" class="custom-control-input">
                         <label for="answer${answer.answerSimpleId}" class="custom-control-label">
-                                ${answer.body}
+                                <c:out value="${answer.body}"/>
                         </label>
                     </div>
                     <br>
@@ -82,7 +82,7 @@
                         <input type="checkbox" id="answer${answer.answerSimpleId}" class="custom-control-input"
                                name="fewAnswer${status.index}" value="${answer.correct}">
                         <label for="answer${answer.answerSimpleId}" class="custom-control-label">
-                                ${answer.body}
+                                <c:out value="${answer.body}"/>
                         </label>
                     </div>
                     <br>
@@ -103,12 +103,12 @@
             <c:when test="${question.questionType eq 'ACCORDANCE'}">
                 <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
                     <div class="row">
-                        <div class="col-md-4">${left}</div>
+                        <div class="col-md-4"><c:out value="${left}"/></div>
                         <div class="col-md-4">
                             <select name="accordance${status.index}" class="form-control">
                                 <option selected>select...</option>
                                 <c:forEach items="${answers.rightSide}" var="right">
-                                    <option value="${right}">${right}</option>
+                                    <option value="${right}"><c:out value="${right}"/></option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -136,7 +136,7 @@
                                     class="form-control">
                                 <option selected>select...</option>
                                 <c:forEach items="${answers.correctList}" var="item">
-                                    <option value="${item}">${item}</option>
+                                    <option value="${item}"><c:out value="${item}"/></option>
                                 </c:forEach>
                             </select>
                         </div>

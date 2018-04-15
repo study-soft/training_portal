@@ -26,7 +26,7 @@
     <form:form action="/teacher/quizzes/${quiz.quizId}/edit" method="post" modelAttribute="quiz">
         <div class="form-group">
             <form:label path="name" for="name">
-                <strong>Name<span class="error">*</span></strong>
+                <strong>Name<span class="red">*</span></strong>
             </form:label>
             <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="Name"/>
             <form:errors path="name" cssClass="error"/>

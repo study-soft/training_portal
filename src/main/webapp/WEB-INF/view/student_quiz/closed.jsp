@@ -56,7 +56,7 @@
         Quiz successfully closed
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>${closedQuiz.quizName}</h2>
+    <h2><c:out value="${closedQuiz.quizName}"/></h2>
     <div class="row no-gutters align-items-center highlight-primary">
         <div class="col-auto mr-3">
             <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
@@ -87,7 +87,9 @@
     </table>
     <h4>Information about quiz</h4>
     <c:if test="${closedQuiz.description ne null}">
-        <div class="col-lg-6"><strong>Description: </strong>${closedQuiz.description}</div>
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${closedQuiz.description}"/>
+        </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>
@@ -114,7 +116,9 @@
         </tr>
     </table>
     <c:if test="${closedQuiz.explanation ne null}">
-        <div class="col-lg-6"><strong>Explanation: </strong>${closedQuiz.explanation}</div>
+        <div class="col-lg-6">
+            <strong>Explanation: </strong><c:out value="${closedQuiz.explanation}"/>
+        </div>
     </c:if>
     <button id="back" value="Back" class="btn btn-primary">Back</button>
     <span id="answers">

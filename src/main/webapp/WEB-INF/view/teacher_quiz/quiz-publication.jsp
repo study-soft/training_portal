@@ -47,7 +47,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${quiz.name}</h2>
+    <h2><c:out value="${quiz.name}"/></h2>
     <c:choose>
         <c:when test="${empty groups && empty studentsWithoutGroup}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -91,7 +91,7 @@
                                         <button type="button" class="btn-link" data-toggle="collapse"
                                                 data-target="#collapse${group.groupId}"
                                                 aria-expanded="false" aria-controls="collapse${group.groupId}">
-                                                ${group.name}
+                                                <c:out value="${group.name}"/>
                                         </button>
                                         <div class="custom-control custom-checkbox right">
                                             <input type="checkbox" id="group${group.groupId}"

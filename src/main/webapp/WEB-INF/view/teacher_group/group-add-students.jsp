@@ -49,8 +49,8 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${group.name}</h2>
-    <h3>Students to add:</h3>
+    <h2><c:out value="${group.name}"/></h2>
+    <h4>Students to add:</h4>
     <c:choose>
         <c:when test="${empty students}">
             <div>There is no students without group.</div>

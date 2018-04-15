@@ -37,7 +37,11 @@
             </tr>
             <c:forEach items="${quizzes}" var="quiz" varStatus="status">
                 <tr>
-                    <td><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></td>
+                    <td>
+                        <a href="/student/quizzes/${quiz.quizId}">
+                            <c:out value="${quiz.name}"/>
+                        </a>
+                    </td>
                     <td>${statusList[status.index]}</td>
                 </tr>
             </c:forEach>

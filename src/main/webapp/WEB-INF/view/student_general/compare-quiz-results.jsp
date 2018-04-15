@@ -26,7 +26,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Group results</h2>
-    <h3><a href="/student/quizzes/${quiz.quizId}">${quiz.name}</a></h3>
+    <h3><a href="/student/quizzes/${quiz.quizId}"><c:out value="${quiz.name}"/></a></h3>
     <c:choose>
         <c:when test="${not empty openedStudents or not empty passedStudents}">
             <div class="row no-gutters align-items-center highlight-primary">

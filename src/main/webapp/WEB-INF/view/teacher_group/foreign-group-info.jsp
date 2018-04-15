@@ -9,9 +9,11 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${group.name}</h2>
+    <h2><c:out value="${group.name}"/></h2>
     <c:if test="${group.description ne null}">
-        <div class="col-lg-6"><strong>Description: </strong>${group.description}</div>
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${group.description}"/>
+        </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>
@@ -40,7 +42,11 @@
             <table class="col-lg-6 table-info">
                 <c:forEach items="${publishedQuizzes}" var="quiz" varStatus="status">
                     <tr>
-                        <td><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></td>
+                        <td>
+                            <a href="/teacher/quizzes/${quiz.quizId}">
+                                <c:out value="${quiz.name}"/>
+                            </a>
+                        </td>
                         <td>${statuses[status.index]}</td>
                         <td>${studentsProgress[quiz.quizId][0]} / ${studentsProgress[quiz.quizId][1]}</td>
                     </tr>

@@ -18,7 +18,7 @@
                  width="25" height="25">
         </div>
         <div class="col">
-            You have forcibly completed <strong>${quiz.quizName}</strong> quiz with ${quiz.attempt} attempt
+            You have forcibly completed <strong><c:out value="${quiz.quizName}"/></strong> quiz with ${quiz.attempt} attempt
         </div>
     </div>
     <table class="col-lg-6 table-info">
@@ -37,7 +37,7 @@
         </tr>
     </table>
     <c:if test="${quiz.explanation ne null}">
-        <div class="col-lg-6"><strong>Explanation: </strong> ${quiz.explanation}</div>
+        <div class="col-lg-6"><strong>Explanation: </strong><c:out value="${quiz.explanation}"/></div>
     </c:if>
     <sec:authorize access="hasRole('ROLE_STUDENT')">
         <div><a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a></div>

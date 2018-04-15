@@ -898,7 +898,7 @@
         <div class="col-6">
             <c:choose>
                 <c:when test="${quiz.questionsNumber ne 0}">
-                    <h2>Answers for quiz '${quiz.name}'</h2>
+                    <h2>Answers for quiz '<c:out value="${quiz.name}"/>'</h2>
                 </c:when>
                 <c:otherwise>
                     <div class="row no-gutters align-items-center highlight-primary">
@@ -907,7 +907,7 @@
                                  width="25" height="25">
                         </div>
                         <div class="col">
-                            There is no questions in '${quiz.name}' quiz
+                            There is no questions in '<c:out value="${quiz.name}"/>' quiz
                         </div>
                     </div>
                 </c:otherwise>
@@ -928,19 +928,23 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-7">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}" type="ONE_ANSWER"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="ONE_ANSWER">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}"><i class="fa fa-trash-o"></i> Delete</a>
+                            <a href="${question.questionId}">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -950,17 +954,19 @@
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
                             <div class="col-6">
-                                <div class="correct">${answer.body}</div>
+                                <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div class="col-6">
-                                <div class="incorrect">${answer.body}</div>
+                                <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong>Explanation: </strong>${question.explanation}</div>
+                <div>
+                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                </div>
             </div>
         </c:forEach>
     </c:if>
@@ -971,19 +977,23 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-7">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}" type="FEW_ANSWERS"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="FEW_ANSWERS">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}"><i class="fa fa-trash-o"></i> Delete</a>
+                            <a href="${question.questionId}">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -993,17 +1003,19 @@
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
                             <div class="col-6">
-                                <div class="correct">${answer.body}</div>
+                                <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div class="col-6">
-                                <div class="incorrect">${answer.body}</div>
+                                <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div><strong>Explanation: </strong>${question.explanation}</div>
+                <div>
+                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                </div>
             </div>
         </c:forEach>
     </c:if>
@@ -1014,19 +1026,23 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-7">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}" type="ACCORDANCE"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="ACCORDANCE">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}"><i class="fa fa-trash-o"></i> Delete</a>
+                            <a href="${question.questionId}">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1037,12 +1053,14 @@
                 <table class="col-6 table-info">
                     <c:forEach items="${leftSide}" var="item" varStatus="status">
                         <tr>
-                            <td>${item}</td>
-                            <td>${rightSide[status.index]}</td>
+                            <td><c:out value="${item}"/></td>
+                            <td><c:out value="${rightSide[status.index]}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong>Explanation: </strong>${question.explanation}</div>
+                <div>
+                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                </div>
             </div>
         </c:forEach>
     </c:if>
@@ -1053,19 +1071,23 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-7">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}" type="SEQUENCE"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="SEQUENCE">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}"><i class="fa fa-trash-o"></i> Delete</a>
+                            <a href="${question.questionId}">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1076,11 +1098,13 @@
                     <c:forEach items="${correctList}" var="item" varStatus="status">
                         <tr>
                             <td>${status.index + 1}</td>
-                            <td>${item}</td>
+                            <td><c:out value="${item}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
-                <div><strong>Explanation: </strong>${question.explanation}</div>
+                <div>
+                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                </div>
             </div>
         </c:forEach>
     </c:if>
@@ -1091,19 +1115,23 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-7">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}" type="NUMBER"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="${question.questionId}" type="NUMBER">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
-                            <a href="${question.questionId}"><i class="fa fa-trash-o"></i> Delete</a>
+                            <a href="${question.questionId}">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1115,7 +1143,9 @@
                         <td>${quizAnswersNumber[question.questionId].correct}</td>
                     </tr>
                 </table>
-                <div><strong>Explanation: </strong>${question.explanation}</div>
+                <div>
+                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                </div>
             </div>
         </c:forEach>
     </c:if>

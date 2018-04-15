@@ -55,7 +55,11 @@
                     <tbody>
                     <c:forEach items="${openedQuizzes}" var="quiz">
                         <tr>
-                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td>
+                                <a href="/student/quizzes/${quiz.quizId}">
+                                    <c:out value="${quiz.quizName}"/>
+                                </a>
+                            </td>
                             <td><localDateTime:format value="${quiz.submitDate}"/></td>
                             <td colspan="4"></td>
                             <c:choose>
@@ -88,7 +92,11 @@
                     <tbody>
                     <c:forEach items="${passedQuizzes}" var="quiz">
                         <tr>
-                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td>
+                                <a href="/student/quizzes/${quiz.quizId}">
+                                    <c:out value="${quiz.quizName}"/>
+                                </a>
+                            </td>
                             <td><localDateTime:format value="${quiz.submitDate}"/></td>
                             <td><localDateTime:format value="${quiz.finishDate}"/></td>
                             <td>${quiz.result} / ${quiz.score}</td>
@@ -124,7 +132,11 @@
                     <tbody>
                     <c:forEach items="${closedQuizzes}" var="quiz">
                         <tr>
-                            <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                            <td>
+                                <a href="/student/quizzes/${quiz.quizId}">
+                                    <c:out value="${quiz.quizName}"/>
+                                </a>
+                            </td>
                             <td><localDateTime:format value="${quiz.submitDate}"/></td>
                             <td><localDateTime:format value="${quiz.finishDate}"/></td>
                             <td>${quiz.result} / ${quiz.score}</td>

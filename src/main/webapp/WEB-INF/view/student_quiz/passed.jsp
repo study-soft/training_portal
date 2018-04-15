@@ -29,7 +29,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${passedQuiz.quizName}</h2>
+    <h2><c:out value="${passedQuiz.quizName}"/></h2>
     <div class="row no-gutters align-items-center highlight-success">
         <div class="col-auto mr-3">
             <img src="${pageContext.request.contextPath}/resources/icon-success.png"
@@ -60,7 +60,9 @@
     </table>
     <h4>Information about quiz</h4>
     <c:if test="${passedQuiz.description ne null}">
-        <div class="col-lg-6"><strong>Description: </strong>${passedQuiz.description}</div>
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${passedQuiz.description}"/>
+        </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>

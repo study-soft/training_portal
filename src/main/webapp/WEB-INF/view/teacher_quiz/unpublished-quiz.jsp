@@ -80,7 +80,7 @@
         Quiz information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>${unpublishedQuiz.name}</h2>
+    <h2><c:out value="${unpublishedQuiz.name}"/></h2>
     <div class="row">
         <div class="col-auto">
             <div class="row no-gutters align-items-center highlight-danger">
@@ -102,7 +102,9 @@
         </div>
     </div>
     <c:if test="${unpublishedQuiz.description ne null}">
-        <div><strong>Description: </strong>${unpublishedQuiz.description}</div>
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${unpublishedQuiz.description}"/>
+        </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>
@@ -161,7 +163,9 @@
         </c:if>
     </table>
     <c:if test="${unpublishedQuiz.explanation ne null}">
-        <div><strong>Explanation: </strong>${unpublishedQuiz.explanation}</div>
+        <div class="col-lg-6">
+            <strong>Explanation: </strong><c:out value="${unpublishedQuiz.explanation}"/>
+        </div>
     </c:if>
     <div class="row no-gutters align-items-center highlight-primary">
         <div class="col-auto mr-3">

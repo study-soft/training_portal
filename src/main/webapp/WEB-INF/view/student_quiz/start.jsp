@@ -9,7 +9,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${openedQuiz.quizName}</h2>
+    <h2><c:out value="${openedQuiz.quizName}"/></h2>
     <table class="col-lg-6 table-info">
         <c:if test="${openedQuiz.passingTime ne null}">
             <tr>

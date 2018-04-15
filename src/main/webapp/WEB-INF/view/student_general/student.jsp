@@ -86,7 +86,7 @@
             <table class="col-lg-6 table-info">
                 <tr>
                     <td>Name</td>
-                    <td>${group.name}</td>
+                    <td><c:out value="${group.name}"/></td>
                 </tr>
                 <tr>
                     <td>Creation date</td>

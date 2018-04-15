@@ -23,17 +23,11 @@ public class QuizValidator implements Validator {
         validateExplanation(quiz.getExplanation(), errors);
     }
 
-    private boolean contains(String string, String regex) {
-        return Pattern.compile(regex).matcher(string).find();
-    }
-
     public void validateQuizName(String name, Errors errors) {
         if (name == null || name.isEmpty()) {
             errors.rejectValue("name", "quiz.name.empty");
         } else if (name.length() > 50) {
             errors.rejectValue("name", "quiz.name.size");
-        } else if (contains(name, "[<>]+")) {
-            errors.rejectValue("name", "quiz.name.format");
         }
     }
 
@@ -42,8 +36,6 @@ public class QuizValidator implements Validator {
             return;
         } else if (description.length() > 65535) {
             errors.rejectValue("description", "quiz.description.size");
-        } else if (contains(description, "[<>]+")) {
-            errors.rejectValue("description", "quiz.description.format");
         }
     }
 
@@ -81,8 +73,6 @@ public class QuizValidator implements Validator {
             return;
         } else if (explanation.length() > 65535) {
             errors.rejectValue("explanation", "quiz.explanation.size");
-        } else if (contains(explanation, "[<>]+")) {
-            errors.rejectValue("explanation", "quiz.explanation.format");
         }
     }
 }

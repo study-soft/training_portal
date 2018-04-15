@@ -84,7 +84,7 @@
         Quiz was successfully published
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>${publishedQuiz.name}</h2>
+    <h2><c:out value="${publishedQuiz.name}"/></h2>
     <div class="row">
         <div class="col-auto">
             <div class="row no-gutters align-items-center highlight-success">
@@ -106,7 +106,9 @@
         </div>
     </div>
     <c:if test="${publishedQuiz.description ne null}">
-        <div><strong>Description: </strong>${publishedQuiz.description}</div>
+        <div class="col-lg-6">
+            <strong>Description: </strong><c:out value="${publishedQuiz.description}"/>
+        </div>
     </c:if>
     <table class="table-info col-lg-6">
         <tr>
@@ -163,7 +165,9 @@
         </c:if>
     </table>
     <c:if test="${publishedQuiz.explanation ne null}">
-        <div><strong>Explanation: </strong>${publishedQuiz.explanation}</div>
+        <div class="col-lg-6">
+            <strong>Explanation: </strong><c:out value="${publishedQuiz.explanation}"/>
+        </div>
     </c:if>
     <div class="row no-gutters align-items-center highlight-primary">
         <div class="col-auto mr-3">
@@ -186,7 +190,7 @@
                             <button type="button" class="btn-link" data-toggle="collapse"
                                     data-target="#collapse${group.groupId}"
                                     aria-expanded="false" aria-controls="collapse${group.groupId}">
-                                    ${group.name}
+                                    <c:out value="${group.name}"/>
                             </button>
                         </div>
                         <div id="collapse${group.groupId}" class="collapse"

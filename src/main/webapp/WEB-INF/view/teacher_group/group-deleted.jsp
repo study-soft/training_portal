@@ -16,7 +16,7 @@
             <div class="highlight-success">
                 <img src="${pageContext.request.contextPath}/resources/icon-success.png"
                      width="25" height="25" class="icon-one-row">
-                Group '${group.name}' successfully deleted
+                Group '<c:out value="${group.name}"/>' successfully deleted
             </div>
             <c:if test="${not empty students}">
                 <h3>Students which were in this group:</h3>

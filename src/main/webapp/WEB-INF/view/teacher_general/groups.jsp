@@ -62,7 +62,11 @@
                 <tbody>
                 <c:forEach items="${teacherGroups}" var="group" varStatus="status">
                     <tr>
-                        <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
+                        <td>
+                            <a href="/teacher/groups/${group.groupId}">
+                                <c:out value="${group.name}"/>
+                            </a>
+                        </td>
                         <td>${studentsNumberForTeacherGroups[status.index]}</td>
                         <td><localDate:format value="${group.creationDate}"/></td>
                         <td>
@@ -107,7 +111,11 @@
                 <tbody>
                 <c:forEach items="${groups}" var="group" varStatus="status">
                     <tr>
-                        <td><a href="/teacher/groups/${group.groupId}">${group.name}</a></td>
+                        <td>
+                            <a href="/teacher/groups/${group.groupId}">
+                                <c:out value="${group.name}"/>
+                            </a>
+                        </td>
                         <td>${studentsNumberForGroups[status.index]}</td>
                         <td><localDate:format value="${group.creationDate}"/></td>
                         <td>${authors[status.index].lastName} ${authors[status.index].firstName}</td>

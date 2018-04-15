@@ -145,7 +145,11 @@
                 <tbody>
                 <c:forEach items="${unpublishedQuizzes}" var="unpublishedQuiz">
                     <tr>
-                        <td><a href="/teacher/quizzes/${unpublishedQuiz.quizId}">${unpublishedQuiz.name}</a></td>
+                        <td>
+                            <a href="/teacher/quizzes/${unpublishedQuiz.quizId}">
+                                <c:out value="${unpublishedQuiz.name}"/>
+                            </a>
+                        </td>
                         <td>${unpublishedQuiz.questionsNumber}</td>
                         <td>${unpublishedQuiz.score}</td>
                         <td><localDate:format value="${unpublishedQuiz.creationDate}"/></td>
@@ -207,7 +211,11 @@
                 <tbody>
                 <c:forEach items="${publishedQuizzes}" var="publishedQuiz">
                     <tr>
-                        <td><a href="/teacher/quizzes/${publishedQuiz.quizId}">${publishedQuiz.name}</a></td>
+                        <td>
+                            <a href="/teacher/quizzes/${publishedQuiz.quizId}">
+                                <c:out value="${publishedQuiz.name}"/>
+                            </a>
+                        </td>
                         <td>${publishedQuiz.questionsNumber}</td>
                         <td>${publishedQuiz.score}</td>
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>

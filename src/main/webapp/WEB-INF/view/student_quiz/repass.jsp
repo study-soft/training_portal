@@ -20,7 +20,7 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>${passedQuiz.quizName}</h2>
+    <h2><c:out value="${passedQuiz.quizName}"/></h2>
     <h4>Information about result</h4>
     <table class="col-lg-6 table-info">
         <tr>

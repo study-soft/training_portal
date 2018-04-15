@@ -8,14 +8,14 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Answers for quiz '${quiz.name}'</h2>
+    <h2>Answers for quiz '<c:out value="${quiz.name}"/>'</h2>
     <c:if test="${not empty questionsOneAnswer}">
         <h4 class="shifted-left">Questions with one correct answer</h4>
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
                     <div class="col-md-9">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
@@ -27,18 +27,20 @@
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
                             <div class="col-lg-6">
-                                <div class="correct">${answer.body}</div>
+                                <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div class="col-lg-6">
-                                <div class="incorrect">${answer.body}</div>
+                                <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
                 <c:if test="${question.explanation ne null}">
-                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                    <div>
+                        <strong> Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
                 </c:if>
             </div>
         </c:forEach>
@@ -49,7 +51,7 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-md-9">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
@@ -61,18 +63,20 @@
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
                             <div class="col-lg-6">
-                                <div class="correct">${answer.body}</div>
+                                <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div class="col-lg-6">
-                                <div class="incorrect">${answer.body}</div>
+                                <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
                 <c:if test="${question.explanation ne null}">
-                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                    <div>
+                        <strong> Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
                 </c:if>
             </div>
         </c:forEach>
@@ -83,7 +87,7 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-md-9">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
@@ -96,13 +100,15 @@
                 <table class="col-lg-6 table-info">
                     <c:forEach items="${leftSide}" var="item" varStatus="status">
                         <tr>
-                            <td>${item}</td>
-                            <td>${rightSide[status.index]}</td>
+                            <td><c:out value="${item}"/></td>
+                            <td><c:out value="${rightSide[status.index]}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
                 <c:if test="${question.explanation ne null}">
-                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                    <div>
+                        <strong> Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
                 </c:if>
             </div>
         </c:forEach>
@@ -113,7 +119,7 @@
             <div class="question-header">
                 <div class="row">
                     <div class="col-md-9">
-                        <h5>${question.body}</h5>
+                        <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-md-2 offset-md-1">
                         <h6>${question.score} points</h6>
@@ -126,12 +132,14 @@
                     <c:forEach items="${correctList}" var="item" varStatus="status">
                         <tr>
                             <td>${status.index + 1}</td>
-                            <td>${item}</td>
+                            <td><c:out value="${item}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
                 <c:if test="${question.explanation ne null}">
-                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                    <div>
+                        <strong> Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
                 </c:if>
             </div>
         </c:forEach>
@@ -141,7 +149,7 @@
         <c:forEach items="${questionsNumber}" var="question">
             <div class="row">
                 <div class="col-md-9">
-                    <h5>${question.body}</h5>
+                    <h5><c:out value="${question.body}"/></h5>
                 </div>
                 <div class="col-md-2 offset-md-1">
                     <h6>${question.score} points</h6>
@@ -155,7 +163,9 @@
                     </tr>
                 </table>
                 <c:if test="${question.explanation ne null}">
-                    <div><strong> Explanation: </strong>${question.explanation}</div>
+                    <div>
+                        <strong> Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
                 </c:if>
             </div>
         </c:forEach>

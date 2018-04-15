@@ -41,7 +41,11 @@
                             </tr>
                             <c:forEach items="${groups}" var="group">
                                 <tr>
-                                    <td><a href="/teacher/results/group/${group.groupId}">${group.name}</a></td>
+                                    <td>
+                                        <a href="/teacher/results/group/${group.groupId}">
+                                            <c:out value="${group.name}"/>
+                                        </a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </table>
@@ -56,7 +60,9 @@
                             <c:forEach items="${students}" var="student" varStatus="status">
                                 <tr>
                                     <td>
-                                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                                        <a href="/teacher/students/${student.userId}">
+                                                ${student.lastName} ${student.firstName}
+                                        </a>
                                     </td>
                                 </tr>
                             </c:forEach>

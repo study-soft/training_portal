@@ -105,7 +105,11 @@
                 <tbody>
                 <c:forEach items="${openedQuizzes}" var="openedQuiz">
                     <tr>
-                        <td><a href="/student/quizzes/${openedQuiz.quizId}">${openedQuiz.quizName}</a></td>
+                        <td>
+                            <a href="/student/quizzes/${openedQuiz.quizId}">
+                                <c:out value="${openedQuiz.quizName}"/>
+                            </a>
+                        </td>
                         <td>${openedQuiz.questionsNumber}</td>
                         <td>${openedQuiz.score}</td>
                         <td><localDateTime:format value="${openedQuiz.submitDate}"/></td>
@@ -145,7 +149,9 @@
                 <c:forEach items="${passedQuizzes}" var="quiz">
                     <tr>
                         <td>
-                            <a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a>
+                            <a href="/student/quizzes/${quiz.quizId}">
+                                <c:out value="${quiz.quizName}"/>
+                            </a>
                         </td>
                         <td>${quiz.questionsNumber}</td>
                         <td>${quiz.score}</td>
@@ -189,7 +195,11 @@
                 <tbody>
                 <c:forEach items="${closedQuizzes}" var="quiz">
                     <tr>
-                        <td><a href="/student/quizzes/${quiz.quizId}">${quiz.quizName}</a></td>
+                        <td>
+                            <a href="/student/quizzes/${quiz.quizId}">
+                                <c:out value="${quiz.quizName}"/>
+                            </a>
+                        </td>
                         <td>${quiz.questionsNumber}</td>
                         <td>${quiz.score}</td>
                         <td><localDateTime:format value="${quiz.submitDate}"/></td>

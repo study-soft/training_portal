@@ -9,4 +9,6 @@ class SessionAttributes {
     static final String CURRENT_QUIZ = "currentQuiz";
     static final String START_TIME = "startTime";
     static final String TIME_LEFT = "timeLeft";
+
+    private SessionAttributes() {}
 }

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static com.company.training_portal.controller.SessionAttributes.*;
 import static com.company.training_portal.controller.SessionAttributes.QUESTIONS_NUMBER;
 import static com.company.training_portal.model.enums.QuestionType.*;
+import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.util.Utils.roundOff;
 
@@ -129,7 +130,7 @@ public class QuizPassingController {
         return "quiz_passing/question";
     }
 
-    @SuppressWarnings({"unchecked", "Duplicates"})
+    @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/quizzes/{quizId}/passing", method = RequestMethod.POST)
     public String showCurrentQuestionPost(@ModelAttribute("userId") Long studentId,
                                           @RequestParam Map<String, String> studentAnswers,
@@ -186,6 +187,9 @@ public class QuizPassingController {
                 }
                 break;
             case ACCORDANCE:
+                // This cast is correct because the array we're creating
+                // is of the same type as the one passed in, which is List<String>
+                @SuppressWarnings("unchecked")
                 List<String> rightSide = (List<String>) session.getAttribute(ACCORDANCE_LIST);
                 for (int i = 0; i < 4; i++) {
                     String answer = studentAnswers.get("accordance" + i);
@@ -275,12 +279,15 @@ public class QuizPassingController {
                 model.addAttribute("quiz", quiz);
                 return "quiz_passing/congratulations";
             }
-            Integer attempt = quizDao.findAttempt(studentId, quizId);
-            Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
-            attempt++;
-            LocalDateTime finishDate = LocalDateTime.now();
-            quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
-                    finishDate, attempt, PASSED);
+            // Check if teacher close quiz while student is passing it
+            if (!quizDao.findStudentQuizStatus(studentId, quizId).equals(CLOSED)) {
+                Integer attempt = quizDao.findAttempt(studentId, quizId);
+                Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
+                attempt++;
+                LocalDateTime finishDate = LocalDateTime.now();
+                quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
+                        finishDate, attempt, PASSED);
+            }
             PassedQuiz quiz = quizDao.findPassedQuiz(studentId, quizId);
             model.addAttribute("quiz", quiz);
             model.addAttribute("currentQuestionSerial", currentQuestionSerial);

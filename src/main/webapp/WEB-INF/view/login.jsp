@@ -37,6 +37,7 @@
                     <div>Password: 123</div>
                 </div>
             </div>
+            <br>
             <form action="/login" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <c:if test="${param.error ne null}">

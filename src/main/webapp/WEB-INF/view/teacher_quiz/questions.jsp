@@ -229,9 +229,9 @@
                             xhr.responseText + "\nerror: " + error);
                         alert("Some error. See in console");
                     },
-                    success: function () {
+                    success: function (savedQuestionId) {
                         // alert("success");
-
+                        // alert("saved questionId: " + savedQuestionId);
                         const noQuestions = $("#noQuestionsInfo");
                         if (noQuestions.length !== 0) {
                             noQuestions.replaceWith('<h2 id="pageHeader">Questions for quiz ' +
@@ -242,7 +242,7 @@
                             case "ONE_ANSWER":
                                 form.after(baseQuestion);
                                 $("a[href=''][type='']:contains(Edit)")
-                                    .attr("href", questionId)
+                                    .attr("href", savedQuestionId)
                                     .attr("type", "ONE_ANSWER");
                                 var correct = $("input[type=radio][name='correct']:checked").val();
                                 var container = $("#addedAnswersContainer");
@@ -268,7 +268,7 @@
                             case "FEW_ANSWERS":
                                 form.after(baseQuestion);
                                 $("a[href=''][type='']:contains(Edit)")
-                                    .attr("href", questionId)
+                                    .attr("href", savedQuestionId)
                                     .attr("type", "FEW_ANSWERS");
                                 var container = $("#addedAnswersContainer");
                                 container.removeAttr("id");
@@ -297,7 +297,7 @@
                             case "ACCORDANCE":
                                 form.after(baseQuestion);
                                 $("a[href=''][type='']:contains(Edit)")
-                                    .attr("href", questionId)
+                                    .attr("href", savedQuestionId)
                                     .attr("type", "ACCORDANCE");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
@@ -323,7 +323,7 @@
                             case "SEQUENCE":
                                 form.after(baseQuestion);
                                 $("a[href=''][type='']:contains(Edit)")
-                                    .attr("href", questionId)
+                                    .attr("href", savedQuestionId)
                                     .attr("type", "SEQUENCE");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
@@ -350,7 +350,7 @@
                             case "NUMBER":
                                 form.after(baseQuestion);
                                 $("a[href=''][type='']:contains(Edit)")
-                                    .attr("href", questionId)
+                                    .attr("href", savedQuestionId)
                                     .attr("type", "NUMBER");
                                 $("a[href='']:contains(Delete)").attr("href", questionId);
                                 var container = $("#addedAnswersContainer");
@@ -423,6 +423,7 @@
                 '                    </div>\n' +
                 '                </div>\n' +
                 '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
+                '                    <span id="buttonMarker"></span>' +
                 '                    <button id="addAnswer" type="button" class="btn btn-success btn-wide" value="oneAnswer">\n' +
                 '                        <i class="fa fa-plus"></i> Add answer\n' +
                 '                    </button>\n' +
@@ -746,18 +747,37 @@
                 switch (questionType) {
                     case "ONE_ANSWER":
                         answersContainer.append(oneAnswers);
+                        var addAnswerButton = $("#addAnswer");
+                        if (addAnswerButton.length === 0) {
+                            $("#buttonMarker").after(
+                                '<button id="addAnswer" type="button" class="btn btn-success btn-wide" value="oneAnswer">\n' +
+                                '    <i class="fa fa-plus"></i> Add answer\n' +
+                                '</button>\n');
+                        }
+                        $("#addAnswer").val("oneAnswer");
                         break;
                     case "FEW_ANSWERS":
                         answersContainer.append(fewAnswers);
+                        var addAnswerButton = $("#addAnswer");
+                        if (addAnswerButton.length === 0) {
+                            $("#buttonMarker").after(
+                                '<button id="addAnswer" type="button" class="btn btn-success btn-wide" value="oneAnswer">\n' +
+                                '    <i class="fa fa-plus"></i> Add answer\n' +
+                                '</button>\n');
+                        }
+                        $("#addAnswer").val("fewAnswers");
                         break;
                     case "ACCORDANCE":
                         answersContainer.append(accordanceAnswers);
+                        $("#addAnswer").remove();
                         break;
                     case "SEQUENCE":
                         answersContainer.append(sequenceAnswers);
+                        $("#addAnswer").remove();
                         break;
                     case "NUMBER":
                         answersContainer.append(numberAnswers);
+                        $("#addAnswer").remove();
                         break;
                 }
             });
@@ -838,9 +858,11 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div>
-                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
-                </div>
+                <c:if test="${question.explanation ne null}">
+                    <div>
+                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -887,9 +909,11 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                <div>
-                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
-                </div>
+                <c:if test="${question.explanation ne null}">
+                    <div>
+                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -932,9 +956,11 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div>
-                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
-                </div>
+                <c:if test="${question.explanation ne null}">
+                    <div>
+                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -976,9 +1002,11 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <div>
-                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
-                </div>
+                <c:if test="${question.explanation ne null}">
+                    <div>
+                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>
@@ -1017,9 +1045,11 @@
                         <td>${quizAnswersNumber[question.questionId].correct}</td>
                     </tr>
                 </table>
-                <div>
-                    <strong>Explanation: </strong><c:out value="${question.explanation}"/>
-                </div>
+                <c:if test="${question.explanation ne null}">
+                    <div>
+                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                    </div>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>

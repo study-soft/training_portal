@@ -52,7 +52,7 @@ VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '(095)-787-22-56', NULL,
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Procedural', 'Try your procedural skills', 'Hope you had procedural fun :)', '2018-03-01', '00:10:00', 1, 'PUBLISHED');
+VALUES ('Object Oriented Programming', 'There are questions to test your skills in object oriented programming in Java', NULL, '2018-03-01', '00:10:00', 1, 'PUBLISHED');
 /*2*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'PUBLISHED');
 /*3*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -60,15 +60,15 @@ VALUES ('Collections', 'Try your collections skills', 'Hope you had fun with col
 /*4*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:00:10', 2, 'PUBLISHED');
 /*5*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
+VALUES ('Generics', 'Try your generics skills', 'Hope you had generic fun :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
 /*6*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Generics', 'Try your generics skills', 'Hope you had generic fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
+VALUES ('Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
 /*7*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
+VALUES ('Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun but Pascal is dead :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
 /*8*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('Pascal advanced', 'Try your senior pascal skills', 'Hope you had pascal fun :)', '2018-03-11', '00:05:00', 2, 'UNPUBLISHED');
+VALUES ('Pascal advanced', 'Try your senior pascal skills', 'Hope you had Pascal fun but Pascal is dead :)', '2018-03-11', '00:05:00', 2, 'UNPUBLISHED');
 /*9*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES ('HTML basics', 'Try your HTML skills', 'Hope you had HTML fun :)', '2018-03-11', '00:10:00', 1, 'UNPUBLISHED');
+VALUES ('HTML basics', 'Try your HTML skills', NULL, '2018-03-11', '00:10:00', 1, 'UNPUBLISHED');
 /*10*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
 VALUES ('HTML forms', 'Try your HTML skills with forms', 'Hope you had HTML fun :)', '2018-03-11', '00:09:00', 1, 'UNPUBLISHED');
 /*11*/INSERT INTO quizzes (name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
@@ -249,13 +249,13 @@ VALUES (9, 'Question 9.1 body?', 'Question 9.1 explanation', 'NUMBER', 4);
 /*25*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Which element DOESN''T belongs to HTML forms?', '''Name'' is input type element, NOT form', 'ONE_ANSWER', 1);
 /*26*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (10, 'Set accordance between HTML form elements and their description', 'Question 6.1 explanation', 'ACCORDANCE', 4);
+VALUES (10, 'Set accordance between HTML form elements and their description', NULL, 'ACCORDANCE', 4);
 /*27*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Enter the year when Berners-Lee wrote HTML', 'End of 1990', 'NUMBER', 5);
 /*28*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Which input restriction specifies a regular expression to check the input value against', 'It is ''pattern'' restriction', 'ONE_ANSWER', 3);
 /*29*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
-VALUES (10, 'Set correct sequence of tags in HTML document', 'html -> form action="handler.php" -> input type="checkbox" -> /body', 'SEQUENCE', 3);
+VALUES (10, 'Set correct sequence of tags in HTML document', '<html> -> <form action="handler.php"> -> <input type="checkbox"> -> </body>', 'SEQUENCE', 3);
 /*30*/INSERT INTO questions (quiz_id, body, explanation, question_type, score)
 VALUES (10, 'Select ALL correct HTML form input types', '''style'' and ''value'' are NOT input types', 'FEW_ANSWERS', 3);
 
@@ -354,8 +354,8 @@ left_side_3, right_side_3, left_side_4, right_side_4)
 VALUES (8, '(a == 1)', 'expression', 'a = b + 1;', 'statement', '{a = 0; b = a + 1;}', 'block', '[a-zA-Z]+', 'regExp');
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2,
 left_side_3, right_side_3, left_side_4, right_side_4)
-VALUES (26, 'textarea', 'Defines a multiline input control', 'select', 'Defines a drop-down list',
-'option', 'Defines an option in a drop-down list', 'input', 'Defines an input control');
+VALUES (26, '<textarea>', 'Defines a multiline input control', '<select>', 'Defines a drop-down list',
+'<option>', 'Defines an option in a drop-down list', '<input>', 'Defines an input control');
 
 -- Table: answers_sequence
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
@@ -365,7 +365,7 @@ VALUES (9, 'Object', 'Collection', 'List', 'ArrayList');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
 VALUES (20, 'First answer', 'Second answer', 'Third answer', 'Fourth answer');
 INSERT INTO answers_sequence (question_id, item_1, item_2, item_3, item_4)
-VALUES (29, 'html', 'form action="handler.php"', 'input type="checkbox"', '/body');
+VALUES (29, '<html>', '<form action="handler.php">', '<input type="checkbox">', '</body>');
 
 -- Table: answers_number
 INSERT INTO answers_number (question_id, correct) VALUES (5, 5);

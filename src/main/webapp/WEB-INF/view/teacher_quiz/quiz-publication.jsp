@@ -72,6 +72,17 @@
                         </button>
                     </div>
                 </div>
+                <c:if test="${quiz.teacherQuizStatus eq 'UNPUBLISHED'}">
+                    <div class="row no-gutters align-items-center highlight-danger">
+                        <div class="col-auto mr-3">
+                            <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                                 width="25" height="25">
+                        </div>
+                        <div class="col">
+                            After publication of the quiz you can no longer edit it
+                        </div>
+                    </div>
+                </c:if>
                 <div class="row no-gutters align-items-center highlight-primary">
                     <div class="col-auto mr-3">
                         <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
@@ -91,7 +102,7 @@
                                         <button type="button" class="btn-link" data-toggle="collapse"
                                                 data-target="#collapse${group.groupId}"
                                                 aria-expanded="false" aria-controls="collapse${group.groupId}">
-                                                <c:out value="${group.name}"/>
+                                            <c:out value="${group.name}"/>
                                         </button>
                                         <div class="custom-control custom-checkbox right">
                                             <input type="checkbox" id="group${group.groupId}"

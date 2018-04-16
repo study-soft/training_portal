@@ -168,16 +168,16 @@
         <div class="col-lg-6">
             <strong>Explanation: </strong><c:out value="${publishedQuiz.explanation}"/>
         </div>
+        <div class="row no-gutters align-items-center highlight-primary">
+            <div class="col-auto mr-3">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25">
+            </div>
+            <div class="col">
+                Students will see explanation after all group close this quiz
+            </div>
+        </div>
     </c:if>
-    <div class="row no-gutters align-items-center highlight-primary">
-        <div class="col-auto mr-3">
-            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                 width="25" height="25">
-        </div>
-        <div class="col">
-            Students will see explanation after all group close this quiz
-        </div>
-    </div>
 
     <h4>Groups and students to whom quiz was published</h4>
     <div class="row">

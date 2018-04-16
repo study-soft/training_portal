@@ -383,8 +383,11 @@ public class TeacherQuizController {
                     minutes.isEmpty() ? 0 : Integer.valueOf(minutes),
                     seconds.isEmpty() ? 0 : Integer.valueOf(seconds));
         }
-        quizDao.editQuiz(oldQuiz.getQuizId(), editedQuiz.getName(), editedQuiz.getDescription(),
-                editedQuiz.getExplanation(), editedPassingTime);
+        quizDao.editQuiz(oldQuiz.getQuizId(),
+                editedQuiz.getName(),
+                editedQuiz.getDescription().isEmpty() ? null : editedQuiz.getDescription(),
+                editedQuiz.getExplanation().isEmpty() ? null : editedQuiz.getExplanation(),
+                editedPassingTime);
 
         Quiz newQuiz = quizDao.findQuiz(quizId);
         if (!oldQuiz.equals(newQuiz)) {
@@ -429,6 +432,12 @@ public class TeacherQuizController {
         model.addAttribute("questionsSequence", questionsSequence);
         model.addAttribute("questionsNumber", questionsNumber);
 
+        logger.info(">>>>> questionsOneAnswer" + questionsOneAnswer);
+        logger.info(">>>>> questionsFewAnswers" + questionsFewAnswers);
+        logger.info(">>>>> questionsAccordance" + questionsAccordance);
+        logger.info(">>>>> questionsSequence" + questionsSequence);
+        logger.info(">>>>> questionsNumber" + questionsNumber);
+
         Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
         Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
         Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
@@ -462,9 +471,9 @@ public class TeacherQuizController {
         model.addAttribute("quizAnswersSequence", quizAnswersSequence);
         model.addAttribute("quizAnswersNumber", quizAnswersNumber);
 
-        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
-            return "student_quiz/answers";
-        }
+//        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
+//            return "student_quiz/answers";
+//        }
         return "teacher_quiz/questions";
     }
 
@@ -472,7 +481,7 @@ public class TeacherQuizController {
 
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
     @ResponseBody
-    public ResponseEntity<?> editQuestion(@PathVariable("quizId") Long quizId,
+    public Long editQuestion(@PathVariable("quizId") Long quizId,
                                           @RequestParam Map<String, String> params) {
         logger.info(params);
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
@@ -483,7 +492,7 @@ public class TeacherQuizController {
         Question question = new Question.QuestionBuilder()
                 .quizId(quizId)
                 .body(questionBody)
-                .explanation(explanation)
+                .explanation(explanation.isEmpty() ? null : explanation)
                 .questionType(questionType)
                 .score(score)
                 .build();
@@ -607,7 +616,7 @@ public class TeacherQuizController {
                 }
                 break;
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return questionId;
     }
 
     // QUESTION DELETE =========================================================

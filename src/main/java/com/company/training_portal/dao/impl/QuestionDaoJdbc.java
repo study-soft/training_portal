@@ -150,7 +150,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 break;
         }
         template.update(DELETE_QUESTION, questionId);
-        logger.info("Deleted questions with questionId: " + questionId);
+        logger.info("Deleted question with questionId: " + questionId);
     }
 
     @Transactional

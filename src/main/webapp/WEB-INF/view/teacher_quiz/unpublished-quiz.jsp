@@ -31,6 +31,8 @@
             });
 
             if ("${unpublishedQuiz.questionsNumber}" === "0") {
+                $("#preview").remove();
+
                 const warning = $("#warning");
                 warning.text("You have no questions in this quiz");
 
@@ -166,19 +168,19 @@
         <div class="col-lg-6">
             <strong>Explanation: </strong><c:out value="${unpublishedQuiz.explanation}"/>
         </div>
+        <div class="row no-gutters align-items-center highlight-primary">
+            <div class="col-auto mr-3">
+                <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                     width="25" height="25">
+            </div>
+            <div class="col">
+                Students will see explanation after all group close this quiz
+            </div>
+        </div>
     </c:if>
-    <div class="row no-gutters align-items-center highlight-primary">
-        <div class="col-auto mr-3">
-            <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
-                 width="25" height="25">
-        </div>
-        <div class="col">
-            Students will see explanation after all group close this quiz
-        </div>
-    </div>
     <button id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
-    <a href="/quizzes/${unpublishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
+    <a id="preview" href="/quizzes/${unpublishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">
         <i class="fa fa-edit"></i> Edit
     </a>

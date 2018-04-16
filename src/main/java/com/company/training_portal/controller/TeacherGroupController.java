@@ -170,7 +170,7 @@ public class TeacherGroupController {
         LocalDate creationDate = LocalDate.now();
         Group group = new Group.GroupBuilder()
                 .name(name)
-                .description(description)
+                .description(description.isEmpty() ? null : description)
                 .creationDate(creationDate)
                 .authorId(teacherId)
                 .build();
@@ -270,7 +270,7 @@ public class TeacherGroupController {
         Group editedGroup = new Group.GroupBuilder()
                 .groupId(oldGroup.getGroupId())
                 .name(editedName)
-                .description(editedDescription)
+                .description(editedDescription.isEmpty() ? null : editedDescription)
                 .creationDate(oldGroup.getCreationDate())
                 .authorId(oldGroup.getAuthorId())
                 .build();

@@ -15,7 +15,7 @@ h5, h6 {
 /******************************   TABLES   *******************************/
 
 .table {
-    border-collapse: collapse;
+    /*border-collapse: collapse;*/
 }
 
 .table th, td {
@@ -24,11 +24,11 @@ h5, h6 {
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2
+    background-color: #f2f2f2;
 }
 
 .table tr:nth-child(odd) {
-    background-color: #ffffff
+    background-color: #ffffff;
 }
 
 .table tr:hover {
@@ -39,6 +39,10 @@ h5, h6 {
     background-color: #0380ff;
     color: white;
     border: none;
+}
+
+.table td {
+    border-top: 2px solid #dee2e6;
 }
 
 .table-info {

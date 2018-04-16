@@ -310,7 +310,7 @@ public class QuizPassingController {
                     .attempt(1)
                     .passingTime(quiz.getPassingTime())
                     .finishDate(finishDate)
-                    .timeSpent(quiz.getPassingTime().minus(timeLeft))
+                    .timeSpent(quiz.getPassingTime() == null ? null : quiz.getPassingTime().minus(timeLeft))
                     .build();
             model.addAttribute("quiz", passedQuiz);
             model.addAttribute("currentQuestionSerial", currentQuestionSerial);

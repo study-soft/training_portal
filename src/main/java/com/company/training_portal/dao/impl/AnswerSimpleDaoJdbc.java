@@ -45,7 +45,7 @@ public class AnswerSimpleDaoJdbc implements AnswerSimpleDao {
     public List<AnswerSimple> findAnswersSimple(Long questionId) {
         List<AnswerSimple> answers = template.query(FIND_ALL_ANSWERS_SIMPLE_BY_QUESTION_ID,
                 new Object[]{questionId}, this::mapAnswerSimple);
-        logger.info("Found all answers simple by questionId:");
+        logger.info("Found all answers simple by questionId = " + questionId + ":");
         answers.forEach(logger::info);
         return answers;
     }

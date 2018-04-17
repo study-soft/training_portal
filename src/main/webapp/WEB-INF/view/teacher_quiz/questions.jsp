@@ -190,7 +190,7 @@
                 var baseQuestion = '<div class="question-header">\n' +
                     '                <div class="row">\n' +
                     '                    <div class="col-7">\n' +
-                    '                        <h5>' + $("#question").val() + '</h5>\n' +
+                    '                        <h5></h5>\n' +
                     '                    </div>\n' +
                     '                    <div class="col-2">\n' +
                     '                        <h6>' + $("#points").val() + ' points</h6>\n' +
@@ -241,6 +241,9 @@
                         switch (questionType) {
                             case "ONE_ANSWER":
                                 form.after(baseQuestion);
+                                var questionHeader = form.next();
+                                questionHeader.find("a:contains(Delete)").attr("href", savedQuestionId);
+                                questionHeader.find("h5").text($("#question").val());
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", savedQuestionId)
                                     .attr("type", "ONE_ANSWER");
@@ -250,23 +253,28 @@
                                 $("input[name*='answer']").each(function () {
                                     if ($(this).attr("name") === correct) {
                                         container.append('<div class="col-6">\n' +
-                                            '                 <div class="correct">' + $(this).val() + '</div>\n' +
+                                            '                 <div class="correct"></div>\n' +
                                             '             </div>');
+                                        container.find(".correct").last().text($(this).val());
                                     } else {
                                         container.append('<div class="col-6">\n' +
-                                            '                 <div class="incorrect">' + $(this).val() + '</div>\n' +
+                                            '                 <div class="incorrect"></div>\n' +
                                             '             </div>');
+                                        container.find(".incorrect").last().text($(this).val());
                                     }
                                 });
                                 var explanation = $("#explanation").val();
                                 if (explanation) {
-                                    container.append('<div><strong> Explanation: </strong>' +
-                                        explanation + '</div>');
+                                    container.append('<div><strong>Explanation: </strong></div>');
+                                    container.find("div").last().append(document.createTextNode(explanation));
                                 }
                                 form.remove();
                                 break;
                             case "FEW_ANSWERS":
                                 form.after(baseQuestion);
+                                var questionHeader = form.next();
+                                questionHeader.find("a:contains(Delete)").attr("href", savedQuestionId);
+                                questionHeader.find("h5").text($("#question").val());
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", savedQuestionId)
                                     .attr("type", "FEW_ANSWERS");
@@ -279,23 +287,28 @@
                                 $("input[name*='answer']").each(function () {
                                     if ($.inArray($(this).attr("name"), corrects) !== -1) {
                                         container.append('<div class="col-6">\n' +
-                                            '                 <div class="correct">' + $(this).val() + '</div>\n' +
+                                            '                 <div class="correct"></div>\n' +
                                             '             </div>');
+                                        container.find(".correct").last().text($(this).val());
                                     } else {
                                         container.append('<div class="col-6">\n' +
-                                            '                 <div class="incorrect">' + $(this).val() + '</div>\n' +
+                                            '                 <div class="incorrect"></div>\n' +
                                             '             </div>');
+                                        container.find(".incorrect").last().text($(this).val());
                                     }
                                 });
                                 var explanation = $("#explanation").val();
                                 if (explanation) {
-                                    container.append('<div><strong> Explanation: </strong>' +
-                                        explanation + '</div>');
+                                    container.append('<div><strong>Explanation: </strong></div>');
+                                    container.find("div").last().append(document.createTextNode(explanation));
                                 }
                                 form.remove();
                                 break;
                             case "ACCORDANCE":
                                 form.after(baseQuestion);
+                                var questionHeader = form.next();
+                                questionHeader.find("a:contains(Delete)").attr("href", savedQuestionId);
+                                questionHeader.find("h5").text($("#question").val());
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", savedQuestionId)
                                     .attr("type", "ACCORDANCE");
@@ -309,19 +322,26 @@
                                 $("input[name*='left']").each(function () {
                                     var counter = $(this).attr("name").replace("left", "");
                                     table.append('<tr>\n' +
-                                        '                <td>' + $(this).val() + '</td>' +
-                                        '                <td>' + $("input[name='right" + counter + "']").val() + '</td>' +
+                                        '                <td></td>' +
+                                        '                <td></td>' +
                                         '             </tr>');
+                                    table.find("td").last().text($("input[name='right" + counter + "']").val())
+                                        .prev().text($(this).val());
+                                    // table.find("tr").last().children().first().text($(this).val())
+                                    //     .next().text();
                                 });
                                 var explanation = $("#explanation").val();
                                 if (explanation) {
-                                    container.append('<div><strong> Explanation: </strong>' +
-                                        explanation + '</div>');
+                                    container.append('<div><strong>Explanation: </strong></div>');
+                                    container.find("div").last().append(document.createTextNode(explanation));
                                 }
                                 form.remove();
                                 break;
                             case "SEQUENCE":
                                 form.after(baseQuestion);
+                                var questionHeader = form.next();
+                                questionHeader.find("a:contains(Delete)").attr("href", savedQuestionId);
+                                questionHeader.find("h5").text($("#question").val());
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", savedQuestionId)
                                     .attr("type", "SEQUENCE");
@@ -336,19 +356,23 @@
                                 $("input[name*='sequence']").each(function () {
                                     table.append('<tr>\n' +
                                         '                <td>' + counter + '</td>' +
-                                        '                <td>' + $(this).val() + '</td>' +
+                                        '                <td></td>' +
                                         '             </tr>');
+                                    table.find("td").last().text($(this).val());
                                     counter++;
                                 });
                                 var explanation = $("#explanation").val();
                                 if (explanation) {
-                                    container.append('<div><strong>Explanation: </strong>' +
-                                        explanation + '</div>');
+                                    container.append('<div><strong>Explanation: </strong></div>');
+                                    container.find("div").last().append(document.createTextNode(explanation));
                                 }
                                 form.remove();
                                 break;
                             case "NUMBER":
                                 form.after(baseQuestion);
+                                var questionHeader = form.next();
+                                questionHeader.find("a:contains(Delete)").attr("href", savedQuestionId);
+                                questionHeader.find("h5").text($("#question").val());
                                 $("a[href=''][type='']:contains(Edit)")
                                     .attr("href", savedQuestionId)
                                     .attr("type", "NUMBER");
@@ -364,7 +388,8 @@
                                         '                </table>');
                                 var explanation = $("#explanation").val();
                                 if (explanation) {
-                                    container.append('<div><strong>Explanation: </strong>' + explanation + '</div>');
+                                    container.append('<div><strong>Explanation: </strong></div>');
+                                    container.find("div").last().append(document.createTextNode(explanation));
                                 }
                                 form.remove();
                                 break;
@@ -449,32 +474,34 @@
                 event.preventDefault();
 
                 var quizId = window.location.pathname.split("/")[3];
+                var deleteButton = $(this);
 
                 $.ajax({
                     type: "POST",
                     url: "/teacher/quizzes/" + quizId + "/questions/delete",
-                    data: "questionId=" + $(this).attr("href")
+                    data: "questionId=" + deleteButton.attr("href"),
+                    success: function () {
+                        var header = deleteButton.closest(".question-header");
+                        var answers = header.next();
+                        header.remove();
+                        answers.remove();
+
+                        if ($("a:contains(Delete)").length === 0) {
+                            $("#pageHeader").replaceWith(
+                                '<div id="noQuestionsInfo" class="row no-gutters align-items-center highlight-primary">\n' +
+                                '    <div class="col-auto mr-3">\n' +
+                                '        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '             width="25" height="25">\n' +
+                                '    </div>\n' +
+                                '    <div class="col">\n' +
+                                '         There is no questions in \'<c:out value="${quiz.name}"/>\' quiz\n' +
+                                '    </div>\n' +
+                                '</div>');
+
+                            $("h4.shifted-left").remove();
+                        }
+                    }
                 });
-
-                var header = $(this).closest(".question-header");
-                var answers = header.next();
-                header.remove();
-                answers.remove();
-
-                if ($("a:contains(Delete)").length === 0) {
-                    $("#pageHeader").replaceWith(
-                        '<div id="noQuestionsInfo" class="row no-gutters align-items-center highlight-primary">\n' +
-                        '    <div class="col-auto mr-3">\n' +
-                        '        <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
-                        '             width="25" height="25">\n' +
-                        '    </div>\n' +
-                        '    <div class="col">\n' +
-                        '         There is no questions in \'<c:out value="${quiz.name}"/>\' quiz\n' +
-                        '    </div>\n' +
-                        '</div>');
-
-                    $("h4.shifted-left").remove();
-                }
             });
 
             $(document).on("click", "a:contains(Edit)", function (event) {
@@ -789,7 +816,7 @@
 <div class="container">
     <br>
     <div id="pageHeaderRow" class="row">
-        <div class="col-6">
+        <div class="col-sm-9">
             <c:choose>
                 <c:when test="${quiz.questionsNumber ne 0}">
                     <h2 id="pageHeader">Questions for quiz '<c:out value="${quiz.name}"/>'</h2>
@@ -807,8 +834,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        <div class="col-4"></div>
-        <div class="col-2 shifted-down-20px">
+        <div class="col-sm-2 offset-sm-1 shifted-down-20px">
             <button id="addQuestion" type="button" class="btn btn-success btn-wide">
                 <i class="fa fa-plus"></i>
                 Add question
@@ -821,20 +847,20 @@
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-7">
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto col-sm-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}" type="ONE_ANSWER">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}">
                                 <i class="fa fa-trash-o"></i> Delete
@@ -847,12 +873,12 @@
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
-                            <div class="col-6">
+                            <div class="col-lg-8">
                                 <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="col-6">
+                            <div class="col-lg-8">
                                 <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
@@ -872,20 +898,20 @@
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-7">
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto col-sm-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}" type="FEW_ANSWERS">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}">
                                 <i class="fa fa-trash-o"></i> Delete
@@ -898,12 +924,12 @@
                 <c:forEach items="${quizAnswersSimple[question.questionId]}" var="answer">
                     <c:choose>
                         <c:when test="${answer.correct eq true}">
-                            <div class="col-6">
+                            <div class="col-lg-8">
                                 <div class="correct"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="col-6">
+                            <div class="col-lg-8">
                                 <div class="incorrect"><c:out value="${answer.body}"/></div>
                             </div>
                         </c:otherwise>
@@ -923,10 +949,10 @@
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-7">
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto col-sm-2">
                         <h6>${question.score} points</h6>
                     </div>
                     <div class="col-auto">
@@ -948,11 +974,11 @@
             <div class="question-answers">
                 <c:set var="leftSide" value="${quizAnswersAccordance[question.questionId].leftSide}" scope="page"/>
                 <c:set var="rightSide" value="${quizAnswersAccordance[question.questionId].rightSide}" scope="page"/>
-                <table class="col-6 table-info">
+                <table class="col-lg-8 table-info">
                     <c:forEach items="${leftSide}" var="item" varStatus="status">
                         <tr>
-                            <td><c:out value="${item}"/></td>
-                            <td><c:out value="${rightSide[status.index]}"/></td>
+                            <td style="width: 50%"><c:out value="${item}"/></td>
+                            <td style="width: 50%"><c:out value="${rightSide[status.index]}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -970,20 +996,20 @@
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-7">
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto col-sm-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}" type="SEQUENCE">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}">
                                 <i class="fa fa-trash-o"></i> Delete
@@ -994,11 +1020,11 @@
             </div>
             <div class="question-answers">
                 <c:set var="correctList" value="${quizAnswersSequence[question.questionId].correctList}" scope="page"/>
-                <table class="col-6 table-info">
+                <table class="col-lg-8 table-info">
                     <c:forEach items="${correctList}" var="item" varStatus="status">
                         <tr>
-                            <td>${status.index + 1}</td>
-                            <td><c:out value="${item}"/></td>
+                            <td style="width: 10%;">${status.index + 1}</td>
+                            <td style="width: 90%;"><c:out value="${item}"/></td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -1016,20 +1042,20 @@
         <c:forEach items="${questionsNumber}" var="question">
             <div class="question-header">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-7">
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto col-sm-2">
                         <h6>${question.score} points</h6>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}" type="NUMBER">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-sm-auto">
                         <div class="shifted-down-10px">
                             <a href="${question.questionId}">
                                 <i class="fa fa-trash-o"></i> Delete
@@ -1039,10 +1065,10 @@
                 </div>
             </div>
             <div class="question-answers">
-                <table class="col-6 table-info">
+                <table class="col-lg-8 table-info">
                     <tr>
-                        <td>Answer</td>
-                        <td>${quizAnswersNumber[question.questionId].correct}</td>
+                        <td style="width: 50%;">Answer</td>
+                        <td style="width: 50%;">${quizAnswersNumber[question.questionId].correct}</td>
                     </tr>
                 </table>
                 <c:if test="${question.explanation ne null}">

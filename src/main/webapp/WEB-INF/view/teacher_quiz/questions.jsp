@@ -9,32 +9,32 @@
         var oldAnswers;
         <%--// question one answer--%>
         $(document).ready(function () {
-            var rowOneAnswer = '<div id="new-row" class="row margin-row">\n' +
-                '                <div class="col-auto">\n' +
+            var rowOneAnswer = '<div id="new-row" class="row no-gutters margin-row">\n' +
+                '                <div class="col-auto mx-sm-3">\n' +
                 '                    <div class="custom-control custom-radio shifted-down-10px">\n' +
                 '                        <input type="radio" id="" name="correct" value="" class="custom-control-input">\n' +
                 '                        <label for="correct2" class="custom-control-label"></label>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '                <div class="col-9">\n' +
+                '                <div class="col col-sm-8 mr-sm-4">\n' +
                 '                    <input type="text" class="form-control" name="">\n' +
                 '                </div>\n' +
-                '                <div class="col-1">\n' +
+                '                <div class="col-auto">\n' +
                 '                    <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>\n' +
                 '                </div>\n' +
                 '            </div>';
 
-            var rowFewAnswers = '<div id="new-row" class="row margin-row">\n' +
-                '                <div class="col-auto">\n' +
+            var rowFewAnswers = '<div id="new-row" class="row no-gutters margin-row">\n' +
+                '                <div class="col-auto mx-sm-3">\n' +
                 '                    <div class="custom-control custom-checkbox shifted-down-10px">\n' +
                 '                        <input type="checkbox" id="" name="" value="correct" class="custom-control-input">\n' +
                 '                        <label for="" class="custom-control-label"></label>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '                <div class="col-9">\n' +
+                '                <div class="col col-sm-8 mr-sm-4">\n' +
                 '                    <input type="text" class="form-control">\n' +
                 '                </div>\n' +
-                '                <div class="col-1">\n' +
+                '                <div class="col-auto">\n' +
                 '                    <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>\n' +
                 '                </div>\n' +
                 '            </div>';
@@ -189,18 +189,18 @@
 
                 var baseQuestion = '<div class="question-header">\n' +
                     '                <div class="row">\n' +
-                    '                    <div class="col-7">\n' +
+                    '                    <div class="col-sm-7">\n' +
                     '                        <h5></h5>\n' +
                     '                    </div>\n' +
-                    '                    <div class="col-2">\n' +
+                    '                    <div class="col-auto col-sm-2">\n' +
                     '                        <h6>' + $("#points").val() + ' points</h6>\n' +
                     '                    </div>\n' +
-                    '                    <div class="col-auto">\n' +
+                    '                    <div class="col-sm-auto">\n' +
                     '                        <div class="shifted-down-10px">\n' +
                     '                            <a href="" type=""><i class="fa fa-edit"></i> Edit</a>\n' +
                     '                        </div>\n' +
                     '                    </div>\n' +
-                    '                    <div class="col-auto">\n' +
+                    '                    <div class="col-sm-auto">\n' +
                     '                        <div class="shifted-down-10px">\n' +
                     '                            <a href=""><i class="fa fa-trash-o"></i> Delete</a>\n' +
                     '                        </div>\n' +
@@ -252,12 +252,12 @@
                                 container.removeAttr("id");
                                 $("input[name*='answer']").each(function () {
                                     if ($(this).attr("name") === correct) {
-                                        container.append('<div class="col-6">\n' +
+                                        container.append('<div class="col-lg-8">\n' +
                                             '                 <div class="correct"></div>\n' +
                                             '             </div>');
                                         container.find(".correct").last().text($(this).val());
                                     } else {
-                                        container.append('<div class="col-6">\n' +
+                                        container.append('<div class="col-lg-8">\n' +
                                             '                 <div class="incorrect"></div>\n' +
                                             '             </div>');
                                         container.find(".incorrect").last().text($(this).val());
@@ -286,12 +286,12 @@
                                 });
                                 $("input[name*='answer']").each(function () {
                                     if ($.inArray($(this).attr("name"), corrects) !== -1) {
-                                        container.append('<div class="col-6">\n' +
+                                        container.append('<div class="col-lg-8">\n' +
                                             '                 <div class="correct"></div>\n' +
                                             '             </div>');
                                         container.find(".correct").last().text($(this).val());
                                     } else {
-                                        container.append('<div class="col-6">\n' +
+                                        container.append('<div class="col-lg-8">\n' +
                                             '                 <div class="incorrect"></div>\n' +
                                             '             </div>');
                                         container.find(".incorrect").last().text($(this).val());
@@ -317,13 +317,13 @@
                                 container.removeAttr("id");
                                 var table = container
                                     .removeAttr("id")
-                                    .prepend('<table class="col-6 table-info"></table>')
+                                    .prepend('<table class="col-lg-8 table-info"></table>')
                                     .children(":first");
                                 $("input[name*='left']").each(function () {
                                     var counter = $(this).attr("name").replace("left", "");
                                     table.append('<tr>\n' +
-                                        '                <td></td>' +
-                                        '                <td></td>' +
+                                        '                <td style="width: 50%"></td>' +
+                                        '                <td style="width: 50%"></td>' +
                                         '             </tr>');
                                     table.find("td").last().text($("input[name='right" + counter + "']").val())
                                         .prev().text($(this).val());
@@ -350,13 +350,13 @@
                                 container.removeAttr("id");
                                 var table = container
                                     .removeAttr("id")
-                                    .prepend('<table class="col-6 table-info"></table>')
+                                    .prepend('<table class="col-lg-8 table-info"></table>')
                                     .children(":first");
                                 var counter = 1;
                                 $("input[name*='sequence']").each(function () {
                                     table.append('<tr>\n' +
-                                        '                <td>' + counter + '</td>' +
-                                        '                <td></td>' +
+                                        '                <td style="width: 10%">' + counter + '</td>' +
+                                        '                <td style="width: 90%"></td>' +
                                         '             </tr>');
                                     table.find("td").last().text($(this).val());
                                     counter++;
@@ -380,10 +380,10 @@
                                 var container = $("#addedAnswersContainer");
                                 container.removeAttr("id")
                                     .prepend(
-                                        '                <table class="col-6 table-info">\n' +
+                                        '                <table class="col-lg-8 table-info">\n' +
                                         '                    <tr>\n' +
-                                        '                        <td>Answer</td>\n' +
-                                        '                        <td>' + $("#number").val() + '</td>\n' +
+                                        '                        <td style="width: 50%">Answer</td>\n' +
+                                        '                        <td style="width: 50%">' + $("#number").val() + '</td>\n' +
                                         '                    </tr>\n' +
                                         '                </table>');
                                 var explanation = $("#explanation").val();
@@ -401,13 +401,13 @@
             var baseEditQuestionForm =
                 '   <form id="questionForm" action="/teacher/quizzes/' + window.location.pathname.split("/")[3] + '/questions/update" method="post">\n' +
                 '        <div class="question-header">\n' +
-                '            <div class="row">\n' +
-                '                <div class="col-8">\n' +
+                '            <div class="row no gutters">\n' +
+                '                <div class="col-lg-8">\n' +
                 '                    <div class="form-group form-inline">\n' +
-                '                        <label for="type" class="col-xl-3 col-lg-4 col-md-6 col-form-label">\n' +
+                '                        <label for="type" class="col-sm-4">\n' +
                 '                            <strong>Type</strong>\n' +
                 '                        </label>\n' +
-                '                        <select id="type" name="type" class="col-4 form-control" disabled>\n' +
+                '                        <select id="type" name="type" class="col-sm-4 form-control" disabled>\n' +
                 '                            <option value="ONE_ANSWER">One answer</option>\n' +
                 '                            <option value="FEW_ANSWERS">Few answers</option>\n' +
                 '                            <option value="ACCORDANCE">Accordance</option>\n' +
@@ -416,12 +416,12 @@
                 '                        </select>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '                <div class="col-4">\n' +
+                '                <div class="col-lg-4">\n' +
                 '                    <div class="form-group form-inline">\n' +
-                '                        <label for="points" class="col-3 col-form-label">\n' +
+                '                        <label for="points" class="col-sm-3 col-form-label">\n' +
                 '                            <strong>Points</strong>\n' +
                 '                        </label>\n' +
-                '                        <input type="text" id="points" name="points" class="col-6 form-control" placeholder="Points">\n' +
+                '                        <input type="text" id="points" name="points" class="col-sm-6 form-control" placeholder="Points">\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
                 '            </div>\n' +
@@ -429,7 +429,7 @@
                 '                <label for="question" class="col-form-label">\n' +
                 '                    <strong>Question</strong>\n' +
                 '                </label>\n' +
-                '                <textarea name="question" id="question" rows="2" class="col-11 form-control"\n' +
+                '                <textarea name="question" id="question" rows="2" class="col-lg-11 form-control"\n' +
                 '                          placeholder="Question"></textarea>\n' +
                 '            </div>\n' +
                 '        </div>' +
@@ -438,7 +438,7 @@
                 '            <span id="answersContainer">' +
                 '            </span>\n' +
                 '        <div class="row">\n' +
-                '                <div class="col-xl-9 col-lg-8 col-md-6">\n' +
+                '                <div class="col-lg-9">\n' +
                 '                    <div class="form-group">\n' +
                 '                        <label for="explanation" class="col-form-label">\n' +
                 '                            <strong>Explanation</strong>\n' +
@@ -447,7 +447,7 @@
                 '                                  placeholder="Explanation"></textarea>\n' +
                 '                    </div>\n' +
                 '                </div>\n' +
-                '                <div class="col-xl-3 col-lg-4 col-md-6">\n' +
+                '                <div class="col-lg-3">\n' +
                 '                    <span id="buttonMarker"></span>' +
                 '                    <button id="addAnswer" type="button" class="btn btn-success btn-wide" value="oneAnswer">\n' +
                 '                        <i class="fa fa-plus"></i> Add answer\n' +
@@ -530,21 +530,21 @@
                         var counter = 0;
                         answers.find("[class*=correct]").each(function () {
                             var answer =
-                                '<div id="' + counter + '" class="row margin-row">\n' +
-                                '    <div class="col-auto">\n' +
+                                '<div id="' + counter + '" class="row no-gutters margin-row">\n' +
+                                '    <div class="col-auto mx-sm-3">\n' +
                                 '        <div class="custom-control custom-radio shifted-down">\n' +
                                 '            <input type="radio" id="status' + counter + '" name="correct" value="answer' + counter + '"\n' +
                                 '                 class="custom-control-input">\n' +
                                 '            <label for="status' + counter + '" class="custom-control-label"></label>\n' +
                                 '        </div>\n' +
                                 '    </div>\n' +
-                                '    <div class="col-9">\n' +
+                                '    <div class="col col-sm-8 mr-sm-4">\n' +
                                 '        <input type="text" id="answer' + counter + '" name="answer' + counter + '"\n' +
                                 '               class="form-control is-invalid">\n' +
                                 '    </div>\n';
                             if (counter > 1) {
                                 answer +=
-                                    '    <div class="col-1">\n' +
+                                    '    <div class="col-auto">\n' +
                                     '        <button type="button" class="answer-delete" value="' + counter + '"><i\n' +
                                     '              class="fa fa-close"></i></button>\n' +
                                     '    </div>\n';
@@ -566,8 +566,8 @@
                         var counter = 0;
                         answers.find("[class*=correct]").each(function () {
                             var answer =
-                                '<div id="' + counter + '" class="row margin-row">\n' +
-                                '    <div class="col-auto">\n' +
+                                '<div id="' + counter + '" class="row no-gutters margin-row">\n' +
+                                '    <div class="col-auto mx-sm-3">\n' +
                                 '        <div class="custom-control custom-checkbox shifted-down">\n' +
                                 '            <input type="checkbox" id="status' + counter + '"\n ' +
                                 '                name="correct' + counter + '" value="answer' + counter + '"\n' +
@@ -575,13 +575,13 @@
                                 '            <label for="status' + counter + '" class="custom-control-label"></label>\n' +
                                 '        </div>\n' +
                                 '     </div>\n' +
-                                '     <div class="col-9">\n' +
+                                '     <div class="col col-sm-8 mr-sm-4">\n' +
                                 '         <input type="text" id="answer' + counter + '" name="answer' + counter + '"\n ' +
                                 '             class="form-control is-invalid">\n' +
                                 '     </div>\n';
                             if (counter > 1) {
                                 answer +=
-                                    '    <div class="col-1">\n' +
+                                    '    <div class="col-auto">\n' +
                                     '        <button type="button" class="answer-delete" value="' + counter + '"><i\n' +
                                     '              class="fa fa-close"></i></button>\n' +
                                     '    </div>\n';
@@ -637,7 +637,7 @@
                             container.append(
                                 '<div class="row margin-row">\n' +
                                 '    <div class="col-auto">\n' + (counter + 1) + '.' + '</div>\n' +
-                                '    <div class="col-6">\n' +
+                                '    <div class="col-lg-8">\n' +
                                 '         <input type="text" class="form-control"\n' +
                                 '                name="sequence' + counter + '">\n' +
                                 '     </div>\n' +
@@ -669,20 +669,20 @@
             });
 
             var oneAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
-                '                <div id="${status.index}" class="row margin-row">\n' +
-                '                    <div class="col-auto">\n' +
+                '                <div id="${status.index}" class="row no-gutters margin-row">\n' +
+                '                    <div class="col-auto mx-sm-3">\n' +
                 '                        <div class="custom-control custom-radio shifted-down">\n' +
                 '                            <input type="radio" id="status${status.index}" name="correct" value="answer${status.index}"\n' +
                 '                                   class="custom-control-input">\n' +
                 '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
                 '                        </div>\n' +
                 '                    </div>\n' +
-                '                    <div class="col-9">\n' +
+                '                    <div class="col col-sm-8 mr-sm-4">\n' +
                 '                        <input type="text" id="answer${status.index}" name="answer${status.index}"\n' +
                 '                               class="form-control is-invalid">\n' +
                 '                    </div>\n' +
                 '                    <c:if test="${status.index eq 2}">\n' +
-                '                        <div class="col-1">\n' +
+                '                        <div class="col-auto">\n' +
                 '                            <button type="button" class="answer-delete" value="${status.index}"><i\n' +
                 '                                    class="fa fa-close"></i></button>\n' +
                 '                        </div>\n' +
@@ -691,8 +691,8 @@
                 '            </c:forEach>\n';
 
             var fewAnswers = '<c:forEach begin="0" end="2" varStatus="status">\n' +
-                '                <div id="${status.index}" class="row margin-row">\n' +
-                '                    <div class="col-auto">\n' +
+                '                <div id="${status.index}" class="row no-gutters margin-row">\n' +
+                '                    <div class="col-auto mx-sm-3">\n' +
                 '                        <div class="custom-control custom-checkbox shifted-down">\n' +
                 '                            <input type="checkbox" id="status${status.index}"\n ' +
                 '                                   name="correct${status.index}" value="answer${status.index}"\n' +
@@ -700,12 +700,12 @@
                 '                            <label for="status${status.index}" class="custom-control-label"></label>\n' +
                 '                        </div>\n' +
                 '                    </div>\n' +
-                '                    <div class="col-9">\n' +
+                '                    <div class="col col-sm-8 mr-sm-4">\n' +
                 '                        <input type="text" id="answer${status.index}" name="answer${status.index}"\n ' +
                 '                               class="form-control is-invalid">\n' +
                 '                    </div>\n' +
                 '                    <c:if test="${status.index eq 2}">\n' +
-                '                        <div class="col-1">\n' +
+                '                        <div class="col-auto">\n' +
                 '                            <button type="button" class="answer-delete"><i class="fa fa-close"></i></button>\n' +
                 '                        </div>\n' +
                 '                    </c:if>\n' +
@@ -737,7 +737,7 @@
                 '                    <div class="col-auto">\n' +
                 '                            ${status.index + 1}.\n' +
                 '                    </div>\n' +
-                '                    <div class="col-6">\n' +
+                '                    <div class="col-lg-8">\n' +
                 '                        <input type="text" class="form-control" name="sequence${status.index}">\n' +
                 '                    </div>\n' +
                 '                </div>\n' +

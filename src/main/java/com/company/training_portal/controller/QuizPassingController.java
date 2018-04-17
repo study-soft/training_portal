@@ -58,7 +58,8 @@ public class QuizPassingController {
     }
 
     @RequestMapping(value = "/quizzes/{quizId}/initialize", method = RequestMethod.GET)
-    public String initializeQuiz(@ModelAttribute("userId") Long studentId,
+    public String initializeQuiz(@AuthenticationPrincipal SecurityUser securityUser,
+                                 @ModelAttribute("userId") Long studentId,
                                  @PathVariable("quizId") Long quizId,
                                  HttpSession session,
                                  ModelMap model) {
@@ -85,10 +86,16 @@ public class QuizPassingController {
         session.setAttribute(RESULT, 0D);
         session.setAttribute(QUESTIONS_NUMBER, questions.size());
         session.setAttribute(CURRENT_QUESTION_SERIAL, 0);
-        session.setAttribute(START_TIME, LocalDateTime.now());
-
         LocalDateTime startDate = LocalDateTime.now();
-        quizDao.editStartDate(startDate, studentId, quizId);
+        session.setAttribute(START_DATE, startDate);
+
+        List<String> userRoles = securityUser.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        if (userRoles.contains("ROLE_STUDENT")) {
+            quizDao.editStartDate(startDate, studentId, quizId);
+        }
 
         model.clear();
 
@@ -105,8 +112,8 @@ public class QuizPassingController {
                                                  Integer currentQuestionSerial,
                                          @SessionAttribute(value = QUESTIONS, required = false)
                                                  List<Question> questions,
-                                         @SessionAttribute(value = START_TIME, required = false)
-                                                 LocalDateTime startTime,
+                                         @SessionAttribute(value = START_DATE, required = false)
+                                                 LocalDateTime startDate,
                                          HttpSession session, ModelMap model) {
 
         Question currentQuestion = questions.get(currentQuestionSerial);
@@ -117,7 +124,7 @@ public class QuizPassingController {
 
         if (quiz.getPassingTime() != null) {
             LocalDateTime currentTime = LocalDateTime.now();
-            Duration studentPassingTime = Duration.between(startTime, currentTime);
+            Duration studentPassingTime = Duration.between(startDate, currentTime);
             Duration passingTime = quiz.getPassingTime();
             if (studentPassingTime.compareTo(passingTime) > 0) {
                 model.clear();
@@ -140,13 +147,13 @@ public class QuizPassingController {
                                                   Integer currentQuestionSerial,
                                           @SessionAttribute(QUESTIONS) List<Question> questions,
                                           @SessionAttribute(RESULT) Double result,
-                                          @SessionAttribute(START_TIME) LocalDateTime startTime,
+                                          @SessionAttribute(START_DATE) LocalDateTime startDate,
                                           HttpSession session, ModelMap model) {
         session.setAttribute(CURRENT_QUESTION_SERIAL, ++currentQuestionSerial);
 
         if (quiz.getPassingTime() != null) {
             LocalDateTime currentTime = LocalDateTime.now();
-            Duration studentPassingTime = Duration.between(startTime, currentTime);
+            Duration studentPassingTime = Duration.between(startDate, currentTime);
             Duration passingTime = quiz.getPassingTime();
             if (studentPassingTime.compareTo(passingTime) > 0) {
                 model.clear();
@@ -254,9 +261,10 @@ public class QuizPassingController {
                              @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
                                      Integer currentQuestionSerial,
                              @SessionAttribute(value = TIME_LEFT, required = false) Duration timeLeft,
+                             @SessionAttribute(value = START_DATE, required = false) LocalDateTime startDate,
                              HttpSession session, Model model) {
         showResult(securityUser, studentId, quizId, result,
-                currentQuestionSerial, timeLeft, session, model);
+                currentQuestionSerial, timeLeft, startDate, session, model);
         return "quiz_passing/time-up";
     }
 
@@ -268,6 +276,7 @@ public class QuizPassingController {
                              @SessionAttribute(value = CURRENT_QUESTION_SERIAL, required = false)
                                      Integer currentQuestionSerial,
                              @SessionAttribute(value = TIME_LEFT, required = false) Duration timeLeft,
+                             @SessionAttribute(value = START_DATE, required = false) LocalDateTime startDate,
                              HttpSession session, Model model) {
         List<String> userRoles = securityUser.getAuthorities()
                 .stream()
@@ -310,7 +319,7 @@ public class QuizPassingController {
                     .attempt(1)
                     .passingTime(quiz.getPassingTime())
                     .finishDate(finishDate)
-                    .timeSpent(quiz.getPassingTime() == null ? null : quiz.getPassingTime().minus(timeLeft))
+                    .timeSpent(Duration.between(startDate, finishDate))
                     .build();
             model.addAttribute("quiz", passedQuiz);
             model.addAttribute("currentQuestionSerial", currentQuestionSerial);
@@ -321,6 +330,7 @@ public class QuizPassingController {
         session.removeAttribute(CURRENT_QUIZ);
         session.removeAttribute(CURRENT_QUESTION_SERIAL);
         session.removeAttribute(TIME_LEFT);
+        session.removeAttribute(START_DATE);
 
         return "quiz_passing/congratulations";
     }

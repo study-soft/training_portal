@@ -233,30 +233,6 @@ h5, h6 {
     border: 1px solid #7C8994;
 }
 
-/*****************************   ICONS   *******************************/
-
-.icon-one-row {
-    margin: 0 5px 0 10px;
-}
-
-.icon-two-rows {
-    display: inline;
-    margin: 0 15px 0 20px;
-    position: relative;
-    top: 10px;
-}
-
-.icon-four-rows {
-    display: inline;
-    margin: 0 15px 0 20px;
-    position: relative;
-    top: 35px;
-}
-
-.non-first-row {
-    margin-left: 65px;
-}
-
 .nav-icon {
     font-size: 24px;
     position: relative;

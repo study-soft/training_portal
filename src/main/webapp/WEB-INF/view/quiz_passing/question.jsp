@@ -52,6 +52,7 @@
             </div>
         </div>
         <c:choose>
+            <%--***************************   ONE ANSWER   *********************************--%>
             <c:when test="${question.questionType eq 'ONE_ANSWER'}">
                 <c:forEach items="${answers}" var="answer">
                     <div class="custom-control custom-radio">
@@ -74,8 +75,8 @@
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
-                <div>Result: ${sessionScope.result}</div>
             </c:when>
+            <%--****************************   FEW ANSWERS   *********************************--%>
             <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
                 <c:forEach items="${answers}" var="answer" varStatus="status">
                     <div class="custom-control custom-checkbox">
@@ -98,8 +99,8 @@
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
-                <div>Result: ${sessionScope.result}</div>
             </c:when>
+            <%--*****************************   ACCORDANCE   ***********************************--%>
             <c:when test="${question.questionType eq 'ACCORDANCE'}">
                 <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
                     <div class="row">
@@ -125,8 +126,8 @@
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
-                <div>Result: ${sessionScope.result}</div>
             </c:when>
+            <%--**********************************   SEQUENCE   *****************************--%>
             <c:when test="${question.questionType eq 'SEQUENCE'}">
                 <c:forEach begin="0" end="3" varStatus="status">
                     <div class="row">
@@ -153,8 +154,8 @@
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
-                <div>Result: ${sessionScope.result}</div>
             </c:when>
+            <%--************************************   NUMBER   *************************************--%>
             <c:when test="${question.questionType eq 'NUMBER'}">
                 <div class="col-sm-4">
                     <input type="text" name="number" class="form-control" style="margin-left: -10px"
@@ -171,7 +172,6 @@
                                formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
                     </div>
                 </div>
-                <div>Result: ${sessionScope.result}</div>
             </c:when>
             <c:otherwise>
                 <strong class="error">SOME ERROR</strong>

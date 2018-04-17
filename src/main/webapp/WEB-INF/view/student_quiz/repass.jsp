@@ -64,6 +64,15 @@
             <br>If you do not want to repass quiz than press "Back"
         </div>
     </div>
+    <div class="row no-gutters align-items-center highlight-danger">
+        <div class="col-auto mr-3">
+            <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+                 width="25" height="25">
+        </div>
+        <div class="col">
+            Attention! Your previous result will be overwritten
+        </div>
+    </div>
     <div>
         <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
         <a href="/quizzes/${passedQuiz.quizId}/initialize" id="repass"

@@ -178,7 +178,7 @@
             </div>
         </div>
     </c:if>
-    <button id="back" class="btn btn-primary">Back</button>
+    <button type="button" id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
     <a id="preview" href="/quizzes/${unpublishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit" class="btn btn-primary">

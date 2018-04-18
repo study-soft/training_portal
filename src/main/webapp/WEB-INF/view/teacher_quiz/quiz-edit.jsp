@@ -7,7 +7,13 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var passingTimeRemoved;
+            const passingTime = "${quiz.passingTime}";
+            let passingTimeRemoved;
+            if (!passingTime) {
+                passingTimeRemoved = $("#passingTime").detach();
+                $("#enabled").prop("checked", false);
+            }
+
             $("#enabled").change(function () {
                 if (passingTimeRemoved) {
                     $("#after").after(passingTimeRemoved);
@@ -83,7 +89,7 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+                <button type="button" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
             </div>
             <div class="col-1 offset-3">
                 <input type="submit" class="btn btn-success" value="Save">

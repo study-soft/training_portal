@@ -236,7 +236,7 @@
         </c:if>
     </div>
 
-    <button id="back" class="btn btn-primary">Back</button>
+    <button type="button" id="back" class="btn btn-primary">Back</button>
     <a href="/teacher/quizzes/${publishedQuiz.quizId}/questions" class="btn btn-primary">Questions</a>
     <a href="/quizzes/${publishedQuiz.quizId}/initialize" class="btn btn-primary">Preview</a>
 </div>

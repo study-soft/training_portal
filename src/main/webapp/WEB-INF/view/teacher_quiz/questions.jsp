@@ -509,8 +509,10 @@
 
                 var form = $("#questionForm");
                 if (form.length !== 0) {
-                    form.after(oldHeader);
-                    oldHeader.after(oldAnswers);
+                    if (oldHeader && oldAnswers) {
+                        form.after(oldHeader);
+                        oldHeader.after(oldAnswers);
+                    }
                     form.remove();
                 }
 

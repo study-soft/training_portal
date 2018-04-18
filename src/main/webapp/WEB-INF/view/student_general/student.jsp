@@ -31,8 +31,8 @@
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>Hello, student! Welcome to the training portal!</h2>
-    <h3><i class="fa fa-graduation-cap"></i> Student information</h3>
+    <h2>Hi, ${student.firstName}! Welcome to the training portal!</h2>
+    <h4><i class="fa fa-graduation-cap"></i> Student information</h4>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>
@@ -68,7 +68,7 @@
     <div>
         <a href="/student/edit-profile" class="btn btn-primary">Edit profile</a>
     </div>
-    <h3><i class="fa fa-group"></i> Group information</h3>
+    <h4><i class="fa fa-group"></i> Group information</h4>
     <c:choose>
         <c:when test="${group eq null}">
             <div class="row no-gutters align-items-center highlight-danger">

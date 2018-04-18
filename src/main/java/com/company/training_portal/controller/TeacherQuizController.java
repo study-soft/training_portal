@@ -432,12 +432,6 @@ public class TeacherQuizController {
         model.addAttribute("questionsSequence", questionsSequence);
         model.addAttribute("questionsNumber", questionsNumber);
 
-        logger.info(">>>>> questionsOneAnswer" + questionsOneAnswer);
-        logger.info(">>>>> questionsFewAnswers" + questionsFewAnswers);
-        logger.info(">>>>> questionsAccordance" + questionsAccordance);
-        logger.info(">>>>> questionsSequence" + questionsSequence);
-        logger.info(">>>>> questionsNumber" + questionsNumber);
-
         Map<Long, List<AnswerSimple>> quizAnswersSimple = new HashMap<>();
         Map<Long, AnswerAccordance> quizAnswersAccordance = new HashMap<>();
         Map<Long, AnswerSequence> quizAnswersSequence = new HashMap<>();
@@ -471,9 +465,9 @@ public class TeacherQuizController {
         model.addAttribute("quizAnswersSequence", quizAnswersSequence);
         model.addAttribute("quizAnswersNumber", quizAnswersNumber);
 
-//        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
-//            return "student_quiz/answers";
-//        }
+        if (quiz.getTeacherQuizStatus().equals(PUBLISHED)) {
+            return "student_quiz/answers";
+        }
         return "teacher_quiz/questions";
     }
 

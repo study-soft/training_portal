@@ -35,7 +35,7 @@
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
-    <h2>Hello, teacher! Welcome to the training portal!</h2>
+    <h2>Hi, ${teacher.firstName}! Welcome to the training portal!</h2>
     <div>
         <a href="/teacher/groups/create" class="btn btn-success btn-wide">
             <i class="fa fa-group"></i> New group
@@ -44,7 +44,7 @@
             <i class="fa fa-book"></i> New quiz
         </a>
     </div>
-    <h3><i class="fa fa-user"></i> Teacher information</h3>
+    <h4><i class="fa fa-user"></i> Teacher information</h4>
     <table class="col-lg-6 table-info">
         <tr>
             <td>Name</td>

@@ -13,10 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -106,7 +103,7 @@ public class GroupDaoJdbcTest {
 
     @Test
     public void test_teacher_group_ids() {
-        List<Long> testTeacherGroupIds = List.of(1L, 3L);
+        List<Long> testTeacherGroupIds = Arrays.asList(1L, 3L);
         List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(1L);
         assertEquals(testTeacherGroupIds, teacherGroupIds);
     }

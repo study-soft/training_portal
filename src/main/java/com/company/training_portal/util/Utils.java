@@ -25,7 +25,7 @@ public class Utils {
         if (duration == null) {
             return null;
         }
-        long seconds = duration.toSeconds();
+        long seconds = duration.toMillis() / 1000;
         int effectiveSeconds = (int) seconds % 60;
         int minutes = (int) seconds / 60;
         int effectiveMinutes = minutes % 60;
@@ -40,7 +40,7 @@ public class Utils {
 
     public static String formatDuration(Duration duration) {
         StringBuilder result = new StringBuilder();
-        long totalSeconds = duration.toSeconds();
+        long totalSeconds = duration.toMillis() / 1000;
         int seconds = (int) totalSeconds % 60;
         int totalMinutes = (int) totalSeconds / 60;
         int minutes = totalMinutes % 60;

@@ -245,14 +245,14 @@ public class QuizDaoJdbcTest {
 
     @Test
     public void test_find_teacher_quiz_ids() {
-        List<Long> testTeacherQuizIds = List.of(3L, 4L, 6L, 7L, 8L);
+        List<Long> testTeacherQuizIds = Arrays.asList(3L, 4L, 6L, 7L, 8L);
         List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(2L);
         assertEquals(testTeacherQuizIds, teacherQuizIds);
     }
 
     @Test
     public void test_find_student_quiz_ids() {
-        List<Long> testStudentQuizIds = List.of(3L, 5L, 6L, 11L);
+        List<Long> testStudentQuizIds = Arrays.asList(3L, 5L, 6L, 11L);
         List<Long> studentQuizIds = quizDao.findStudentQuizIds(5L);
         assertEquals(testStudentQuizIds, studentQuizIds);
     }

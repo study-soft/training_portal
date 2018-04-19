@@ -3,9 +3,9 @@
 <html>
 <head>
     <title>No data found</title>
-    <c:import url="fragment/head.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
-<c:import url="fragment/navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <body>
 <div class="container">
     <h2>No data found</h2>

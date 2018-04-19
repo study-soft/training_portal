@@ -3,9 +3,9 @@
 <html>
 <head>
     <title>Exception</title>
-    <c:import url="fragment/head.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
-<c:import url="fragment/navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <body>
 <div class="container">
     <h3>Exception Page</h3>

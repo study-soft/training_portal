@@ -8,15 +8,10 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            $("tr").each(function () {
-                if ($(this).attr("id") === "${studentId}") {
-                    $(this).css("background-color", "#a7f9aa");
-                }
-            });
-
-            $("td[id]").each(function () {
-                if (this.id === "OPENED") {
-                    $(this).text("");
+            $("td:first-child a").each(function () {
+                if ($(this).attr("href").split("/")[2] === "${studentId}") {
+                    $(this).parents("tr").css("background-color", "#a7f9aa");
+                    $(this).attr("href", "/student");
                 }
             });
         });
@@ -63,7 +58,7 @@
                 <c:set var="i" value="${status.index}"/>
                 <tr>
                     <td>
-                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                        <a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a>
                     </td>
                     <td><localDateTime:format value="${openedQuizzes[i].submitDate}"/></td>
                     <td colspan="4"></td>
@@ -86,7 +81,7 @@
                 <c:set var="i" value="${status.index}"/>
                 <tr>
                     <td>
-                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                        <a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a>
                     </td>
                     <td><localDateTime:format value="${passedQuizzes[i].submitDate}"/></td>
                     <td><localDateTime:format value="${passedQuizzes[i].finishDate}"/></td>
@@ -112,7 +107,7 @@
                 <c:set var="i" value="${status.index}"/>
                 <tr>
                     <td>
-                        <a href="/teacher/students/${student.userId}">${student.lastName} ${student.firstName}</a>
+                        <a href="/student/${student.userId}">${student.lastName} ${student.firstName}</a>
                     </td>
                     <td><localDateTime:format value="${closedQuizzes[i].submitDate}"/></td>
                     <td><localDateTime:format value="${closedQuizzes[i].finishDate}"/></td>

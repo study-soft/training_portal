@@ -9,7 +9,7 @@
         $(document).ready(function () {
             $("button:contains(Close all)").click(function () {
                 $("#yes").data("quizId", $(this).val());
-                var quizName = $(this).parent().siblings().first().text();
+                const quizName = $(this).parent().siblings().first().text();
                 $(".modal-body").text("Are you sure you want to close '" + quizName +
                     "' quiz to group '${group.name}'?");
                 $("#modal").modal();
@@ -17,16 +17,16 @@
 
             $("#yes").click(function () {
                 $("#modal").modal("toggle");
-                var quizId = $(this).data("quizId");
+                const quizId = $(this).data("quizId");
                 $.ajax({
                     type: "POST",
                     url: "/teacher/results/group/${group.groupId}/close",
                     data: "quizId=" + quizId,
                     success: function (closedQuizInfo) {
-                        var closedQuizName = closedQuizInfo[0];
-                        var closingDate = closedQuizInfo[1];
-                        var passedQuizzes = $("#passedQuizzes");
-                        var closedQuizzes = $("#closedQuizzes");
+                        const closedQuizName = closedQuizInfo[0];
+                        const closingDate = closedQuizInfo[1];
+                        const passedQuizzes = $("#passedQuizzes");
+                        const closedQuizzes = $("#closedQuizzes");
 
                         passedQuizzes.find("a:contains(" + closedQuizName + ")").parents("tr").remove();
 
@@ -55,6 +55,11 @@
                             '    </td>\n' +
                             '    <td>' + closingDate + '</td>\n' +
                             '</tr>\n');
+                        }
+
+                        if (passedQuizzes.find("tr").length === 2) {
+                            passedQuizzes.prev().remove();
+                            passedQuizzes.remove();
                         }
                     }
                 });

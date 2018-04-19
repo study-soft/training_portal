@@ -96,15 +96,14 @@
                         }
 
                         if ($("#passedQuizzes").length === 0 && $("#openedQuizzes").length === 0) {
-                            $("#info").html('<div class="row no-gutters align-items-center highlight-primary">\n' +
-                                '                <div class="col-auto mr-3">\n' +
-                                '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
-                                '                         width="25" height="25">\n' +
-                                '                </div>\n' +
-                                '                <div class="col">\n' +
-                                '                    All students in this group closed this quiz\n' +
-                                '                </div>\n' +
-                                '            </div>');
+                            $("#info").html(
+                                '<div class="col-auto mr-3">\n' +
+                                '   <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '       width="25" height="25">\n' +
+                                '</div>\n' +
+                                '<div class="col">\n' +
+                                '   All students in this group closed this quiz\n' +
+                                '</div>\n');
                         }
                     }
                 });
@@ -119,7 +118,7 @@
     <h2><a href="/teacher/quizzes/${quiz.quizId}">${quiz.name}</a></h2>
     <c:choose>
         <c:when test="${not empty openedStudents or not empty passedStudents}">
-            <div class="row no-gutters align-items-center highlight-primary">
+            <div id="info" class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                          width="25" height="25">

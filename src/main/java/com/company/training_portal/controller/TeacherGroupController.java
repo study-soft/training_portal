@@ -7,7 +7,6 @@ import com.company.training_portal.model.Group;
 import com.company.training_portal.model.Quiz;
 import com.company.training_portal.model.SecurityUser;
 import com.company.training_portal.model.User;
-import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -190,7 +189,7 @@ public class TeacherGroupController {
     public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("groupId") Long groupId, Model model) {
         if (checkGroupAccessDenied(teacherId, groupId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Group group = groupDao.findGroup(groupId);
@@ -229,7 +228,7 @@ public class TeacherGroupController {
     public String showEditGroup(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("groupId") Long groupId, Model model) {
         if (checkGroupAccessDenied(teacherId, groupId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Group group = groupDao.findGroup(groupId);

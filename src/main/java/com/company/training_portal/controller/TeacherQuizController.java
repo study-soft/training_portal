@@ -99,7 +99,7 @@ public class TeacherQuizController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         logger.info("Access allowed");
@@ -162,7 +162,7 @@ public class TeacherQuizController {
                                       @PathVariable("quizId") Long quizId,
                                       Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         logger.info("access allowed");
@@ -330,7 +330,7 @@ public class TeacherQuizController {
     public String showEditQuiz(@ModelAttribute("teacherId") Long teacherId,
                                @PathVariable("quizId") Long quizId, Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -415,7 +415,7 @@ public class TeacherQuizController {
     public String showQuestions(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);

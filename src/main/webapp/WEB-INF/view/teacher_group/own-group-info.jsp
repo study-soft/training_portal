@@ -7,8 +7,8 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var createSuccess = "${createSuccess}";
-            var editSuccess = "${editSuccess}";
+            const createSuccess = "${createSuccess}";
+            const editSuccess = "${editSuccess}";
             if (createSuccess) {
                 $("#create-success").fadeIn("slow");
             }
@@ -21,9 +21,9 @@
             });
 
             $("#back").click(function () {
-                var previousUri = document.referrer;
-                var createGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/create";
-                var editGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/" + ${group.groupId} +"/edit";
+                const previousUri = document.referrer;
+                const createGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/create";
+                const editGroupUri = "http://" + "${header["host"]}" + "/teacher/groups/" + ${group.groupId} +"/edit";
                 if (previousUri === createGroupUri || previousUri === editGroupUri) {
                     window.history.go(-2);
                 } else {
@@ -33,24 +33,35 @@
 
             $('a:contains(Delete)').click(function (event) {
                 event.preventDefault();
-                var studentName = $(this).parent().prev().text();
+                const studentName = $(this).parent().prev().text();
                 $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
-                var studentId = $(this).next().val();
+                const studentId = $(this).next().val();
                 $('#studentId').val(studentId);
                 $("#modal-student").modal();
             });
 
             $('#yes-student').click(function () {
-                var studentId = $(this).next().val();
+                const studentId = $(this).next().val();
                 $.ajax({
-                    type: 'POST',
-                    url: '/teacher/groups/${group.groupId}/delete-student',
-                    data: 'studentId=' + studentId,
+                    type: "POST",
+                    url: "/teacher/groups/${group.groupId}/delete-student",
+                    data: "studentId=" + studentId,
                     success: function (studentId) {
-                        $('#' + studentId).remove();
-                        var studentsTable = $('#studentsTable');
-                        if (studentsTable.find("tr").length === 1) {
-                            studentsTable.before('<div>There is no students in group.</div>');
+                        var $numberOfStudents = $("#numberOfStudents");
+                        $numberOfStudents.text(Number($numberOfStudents.text()) - 1);
+
+                        $("#" + studentId).remove();
+                        const studentsTable = $('#studentsTable');
+                        if (studentsTable.find("tr").length === 0) {
+                            studentsTable.before('<div class="row no-gutters align-items-center highlight-primary">\n' +
+                                '                <div class="col-auto mr-3">\n' +
+                                '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '                         width="25" height="25">\n' +
+                                '                </div>\n' +
+                                '                <div class="col">\n' +
+                                '                    There is no students in this group\n' +
+                                '                </div>\n' +
+                                '            </div>');
                             studentsTable.remove();
                         }
                     }
@@ -89,7 +100,7 @@
         </tr>
         <tr>
             <td>Number of students</td>
-            <td>${studentsNumber}</td>
+            <td id="numberOfStudents">${studentsNumber}</td>
         </tr>
     </table>
     <h4>You gave next quizzes to this group</h4>

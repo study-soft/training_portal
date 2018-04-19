@@ -196,7 +196,7 @@ public class StudentController {
 
             return "student_general/student-info";
         } else {
-            return "access-denied";
+            return "error/access-denied";
         }
     }
 
@@ -281,7 +281,7 @@ public class StudentController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         User student = userDao.findUser(studentId);
@@ -333,7 +333,7 @@ public class StudentController {
                                         Integer currentQuestionSerial,
                                 ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         if (currentQuestionSerial != null) {
@@ -352,7 +352,7 @@ public class StudentController {
                                          Integer currentQuestionSerial,
                                  ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         if (currentQuestionSerial != null) {
@@ -368,14 +368,14 @@ public class StudentController {
     public String showAnswers(@ModelAttribute("studentId") Long studentId,
                               @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
         Integer totalStudents = groupDao.findStudentsNumberInGroup(groupId);
         Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
         if (!closedStudents.equals(totalStudents)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -481,7 +481,7 @@ public class StudentController {
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "access-denied";
+            return "error/access-denied";
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);

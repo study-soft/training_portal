@@ -7,23 +7,6 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            $("input[type=search]").on("keyup", function () {
-                const value = $(this).val().toLowerCase();
-                $("tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-            });
-
-            $("button:contains(Delete)").click(function () {
-                const quizName = $(this).parent("td").siblings().first().text();
-                const quizId = $(this).val();
-                $("#yes").val(quizName);
-                $("#deleteForm").attr("action", "/teacher/quizzes/" + quizId + "/delete");
-                $("#modalLabel").removeClass("red").text("Attention");
-                $(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
-                $("#modal").modal();
-            });
-
             const deletedQuiz = "${deletedQuiz}";
             const unpublishedQuiz = "${unpublishedQuiz}";
             if (deletedQuiz) {
@@ -37,6 +20,24 @@
                     '<button id="close" class="close">&times;</button>').fadeIn("slow");
             }
 
+            $("input[type=search]").on("keyup", function () {
+                const value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+            $("button:contains(Delete)").click(function (event) {
+                event.preventDefault();
+                const quizName = $(this).parent("td").siblings().first().text();
+                const quizId = $(this).val();
+
+                $("#deleteForm").attr("action", "/teacher/quizzes/" + quizId + "/delete");
+                const modal = $("#modalDelete");
+                modal.find(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
+                modal.modal();
+            });
+
             $("#close").click(function () {
                 $("#delete-success").fadeOut("slow");
             });
@@ -45,7 +46,7 @@
                 event.preventDefault();
                 const unpublishUrl = $(this).attr("href");
                 const quizId = unpublishUrl.split("/")[3];
-                $("#deleteForm").data("quizId", quizId).data("unpublication", true);
+                $("#unpublishForm").data("quizId", quizId);
 
                 $.ajax({
                     type: "GET",
@@ -57,8 +58,8 @@
                     success: function (studentsNumber) {
                         const closedStudents = studentsNumber.closedStudents;
                         const totalStudents = studentsNumber.totalStudents;
-                        const modalBody = $(".modal-body");
-                        $("#modalLabel").addClass("red").text("Danger");
+                        const modal = $("#modalUnpublish");
+                        const modalBody = modal.find(".modal-body");
                         if (closedStudents === totalStudents) {
                             modalBody.text("All students have closed this quiz. \n" +
                                 "If you unpublish it results of all students will be lost. Continue?");
@@ -75,26 +76,22 @@
                             '    <label class="col-form-label" for="password">Enter password to confirm action</label>\n' +
                             '    <input type="password" class="form-control modal-input" id="password" name="password">\n' +
                             '</div>');
-                        $("#modal").modal();
+                        modal.modal();
                     }
                 });
             });
 
-            $("#deleteForm").submit(function () {
-                if ($(this).data("unpublication")) {
-                    $(this).removeData("unpublication");
+            $("#unpublishForm").submit(function () {
                     const password = "${password}";
                     const inputPassword = $("#password").val();
                     if (inputPassword !== password) {
-                        const modalBody = $(".modal-body");
+                        const modalBody = $("#modalUnpublish").find(".modal-body");
                         modalBody.find(".error").remove();
                         modalBody.append('<div class="error">Incorrect password</div>');
                         return false;
                     }
                     const quizId = $(this).data("quizId");
                     $(this).attr("action", "/teacher/quizzes/" + quizId + "/unpublish-from-quizzes");
-                    return true;
-                }
             });
         });
     </script>
@@ -173,7 +170,7 @@
                             </a>
                         </td>
                         <td>
-                            <button value="${unpublishedQuiz.quizId}" class="danger-button">
+                            <button type="button" value="${unpublishedQuiz.quizId}" class="danger-button">
                                 <i class="fa fa-trash-o"></i> Delete
                             </button>
                         </td>
@@ -239,12 +236,12 @@
         <button class="btn btn-primary" value="Back" onclick="window.history.go(-1);">Back</button>
     </div>
 
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog"
-         aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
+         aria-labelledby="modalLabelDelete" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Attention</h5>
+                    <h5 class="modal-title" id="modalLabelDelete">Attention</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -253,7 +250,28 @@
                 <div class="modal-footer">
                     <form id="deleteForm" action="" method="post">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" name="deletedQuiz" value="" id="yes" class="btn btn-primary">Yes</button>
+                        <button type="submit" name="deletedQuiz" value="" id="yes-delete" class="btn btn-primary">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalUnpublish" tabindex="-1" role="dialog"
+         aria-labelledby="modalLabelUnpublish" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title red" id="modalLabelUnpublish">Danger</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <form id="unpublishForm" action="" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" name="deletedQuiz" value="" id="yes-unpublish" class="btn btn-primary">Yes</button>
                     </form>
                 </div>
             </div>

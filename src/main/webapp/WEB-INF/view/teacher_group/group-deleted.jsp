@@ -13,10 +13,14 @@
             <h2>This group already deleted.</h2>
         </c:when>
         <c:otherwise>
-            <div class="highlight-success">
-                <img src="${pageContext.request.contextPath}/resources/icon-success.png"
-                     width="25" height="25" class="icon-one-row">
-                Group '<c:out value="${group.name}"/>' successfully deleted
+            <div class="row no-gutters align-items-center highlight-success">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-success.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    Group '<c:out value="${group.name}"/>' successfully deleted
+                </div>
             </div>
             <c:if test="${not empty students}">
                 <h3>Students which were in this group:</h3>

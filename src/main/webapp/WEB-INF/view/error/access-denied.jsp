@@ -3,10 +3,10 @@
 <html>
 <head>
     <title>Access denied</title>
-    <c:import url="fragment/head.jsp"/>
+    <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
-<c:import url="fragment/navbar.jsp"/>
+<c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Access denied</h2>
 </div>

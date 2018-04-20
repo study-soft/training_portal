@@ -9,13 +9,13 @@
 <br>
 <div class="container">
     <div class="text-center">
-        <img src="/resources/training-portal-favicon.png" width="30" height="35" style="margin-bottom: 15px">
+        <img src="${pageContext.request.contextPath}/resources/training-portal-favicon.png"
+             width="30" height="35" style="margin-bottom: 15px">
         <h2 style="display: inline">Training portal</h2>
     </div>
     <br>
     <br>
     <form action="/login" method="post" class="col col-md-6 center">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <c:if test="${param.error ne null}">
             <p class="error">Invalid login or password</p>
         </c:if>
@@ -33,7 +33,8 @@
         </div>
         <br>
         <br>
-        <div class="right">Do not have an account? <a href="/register">Register</a></div>
+        <div class="right">Do not have an account?
+            <a href="${pageContext.request.contextPath}/register">Register</a></div>
     </form>
 </div>
 </body>

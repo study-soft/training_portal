@@ -10,8 +10,7 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2>Create group</h2>
-    <form action="/teacher/groups/create" method="post">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <form action="${pageContext.request.contextPath}/teacher/groups/create" method="post">
         <div>
             <label for="name" class="col-form-label">
                 <strong>Name<span class="red">*</span></strong>

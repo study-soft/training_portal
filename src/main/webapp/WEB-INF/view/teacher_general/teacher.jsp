@@ -37,10 +37,10 @@
     </div>
     <h2>Hi, ${teacher.firstName}! Welcome to the training portal!</h2>
     <div>
-        <a href="/teacher/groups/create" class="btn btn-success btn-wide">
+        <a href="${pageContext.request.contextPath}/teacher/groups/create" class="btn btn-success btn-wide">
             <i class="fa fa-group"></i> New group
         </a>
-        <a href="/teacher/quizzes/create" class="btn btn-success btn-wide">
+        <a href="${pageContext.request.contextPath}/teacher/quizzes/create" class="btn btn-success btn-wide">
             <i class="fa fa-book"></i> New quiz
         </a>
     </div>
@@ -75,7 +75,8 @@
         </tr>
     </table>
     <div>
-        <a href="/teacher/edit-profile" class="btn btn-primary">Edit profile</a>
+        <a href="${pageContext.request.contextPath}/teacher/edit-profile"
+           class="btn btn-primary">Edit profile</a>
     </div>
 </div>
 <br>

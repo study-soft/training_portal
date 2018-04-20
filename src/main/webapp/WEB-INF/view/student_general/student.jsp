@@ -7,7 +7,7 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var editSuccess = "${editSuccess}";
+            const editSuccess = "${editSuccess}";
             if (editSuccess) {
                 $("#edit-success").fadeIn("slow");
             }
@@ -66,7 +66,8 @@
         </tr>
     </table>
     <div>
-        <a href="/student/edit-profile" class="btn btn-primary">Edit profile</a>
+        <a href="${pageContext.request.contextPath}/student/edit-profile"
+           class="btn btn-primary">Edit profile</a>
     </div>
     <h4><i class="fa fa-group"></i> Group information</h4>
     <c:choose>
@@ -102,7 +103,8 @@
                 </tr>
             </table>
             <div>
-                <a href="/student/group" class="btn btn-primary">More info</a>
+                <a href="${pageContext.request.contextPath}/student/group"
+                   class="btn btn-primary">More info</a>
             </div>
         </c:otherwise>
     </c:choose>

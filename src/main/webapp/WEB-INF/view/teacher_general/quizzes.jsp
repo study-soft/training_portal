@@ -212,7 +212,7 @@
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
-    <a href="/teacher/quizzes/create" class="btn btn-success btn-wide float-right">
+    <a href="${pageContext.request.contextPath}/teacher/quizzes/create" class="btn btn-success btn-wide float-right">
         <i class="fa fa-book"></i> New quiz
     </a>
     <h3>Unpublished quizzes</h3>

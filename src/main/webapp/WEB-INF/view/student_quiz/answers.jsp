@@ -147,12 +147,14 @@
     <c:if test="${not empty questionsNumber}">
         <h4 class="shifted-left">Questions with numerical answers</h4>
         <c:forEach items="${questionsNumber}" var="question">
-            <div class="row">
-                <div class="col-md-9">
-                    <h5><c:out value="${question.body}"/></h5>
-                </div>
-                <div class="col-md-2 offset-md-1">
-                    <h6>${question.score} points</h6>
+            <div class="question-header">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h5><c:out value="${question.body}"/></h5>
+                    </div>
+                    <div class="col-md-2 offset-md-1">
+                        <h6>${question.score} points</h6>
+                    </div>
                 </div>
             </div>
             <div class="question-answers">

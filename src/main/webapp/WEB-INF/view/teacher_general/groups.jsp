@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-md-2 offset-lg-6">
-                <a href="/teacher/groups/create" class="btn btn-success btn-wide">
+                <a href="${pageContext.request.contextPath}/teacher/groups/create" class="btn btn-success btn-wide">
                     <i class="fa fa-group"></i> New group
                 </a>
             </div>

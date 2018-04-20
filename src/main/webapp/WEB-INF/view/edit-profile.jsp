@@ -12,7 +12,6 @@
     <br>
     <form:form id="editForm" action="${requestScope['javax.servlet.forward.request_uri']}"
                method="post" modelAttribute="user" cssClass="col-md-6 center">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-group row">
             <form:label path="password" for="password" cssClass="col-4 col-form-label">
                 <strong>Old password<span class="error">*</span></strong>

@@ -57,7 +57,7 @@
         </table>
     </div>
     <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
     </div>
 </div>
 <br>

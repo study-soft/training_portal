@@ -33,7 +33,7 @@
     <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
     <h2><c:out value="${sessionScope.currentQuiz.name}"/></h2>
     <form action="/quizzes/${question.quizId}/passing" method="post">
-        <div class="row">
+        <div class="row mb-2">
             <div class="col-sm-8">
                 Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
             </div>
@@ -43,27 +43,30 @@
                 </c:if>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-8">
-                <h5><c:out value="${question.body}"/></h5>
-            </div>
-            <div class="col-sm-4">
-                <h6>${question.score} points</h6>
+        <div class="question-header">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h5><c:out value="${question.body}"/></h5>
+                </div>
+                <div class="col-sm-4">
+                    <h6>${question.score} points</h6>
+                </div>
             </div>
         </div>
         <c:choose>
             <%--***************************   ONE ANSWER   *********************************--%>
             <c:when test="${question.questionType eq 'ONE_ANSWER'}">
-                <c:forEach items="${answers}" var="answer">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" id="answer${answer.answerSimpleId}"
-                               name="oneAnswer" value="${answer.correct}" class="custom-control-input">
-                        <label for="answer${answer.answerSimpleId}" class="custom-control-label">
+                <div class="question-answers">
+                    <c:forEach items="${answers}" var="answer">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="answer${answer.answerSimpleId}"
+                                   name="oneAnswer" value="${answer.correct}" class="custom-control-input">
+                            <label for="answer${answer.answerSimpleId}" class="custom-control-label">
                                 <c:out value="${answer.body}"/>
-                        </label>
-                    </div>
-                    <br>
-                </c:forEach>
+                            </label>
+                        </div>
+                    </c:forEach>
+                </div>
                 <div class="row">
                     <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
@@ -78,16 +81,17 @@
             </c:when>
             <%--****************************   FEW ANSWERS   *********************************--%>
             <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
-                <c:forEach items="${answers}" var="answer" varStatus="status">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" id="answer${answer.answerSimpleId}" class="custom-control-input"
-                               name="fewAnswer${status.index}" value="${answer.correct}">
-                        <label for="answer${answer.answerSimpleId}" class="custom-control-label">
+                <div class="question-answers">
+                    <c:forEach items="${answers}" var="answer" varStatus="status">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="answer${answer.answerSimpleId}" class="custom-control-input"
+                                   name="fewAnswer${status.index}" value="${answer.correct}">
+                            <label for="answer${answer.answerSimpleId}" class="custom-control-label">
                                 <c:out value="${answer.body}"/>
-                        </label>
-                    </div>
-                    <br>
-                </c:forEach>
+                            </label>
+                        </div>
+                    </c:forEach>
+                </div>
                 <div class="row">
                     <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
@@ -102,19 +106,21 @@
             </c:when>
             <%--*****************************   ACCORDANCE   ***********************************--%>
             <c:when test="${question.questionType eq 'ACCORDANCE'}">
-                <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
-                    <div class="row">
-                        <div class="col-md-4"><c:out value="${left}"/></div>
-                        <div class="col-md-4">
-                            <select name="accordance${status.index}" class="form-control">
-                                <option selected>select...</option>
-                                <c:forEach items="${answers.rightSide}" var="right">
-                                    <option value="${right}"><c:out value="${right}"/></option>
-                                </c:forEach>
-                            </select>
+                <div class="question-answers">
+                    <c:forEach items="${answers.leftSide}" var="left" varStatus="status">
+                        <div class="row">
+                            <div class="col-md-4"><c:out value="${left}"/></div>
+                            <div class="col-md-4">
+                                <select name="accordance${status.index}" class="form-control">
+                                    <option selected>select...</option>
+                                    <c:forEach items="${answers.rightSide}" var="right">
+                                        <option value="${right}"><c:out value="${right}"/></option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
                 <div class="row">
                     <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
@@ -129,20 +135,22 @@
             </c:when>
             <%--**********************************   SEQUENCE   *****************************--%>
             <c:when test="${question.questionType eq 'SEQUENCE'}">
-                <c:forEach begin="0" end="3" varStatus="status">
-                    <div class="row">
-                        <div class="col-auto">${status.index + 1}.</div>
-                        <div class="col-md-4">
-                            <select name="sequence${status.index}" id="sequence${status.index}"
-                                    class="form-control">
-                                <option selected>select...</option>
-                                <c:forEach items="${answers.correctList}" var="item">
-                                    <option value="${item}"><c:out value="${item}"/></option>
-                                </c:forEach>
-                            </select>
+                <div class="question-answers">
+                    <c:forEach begin="0" end="3" varStatus="status">
+                        <div class="row">
+                            <div class="col-auto">${status.index + 1}.</div>
+                            <div class="col-md-4">
+                                <select name="sequence${status.index}" id="sequence${status.index}"
+                                        class="form-control">
+                                    <option selected>select...</option>
+                                    <c:forEach items="${answers.correctList}" var="item">
+                                        <option value="${item}"><c:out value="${item}"/></option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
                 <div class="row">
                     <div class="col-sm-8">
                             <%--suppress XmlDuplicatedId --%>
@@ -157,9 +165,11 @@
             </c:when>
             <%--************************************   NUMBER   *************************************--%>
             <c:when test="${question.questionType eq 'NUMBER'}">
-                <div class="col-sm-4">
-                    <input type="text" name="number" class="form-control" style="margin-left: -10px"
-                           placeholder="Enter number">
+                <div class="question-answers">
+                    <div class="col-sm-4">
+                        <input type="text" name="number" class="form-control" style="margin-left: -10px"
+                               placeholder="Enter number">
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-8">

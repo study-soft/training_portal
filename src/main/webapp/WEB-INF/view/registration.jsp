@@ -10,12 +10,12 @@
 <div class="container">
     <br>
     <div class="text-center">
-        <img src="/resources/training-portal-favicon.png" width="30" height="35" style="margin-bottom: 15px">
+        <img src="${pageContext.request.contextPath}/resources/training-portal-favicon.png"
+             width="30" height="35" style="margin-bottom: 15px">
         <h2 style="display: inline">Training portal</h2>
     </div>
     <br>
     <form:form action="/register" method="post" modelAttribute="user" cssClass="col-md-6 center">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-group row">
             <form:label path="login" for="login" cssClass="col-4 col-form-label">
                 <strong>Login<span class="red">*</span></strong>

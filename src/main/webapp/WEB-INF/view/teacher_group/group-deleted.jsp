@@ -32,7 +32,8 @@
             </c:if>
         </c:otherwise>
     </c:choose>
-    <a href="/teacher/groups" class="btn btn-primary" style="width: 140px">Back to groups</a>
+    <a href="${pageContext.request.contextPath}/teacher/groups"
+       class="btn btn-primary" style="width: 140px">Back to groups</a>
 </div>
 </body>
 </html>

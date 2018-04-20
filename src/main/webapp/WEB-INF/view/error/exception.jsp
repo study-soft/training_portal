@@ -25,6 +25,7 @@
     </table>
     <strong>Stack trace</strong>
     <pre>${pageContext.out.flush()}${exception.printStackTrace(pageContext.response.writer)}</pre>
+    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
 </div>
 </body>
 </html>

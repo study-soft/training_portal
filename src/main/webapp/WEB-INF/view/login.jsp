@@ -19,6 +19,11 @@
             </div>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <a target="_blank" href="https://github.com/training-portal/training_portal">
+            <h5>GitHub link <i class="fa fa-external-link"></i></h5>
+        </a>
+    </div>
     <div class="row justify-content-around">
         <div class="col-lg-6 p-lg-4">
             <div class="row correct">
@@ -69,11 +74,6 @@
                     <div class="col-auto">
                         <div>Do not have an account? <a href="/register">Register</a></div>
                     </div>
-                </div>
-                <div class="row justify-content-center mt-lg-5">
-                    <a href="https://github.com/training-portal/training_portal">
-                        <h5>GitHub link <i class="fa fa-external-link"></i></h5>
-                    </a>
                 </div>
             </form>
         </div>

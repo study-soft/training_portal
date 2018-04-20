@@ -222,13 +222,11 @@ public class TeacherQuizController {
     }
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/unpublish-from-quizzes", method = RequestMethod.POST)
-    public String unpublishQuizFromQuizzes(@PathVariable("quizId") Long quizId,
-                                           RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<?> unpublishQuizFromQuizzes(@PathVariable("quizId") Long quizId) {
         quizDao.deleteStudentsInfoAboutQuiz(quizId);
         quizDao.editTeacherQuizStatus(UNPUBLISHED, quizId);
-        String unpublishedQuizName = quizDao.findQuiz(quizId).getName();
-        redirectAttributes.addFlashAttribute("unpublishedQuiz", unpublishedQuizName);
-        return "redirect:/teacher/quizzes";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // QUIZ CLOSE ======================================================================
@@ -401,12 +399,10 @@ public class TeacherQuizController {
     // QUIZ DELETE =================================================================
 
     @RequestMapping(value = "/teacher/quizzes/{quizId}/delete", method = RequestMethod.POST)
-    public String deleteQuiz(@PathVariable("quizId") Long quizId,
-                             @RequestParam("deletedQuiz") String deletedQuiz,
-                             RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("deletedQuiz", deletedQuiz);
+    @ResponseBody
+    public ResponseEntity<?> deleteQuiz(@PathVariable("quizId") Long quizId) {
         quizDao.deleteUnpublishedQuiz(quizId);
-        return "redirect:/teacher/quizzes";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // QUESTION SHOW ===============================================================

@@ -19,12 +19,12 @@
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
 <script>
     $(document).ready(function () {
-        var currentPath = window.location.pathname;
-        var locationPath;
-        if (currentPath === "/student") {
+        const currentPath = window.location.pathname;
+        let locationPath;
+        if (currentPath === "/student" || currentPath === "/teacher") {
             locationPath = currentPath;
         } else {
-            var url = currentPath.split("/");
+            const url = currentPath.split("/");
             locationPath = "/" + url[1] + "/" + url[2];
         }
         $('ul li a[href="'+ locationPath + '"]').parent().addClass('active');
@@ -34,7 +34,7 @@
     $(document).ready(function () {
         $("#logout").click(function (event) {
             event.preventDefault();
-            var quizStarted = Boolean("${sessionScope.result}");
+            const quizStarted = Boolean("${sessionScope.result}");
             if (quizStarted) {
                 if (confirm("Are you sure you want to log out? You do not finish current quiz")) {
                     window.location = $(this).attr("href");

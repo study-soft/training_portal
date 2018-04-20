@@ -7,18 +7,6 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            const deletedQuiz = "${deletedQuiz}";
-            const unpublishedQuiz = "${unpublishedQuiz}";
-            if (deletedQuiz) {
-                $("#delete-success").html(
-                    'Quiz \'${deletedQuiz}\' was successfully deleted\n' +
-                    '<button id="close" class="close">&times;</button>').fadeIn("slow");
-            }
-            if (unpublishedQuiz) {
-                $("#delete-success").html(
-                    'Quiz \'${unpublishedQuiz}\' was successfully unpublished\n' +
-                    '<button id="close" class="close">&times;</button>').fadeIn("slow");
-            }
 
             $("input[type=search]").on("keyup", function () {
                 const value = $(this).val().toLowerCase();
@@ -27,26 +15,70 @@
                 });
             });
 
-            $("button:contains(Delete)").click(function (event) {
+            $(document).on("click", "button:contains(Delete)", function (event) {
                 event.preventDefault();
                 const quizName = $(this).parent("td").siblings().first().text();
                 const quizId = $(this).val();
+                $("#yes-delete").data("quizId", quizId).data("quizName", quizName);
 
-                $("#deleteForm").attr("action", "/teacher/quizzes/" + quizId + "/delete");
                 const modal = $("#modalDelete");
                 modal.find(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
                 modal.modal();
             });
 
-            $("#close").click(function () {
+            $("#yes-delete").click(function () {
+                $("#modalDelete").modal("toggle");
+                const yes = $("#yes-delete");
+                const quizId = yes.data("quizId");
+                const quizName = yes.data("quizName");
+
+                $.ajax({
+                    type: "POST",
+                    url: "/teacher/quizzes/" + quizId + "/delete",
+                    error: function (xhr) {
+                        alert("Some error. See log in console");
+                        console.log(xhr.responseText);
+                    },
+                    success: function () {
+                        let unpublishedQuizzes = $("#unpublishedQuizzes");
+                        unpublishedQuizzes.find("td:first-child a").each(function () {
+                            if ($(this).attr("href").split("/")[3] === quizId) {
+                                $(this).parents("tr").remove();
+                                if (unpublishedQuizzes.find("tr").length === 1) {
+                                    unpublishedQuizzes.replaceWith(
+                                        '<div id="noUnpublishedQuizzesInfo" class="row no-gutters align-items-center highlight-primary">\n' +
+                                        '                <div class="col-auto mr-3">\n' +
+                                        '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                        '                         width="25" height="25">\n' +
+                                        '                </div>\n' +
+                                        '                <div class="col">\n' +
+                                        '                    You do not have unpublished quizzes\n' +
+                                        '                </div>\n' +
+                                        '            </div>');
+                                }
+                            }
+                        });
+
+                        window.scrollTo(0, 0);
+                        $("#delete-success").html(
+                            'Quiz \'' + quizName + '\' was successfully deleted\n' +
+                            '<button id="close" class="close">&times;</button>')
+                            .hide().fadeIn("slow");
+                    }
+                });
+            });
+
+            $(document).on("click", "#close", function () {
                 $("#delete-success").fadeOut("slow");
             });
 
             $("a:contains(Unpublish)").click(function (event) {
                 event.preventDefault();
+
                 const unpublishUrl = $(this).attr("href");
                 const quizId = unpublishUrl.split("/")[3];
-                $("#unpublishForm").data("quizId", quizId);
+                const quizName = $(this).parents("tr").find("a").first().text();
+                $("#yes-unpublish").data("quizId", quizId).data("quizName", quizName);
 
                 $.ajax({
                     type: "GET",
@@ -81,17 +113,88 @@
                 });
             });
 
-            $("#unpublishForm").submit(function () {
-                    const password = "${password}";
-                    const inputPassword = $("#password").val();
-                    if (inputPassword !== password) {
-                        const modalBody = $("#modalUnpublish").find(".modal-body");
-                        modalBody.find(".error").remove();
-                        modalBody.append('<div class="error">Incorrect password</div>');
-                        return false;
+            $("#yes-unpublish").click(function () {
+                const password = "${password}";
+                const inputPassword = $("#password").val();
+                if (inputPassword !== password) {
+                    const modalBody = $("#modalUnpublish").find(".modal-body");
+                    modalBody.find(".error").remove();
+                    modalBody.append('<div class="error">Incorrect password</div>');
+                    return false;
+                }
+
+                $("#modalUnpublish").modal("toggle");
+                const quizId = $(this).data("quizId");
+                const quizName = $(this).data("quizName");
+
+                $.ajax({
+                    type: "POST",
+                    url: "/teacher/quizzes/" + quizId + "/unpublish-from-quizzes",
+                    success: function () {
+                        if ($("#unpublishedQuizzes").length === 0) {
+                            $("#noUnpublishedQuizzesInfo").replaceWith(
+                                '<table id="unpublishedQuizzes" class="table">\n' +
+                                '    <thead>\n' +
+                                '    <tr>\n' +
+                                '        <th style="width: 30%">Name</th>\n' +
+                                '        <th style="width: 10%">Questions</th>\n' +
+                                '        <th style="width: 8%">Score</th>\n' +
+                                '        <th style="width: 15%;">Creation date</th>\n' +
+                                '        <th style="width: 17%"></th>\n' +
+                                '        <th style="width: 8%"></th>\n' +
+                                '        <th style="width: 12%"></th>\n' +
+                                '    </tr>\n' +
+                                '    </thead>\n' +
+                                '    <tbody>\n' +
+                                '    </tbody>\n' +
+                                '</table>');
+                        }
+
+                        const unpulblishedQuizzes = $("#unpublishedQuizzes");
+                        const publishedQuizzes = $("#publishedQuizzes");
+
+                        const publishedQuizRow = publishedQuizzes
+                            .find("a:contains(" + quizName + ")").parents("tr");
+                        const rowToInsert = publishedQuizRow.clone();
+                        rowToInsert.find("td:gt(3)").remove();
+                        rowToInsert.append(
+                            '<td>\n' +
+                            '   <a href="/teacher/quizzes/' + quizId + '/publication" class="success">\n' +
+                            '       <i class="fa fa-share-square-o"></i> Publish\n' +
+                            '    </a>' +
+                            '</td>\n' +
+                            '<td>\n' +
+                            '   <a href="/teacher/quizzes/' + quizId + '/edit">\n' +
+                            '       <i class="fa fa-edit"></i> Edit\n' +
+                            '   </a>\n' +
+                            '</td>\n' +
+                            '<td>\n' +
+                            '   <button type="button" value="' + quizId + '" class="danger-button">\n' +
+                            '       <i class="fa fa-trash-o"></i> Delete\n' +
+                            '   </button>\n' +
+                            '</td>');
+
+                        unpulblishedQuizzes.find("tbody").append(rowToInsert);
+                        publishedQuizRow.remove();
+                        if (publishedQuizzes.find("tr").length === 1) {
+                            publishedQuizzes.replaceWith(
+                                '<div class="row no-gutters align-items-center highlight-primary">\n' +
+                                '   <div class="col-auto mr-3">\n' +
+                                '       <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
+                                '             width="25" height="25">\n' +
+                                '   </div>\n' +
+                                '   <div class="col">\n' +
+                                '       You do not have published quizzes\n' +
+                                '   </div>\n' +
+                                '</div>');
+                        }
+                        window.scrollTo(0, 0);
+                        $("#delete-success").html(
+                            'Quiz \'' + quizName + '\' was successfully unpublished\n' +
+                            '<button id="close" class="close">&times;</button>')
+                            .hide().fadeIn("slow");
                     }
-                    const quizId = $(this).data("quizId");
-                    $(this).attr("action", "/teacher/quizzes/" + quizId + "/unpublish-from-quizzes");
+                });
             });
         });
     </script>
@@ -100,7 +203,6 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <div id="delete-success" class="col-lg-5 mx-auto text-center correct update-success">
-        Quiz '${deletedQuiz}' successfully deleted
         <button id="close" class="close">&times;</button>
     </div>
     <br>
@@ -116,7 +218,7 @@
     <h3>Unpublished quizzes</h3>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
-            <div class="row no-gutters align-items-center highlight-primary">
+            <div id="noUnpublishedQuizzesInfo" class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                          width="25" height="25">
@@ -127,7 +229,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
+            <table id="unpublishedQuizzes" class="table">
                 <thead>
                 <tr>
                     <th style="width: 30%">Name</th>
@@ -194,7 +296,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <table class="table">
+            <table id="publishedQuizzes" class="table">
                 <thead>
                 <tr>
                     <th style="width: 30%">Name</th>
@@ -248,10 +350,9 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <form id="deleteForm" action="" method="post">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" name="deletedQuiz" value="" id="yes-delete" class="btn btn-primary">Yes</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button id="yes-delete" type="button" name="deletedQuiz" value="" class="btn btn-primary">Yes
+                    </button>
                 </div>
             </div>
         </div>
@@ -269,10 +370,9 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <form id="unpublishForm" action="" method="post">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" name="deletedQuiz" value="" id="yes-unpublish" class="btn btn-primary">Yes</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button id="yes-unpublish" type="button" name="deletedQuiz" value="" class="btn btn-primary">Yes
+                    </button>
                 </div>
             </div>
         </div>

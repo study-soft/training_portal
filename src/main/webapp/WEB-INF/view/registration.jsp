@@ -109,7 +109,7 @@
     <br>
     <br>
     <div class="right">
-        <a href="/login">Login page</a>
+        <a href="${pageContext.request.contextPath}/login">Login page</a>
     </div>
     <br>
     <br>

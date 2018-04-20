@@ -11,8 +11,8 @@
     <div class="row justify-content-center">
         <div class="col-auto">
             <div class="media">
-                <img class="mr-2" style="margin-top: 15px" src="/resources/training-portal-favicon.png" width="30"
-                     height="35">
+                <img class="mr-2" style="margin-top: 15px" src="${pageContext.request.contextPath}/resources/training-portal-favicon.png"
+                     width="30" height="35">
                 <div class="media-body">
                     <h2>Training portal</h2>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <br>
-            <form action="/login" method="post">
+            <form action="${pageContext.request.contextPath}/login" method="post">
                 <c:if test="${param.error ne null}">
                     <p class="error">Invalid login or password</p>
                 </c:if>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-auto">
-                        <div>Do not have an account? <a href="/register">Register</a></div>
+                        <div>Do not have an account? <a href="${pageContext.request.contextPath}/register">Register</a></div>
                     </div>
                 </div>
             </form>

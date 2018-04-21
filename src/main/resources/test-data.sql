@@ -265,7 +265,7 @@ VALUES (28, 10, 'Which input restriction specifies a regular expression to check
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
 VALUES (29, 10, 'Set correct sequence of tags in HTML document', '<html> -> <form action="handler.php"> -> <input type="checkbox"> -> </body>', 'SEQUENCE', 3);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
-VALUES (30, 10, 'Select ALL correct HTML form input types', '''style'' and ''value'' are NOT input types', 'FEW_ANSWERS', 3);
+VALUES (30, 10, 'Select all CORRECT HTML form input types', '''style'' and ''value'' are NOT input types', 'FEW_ANSWERS', 3);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
 VALUES (31, 11, 'Enter the year when HTTP was invented', null, 'NUMBER', 5);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
@@ -344,7 +344,7 @@ VALUES (72, 12, 'Set correct sequence of JSP lifecycle', null, 'SEQUENCE', 6);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
 VALUES (73, 12, 'How can you use scriplet on JSP?', null, 'ONE_ANSWER', 1);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
-VALUES (74, 12, 'Which place in "Model-view-controller" ptter JSP takes?', null, 'ONE_ANSWER', 1);
+VALUES (74, 12, 'Which place in "Model-view-controller" pattern JSP takes?', null, 'ONE_ANSWER', 1);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
 VALUES (75, 12, 'Select all CORRECT variants of using equality operator in JSP', null, 'FEW_ANSWERS', 2);
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
@@ -467,8 +467,8 @@ INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (169, 50, 'SELECT [all] FROM Persons WHERE FirstName LIKE ''Peter''', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (170, 50, 'SELECT * FROM Persons WHERE FirstName=''Peter''', TRUE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (171, 51, 'SELECT * FROM Persons WHERE LastName BETWEEN ''Hansen'' AND ''Pettersen''', FALSE);
-INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (172, 51, 'SELECT * FROM Persons WHERE LastName>''Hansen'' AND LastName<''Pettersen''', FALSE);
-INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (173, 51, 'SELECT LastName>''Hansen'' AND LastName<''Pettersen'' FROM Persons', TRUE);
+INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (172, 51, 'SELECT * FROM Persons WHERE LastName>''Hansen'' AND LastName<''Pettersen''', TRUE);
+INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (173, 51, 'SELECT LastName>''Hansen'' AND LastName<''Pettersen'' FROM Persons', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (174, 52, 'SELECT DIFFERENT', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (175, 52, 'SELECT DISTINCT', TRUE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (176, 52, 'SELECT UNIQUE', FALSE);
@@ -501,8 +501,8 @@ INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (203, 59, 'FileNotFoundException', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (204, 61, 'true', TRUE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (205, 61, 'false', FALSE);
-INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (206, 63, 'Yes', TRUE);
-INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (207, 63, 'No', FALSE);
+INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (206, 63, 'Yes', FALSE);
+INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (207, 63, 'No', TRUE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (208, 67, 'ServletContext', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (209, 67, 'ServletConfig', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (210, 67, 'Filter', TRUE);
@@ -613,7 +613,7 @@ VALUES (26, '<textarea>', 'Defines a multiline input control',
         '<option>', 'Defines an option in a drop-down list',
         '<input>', 'Defines an input control');
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2, left_side_3, right_side_3, left_side_4, right_side_4)
-VALUES (57, 'SQL', 'Standard language for storing, manipulating and retrieving data in databases',
+VALUES (57, 'SQL', 'Language for storing, manipulating and retrieving data in databases',
         'DDL', 'Language for defining data structures, especially database schemas',
         'DML', 'Language used for adding (inserting), deleting, and modifying (updating) data in a database',
         'MySQL', 'Open-source relational database management system (RDBMS)');
@@ -631,7 +631,7 @@ INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_sid
 VALUES (94, '(a == 1)', 'expression',
         'a = b + 1;', 'statement',
         '{a = 0; b = a + 1;}', 'block',
-        '[a-zA-Z]+', 'regExp');
+        '[a-zA-Z]+', 'regular expression');
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2, left_side_3, right_side_3, left_side_4, right_side_4)
 VALUES (108, 'HashMap', 'O(1)',
         'TreeMap', 'O(log(n))',

@@ -187,7 +187,7 @@ public class QuizPassingController {
                 if (answers.size() <= countOfCorrect) {
                     for (String answer : answers) {
                         if (answer.equals("true")) {
-                            result += prevQuestionScore / countOfCorrect;
+                            result += ((double) prevQuestionScore) / countOfCorrect;
                         }
                     }
                     session.setAttribute(RESULT, result);
@@ -198,6 +198,7 @@ public class QuizPassingController {
                 // is of the same type as the one passed in, which is List<String>
                 @SuppressWarnings("unchecked")
                 List<String> rightSide = (List<String>) session.getAttribute(ACCORDANCE_LIST);
+                logger.info(">>> rightSide from session: " + rightSide);
                 for (int i = 0; i < 4; i++) {
                     String answer = studentAnswers.get("accordance" + i);
                     if (answer != null && answer.equals(rightSide.get(i))) {
@@ -210,7 +211,7 @@ public class QuizPassingController {
             case SEQUENCE:
                 AnswerSequence answerSequence = answerSequenceDao.findAnswerSequence(prevQuestionId);
                 List<String> correctList = answerSequence.getCorrectList();
-                logger.info("get session attribute SEQUENCE_LIST: " + correctList);
+                logger.info(">>> correctList: " + correctList);
                 for (int i = 0; i < 4; i++) {
                     String answer = studentAnswers.get("sequence" + i);
                     if (answer != null && answer.equals(correctList.get(i))) {
@@ -341,10 +342,12 @@ public class QuizPassingController {
         switch (questionType) {
             case ONE_ANSWER:
                 List<AnswerSimple> oneAnswer = answerSimpleDao.findAnswersSimple(questionId);
+                Collections.shuffle(oneAnswer);
                 model.addAttribute("answers", oneAnswer);
                 break;
             case FEW_ANSWERS:
                 List<AnswerSimple> fewAnswers = answerSimpleDao.findAnswersSimple(questionId);
+                Collections.shuffle(fewAnswers);
                 model.addAttribute("answers", fewAnswers);
                 break;
             case ACCORDANCE:

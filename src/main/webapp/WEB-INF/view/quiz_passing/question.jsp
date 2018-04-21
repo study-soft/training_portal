@@ -24,6 +24,13 @@
                     questionsNumber + " questions yet");
                 $("#modal").modal();
             });
+
+            $("#questionForm").submit(function () {
+                $("option").each(function () {
+                    const answer = $(this).text().replace('"', '\"');
+                    $(this).val(answer);
+                });
+            });
         });
     </script>
 </head>
@@ -32,7 +39,7 @@
 <div class="container">
     <c:set var="question" value="${sessionScope.questions[sessionScope.currentQuestionSerial]}" scope="page"/>
     <h2><c:out value="${sessionScope.currentQuiz.name}"/></h2>
-    <form action="/quizzes/${question.quizId}/passing" method="post">
+    <form id="questionForm" action="/quizzes/${question.quizId}/passing" method="post">
         <div class="row mb-2">
             <div class="col-sm-8">
                 Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
@@ -42,6 +49,9 @@
                     Time left: <duration:format value="${sessionScope.timeLeft}"/>
                 </c:if>
             </div>
+        </div>
+        <div>
+            <strong>Result: ${sessionScope.result}</strong>
         </div>
         <div class="question-header">
             <div class="row">
@@ -114,7 +124,7 @@
                                 <select name="accordance${status.index}" class="form-control">
                                     <option selected>select...</option>
                                     <c:forEach items="${answers.rightSide}" var="right">
-                                        <option value="${right}"><c:out value="${right}"/></option>
+                                        <option value=""><c:out value="${right}"/></option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -144,7 +154,7 @@
                                         class="form-control">
                                     <option selected>select...</option>
                                     <c:forEach items="${answers.correctList}" var="item">
-                                        <option value="${item}"><c:out value="${item}"/></option>
+                                        <option value=""><c:out value="${item}"/></option>
                                     </c:forEach>
                                 </select>
                             </div>

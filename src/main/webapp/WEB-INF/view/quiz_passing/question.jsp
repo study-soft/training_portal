@@ -50,9 +50,6 @@
                 </c:if>
             </div>
         </div>
-        <div>
-            <strong>Result: ${sessionScope.result}</strong>
-        </div>
         <div class="question-header">
             <div class="row">
                 <div class="col-sm-8">

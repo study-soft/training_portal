@@ -33,38 +33,38 @@ public class AppConfig {
 //                .build();
 //    }
 
-    @Bean
-    public DataSource dataSource() {
-        BoneCPDataSource dataSource = new BoneCPDataSource();
-        dataSource.setDriverClass(environment.getProperty("jdbc.driverClass"));
-        dataSource.setJdbcUrl(environment.getProperty("jdbc.jdbcUrl"));
-        dataSource.setUsername(environment.getProperty("jdbc.username"));
-        dataSource.setPassword(environment.getProperty("jdbc.password"));
-        return dataSource;
-    }
-
 //    @Bean
 //    public DataSource dataSource() {
-//        URI dbUri = null;
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//            dbUri = new URI(System.getenv("DATABASE_URL"));
-//        } catch (ClassNotFoundException | URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String username = dbUri.getUserInfo().split(":")[0];
-//        String password = dbUri.getUserInfo().split(":")[1];
-//        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
-//                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-//
 //        BoneCPDataSource dataSource = new BoneCPDataSource();
-//        dataSource.setJdbcUrl(dbUrl);
-//        dataSource.setUsername(username);
-//        dataSource.setPassword(password);
-//
+//        dataSource.setDriverClass(environment.getProperty("jdbc.driverClass"));
+//        dataSource.setJdbcUrl(environment.getProperty("jdbc.jdbcUrl"));
+//        dataSource.setUsername(environment.getProperty("jdbc.username"));
+//        dataSource.setPassword(environment.getProperty("jdbc.password"));
 //        return dataSource;
 //    }
+
+    @Bean
+    public DataSource dataSource() {
+        URI dbUri = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+        } catch (ClassNotFoundException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
+                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+        BoneCPDataSource dataSource = new BoneCPDataSource();
+        dataSource.setJdbcUrl(dbUrl);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        return dataSource;
+    }
 
     @Bean
     public PlatformTransactionManager transactionManager() {

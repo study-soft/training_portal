@@ -42,10 +42,22 @@
         <a href="/teacher/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a>
     </sec:authorize>
     <sec:authorize access="hasRole('ROLE_STUDENT')">
+        <c:if test="${status ne 'CLOSED'}">
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    If you press "Close" you will close this quiz with current result
+                    <br>If you want to repass this quiz then press "Back to quiz"
+                </div>
+            </div>
+            <form class="inline" action="/student/quizzes/${quiz.quizId}" method="post">
+                <input type="submit" value="Close" class="btn btn-success">
+            </form>
+        </c:if>
         <a href="/student/quizzes/${quiz.quizId}" class="btn btn-primary btn-wide">Back to quiz</a>
-        <form class="inline" action="/student/quizzes/${quiz.quizId}" method="post">
-            <input type="submit" value="Close" class="btn btn-success">
-        </form>
     </sec:authorize>
 </div>
 <br>

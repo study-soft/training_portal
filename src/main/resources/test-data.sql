@@ -604,7 +604,7 @@ INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (365, 121, 'ByteArrayOutputStream', FALSE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (366, 121, 'BufferedOutputStream', TRUE);
 INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (367, 121, 'ObjectOutputStream', FALSE);
-INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (368, 121, 'GZIPOutputStream', TRUE);
+INSERT INTO answers_simple (answer_simple_id, question_id, body, correct) VALUES (368, 121, 'CZIPOutputStream', TRUE);
 
 -- Table: answers_accordance
 INSERT INTO answers_accordance (question_id, left_side_1, right_side_1, left_side_2, right_side_2, left_side_3, right_side_3, left_side_4, right_side_4)

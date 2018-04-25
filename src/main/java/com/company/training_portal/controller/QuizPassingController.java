@@ -3,8 +3,10 @@ package com.company.training_portal.controller;
 import com.company.training_portal.dao.*;
 import com.company.training_portal.model.*;
 import com.company.training_portal.model.enums.QuestionType;
+import com.company.training_portal.model.enums.StudentQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -283,14 +285,21 @@ public class QuizPassingController {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         if (userRoles.contains("ROLE_STUDENT")) {
             if (result == null) {
-                PassedQuiz quiz = quizDao.findPassedQuiz(studentId, quizId);
+                PassedQuiz quiz;
+                try {
+                    quiz = quizDao.findPassedQuiz(studentId, quizId);
+                } catch (EmptyResultDataAccessException e) {
+                    quiz = quizDao.findClosedQuiz(studentId, quizId);
+                }
                 model.addAttribute("quiz", quiz);
+                model.addAttribute("status", status);
                 return "quiz_passing/congratulations";
             }
             // Check if teacher close quiz while student is passing it
-            if (!quizDao.findStudentQuizStatus(studentId, quizId).equals(CLOSED)) {
+            if (!status.equals(CLOSED)) {
                 Integer attempt = quizDao.findAttempt(studentId, quizId);
                 Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
                 attempt++;

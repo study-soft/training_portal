@@ -135,6 +135,10 @@ training_portal/
                     training-portal-favicon.png
                 WEB-INF/
                     web.xml
+                    custom_tags/
+                        formatDuration.tld
+                        formatLocalDate.tld
+                        formatLocalDateTime.tld
                     view/
                         edit-profile.jsp
                         login.jsp

@@ -16,7 +16,7 @@
         <a href="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"> finish</a>
         <strong> <c:out value="${sessionScope.currentQuiz.name}"/></strong> quiz
     </div>
-    <div>You have answered only ${sessionScope.currentQuestionSerial} / ${sessionScope.questionsNumber} questions yet</div>
+    <div>You have answered only ${sessionScope.currentQuestionSerial}/${sessionScope.questionsNumber} questions yet</div>
 </div>
 <br>
 </body>

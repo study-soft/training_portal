@@ -13,6 +13,8 @@
 -- SET FOREIGN_KEY_CHECKS = 1;
 
 -- PostgreSQL
+ALTER USER postgres WITH SUPERUSER;
+
 -- Disable triggers
 ALTER TABLE answers_accordance DISABLE TRIGGER ALL;
 ALTER TABLE answers_number DISABLE TRIGGER ALL;

@@ -1,6 +1,6 @@
 -- tables
 -- Table: answers_accordance
-DROP TABLE IF EXISTS answers_accordance;
+DROP TABLE IF EXISTS answers_accordance CASCADE ;
 CREATE TABLE answers_accordance (
   question_id BIGINT PRIMARY KEY ,
   left_side_1 VARCHAR(255) NOT NULL,
@@ -14,14 +14,14 @@ CREATE TABLE answers_accordance (
 );
 
 -- Table: answers_number
-DROP TABLE IF EXISTS answers_number;
+DROP TABLE IF EXISTS answers_number CASCADE ;
 CREATE TABLE answers_number (
   question_id BIGINT PRIMARY KEY ,
   correct int NOT NULL
 );
 
 -- Table: answers_sequence
-DROP TABLE IF EXISTS answers_sequence;
+DROP TABLE IF EXISTS answers_sequence CASCADE ;
 CREATE TABLE answers_sequence (
   question_id BIGINT PRIMARY KEY,
   item_1 VARCHAR(255) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE answers_sequence (
 );
 
 -- Table: answers_simple
-DROP TABLE IF EXISTS answers_simple;
+DROP TABLE IF EXISTS answers_simple CASCADE ;
 CREATE TABLE answers_simple (
   answer_simple_id BIGSERIAL PRIMARY KEY,
   question_id bigint NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE answers_simple (
 );
 
 -- Table: groups
-DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS groups CASCADE ;
 CREATE TABLE groups (
   group_id BIGSERIAL PRIMARY KEY,
   name varchar(255) UNIQUE NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE groups (
 );
 
 -- Table: questions
-DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS questions CASCADE ;
 CREATE TABLE questions (
   question_id BIGSERIAL PRIMARY KEY,
   quiz_id bigint NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE questions (
 );
 
 -- Table: quizzes
-DROP TABLE IF EXISTS quizzes;
+DROP TABLE IF EXISTS quizzes CASCADE ;
 CREATE TABLE quizzes (
   quiz_id BIGSERIAL PRIMARY KEY,
   name varchar(255) UNIQUE NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE quizzes (
 );
 
 -- Table: users
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE ;
 CREATE TABLE users (
   user_id BIGSERIAL PRIMARY KEY,
   group_id bigint NULL,
@@ -90,7 +90,7 @@ CREATE TABLE users (
 );
 
 -- Table: user_quiz_junctions
-DROP TABLE IF EXISTS user_quiz_junctions;
+DROP TABLE IF EXISTS user_quiz_junctions CASCADE ;
 CREATE TABLE user_quiz_junctions (
   user_id BIGINT NOT NULL,
   quiz_id BIGINT NOT NULL,

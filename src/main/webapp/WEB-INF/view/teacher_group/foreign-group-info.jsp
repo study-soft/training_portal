@@ -48,7 +48,7 @@
                             </a>
                         </td>
                         <td>${statuses[status.index]}</td>
-                        <td>${studentsProgress[quiz.quizId][0]} / ${studentsProgress[quiz.quizId][1]}</td>
+                        <td>${studentsProgress[quiz.quizId][0]}/${studentsProgress[quiz.quizId][1]}</td>
                     </tr>
                 </c:forEach>
             </table>

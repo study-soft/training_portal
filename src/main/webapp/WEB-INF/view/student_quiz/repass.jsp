@@ -25,7 +25,7 @@
     <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
-            <td>${passedQuiz.result} / ${passedQuiz.score}</td>
+            <td>${passedQuiz.result}/${passedQuiz.score}</td>
         </tr>
         <tr>
             <td>Time spent</td>

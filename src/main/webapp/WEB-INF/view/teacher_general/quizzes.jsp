@@ -96,7 +96,7 @@
                             modalBody.text("All students have closed this quiz. \n" +
                                 "If you unpublish it results of all students will be lost. Continue?");
                         } else {
-                            modalBody.text("Only " + closedStudents + " / " + totalStudents + " students " +
+                            modalBody.text("Only " + closedStudents + "/" + totalStudents + " students " +
                                 "closed this quiz. If you unpublish it, the results of all students " +
                                 "will be lost and the remaining students will not be able " +
                                 "to pass this quiz. Continue?");

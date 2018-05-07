@@ -85,7 +85,7 @@
                     </td>
                     <td><localDateTime:format value="${passedQuizzes[i].submitDate}"/></td>
                     <td><localDateTime:format value="${passedQuizzes[i].finishDate}"/></td>
-                    <td>${passedQuizzes[i].result} / ${passedQuizzes[i].score}</td>
+                    <td>${passedQuizzes[i].result}/${passedQuizzes[i].score}</td>
                     <td>${passedQuizzes[i].attempt}</td>
                     <td><duration:format value="${passedQuizzes[i].timeSpent}"/></td>
                 </tr>
@@ -111,7 +111,7 @@
                     </td>
                     <td><localDateTime:format value="${closedQuizzes[i].submitDate}"/></td>
                     <td><localDateTime:format value="${closedQuizzes[i].finishDate}"/></td>
-                    <td>${closedQuizzes[i].result} / ${closedQuizzes[i].score}</td>
+                    <td>${closedQuizzes[i].result}/${closedQuizzes[i].score}</td>
                     <td>${closedQuizzes[i].attempt}</td>
                     <td><duration:format value="${closedQuizzes[i].timeSpent}"/></td>
                 </tr>

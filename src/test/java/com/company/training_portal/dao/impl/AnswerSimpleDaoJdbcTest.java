@@ -6,7 +6,6 @@ import com.company.training_portal.model.AnswerSimple;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(classes = AppConfig.class)
 @WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
-        scripts = {"classpath:schema.sql", "classpath:test-data.sql"})
+        scripts = {"classpath:schema_postgres.sql", "classpath:test-data.sql"})
 public class AnswerSimpleDaoJdbcTest {
 
     @Autowired
@@ -48,11 +47,11 @@ public class AnswerSimpleDaoJdbcTest {
     @Test
     public void test_find_all_answers_simple_by_questionId() {
         List<AnswerSimple> testAnswersSimple = new ArrayList<>();
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(1L));
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(2L));
-        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(3L));
+        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(206L));
+        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(207L));
+//        testAnswersSimple.add(answerSimpleDao.findAnswerSimple(3L));
 
-        List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(1L);
+        List<AnswerSimple> answersSimple = answerSimpleDao.findAnswersSimple(63L);
 
         assertEquals(testAnswersSimple, answersSimple);
     }

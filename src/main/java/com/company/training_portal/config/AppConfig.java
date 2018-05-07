@@ -28,7 +28,7 @@ public class AppConfig {
 //    public DataSource dataSource() {
 //        return new EmbeddedDatabaseBuilder()
 //                .setType(EmbeddedDatabaseType.H2)
-//                .addScript("schema.sql")
+//                .addScript("schema_mysql.sql")
 //                .addScript("test-data.sql")
 //                .build();
 //    }

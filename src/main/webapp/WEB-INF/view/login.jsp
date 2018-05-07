@@ -85,7 +85,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <td><strong>Java 9</strong></td>
+                    <td><strong>Java 8</strong></td>
                     <td>backend programming language</td>
                 </tr>
                 <tr>

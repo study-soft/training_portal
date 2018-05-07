@@ -285,8 +285,8 @@ public class QuizPassingController {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
         if (userRoles.contains("ROLE_STUDENT")) {
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
             if (result == null) {
                 PassedQuiz quiz;
                 try {

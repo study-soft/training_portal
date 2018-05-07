@@ -89,7 +89,7 @@
                             </td>
                             <td><localDateTime:format value="${quiz.submitDate}"/></td>
                             <td><localDateTime:format value="${quiz.finishDate}"/></td>
-                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.result}/${quiz.score}</td>
                             <td>${quiz.attempt}</td>
                             <td><duration:format value="${quiz.timeSpent}"/></td>
                         </tr>
@@ -116,7 +116,7 @@
                             </td>
                             <td><localDateTime:format value="${quiz.submitDate}"/></td>
                             <td><localDateTime:format value="${quiz.finishDate}"/></td>
-                            <td>${quiz.result} / ${quiz.score}</td>
+                            <td>${quiz.result}/${quiz.score}</td>
                             <td>${quiz.attempt}</td>
                             <td><duration:format value="${quiz.timeSpent}"/></td>
                         </tr>

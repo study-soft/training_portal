@@ -10,6 +10,7 @@ h1, h2, h3, h4 {
 
 h5, h6 {
     margin: 10px 0;
+    white-space: pre-wrap;
 }
 
 /******************************   TABLES   *******************************/
@@ -150,6 +151,10 @@ h5, h6 {
 }
 
 /****************************   INSCRIPTIONS   ******************************/
+
+.pre-wrap {
+    white-space: pre-wrap;
+}
 
 .success {
     color: #189e1d;

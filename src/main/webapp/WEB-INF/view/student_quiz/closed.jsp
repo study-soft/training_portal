@@ -70,7 +70,7 @@
     <table class="col-lg-6 table-info">
         <tr>
             <td>Result</td>
-            <td>${closedQuiz.result} / ${closedQuiz.score}</td>
+            <td>${closedQuiz.result}/${closedQuiz.score}</td>
         </tr>
         <tr>
             <td>Time spent</td>

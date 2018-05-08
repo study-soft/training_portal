@@ -8,13 +8,12 @@ import com.company.training_portal.model.User;
 import com.company.training_portal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUIZ;
-import static com.company.training_portal.controller.SessionAttributes.RESULT;
 import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
 import static com.company.training_portal.util.Utils.roundOff;
 

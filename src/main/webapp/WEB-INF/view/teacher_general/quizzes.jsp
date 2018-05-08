@@ -8,6 +8,16 @@
     <script>
         $(document).ready(function () {
 
+            // if (document.referrer.match(/http:\/\/teacher\/quizzes\/[\d]+\/delete/)) {
+            const quizName = sessionStorage.getItem("quizName");
+            if (quizName) {
+                sessionStorage.removeItem("quizName");
+                $("#delete-success").html(
+                    'Quiz \'' + quizName + '\' was successfully deleted\n' +
+                    '<button id="close" class="close">&times;</button>')
+                    .hide().fadeIn("slow");
+            }
+
             $("input[type=search]").on("keyup", function () {
                 const value = $(this).val().toLowerCase();
                 $("tbody tr").filter(function () {

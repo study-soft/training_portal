@@ -67,10 +67,29 @@
 
             $("#delete").click(function () {
                 const quizName = $(this).siblings("h2").text();
-                $("#yes").val(quizName);
-                $("#deleteForm").attr("action", "/teacher/quizzes/${unpublishedQuiz.quizId}/delete");
+                const quizId = $(this).prev().attr("href").split("/")[3];
+                $("#yes").data("quizId", quizId).data("quizName", quizName);
                 $(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
                 $("#modal").modal();
+            });
+
+            $("#yes").click(function () {
+                const quizId = $(this).data("quizId");
+                const quizName = $(this).data("quizName");
+
+                $.ajax({
+                    type: "POST",
+                    url: "/teacher/quizzes/" + quizId + "/delete",
+                    success: function () {
+                        sessionStorage.setItem("quizName", quizName);
+                        window.location.href =
+                            "http://${pageContext.request.contextPath}${header['host']}/teacher/quizzes";
+                    },
+                    error: function (xhr) {
+                        alert("Some error. See log in console");
+                        console.log(xhr.responseText);
+                    }
+                });
             });
         });
     </script>
@@ -200,10 +219,8 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <form id="deleteForm" action="" method="post">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button id="yes" type="submit" name="deletedQuiz" value="" class="btn btn-primary">Yes</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button id="yes" type="button" value="" class="btn btn-primary">Yes</button>
                 </div>
             </div>
         </div>

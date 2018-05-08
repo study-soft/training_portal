@@ -85,9 +85,9 @@
                         window.location.href =
                             "http://${pageContext.request.contextPath}${header['host']}/teacher/quizzes";
                     },
-                    error: function (xhr) {
+                    error: function (resp) {
                         alert("Some error. See log in console");
-                        console.log(xhr.responseText);
+                        console.log(resp.responseText);
                     }
                 });
             });

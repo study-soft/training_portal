@@ -7,13 +7,12 @@
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var passingTimeRemoved;
-            $("#enabled").change(function () {
-                if (passingTimeRemoved) {
-                    $("#after").after(passingTimeRemoved);
-                    passingTimeRemoved = null;
+            let passingTime;
+            $("#passingTimeEnabled").change(function () {
+                if ($(this).prop("checked") === false) {
+                    passingTime = $("#passingTime").detach();
                 } else {
-                    passingTimeRemoved = $("#passingTime").detach();
+                    $("#after").after(passingTime);
                 }
             });
         });
@@ -33,9 +32,9 @@
         </div>
         <div class="form-group">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" id="enabled" name="enabled"
-                       value="enabled" class="custom-control-input" checked>
-                <label for="enabled" class="custom-control-label">
+                <input type="checkbox" id="passingTimeEnabled" name="passingTimeEnabled"
+                       value="passingTimeEnabled" class="custom-control-input" checked>
+                <label for="passingTimeEnabled" class="custom-control-label">
                     <strong>Passing time</strong>
                 </label>
             </div>

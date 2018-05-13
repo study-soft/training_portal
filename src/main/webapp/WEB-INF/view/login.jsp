@@ -20,8 +20,11 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <a target="_blank" href="https://github.com/training-portal/training_portal">
+        <a target="_blank" href="https://github.com/training-portal/training_portal" class="inline">
             <h5>GitHub link <i class="fa fa-external-link"></i></h5>
+        </a>
+        <a href="${pageContext.request.contextPath}/help" class="ml-5">
+            <h5>Help <i class="fa fa-external-link"></i></h5>
         </a>
     </div>
     <div class="row justify-content-around">

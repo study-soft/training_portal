@@ -29,11 +29,14 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/teacher/results">Results</a>
                 </li>
             </ul>
-            <ul class="navbar-nav justify-content-end">
+            <ul class="navbar-nav justify-content-end align-items-center">
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/help" class="nav-link">Help</a>
+                </li>
                 <li class="nav-item">
                         <%--suppress XmlDuplicatedId --%>
-                    <a id="logout" href="${pageContext.request.contextPath}/logout" class="nav-link">Log out<i
-                            class="fa fa-sign-out nav-link nav-icon inline" style="margin-left: 3px"></i></a>
+                    <a id="logout" href="${pageContext.request.contextPath}/logout" class="nav-link">Log out <i
+                            class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                 </li>
             </ul>
         </div>
@@ -65,11 +68,14 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/student/results">Results</a>
                 </li>
             </ul>
-            <ul class="navbar-nav justify-content-end">
+            <ul class="navbar-nav justify-content-end align-items-center">
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/help" class="nav-link">Help</a>
+                </li>
                 <li class="nav-item">
                         <%--suppress XmlDuplicatedId --%>
-                    <a id="logout" href="${pageContext.request.contextPath}/quiz-passing-logout" class="nav-link">Log out<i
-                            class="fa fa-sign-out nav-link nav-icon inline" style="margin-left: 3px"></i></a>
+                    <a id="logout" href="${pageContext.request.contextPath}/quiz-passing-logout" class="nav-link">Log out <i
+                            class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                 </li>
             </ul>
         </div>

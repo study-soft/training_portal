@@ -11,7 +11,7 @@
 2. Questions with several correct answers.
 3. Questions for establishing accordance.
 4. Questions for establishing sequence.
-5. Questions with a numerical answer.
+5. Questions with numerical answer.
 ## Benefits
 1. System has an user friendly interface and responsive design.
 2. User is fully aware of the information about educational flow, which is competently structured according to sections.
@@ -143,6 +143,7 @@
                         <a href="https://github.com/training-portal/training_portal/blob/master/src/main/webapp/WEB-INF/custom_tags/formatLocalDateTime.tld">formatLocalDateTime.tld</a>
                     <a href="https://github.com/training-portal/training_portal/tree/master/src/main/webapp/WEB-INF/view">view/</a>
                         <a href="https://github.com/training-portal/training_portal/blob/master/src/main/webapp/WEB-INF/view/edit-profile.jsp">edit-profile.jsp</a>
+                        <a href="https://github.com/training-portal/training_portal/blob/master/src/main/webapp/WEB-INF/view/help.jsp">help.jsp</a>
                         <a href="https://github.com/training-portal/training_portal/blob/master/src/main/webapp/WEB-INF/view/login.jsp">login.jsp</a>
                         <a href="https://github.com/training-portal/training_portal/blob/master/src/main/webapp/WEB-INF/view/registration.jsp">registration.jsp</a>
                         <a href="https://github.com/training-portal/training_portal/tree/master/src/main/webapp/WEB-INF/view/error">error/</a>

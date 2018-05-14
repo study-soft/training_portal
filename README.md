@@ -31,7 +31,9 @@
 - JQuery 3.3.1 - JavaScript library
 - Git 2.17.0 - versions control
 ## Database schema
-<img src="/resources/database-schema.png">
+![schema](https://github.com/training-portal/training_portal/blob/master/src/main/webapp/resources/database-schema.png)
+## Site map for student
+![student-map](https://github.com/training-portal/training_portal/blob/master/src/main/webapp/resources/training-portal-student.png)
 ## Folder structure
 <pre>
 <a href="https://github.com/training-portal/training_portal">training_portal/</a>

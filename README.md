@@ -31,7 +31,7 @@
 - JQuery 3.3.1 - JavaScript library
 - Git 2.17.0 - versions control
 ## Database schema
-![alt text](https://drive.google.com/file/d/11Vu0KnLNQUKop6h0VqkB7l2c3OkaNYSS/view?usp=sharing)
+<img src="/resources/database-schema.png">
 ## Folder structure
 <pre>
 <a href="https://github.com/training-portal/training_portal">training_portal/</a>

@@ -298,8 +298,7 @@ public class QuizPassingController {
                 model.addAttribute("status", status);
                 return "quiz_passing/congratulations";
             }
-            // Check if teacher close quiz while student is passing it
-            if (!status.equals(CLOSED)) {
+            if (!status.equals(CLOSED)) {   // Check if teacher close quiz while student is passing it
                 Integer attempt = quizDao.findAttempt(studentId, quizId);
                 Integer roundedResult = roundOff(result * (1 - 0.1 * attempt));
                 attempt++;

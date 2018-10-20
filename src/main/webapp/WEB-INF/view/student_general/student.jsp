@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -31,6 +32,11 @@
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
+    <a href="${pageContext.request.contextPath}/student?lang=en_US">English</a> |
+    <a href="${pageContext.request.contextPath}/student?lang=uk_UA">Українська</a> |
+    <a href="${pageContext.request.contextPath}/student?lang=ru_RU">Русский</a>
+    <br>locale: ${pageContext.response.locale}
+    <br><spring:message code="test.message"/>
     <h2>Hi, ${student.firstName}! Welcome to the training portal!</h2>
     <h4><i class="fa fa-graduation-cap"></i> Student information</h4>
     <table class="col-lg-6 table-info">

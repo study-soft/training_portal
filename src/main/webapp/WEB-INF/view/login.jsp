@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,6 +9,13 @@
 <body>
 <br>
 <div class="container">
+    <br/>
+    <a href="${pageContext.request.contextPath}/login?lang=en">English</a> |
+    <a href="${pageContext.request.contextPath}/login?lang=uk">Українська</a> |
+    <a href="${pageContext.request.contextPath}/login?lang=ru">Русский</a>
+    <br>locale: ${pageContext.response.locale}
+    <h3><spring:message code="test.message"/></h3>
+    <br/>
     <div class="row justify-content-center">
         <div class="col-auto">
             <div class="media">

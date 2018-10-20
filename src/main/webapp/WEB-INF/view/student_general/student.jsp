@@ -32,9 +32,9 @@
         Profile information successfully changed
         <button id="close" class="close">&times;</button>
     </div>
-    <a href="${pageContext.request.contextPath}/student?lang=en_US">English</a> |
-    <a href="${pageContext.request.contextPath}/student?lang=uk_UA">Українська</a> |
-    <a href="${pageContext.request.contextPath}/student?lang=ru_RU">Русский</a>
+    <a href="${pageContext.request.contextPath}/student?lang=en">English</a> |
+    <a href="${pageContext.request.contextPath}/student?lang=uk">Українська</a> |
+    <a href="${pageContext.request.contextPath}/student?lang=ru">Русский</a>
     <br>locale: ${pageContext.response.locale}
     <br><spring:message code="test.message"/>
     <h2>Hi, ${student.firstName}! Welcome to the training portal!</h2>

@@ -1,3 +1,4 @@
+<%--suppress XmlDuplicatedId --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <sec:authorize access="hasRole('ROLE_TEACHER')">
@@ -10,7 +11,6 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-            <%--suppress XmlDuplicatedId --%>
         <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
@@ -31,10 +31,18 @@
             </ul>
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item">
+                    <a id="en" class="nav-link" href="#">EN</a>
+                </li>
+                <li class="nav-item">
+                    <a id="ru" class="nav-link" href="#">RU</a>
+                </li>
+                <li class="nav-item">
+                    <a id="uk" class="nav-link" href="#">UK</a>
+                </li>
+                <li class="nav-item">
                     <a href="${pageContext.request.contextPath}/help" class="nav-link">Help</a>
                 </li>
                 <li class="nav-item" style="position: relative; bottom: 3px;">
-                        <%--suppress XmlDuplicatedId --%>
                     <a id="logout" href="${pageContext.request.contextPath}/logout" class="nav-link">Log out <i
                             class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                 </li>
@@ -52,7 +60,6 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-            <%--suppress XmlDuplicatedId --%>
         <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
@@ -70,10 +77,18 @@
             </ul>
             <ul class="navbar-nav justify-content-end align-items-center">
                 <li class="nav-item">
+                    <a id="en" class="nav-link" href="#">EN</a>
+                </li>
+                <li class="nav-item">
+                    <a id="ru" class="nav-link" href="#">RU</a>
+                </li>
+                <li class="nav-item">
+                    <a id="uk" class="nav-link" href="#">UK</a>
+                </li>
+                <li class="nav-item">
                     <a href="${pageContext.request.contextPath}/help" class="nav-link">Help</a>
                 </li>
                 <li class="nav-item" style="position: relative; bottom: 2px;">
-                        <%--suppress XmlDuplicatedId --%>
                     <a id="logout" href="${pageContext.request.contextPath}/quiz-passing-logout" class="nav-link">Log out <i
                             class="fa fa-sign-out nav-link nav-icon inline"></i></a>
                 </li>

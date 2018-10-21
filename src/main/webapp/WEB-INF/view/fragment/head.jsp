@@ -45,3 +45,37 @@
         });
     });
 </script>
+<script>
+    function setLang(event, lang) {
+        event.preventDefault();
+        const uri = window.location.href;
+        const paramLang = new URLSearchParams(window.location.search).get("lang");
+        if (paramLang != null) {
+            window.location = uri.replace("lang=" + paramLang, "lang=" + lang);
+        } else {
+            if (uri.includes("?lang=")) {
+                window.location = uri.replace("lang=" + paramLang, "lang=" + lang);
+            } else if (uri.includes("?")) {
+                window.location = uri + "&lang=" + lang;
+            } else {
+                window.location = uri + "?lang=" + lang;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        $("#en").click(function (event) {
+            const lang = $(this).text().toLowerCase();
+            setLang(event, lang);
+        });
+        $("#ru").click(function (event) {
+            const lang = $(this).text().toLowerCase();
+            setLang(event, lang);
+        });
+        $("#uk").click(function (event) {
+            const lang = $(this).text().toLowerCase();
+            setLang(event, lang);
+        });
+
+    })
+</script>

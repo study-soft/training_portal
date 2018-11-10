@@ -1,11 +1,13 @@
 package com.company.training_portal.validator;
 
 import com.company.training_portal.model.Group;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.regex.Pattern;
 
+@Service
 public class GroupValidator implements Validator {
 
     @Override
@@ -22,9 +24,9 @@ public class GroupValidator implements Validator {
 
     private void validateName(String name, Errors errors) {
         if (name == null || name.isEmpty()) {
-            errors.rejectValue("name", "group.name.empty");
+            errors.rejectValue("name", "validation.group.name.empty");
         } else if (name.length() > 255) {
-            errors.rejectValue("name", "group.name.size");
+            errors.rejectValue("name", "validation.group.name.size");
         }
     }
 
@@ -32,7 +34,7 @@ public class GroupValidator implements Validator {
         if (description == null) {
             return;
         } else if (description.length() > 65534) {
-            errors.rejectValue("description", "group.description.size");
+            errors.rejectValue("description", "validation.group.description.size");
         }
     }
 }

@@ -1,9 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Group info</title>
+    <title><spring:message code="title.group"/></title>
     <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
@@ -12,20 +13,20 @@
     <h2><c:out value="${group.name}"/></h2>
     <c:if test="${group.description ne null}">
         <div class="col-lg-6">
-            <strong>Description: </strong><c:out value="${group.description}"/>
+            <strong><spring:message code="group.description"/>: </strong><c:out value="${group.description}"/>
         </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>
-            <td>Creation date</td>
+            <td><spring:message code="group.creation.date"/></td>
             <td><localDate:format value="${group.creationDate}"/></td>
         </tr>
         <tr>
-            <td>Number of students</td>
+            <td><spring:message code="group.students.number"/></td>
             <td>${studentsNumber}</td>
         </tr>
     </table>
-    <h4>You gave next quizzes to this group</h4>
+    <h4><spring:message code="group.quizzes"/></h4>
     <c:choose>
         <c:when test="${empty publishedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -34,7 +35,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You did not give quizzes to this group
+                    <spring:message code="group.no.quizzes"/>
                 </div>
             </div>
         </c:when>
@@ -54,7 +55,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h4>Students</h4>
+    <h4><spring:message code="group.students"/></h4>
     <c:choose>
         <c:when test="${empty studentsList}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -63,7 +64,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    There is no students in this group
+                    <spring:message code="group.no.students"/>
                 </div>
             </div>
         </c:when>
@@ -81,7 +82,9 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1)">
+        <spring:message code="back"/>
+    </button>
 </div>
 <br>
 </body>

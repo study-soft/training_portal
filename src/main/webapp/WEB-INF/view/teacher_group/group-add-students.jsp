@@ -1,46 +1,48 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Add students</title>
+    <title><spring:message code="title.add.students"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var form = $("#addStudentsForm");
+            let form = $("#addStudentsForm");
             form.submit(function (e) {
                 e.preventDefault();
-                var formData = form.serialize();
+                let formData = form.serialize();
                 if (formData) {
                     $.ajax({
                         type: form.attr("method"),
                         url: form.attr("action"),
                         data: formData,
                         success: function (students) {
-                            $('.modal-body').html('<div>You have added such students:</div><ul></ul>');
-                            for (var i = 0; i < students.length; i++) {
-                                var student = students[i];
+                            window.scrollTo(0, 0);
+                            $('.modal-body').html('<div><spring:message code="group.students.added"/>:</div><ul></ul>');
+                            for (let i = 0; i < students.length; i++) {
+                                let student = students[i];
                                 $('input[value="' + student.userId + '"]').parents("tr").remove();
-                                $('.modal-title').text('Success');
+                                $('.modal-title').text('<spring:message code="success"/>');
                                 $('.modal-body ul').append('<li>' + student.lastName + ' ' + student.firstName + '</li>');
                             }
-                            if ($('tr').length === 1) {
-                                $('table').remove();
-                                $('h3').after('<div class="row no-gutters align-items-center highlight-primary">\n' +
+                            if ($("#addStudentsForm table tr").length === 1) {
+                                $('#addStudentsForm table').after('<div class="row no-gutters align-items-center highlight-primary">\n' +
                                     '                <div class="col-auto mr-3">\n' +
                                     '                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"\n' +
                                     '                         width="25" height="25">\n' +
                                     '                </div>\n' +
                                     '                <div class="col">\n' +
-                                    '                    There is no students without group\n' +
+                                    '                    <spring:message code="group.no.students.without"/>\n' +
                                     '                </div>\n' +
                                     '            </div>');
-                                $('input[type="submit"]').remove();
+                                $('#addStudentsForm table').remove();
+                                $('#add').remove();
                             }
                         }
                     });
                 } else {
-                    $('.modal-title').text('Oops...');
-                    $('.modal-body').text('Select at least one student please');
+                    $('.modal-title').text('<spring:message code="oops"/>...');
+                    $('.modal-body').text('<spring:message code="group.select.student"/>');
                 }
             });
         });
@@ -50,19 +52,27 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2><c:out value="${group.name}"/></h2>
-    <h4>Students to add:</h4>
+    <h4><spring:message code="group.students.add"/>:</h4>
     <c:choose>
         <c:when test="${empty students}">
-            <div>There is no students without group.</div>
-            <div><input type="button" class="btn btn-primary" value="Back" onclick="window.history.go(-1);"></div>
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    <spring:message code="group.no.students.without"/>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
         </c:when>
         <c:otherwise>
             <span class="error">${noStudents}</span>
             <form id="addStudentsForm" action="/teacher/groups/${group.groupId}/add-students" method="post">
                 <table class="table">
                     <tr>
-                        <th>Name</th>
-                        <th>E-mail</th>
+                        <th><spring:message code="user.name"/></th>
+                        <th><spring:message code="user.mail"/></th>
                         <th></th>
                     </tr>
                     <c:forEach items="${students}" var="student" varStatus="status">
@@ -81,10 +91,10 @@
                         </tr>
                     </c:forEach>
                 </table>
-                <input type="button" class="btn btn-primary" value="Back" onclick="window.history.go(-1);">
+                <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
                 <!-- Button trigger modal -->
-                <button class="btn btn-success" id="add" data-toggle="modal" data-target="#modal">
-                    <i class="fa fa-user-plus"></i> Add
+                <button class="btn btn-success btn-wide" id="add" data-toggle="modal" data-target="#modal">
+                    <i class="fa fa-user-plus"></i> <spring:message code="group.add"/>
                 </button>
                 <div>
                     <!-- Modal -->
@@ -93,7 +103,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel">Success</h5>
+                                    <h5 class="modal-title" id="modalLabel"><spring:message code="success"/></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -102,7 +112,9 @@
                                     <ul></ul>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <spring:message code="ok"/>
+                                    </button>
                                 </div>
                             </div>
                         </div>

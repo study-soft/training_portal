@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
+import static com.company.training_portal.util.Utils.maskPassword;
+
 @Controller
 @SessionAttributes("teacherId")
 @PreAuthorize("hasRole('ROLE_TEACHER')")
@@ -45,6 +47,7 @@ public class TeacherController {
     @RequestMapping("/teacher")
     public String showTeacherHome(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
+        teacher.setPassword(maskPassword(teacher.getPassword()));
         model.addAttribute("teacher", teacher);
         return "teacher_general/teacher";
     }
@@ -80,17 +83,17 @@ public class TeacherController {
         String editedEmail = editedTeacher.getEmail();
         String email = oldTeacher.getEmail();
         if (!editedEmail.equals(email) && userDao.userExistsByEmail(editedEmail)) {
-            bindingResult.rejectValue("email", "user.email.exists");
+            bindingResult.rejectValue("email", "validation.user.email.exists");
         }
         String editedPhoneNumber = editedTeacher.getPhoneNumber();
         String phoneNumber = oldTeacher.getPhoneNumber();
         if (!editedPhoneNumber.equals(phoneNumber) && userDao.userExistsByPhoneNumber(editedPhoneNumber)) {
-            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
+            bindingResult.rejectValue("phoneNumber", "validation.user.phone.exists");
         }
         String inputPassword = editedTeacher.getPassword();
         String password = oldTeacher.getPassword();
         if (!newPassword.isEmpty() && !inputPassword.equals(password)) {
-            bindingResult.rejectValue("password", "user.password.incorrect-old");
+            bindingResult.rejectValue("password", "validation.user.password.incorrect.old");
             model.addAttribute("newPassword", newPassword);
         }
 

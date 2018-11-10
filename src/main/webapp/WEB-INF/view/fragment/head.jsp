@@ -17,6 +17,7 @@
       href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css">
 <link rel="script" href="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js">
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/main.css">
+<link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
 <script>
     $(document).ready(function () {
         const currentPath = window.location.pathname;

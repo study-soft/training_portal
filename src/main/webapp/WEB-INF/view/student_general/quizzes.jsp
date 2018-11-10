@@ -1,25 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Quizzes</title>
+    <title><spring:message code="title.quizzes"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            $('button:contains(Close)').click(function (event) {
+            $("button:has(i[class='fa fa-close'])").click(function (event) {
                 event.preventDefault();
-                var quizId = $(this).val();
-                var button = $(this);
+                let quizId = $(this).val();
+                let button = $(this);
                 $.ajax({
                     type: "POST",
                     url: "/student/quizzes/" + quizId + "/close",
                     success: function () {
-                        var selectedRow = button.parents("tr");
-                        var quizName = selectedRow.children().first().find("a").text();
-                        var copiedSelectedRow = selectedRow.clone();
+                        window.scrollTo(0, 0);
+                        let selectedRow = button.parents("tr");
+                        let quizName = selectedRow.children().first().find("a").text();
+                        let copiedSelectedRow = selectedRow.clone();
                         selectedRow.remove();
-                        var passedQuizzes = $("#passedQuizzes");
+                        let passedQuizzes = $("#passedQuizzes");
                         if (passedQuizzes.find("tr").length === 1) {
                             passedQuizzes.after('<div class="row no-gutters align-items-center highlight-primary">\n' +
                                 '                <div class="col-auto mr-3">\n' +
@@ -27,24 +29,25 @@
                                 '                         width="25" height="25">\n' +
                                 '                </div>\n' +
                                 '                <div class="col">\n' +
-                                '                    You do not have passed quizzes\n' +
+                                '                    <spring:message code="quiz.quizzes.passed.not"/>\n' +
                                 '                </div>\n' +
                                 '            </div>');
                             passedQuizzes.remove();
                         }
-                        alert("Quiz '" + quizName + "' successfully closed");
-                        var closedQuizzesBody = $("#closedQuizzes").find("tbody");
+                        alert('<spring:message code="quiz.quiz"/> \'' +
+                            quizName.trim() + '\' <spring:message code="quiz.successfully.closed"/>');
+                        let closedQuizzesBody = $("#closedQuizzes").find("tbody");
                         if (closedQuizzesBody.length === 0) {
-                            var info = $("#noClosedQuizzesInfo");
+                            let info = $("#noClosedQuizzesInfo");
                             info.after(
                                 '<table id="closedQuizzes" class="table">\n' +
                                 '    <thead>\n' +
                                 '    <tr>\n' +
-                                '        <th style="width: 25%">Name</th>\n' +
-                                '        <th style="width: 10%">Questions</th>\n' +
-                                '        <th style="width: 7.5%">Score</th>\n' +
-                                '        <th style="width: 22.5%">Submit date</th>\n' +
-                                '        <th style="width: 35%">Author</th>\n' +
+                                '        <th style="width: 25%"><spring:message code="quiz.name"/></th>\n' +
+                                '        <th style="width: 10%"><spring:message code="quiz.questions"/></th>\n' +
+                                '        <th style="width: 8%"><spring:message code="quiz.score"/></th>\n' +
+                                '        <th style="width: 20%"><spring:message code="quiz.submitted"/></th>\n' +
+                                '        <th style="width: 37%"><spring:message code="quiz.author"/></th>\n' +
                                 '    </tr>\n' +
                                 '    </thead>\n' +
                                 '    <tbody>\n' +
@@ -60,7 +63,7 @@
             });
 
             $("input[type=search]").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
+                let value = $(this).val().toLowerCase();
                 $("tbody tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
@@ -71,14 +74,14 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Quizzes</h2>
+    <h2><spring:message code="quiz.quizzes"/></h2>
     <div class="input-group">
-        <input type="search" class="col-sm-4 form-control" placeholder="Search...">
+        <input type="search" class="col-sm-4 form-control" placeholder="<spring:message code="search"/>...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
-    <h4>Opened quizzes</h4>
+    <h4><spring:message code="quiz.quizzes.opened"/></h4>
     <c:choose>
         <c:when test="${empty openedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -87,7 +90,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have opened quizzes
+                    <spring:message code="quiz.quizzes.opened.not"/>
                 </div>
             </div>
         </c:when>
@@ -95,11 +98,11 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 10%">Questions</th>
-                    <th style="width: 7.5%">Score</th>
-                    <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 35%">Author</th>
+                    <th style="width: 25%"><spring:message code="quiz.name"/></th>
+                    <th style="width: 10%"><spring:message code="quiz.questions"/></th>
+                    <th style="width: 8%"><spring:message code="quiz.score"/></th>
+                    <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                    <th style="width: 37%"><spring:message code="quiz.author"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -120,7 +123,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h4>Passed quizzes</h4>
+    <h4><spring:message code="quiz.quizzes.passed"/></h4>
     <c:choose>
         <c:when test="${empty passedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -129,7 +132,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have passed quizzes
+                    <spring:message code="quiz.quizzes.passed.not"/>
                 </div>
             </div>
         </c:when>
@@ -137,12 +140,12 @@
             <table id="passedQuizzes" class="table">
                 <thead>
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 10%">Questions</th>
-                    <th style="width: 7.5%">Score</th>
-                    <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 25%">Author</th>
-                    <th style="width: 10%"></th>
+                    <th style="width: 25%"><spring:message code="quiz.name"/></th>
+                    <th style="width: 10%"><spring:message code="quiz.questions"/></th>
+                    <th style="width: 8%"><spring:message code="quiz.score"/></th>
+                    <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                    <th style="width: 25%"><spring:message code="quiz.author"/></th>
+                    <th style="width: 12%"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -159,7 +162,7 @@
                         <td>${quiz.authorName}</td>
                         <td>
                             <button type="submit" value="${quiz.quizId}" class="success-button">
-                                <i class="fa fa-close"></i> Close
+                                <i class="fa fa-close"></i> <spring:message code="quiz.result.close"/>
                             </button>
                         </td>
                     </tr>
@@ -168,7 +171,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h4>Closed quizzes</h4>
+    <h4><spring:message code="quiz.quizzes.closed"/></h4>
     <c:choose>
         <c:when test="${empty closedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -177,7 +180,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have closed quizzes
+                    <spring:message code="quiz.quizzes.closed.not"/>
                 </div>
             </div>
         </c:when>
@@ -185,11 +188,11 @@
             <table id="closedQuizzes" class="table">
                 <thead>
                 <tr>
-                    <th style="width: 25%">Name</th>
-                    <th style="width: 10%">Questions</th>
-                    <th style="width: 7.5%">Score</th>
-                    <th style="width: 22.5%">Submit date</th>
-                    <th style="width: 35%">Author</th>
+                    <th style="width: 25%"><spring:message code="quiz.name"/></th>
+                    <th style="width: 10%"><spring:message code="quiz.questions"/></th>
+                    <th style="width: 8%"><spring:message code="quiz.score"/></th>
+                    <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                    <th style="width: 37%"><spring:message code="quiz.author"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -210,7 +213,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
 </div>
 <br>
 </body>

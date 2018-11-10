@@ -1,8 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Teachers</title>
+    <title><spring:message code="title.teachers"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
@@ -18,9 +19,9 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Teachers</h2>
+    <h2><spring:message code="quiz.teachers"/></h2>
     <div class="input-group">
-        <input type="search" class="col-sm-4 form-control" placeholder="Search...">
+        <input type="search" class="col-sm-4 form-control" placeholder="<spring:message code="search"/>...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
@@ -34,17 +35,27 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have teachers
+                    <spring:message code="quiz.teachers.no.published"/>
                 </div>
             </div>
         </c:when>
         <c:otherwise>
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                    <spring:message code="quiz.teachers.published"/>
+                </div>
+            </div>
+            <br>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Phone number</th>
+                    <th><spring:message code="user.name"/></th>
+                    <th><spring:message code="user.mail"/></th>
+                    <th><spring:message code="user.phone"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,7 +71,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
 </div>
 <br>
 </body>

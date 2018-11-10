@@ -2,10 +2,11 @@
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Results</title>
+    <title><spring:message code="title.results"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
@@ -21,9 +22,9 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Results</h2>
+    <h2><spring:message code="quiz.result.results"/></h2>
     <div class="input-group">
-        <input type="search" class="col-sm-4 form-control" placeholder="Search...">
+        <input type="search" class="col-sm-4 form-control" placeholder="<spring:message code="search"/>...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
@@ -36,20 +37,20 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have results
+                    <spring:message code="quiz.result.no.results"/>
                 </div>
             </div>
         </c:when>
         <c:otherwise>
             <c:if test="${not empty openedQuizzes}">
-                <h4>Opened quizzes</h4>
+                <h4><spring:message code="quiz.quizzes.opened"/></h4>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th style="width: 18%">Name</th>
-                        <th style="width: 32%">Submitted</th>
-                        <th colspan="4" style="width: 40%"></th>
-                        <th style="width: 10%"></th>
+                        <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                        <th colspan="4" style="width: 50%"></th>
+                        <th style="width: 12%"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -64,7 +65,9 @@
                             <td colspan="4"></td>
                             <c:choose>
                                 <c:when test="${fn:contains(notSingleOpenedQuizzes, quiz)}">
-                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                    <td><a href="/student/results/${quiz.quizId}">
+                                        <spring:message code="quiz.result.compare"/>
+                                    </a></td>
                                 </c:when>
                                 <c:otherwise>
                                     <td></td>
@@ -76,17 +79,17 @@
                 </table>
             </c:if>
             <c:if test="${not empty passedQuizzes}">
-                <h4>Passed quizzes</h4>
+                <h4><spring:message code="quiz.quizzes.passed"/></h4>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th style="width: 18%">Name</th>
-                        <th style="width: 21%">Submitted</th>
-                        <th style="width: 21%">Passed</th>
-                        <th style="width: 9%;">Result</th>
-                        <th style="width: 9%">Attempt</th>
-                        <th style="width: 12%">Time spent</th>
-                        <th style="width: 10%"></th>
+                        <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                        <th style="width: 20%"><spring:message code="quiz.passed"/></th>
+                        <th style="width: 9%;"><spring:message code="quiz.result"/></th>
+                        <th style="width: 9%"><spring:message code="quiz.attempt"/></th>
+                        <th style="width: 12%"><spring:message code="quiz.time.spent"/></th>
+                        <th style="width: 12%"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -104,7 +107,9 @@
                             <td><duration:format value="${quiz.timeSpent}"/></td>
                             <c:choose>
                                 <c:when test="${fn:contains(notSinglePassedQuizzes, quiz)}">
-                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                    <td><a href="/student/results/${quiz.quizId}">
+                                        <spring:message code="quiz.result.compare"/>
+                                    </a></td>
                                 </c:when>
                                 <c:otherwise>
                                     <td></td>
@@ -116,17 +121,17 @@
                 </table>
             </c:if>
             <c:if test="${not empty closedQuizzes}">
-                <h4>Closed quizzes</h4>
+                <h4><spring:message code="quiz.quizzes.closed"/></h4>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th style="width: 18%">Name</th>
-                        <th style="width: 21%">Submitted</th>
-                        <th style="width: 21%">Passed</th>
-                        <th style="width: 9%;">Result</th>
-                        <th style="width: 9%">Attempt</th>
-                        <th style="width: 12%">Time spent</th>
-                        <th style="width: 10%"></th>
+                        <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                        <th style="width: 20%"><spring:message code="quiz.passed"/></th>
+                        <th style="width: 9%;"><spring:message code="quiz.result"/></th>
+                        <th style="width: 9%"><spring:message code="quiz.attempt"/></th>
+                        <th style="width: 12%"><spring:message code="quiz.time.spent"/></th>
+                        <th style="width: 12%"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -144,7 +149,9 @@
                             <td><duration:format value="${quiz.timeSpent}"/></td>
                             <c:choose>
                                 <c:when test="${fn:contains(notSingleClosedQuizzes, quiz)}">
-                                    <td><a href="/student/results/${quiz.quizId}">Compare</a></td>
+                                    <td><a href="/student/results/${quiz.quizId}">
+                                        <spring:message code="quiz.result.compare"/>
+                                    </a></td>
                                 </c:when>
                                 <c:otherwise>
                                     <td></td>
@@ -158,7 +165,7 @@
         </c:otherwise>
     </c:choose>
     <div>
-        <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
     </div>
 </div>
 <br>

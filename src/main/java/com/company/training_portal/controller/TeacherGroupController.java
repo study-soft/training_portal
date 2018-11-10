@@ -10,8 +10,10 @@ import com.company.training_portal.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -89,7 +91,7 @@ public class TeacherGroupController {
 
     @RequestMapping("/teacher/groups/{groupId}")
     public String showGroupInfo(@ModelAttribute("teacherId") Long teacherId,
-                                @PathVariable("groupId") Long groupId, Model model) {
+                                @PathVariable("groupId") Long groupId, Locale locale, Model model) {
         List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(teacherId);
 
         Group group = groupDao.findGroup(groupId);
@@ -99,6 +101,8 @@ public class TeacherGroupController {
 
         List<String> statuses = new ArrayList<>();
         Map<Long, List<Integer>> studentsProgress = new HashMap<>();
+
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
         for (Quiz quiz : publishedQuizzes) {
             Long quizId = quiz.getQuizId();
             Integer studentsNumberForQuiz =
@@ -107,9 +111,9 @@ public class TeacherGroupController {
                     userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
             studentsProgress.put(quizId, asList(closedStudents, studentsNumberForQuiz));
             if (closedStudents.equals(studentsNumberForQuiz)) {
-                statuses.add("Closed");
+                statuses.add(bundle.getString("group.quiz.closed"));
             } else {
-                statuses.add("Passes");
+                statuses.add(bundle.getString("group.quiz.passes"));
             }
         }
 
@@ -189,7 +193,7 @@ public class TeacherGroupController {
     public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("groupId") Long groupId, Model model) {
         if (checkGroupAccessDenied(teacherId, groupId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to group");
         }
 
         Group group = groupDao.findGroup(groupId);
@@ -228,7 +232,7 @@ public class TeacherGroupController {
     public String showEditGroup(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("groupId") Long groupId, Model model) {
         if (checkGroupAccessDenied(teacherId, groupId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to group");
         }
 
         Group group = groupDao.findGroup(groupId);
@@ -311,10 +315,6 @@ public class TeacherGroupController {
 
     private boolean checkGroupAccessDenied(Long teacherId, Long groupId) {
         List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(teacherId);
-        if (teacherGroupIds.contains(groupId)) {
-            return false;
-        }
-        logger.info("Access denied");
-        return true;
+        return !teacherGroupIds.contains(groupId);
     }
 }

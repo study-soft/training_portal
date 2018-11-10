@@ -14,13 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUIZ;
@@ -52,26 +53,27 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute("user") User user,
-                               BindingResult bindingResult, ModelMap model) {
+    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes,
+                               BindingResult bindingResult, Locale locale, ModelMap model) {
         logger.info("Bind request parameter to User backing object: " + user);
         userValidator.validate(user, bindingResult);
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
         if (userDao.userExistsByLogin(user.getLogin())) {
-            bindingResult.rejectValue("login", "user.login.exists");
+            bindingResult.rejectValue("login","validation.user.login.exists");
         }
         if (userDao.userExistsByEmail(user.getEmail())) {
-            bindingResult.rejectValue("email", "user.email.exists");
+            bindingResult.rejectValue("email","validation.user.email.exists");
         }
         if (userDao.userExistsByPhoneNumber(user.getPhoneNumber())) {
-            bindingResult.rejectValue("phoneNumber", "user.phoneNumber.exists");
+            bindingResult.rejectValue("phoneNumber","validation.user.phone.exists");
         }
         if (bindingResult.hasErrors()) {
             return "registration";
         }
 
         userDao.registerUser(user);
-        model.addAttribute("registrationSuccess",
-                "You have been successfully registered! Just log in now.");
+        redirectAttributes.addFlashAttribute("registrationSuccess",
+                bundle.getString("validation.registration.success"));
 
         model.clear();
         return "redirect:/login";
@@ -94,7 +96,7 @@ public class UserController {
             LocalDateTime finishDate = LocalDateTime.now();
             quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, roundedResult,
                     finishDate, attempt, PASSED);
-            logger.info(">>>>>>> WRITING RESULT TO DATABASE");
+            logger.info("WRITING RESULT TO DATABASE");
         }
         return "redirect:/logout";
     }

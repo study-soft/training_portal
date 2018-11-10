@@ -25,9 +25,9 @@ public class QuizValidator implements Validator {
 
     public void validateQuizName(String name, Errors errors) {
         if (name == null || name.isEmpty()) {
-            errors.rejectValue("name", "quiz.name.empty");
+            errors.rejectValue("name", "validation.quiz.name.empty");
         } else if (name.length() > 50) {
-            errors.rejectValue("name", "quiz.name.size");
+            errors.rejectValue("name", "validation.quiz.name.size");
         }
     }
 
@@ -35,34 +35,34 @@ public class QuizValidator implements Validator {
         if (description == null) {
             return;
         } else if (description.length() > 65535) {
-            errors.rejectValue("description", "quiz.description.size");
+            errors.rejectValue("description", "validation.quiz.description.size");
         }
     }
 
     public void validatePassingTime(String hours, String minutes, String seconds, Errors errors) {
         if (hours != null && minutes != null && seconds != null) {
             if (hours.isEmpty() && minutes.isEmpty() && seconds.isEmpty()) {
-                errors.rejectValue("passingTime", "quiz.passingTime.empty");
+                errors.rejectValue("passingTime", "validation.quiz.passing.time.empty");
                 return;
             }
 
             if (!hours.isEmpty() && !hours.matches("[0-9]+")) {
-                errors.rejectValue("passingTime", "quiz.hours.format");
+                errors.rejectValue("passingTime", "validation.quiz.hours.format");
             }
 
             if (!minutes.isEmpty()) {
                 if (!minutes.matches("[0-9]+")) {
-                    errors.rejectValue("passingTime", "quiz.minutes.format");
+                    errors.rejectValue("passingTime", "validation.quiz.minutes.format");
                 } else if (Integer.valueOf(minutes) < 0 || Integer.valueOf(minutes) > 60) {
-                    errors.rejectValue("passingTime", "quiz.minutes.size");
+                    errors.rejectValue("passingTime", "validation.quiz.minutes.size");
                 }
             }
 
             if (!seconds.isEmpty()) {
                 if (!seconds.matches("[0-9]+")) {
-                    errors.rejectValue("passingTime", "quiz.seconds.format");
+                    errors.rejectValue("passingTime", "validation.quiz.seconds.format");
                 } else if (Integer.valueOf(seconds) < 0 || Integer.valueOf(seconds) > 60) {
-                    errors.rejectValue("passingTime", "quiz.seconds.size");
+                    errors.rejectValue("passingTime", "validation.quiz.seconds.size");
                 }
             }
         }
@@ -72,7 +72,7 @@ public class QuizValidator implements Validator {
         if (explanation == null) {
             return;
         } else if (explanation.length() > 65535) {
-            errors.rejectValue("explanation", "quiz.explanation.size");
+            errors.rejectValue("explanation", "validation.quiz.explanation.size");
         }
     }
 }

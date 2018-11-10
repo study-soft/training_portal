@@ -67,9 +67,6 @@ public class Utils {
 
     public static String formatPhoneNumber(String target) {
         String digits = target.replaceAll("\\D", "");
-//        String digits = Pattern.compile("[\\D]")
-//                .splitAsStream(target)
-//                .collect(Collectors.joining());
         return "(" +
                 digits.substring(0, 3) +
                 ")-" +
@@ -78,5 +75,16 @@ public class Utils {
                 digits.substring(6, 8) +
                 "-" +
                 digits.substring(8, 10);
+    }
+
+    /**
+     * Mask password with pattern x*****x. For example, 123qwe will be masked like 1****e
+     *
+     * @param password password
+     * @return masked password
+     */
+    public static String maskPassword(String password) {
+        String masked = new String(password.chars().map(ch -> 42).toArray(), 2, password.length() - 2);
+        return password.substring(0, 1) + masked + password.substring(password.length() - 1);
     }
 }

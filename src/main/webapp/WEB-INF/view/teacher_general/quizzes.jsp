@@ -1,19 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Quizzes</title>
+    <title><spring:message code="title.quizzes"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-
-            // if (document.referrer.match(/http:\/\/teacher\/quizzes\/[\d]+\/delete/)) {
             const quizName = sessionStorage.getItem("quizName");
             if (quizName) {
                 sessionStorage.removeItem("quizName");
                 $("#delete-success").html(
-                    'Quiz \'' + quizName + '\' was successfully deleted\n' +
+                    '<spring:message code="quiz.quiz"/> \'' +
+                    quizName.trim() + '\' <spring:message code="quiz.successfully.deleted"/>\n' +
                     '<button id="close" class="close">&times;</button>')
                     .hide().fadeIn("slow");
             }
@@ -25,14 +25,15 @@
                 });
             });
 
-            $(document).on("click", "button:contains(Delete)", function (event) {
+            $(document).on("click", "button:has(i[class='fa fa-trash-o'])", function (event) {
+                window.scrollTo(0, 0);
                 event.preventDefault();
                 const quizName = $(this).parent("td").siblings().first().text();
                 const quizId = $(this).val();
                 $("#yes-delete").data("quizId", quizId).data("quizName", quizName);
 
                 const modal = $("#modalDelete");
-                modal.find(".modal-body").text("Are you sure you want to delete quiz '" + quizName + "'?");
+                modal.find(".modal-body").text('<spring:message code="quiz.sure.delete"/> \'' + quizName.trim() + '\'?');
                 modal.modal();
             });
 
@@ -62,7 +63,7 @@
                                         '                         width="25" height="25">\n' +
                                         '                </div>\n' +
                                         '                <div class="col">\n' +
-                                        '                    You do not have unpublished quizzes\n' +
+                                        '                    <spring:message code="quiz.quizzes.unpublished.not"/>\n' +
                                         '                </div>\n' +
                                         '            </div>');
                                 }
@@ -71,7 +72,8 @@
 
                         window.scrollTo(0, 0);
                         $("#delete-success").html(
-                            'Quiz \'' + quizName + '\' was successfully deleted\n' +
+                            '<spring:message code="quiz.quiz"/> \'' + quizName.trim() +
+                            '\' <spring:message code="quiz.successfully.deleted"/>\n' +
                             '<button id="close" class="close">&times;</button>')
                             .hide().fadeIn("slow");
                     }
@@ -82,12 +84,13 @@
                 $("#delete-success").fadeOut("slow");
             });
 
-            $("a:contains(Unpublish)").click(function (event) {
+            $("a:has(i[class='fa fa-close'])").click(function (event) {
                 event.preventDefault();
+                window.scrollTo(0, 0);
 
                 const unpublishUrl = $(this).attr("href");
                 const quizId = unpublishUrl.split("/")[3];
-                const quizName = $(this).parents("tr").find("a").first().text();
+                const quizName = $(this).parents("tr").find("a").first().text().trim();
                 $("#yes-unpublish").data("quizId", quizId).data("quizName", quizName);
 
                 $.ajax({
@@ -103,19 +106,18 @@
                         const modal = $("#modalUnpublish");
                         const modalBody = modal.find(".modal-body");
                         if (closedStudents === totalStudents) {
-                            modalBody.text("All students have closed this quiz. \n" +
-                                "If you unpublish it results of all students will be lost. Continue?");
+                            modalBody.text('<spring:message code="quiz.published.all.students.closed"/>. \n' +
+                                '<spring:message code="quiz.published.results.lost"/>?');
                         } else {
-                            modalBody.text("Only " + closedStudents + "/" + totalStudents + " students " +
-                                "closed this quiz. If you unpublish it, the results of all students " +
-                                "will be lost and the remaining students will not be able " +
-                                "to pass this quiz. Continue?");
+                            modalBody.text('<spring:message code="quiz.published.only"/> ' + closedStudents +
+                                '/' + totalStudents + ' <spring:message code="quiz.published.students"/> ' +
+                                '<spring:message code="quiz.published.results.lost"/>?');
                         }
                         modalBody.append(
                             '<br>\n' +
                             '<br>\n' +
                             '<div class="col-9 form-group">\n' +
-                            '    <label class="col-form-label" for="password">Enter password to confirm action</label>\n' +
+                            '    <label class="col-form-label" for="password"><spring:message code="quiz.published.password.enter"/></label>\n' +
                             '    <input type="password" class="form-control modal-input" id="password" name="password">\n' +
                             '</div>');
                         modal.modal();
@@ -129,7 +131,7 @@
                 if (inputPassword !== password) {
                     const modalBody = $("#modalUnpublish").find(".modal-body");
                     modalBody.find(".error").remove();
-                    modalBody.append('<div class="error">Incorrect password</div>');
+                    modalBody.append('<div class="error"><spring:message code="quiz.published.password.incorrect"/></div>');
                     return false;
                 }
 
@@ -146,13 +148,13 @@
                                 '<table id="unpublishedQuizzes" class="table">\n' +
                                 '    <thead>\n' +
                                 '    <tr>\n' +
-                                '        <th style="width: 30%">Name</th>\n' +
-                                '        <th style="width: 10%">Questions</th>\n' +
-                                '        <th style="width: 8%">Score</th>\n' +
-                                '        <th style="width: 15%;">Creation date</th>\n' +
+                                '        <th style="width: 26%"><spring:message code="quiz.name"/></th>\n' +
+                                '        <th style="width: 9%"><spring:message code="quiz.questions"/></th>\n' +
+                                '        <th style="width: 6%"><spring:message code="quiz.score"/></th>\n' +
+                                '        <th style="width: 12%;"><spring:message code="quiz.created.created"/></th>\n' +
+                                '        <th style="width: 16%"></th>\n' +
                                 '        <th style="width: 17%"></th>\n' +
-                                '        <th style="width: 8%"></th>\n' +
-                                '        <th style="width: 12%"></th>\n' +
+                                '        <th style="width: 14%"></th>\n' +
                                 '    </tr>\n' +
                                 '    </thead>\n' +
                                 '    <tbody>\n' +
@@ -164,23 +166,23 @@
                         const publishedQuizzes = $("#publishedQuizzes");
 
                         const publishedQuizRow = publishedQuizzes
-                            .find("a:contains(" + quizName + ")").parents("tr");
+                            .find("a:contains(" + quizName.trim() + ")").parents("tr");
                         const rowToInsert = publishedQuizRow.clone();
                         rowToInsert.find("td:gt(3)").remove();
                         rowToInsert.append(
                             '<td>\n' +
                             '   <a href="/teacher/quizzes/' + quizId + '/publication" class="success">\n' +
-                            '       <i class="fa fa-share-square-o"></i> Publish\n' +
+                            '       <i class="fa fa-share-square-o"></i> <spring:message code="quiz.publish.publish"/>\n' +
                             '    </a>' +
                             '</td>\n' +
                             '<td>\n' +
                             '   <a href="/teacher/quizzes/' + quizId + '/edit">\n' +
-                            '       <i class="fa fa-edit"></i> Edit\n' +
+                            '       <i class="fa fa-edit"></i> <spring:message code="edit"/>\n' +
                             '   </a>\n' +
                             '</td>\n' +
                             '<td>\n' +
                             '   <button type="button" value="' + quizId + '" class="danger-button">\n' +
-                            '       <i class="fa fa-trash-o"></i> Delete\n' +
+                            '       <i class="fa fa-trash-o"></i> <spring:message code="delete"/>\n' +
                             '   </button>\n' +
                             '</td>');
 
@@ -194,13 +196,13 @@
                                 '             width="25" height="25">\n' +
                                 '   </div>\n' +
                                 '   <div class="col">\n' +
-                                '       You do not have published quizzes\n' +
+                                '       <spring:message code="quiz.quizzes.published.not"/>\n' +
                                 '   </div>\n' +
                                 '</div>');
                         }
                         window.scrollTo(0, 0);
                         $("#delete-success").html(
-                            'Quiz \'' + quizName + '\' was successfully unpublished\n' +
+                            '<spring:message code="quiz.quiz"/> \'' + quizName + '\' <spring:message code="quiz.successfully.unpublished"/>\n' +
                             '<button id="close" class="close">&times;</button>')
                             .hide().fadeIn("slow");
                     }
@@ -212,20 +214,20 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <div id="delete-success" class="col-lg-5 mx-auto text-center correct update-success">
+    <div id="delete-success" class="col-lg-7 mx-auto text-center correct update-success">
         <button id="close" class="close">&times;</button>
     </div>
-    <br>
+    <h2><spring:message code="quiz.quizzes"/></h2>
     <div class="input-group">
-        <input type="search" class="col-lg-4 form-control" placeholder="Search...">
+        <input type="search" class="col-lg-4 form-control" placeholder="<spring:message code="search"/>...">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
     </div>
     <a href="${pageContext.request.contextPath}/teacher/quizzes/create" class="btn btn-success btn-wide float-right">
-        <i class="fa fa-book"></i> New quiz
+        <i class="fa fa-book"></i> <spring:message code="quiz.new"/>
     </a>
-    <h3>Unpublished quizzes</h3>
+    <h4><spring:message code="quiz.quizzes.unpublished"/></h4>
     <c:choose>
         <c:when test="${empty unpublishedQuizzes}">
             <div id="noUnpublishedQuizzesInfo" class="row no-gutters align-items-center highlight-primary">
@@ -234,7 +236,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have unpublished quizzes
+                    <spring:message code="quiz.quizzes.unpublished.not"/>
                 </div>
             </div>
         </c:when>
@@ -242,13 +244,13 @@
             <table id="unpublishedQuizzes" class="table">
                 <thead>
                 <tr>
-                    <th style="width: 30%">Name</th>
-                    <th style="width: 10%">Questions</th>
-                    <th style="width: 8%">Score</th>
-                    <th style="width: 15%;">Creation date</th>
+                    <th style="width: 26%"><spring:message code="quiz.name"/></th>
+                    <th style="width: 9%"><spring:message code="quiz.questions"/></th>
+                    <th style="width: 6%"><spring:message code="quiz.score"/></th>
+                    <th style="width: 12%;"><spring:message code="quiz.created.created"/></th>
+                    <th style="width: 16%"></th>
                     <th style="width: 17%"></th>
-                    <th style="width: 8%"></th>
-                    <th style="width: 12%"></th>
+                    <th style="width: 14%"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -266,24 +268,24 @@
                             <c:choose>
                                 <c:when test="${unpublishedQuiz.questionsNumber eq 0}">
                                     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="success">
-                                        <i class="fa fa-plus"></i> Add questions
+                                        <i class="fa fa-plus"></i> <spring:message code="quiz.add.questions"/>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
                                     <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/publication" class="success">
-                                        <i class="fa fa-share-square-o"></i> Publish
+                                        <i class="fa fa-share-square-o"></i> <spring:message code="quiz.publish.publish"/>
                                     </a>
                                 </c:otherwise>
                             </c:choose>
                         </td>
                         <td>
                             <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/edit">
-                                <i class="fa fa-edit"></i> Edit
+                                <i class="fa fa-edit"></i> <spring:message code="edit"/>
                             </a>
                         </td>
                         <td>
                             <button type="button" value="${unpublishedQuiz.quizId}" class="danger-button">
-                                <i class="fa fa-trash-o"></i> Delete
+                                <i class="fa fa-trash-o"></i> <spring:message code="delete"/>
                             </button>
                         </td>
                     </tr>
@@ -292,16 +294,16 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h3>Published quizzes</h3>
+    <h4><spring:message code="quiz.quizzes.published"/></h4>
     <c:choose>
-        <c:when test="${empty unpublishedQuizzes}">
+        <c:when test="${empty publishedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
                     <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You do not have published quizzes
+                    <spring:message code="quiz.quizzes.published.not"/>
                 </div>
             </div>
         </c:when>
@@ -309,12 +311,12 @@
             <table id="publishedQuizzes" class="table">
                 <thead>
                 <tr>
-                    <th style="width: 30%">Name</th>
-                    <th style="width: 10%">Questions</th>
-                    <th style="width: 8%">Score</th>
-                    <th style="width: 15%;">Creation date</th>
+                    <th style="width: 26%"><spring:message code="quiz.name"/></th>
+                    <th style="width: 9%"><spring:message code="quiz.questions"/></th>
+                    <th style="width: 6%"><spring:message code="quiz.score"/></th>
+                    <th style="width: 12%;"><spring:message code="quiz.created.created"/></th>
                     <th style="width: 20%"></th>
-                    <th style="width: 17%"></th>
+                    <th style="width: 27%"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -330,12 +332,12 @@
                         <td><localDate:format value="${publishedQuiz.creationDate}"/></td>
                         <td>
                             <a href="/teacher/quizzes/${publishedQuiz.quizId}/publication" class="success">
-                                <i class="fa fa-share-square-o"></i> Publish again
+                                <i class="fa fa-share-square-o"></i> <spring:message code="quiz.published.publish.again"/>
                             </a>
                         </td>
                         <td>
                             <a href="/teacher/quizzes/${publishedQuiz.quizId}/students-number" class="danger">
-                                <i class="fa fa-close"></i> Unpublish
+                                <i class="fa fa-close"></i> <spring:message code="quiz.published.unpublish"/>
                             </a>
                         </td>
                     </tr>
@@ -345,7 +347,7 @@
         </c:otherwise>
     </c:choose>
     <div>
-        <button class="btn btn-primary" value="Back" onclick="window.history.go(-1);">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
     </div>
 
     <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
@@ -353,15 +355,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelDelete">Attention</h5>
+                    <h5 class="modal-title red" id="modalLabelDelete"><spring:message code="danger"/></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button id="yes-delete" type="button" name="deletedQuiz" value="" class="btn btn-primary">Yes
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <spring:message code="no"/>
+                    </button>
+                    <button id="yes-delete" type="button" name="deletedQuiz" value="" class="btn btn-primary">
+                        <spring:message code="yes"/>
                     </button>
                 </div>
             </div>
@@ -373,15 +378,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title red" id="modalLabelUnpublish">Danger</h5>
+                    <h5 class="modal-title red" id="modalLabelUnpublish"><spring:message code="danger"/></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button id="yes-unpublish" type="button" name="deletedQuiz" value="" class="btn btn-primary">Yes
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <spring:message code="no"/>
+                    </button>
+                    <button id="yes-unpublish" type="button" name="deletedQuiz" value="" class="btn btn-primary">
+                        <spring:message code="yes"/>
                     </button>
                 </div>
             </div>

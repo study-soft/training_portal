@@ -117,6 +117,9 @@ public class QuizPassingController {
                                          @SessionAttribute(value = START_DATE, required = false)
                                                  LocalDateTime startDate,
                                          HttpSession session, ModelMap model) {
+        if (questions == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
 
         Question currentQuestion = questions.get(currentQuestionSerial);
         QuestionType currentQuestionType = currentQuestion.getQuestionType();

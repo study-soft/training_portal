@@ -1,5 +1,10 @@
 package com.company.training_portal.model.enums;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public enum UserRole {
     TEACHER("TEACHER"), STUDENT("STUDENT"), CHOOSE("CHOOSE");
 
@@ -11,5 +16,12 @@ public enum UserRole {
 
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public String toString() {
+        Locale locale = LocaleContextHolder.getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
+        return bundle.getString("user.role." + this.getRole().toLowerCase());
     }
 }

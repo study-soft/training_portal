@@ -1,16 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Quiz results</title>
+    <title><spring:message code="title.quiz.results"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            $("button:contains(Close)").click(function () {
+            $("button:has(i[class='fa fa-close'])").click(function () {
+                window.scrollTo(0, 0);
                 const studentId = $(this).val();
-                var firstTd = $(this).parent().siblings().first();
+                let firstTd = $(this).parent().siblings().first();
                 const studentName = firstTd.find("a").text();
                 const submitDate = firstTd.next().text();
 
@@ -18,8 +20,8 @@
                     .data("studentName", studentName)
                     .data("submitDate", submitDate);
 
-                $(".modal-body").text("Are you sure you want to close " +
-                    "'${quiz.name}' quiz to " + studentName + "?");
+                $(".modal-body").text('<spring:message code="quiz.result.sure.close"/> \'${quiz.name}\' ' +
+                    '<spring:message code="quiz.result.to.student"/> \'' + studentName.trim() + '\'?');
                 $("#modal").modal();
             });
 
@@ -38,15 +40,15 @@
                     success: function (closedQuizInfo) {
                         if ($("#closedQuizzes").length === 0) {
                             $("#insertClosedQuizzesHere").after(
-                                '<h4>Closed</h4>\n' +
+                                '<h4><spring:message code="quiz.quizzes.closed"/></h4>\n' +
                                 '<table id="closedQuizzes" class="table">\n' +
                                 '    <tr>\n' +
-                                '        <th style="width: 18%">Name</th>\n' +
-                                '        <th style="width: 21%">Submitted</th>\n' +
-                                '        <th style="width: 21%;">Passed</th>\n' +
-                                '        <th style="width: 9%">Result</th>\n' +
-                                '        <th style="width: 9%">Attempt</th>\n' +
-                                '        <th style="width: 22%">Time spent</th>\n' +
+                                '        <th style="width: 18%"><spring:message code="quiz.name"/></th>\n' +
+                                '        <th style="width: 20%"><spring:message code="quiz.submitted"/></th>\n' +
+                                '        <th style="width: 20%;"><spring:message code="quiz.passed"/></th>\n' +
+                                '        <th style="width: 9%"><spring:message code="quiz.result"/></th>\n' +
+                                '        <th style="width: 9%"><spring:message code="quiz.attempt"/></th>\n' +
+                                '        <th style="width: 24%"><spring:message code="quiz.time.spent"/></th>\n' +
                                 '    </tr>\n' +
                                 '</table>\n');
                         }
@@ -102,7 +104,7 @@
                                 '       width="25" height="25">\n' +
                                 '</div>\n' +
                                 '<div class="col">\n' +
-                                '   All students in this group closed this quiz\n' +
+                                '   <spring:message code="quiz.result.students.closed"/>\n' +
                                 '</div>\n');
                         }
                     }
@@ -124,7 +126,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    Here are students who pass this quiz with different quiz status
+                    <spring:message code="quiz.result.students.passes"/>
                 </div>
             </div>
         </c:when>
@@ -135,19 +137,19 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    All students in this group closed this quiz
+                    <spring:message code="quiz.result.students.closed"/>
                 </div>
             </div>
         </c:otherwise>
     </c:choose>
     <c:if test="${not empty openedStudents}">
-        <h4>Opened</h4>
+        <h4><spring:message code="quiz.quizzes.opened"/></h4>
         <table id="openedQuizzes" class="table">
             <tr>
-                <th style="width: 18%">Name</th>
-                <th style="width: 21%">Submitted</th>
-                <th colspan="4" style="width: 51%"></th>
-                <th style="width: 10%"></th>
+                <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                <th colspan="4" style="width: 50%"></th>
+                <th style="width: 12%"></th>
             </tr>
             <c:forEach items="${openedStudents}" var="student" varStatus="status">
                 <c:set var="i" value="${status.index}"/>
@@ -159,7 +161,7 @@
                     <td colspan="4"></td>
                     <td>
                         <button class="danger-button" value="${student.userId}">
-                            <i class="fa fa-close"></i> Close
+                            <i class="fa fa-close"></i> <spring:message code="quiz.result.close"/>
                         </button>
                     </td>
                 </tr>
@@ -167,16 +169,16 @@
         </table>
     </c:if>
     <c:if test="${not empty passedStudents}">
-        <h4>Passed</h4>
+        <h4><spring:message code="quiz.quizzes.passed"/></h4>
         <table id="passedQuizzes" class="table">
             <tr>
-                <th style="width: 18%">Name</th>
-                <th style="width: 21%">Submitted</th>
-                <th style="width: 21%;">Passed</th>
-                <th style="width: 9%">Result</th>
-                <th style="width: 9%">Attempt</th>
-                <th style="width: 12%">Time spent</th>
-                <th style="width: 10%"></th>
+                <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                <th style="width: 20%;"><spring:message code="quiz.passed"/></th>
+                <th style="width: 9%"><spring:message code="quiz.result"/></th>
+                <th style="width: 9%"><spring:message code="quiz.attempt"/></th>
+                <th style="width: 12%"><spring:message code="quiz.time.spent"/></th>
+                <th style="width: 12%"></th>
             </tr>
             <c:forEach items="${passedStudents}" var="student" varStatus="status">
                 <c:set var="i" value="${status.index}"/>
@@ -191,7 +193,7 @@
                     <td><duration:format value="${passedQuizzes[i].timeSpent}"/></td>
                     <td>
                         <button class="danger-button" value="${student.userId}">
-                            <i class="fa fa-close"></i> Close
+                            <i class="fa fa-close"></i> <spring:message code="quiz.result.close"/>
                         </button>
                     </td>
                 </tr>
@@ -200,15 +202,15 @@
     </c:if>
     <span id="insertClosedQuizzesHere"></span>
     <c:if test="${not empty closedStudents}">
-        <h4>Closed</h4>
+        <h4><spring:message code="quiz.quizzes.closed"/></h4>
         <table id="closedQuizzes" class="table">
             <tr>
-                <th style="width: 18%">Name</th>
-                <th style="width: 21%">Submitted</th>
-                <th style="width: 21%;">Passed</th>
-                <th style="width: 9%">Result</th>
-                <th style="width: 9%">Attempt</th>
-                <th style="width: 22%">Time spent</th>
+                <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                <th style="width: 20%"><spring:message code="quiz.submitted"/></th>
+                <th style="width: 20%;"><spring:message code="quiz.passed"/></th>
+                <th style="width: 9%"><spring:message code="quiz.result"/></th>
+                <th style="width: 9%"><spring:message code="quiz.attempt"/></th>
+                <th style="width: 24%"><spring:message code="quiz.time.spent"/></th>
             </tr>
             <c:forEach items="${closedStudents}" var="student" varStatus="status">
                 <c:set var="i" value="${status.index}"/>
@@ -226,7 +228,7 @@
         </table>
     </c:if>
     <div>
-        <button class="btn btn-primary" onclick="window.history.go(-1)">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1)"><spring:message code="back"/></button>
     </div>
 
     <div class="modal fade" id="modal" tabindex="-1" role="dialog"
@@ -234,15 +236,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Attention</h5>
+                    <h5 class="modal-title" id="modalLabel"><spring:message code="attention"/></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="button" id="yes" class="btn btn-primary" value="">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <spring:message code="no"/>
+                    </button>
+                    <button type="button" id="yes" class="btn btn-primary" value="">
+                        <spring:message code="yes"/>
+                    </button>
                 </div>
             </div>
         </div>

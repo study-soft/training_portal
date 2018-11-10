@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -99,7 +100,7 @@ public class TeacherQuizController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         logger.info("Access allowed");
@@ -117,28 +118,28 @@ public class TeacherQuizController {
             case PUBLISHED:
                 List<Group> groups = groupDao.findGroupsForWhichPublished(quizId);
                 Map<Long, List<User>> students = new HashMap<>();
-                Map<Long, List<StudentQuizStatus>> statuses = new HashMap<>();
+                Map<Long, List<String>> statuses = new HashMap<>();
                 for (Group group : groups) {
                     Long groupId = group.getGroupId();
                     List<User> groupStudents =
                             userDao.findStudentsForWhomPublished(groupId, quizId);
                     students.put(groupId, groupStudents);
-                    List<StudentQuizStatus> statusList = new ArrayList<>();
+                    List<String> statusList = new ArrayList<>();
                     for (User student : groupStudents) {
                         StudentQuizStatus status =
                                 quizDao.findStudentQuizStatus(student.getUserId(), quizId);
-                        statusList.add(status);
+                        statusList.add(status.toString());
                     }
                     statuses.put(groupId, statusList);
                 }
 
                 List<User> studentsWithoutGroup =
                         userDao.findStudentsWithoutGroupForWhomPublished(quizId);
-                List<StudentQuizStatus> statusesWithoutGroup = new ArrayList<>();
+                List<String> statusesWithoutGroup = new ArrayList<>();
                 for (User student : studentsWithoutGroup) {
                     StudentQuizStatus status =
                             quizDao.findStudentQuizStatus(student.getUserId(), quizId);
-                    statusesWithoutGroup.add(status);
+                    statusesWithoutGroup.add(status.toString());
                 }
 
                 model.addAttribute("publishedQuiz", quiz);
@@ -162,7 +163,7 @@ public class TeacherQuizController {
                                       @PathVariable("quizId") Long quizId,
                                       Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         logger.info("access allowed");
@@ -285,7 +286,7 @@ public class TeacherQuizController {
         }
 
         if (quizDao.quizExistsByName(quiz.getName())) {
-            bindingResult.rejectValue("name", "quiz.name.exists");
+            bindingResult.rejectValue("name", "validation.quiz.name.exists");
         }
 
         if (bindingResult.hasErrors()) {
@@ -328,7 +329,7 @@ public class TeacherQuizController {
     public String showEditQuiz(@ModelAttribute("teacherId") Long teacherId,
                                @PathVariable("quizId") Long quizId, Model model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -370,6 +371,10 @@ public class TeacherQuizController {
             bindingResult.rejectValue("name", "quiz.name.exists");
         }
         if (bindingResult.hasErrors()) {
+            model.addAttribute("enabled", enabled);
+            model.addAttribute("hours", hours);
+            model.addAttribute("minutes", minutes);
+            model.addAttribute("seconds", seconds);
             model.addAttribute("quiz", editedQuiz);
             return "teacher_quiz/quiz-edit";
         }
@@ -411,7 +416,7 @@ public class TeacherQuizController {
     public String showQuestions(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -623,11 +628,7 @@ public class TeacherQuizController {
 
     private boolean checkQuizAccessDenied(Long teacherId, Long quizId) {
         List<Long> teacherQuizIds = quizDao.findTeacherQuizIds(teacherId);
-        if (teacherQuizIds.contains(quizId)) {
-            return false;
-        }
-        logger.info("Access denied");
-        return true;
+        return !teacherQuizIds.contains(quizId);
     }
 
     private List<String> closeQuizToStudent(Long studentId, Long quizId) {

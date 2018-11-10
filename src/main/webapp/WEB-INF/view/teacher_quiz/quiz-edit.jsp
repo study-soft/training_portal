@@ -1,12 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Quiz edit</title>
+    <title><spring:message code="title.quiz.edit"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
+            if ("${enabled}") {
+                $("#enabled").prop("checked", true);
+                return;
+            }
+
             const passingTime = "${quiz.passingTime}";
             let passingTimeRemoved;
             if (!passingTime) {
@@ -28,54 +34,57 @@
 <body>
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
-    <h2>Edit quiz</h2>
+    <h2><spring:message code="quiz.edit"/></h2>
     <form:form action="/teacher/quizzes/${quiz.quizId}/edit" method="post" modelAttribute="quiz">
         <div class="form-group">
+            <spring:message code="quiz.name" var="nameMsg"/>
             <form:label path="name" for="name">
-                <strong>Name<span class="red">*</span></strong>
+                <strong>${nameMsg}<span class="red">*</span></strong>
             </form:label>
-            <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="Name"/>
+            <form:input path="name" cssClass="col col-md-6 form-control" id="name" placeholder="${nameMsg}"/>
             <form:errors path="name" cssClass="error"/>
         </div>
         <div class="form-group">
-            <div class="custom-control custom-checkbox">
+            <div class="custom-control custom-checkbox mb-2">
                 <input type="checkbox" id="enabled" name="enabled"
                        value="enabled" class="custom-control-input" checked>
                 <label for="enabled" class="custom-control-label">
-                    <strong>Passing time</strong>
+                    <strong><spring:message code="quiz.passing.time"/></strong>
                 </label>
             </div>
             <form:errors path="passingTime" cssClass="error"/>
             <span id="after"></span>
             <div id="passingTime" class="row">
                 <div class="col col-md-2">
-                    <label for="hours">Hours </label>
+                    <label for="hours"><spring:message code="quiz.hours"/></label>
                     <input type="text" class="form-control" id="hours" name="hours" value="${hours}">
                 </div>
                 <div class="col col-md-2">
-                    <label for="minutes">Minutes </label>
+                    <label for="minutes"><spring:message code="quiz.minutes"/></label>
                     <input type="text" class="form-control" id="minutes" name="minutes" value="${minutes}">
                 </div>
                 <div class="col col-md-2">
-                    <label for="seconds">Seconds </label>
+                    <label for="seconds"><spring:message code="quiz.seconds"/></label>
                     <input type="text" class="form-control" id="seconds" name="seconds" value="${seconds}">
                 </div>
             </div>
         </div>
         <div class="form-group">
+            <spring:message code="quiz.description" var="descriptionMsg"/>
             <form:label path="description" for="description">
-                <strong>Description</strong>
+                <strong>${descriptionMsg}</strong>
             </form:label>
             <form:textarea path="description" cssClass="col col-md-6 form-control"
-                           rows="6" id="description" placeholder="Description"/>
+                           rows="6" id="description" placeholder="${descriptionMsg}"/>
             <form:errors path="description" cssClass="error"/>
         </div>
         <div class="form-group">
+            <spring:message code="quiz.explanation" var="explanationMsg"/>
             <form:label path="explanation" for="explanation">
-                <strong>Explanation</strong>
+                <strong>${explanationMsg}</strong>
             </form:label>
             <form:textarea path="explanation" cssClass="col col-md-6 form-control"
-                           rows="6" id="explanation" placeholder="Explanation"/>
+                           rows="6" id="explanation" placeholder="${explanationMsg}"/>
             <form:errors path="explanation" cssClass="error"/>
         </div>
         <div class="row no-gutters align-items-center highlight-primary">
@@ -84,15 +93,17 @@
                      width="25" height="25">
             </div>
             <div class="col">
-                Students will see explanation after all group close this quiz
+                <spring:message code="quiz.explanation.create"/>
             </div>
         </div>
         <div class="row">
             <div class="col-2">
-                <button type="button" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+                <button type="button" class="btn btn-primary" onclick="window.history.go(-1);">
+                    <spring:message code="back"/>
+                </button>
             </div>
             <div class="col-1 offset-3">
-                <input type="submit" class="btn btn-success" value="Save">
+                <input type="submit" class="btn btn-success btn-wide" value="<spring:message code="save"/>">
             </div>
         </div>
     </form:form>

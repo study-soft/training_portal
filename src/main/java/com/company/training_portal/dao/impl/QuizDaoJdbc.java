@@ -552,6 +552,16 @@ public class QuizDaoJdbc implements QuizDao {
     }
 
     private PassedQuiz mapPassedQuiz(ResultSet rs, int rowNum) throws SQLException {
+        LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+        LocalDateTime finishDate = rs.getTimestamp("finish_date").toLocalDateTime();
+        Duration timeSpent;
+        if (startDate == null) {
+            timeSpent = Duration.ZERO;
+        } else if (startDate.compareTo(finishDate) > 0) { // Hotfix for bug with time spent :)
+            timeSpent = Duration.ZERO;
+        } else {
+            timeSpent = Duration.between(startDate, finishDate);
+        }
         return new PassedQuiz.PassedQuizBuilder()
                 .quizId(rs.getLong("quiz_id"))
                 .quizName(rs.getString("quiz_name"))
@@ -566,11 +576,8 @@ public class QuizDaoJdbc implements QuizDao {
                         Duration.between(LocalTime.MIDNIGHT,
                                 rs.getTime("passing_time").toLocalTime()))
                 .submitDate(rs.getTimestamp("submit_date").toLocalDateTime())
-                .finishDate(rs.getTimestamp("finish_date").toLocalDateTime())
-                .timeSpent(Duration.between(rs.getTimestamp("start_date") == null ?
-                                rs.getTimestamp("finish_date").toLocalDateTime() :
-                                rs.getTimestamp("start_date").toLocalDateTime(),
-                        rs.getTimestamp("finish_date").toLocalDateTime()))
+                .finishDate(finishDate)
+                .timeSpent(timeSpent)
                 .build();
     }
 

@@ -1,16 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Question</title>
+    <title><spring:message code="title.question"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            const currentQuestion = "${sessionScope.currentQuestionSerial}";
-            const questionsNumber = "${sessionScope.questionsNumber - 1}";
+            const currentQuestion = +"${sessionScope.currentQuestionSerial}";
+            const questionsNumber = +"${sessionScope.questionsNumber}";
             const finish = $("#finish");
-            if (currentQuestion === questionsNumber) {
+            if (currentQuestion === (questionsNumber - 1)) {
                 const submit = $("#submit");
                 submit.val("Finish");
                 submit.removeClass("btn btn-success").addClass("btn btn-primary");
@@ -18,10 +19,11 @@
             }
 
             finish.click(function (event) {
+                window.scrollTo(0, 0);
                 event.preventDefault();
-                $(".modal-body").html("Are you sure you want to finish?" +
-                    "<br>You have answered only " + currentQuestion + " / " +
-                    questionsNumber + " questions yet");
+                $(".modal-body").html('<spring:message code="quiz.passing.sure.finish"/>?' +
+                    '<br><spring:message code="quiz.passing.answered.only"/> ' + currentQuestion + ' / ' +
+                    questionsNumber + ' <spring:message code="quiz.passing.answered.questions"/>');
                 $("#modal").modal();
             });
 
@@ -42,11 +44,14 @@
     <form id="questionForm" action="/quizzes/${question.quizId}/passing" method="post">
         <div class="row mb-2">
             <div class="col-sm-8">
-                Question ${sessionScope.currentQuestionSerial + 1} of ${sessionScope.questionsNumber}
+                <spring:message code="quiz.passing.question"/>&nbsp;
+                ${sessionScope.currentQuestionSerial + 1}&nbsp;
+                <spring:message code="quiz.passing.of"/>&nbsp;${sessionScope.questionsNumber}
             </div>
             <div class="col-sm-4">
                 <c:if test="${sessionScope.timeLeft ne null}">
-                    Time left: <duration:format value="${sessionScope.timeLeft}"/>
+                    <spring:message code="quiz.passing.time.left"/>:&nbsp;
+                    <duration:format value="${sessionScope.timeLeft}"/>
                 </c:if>
             </div>
         </div>
@@ -56,7 +61,7 @@
                     <h5><c:out value="${question.body}"/></h5>
                 </div>
                 <div class="col-sm-4">
-                    <h6>${question.score} points</h6>
+                    <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                 </div>
             </div>
         </div>
@@ -74,17 +79,6 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input id="submit" type="submit" value="Next" class="btn btn-success">
-                    </div>
-                    <div class="col-sm-4">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
-                    </div>
-                </div>
             </c:when>
             <%--****************************   FEW ANSWERS   *********************************--%>
             <c:when test="${question.questionType eq 'FEW_ANSWERS'}">
@@ -99,17 +93,6 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input id="submit" type="submit" value="Next" class="btn btn-success">
-                    </div>
-                    <div class="col-sm-4">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
-                    </div>
-                </div>
             </c:when>
             <%--*****************************   ACCORDANCE   ***********************************--%>
             <c:when test="${question.questionType eq 'ACCORDANCE'}">
@@ -119,7 +102,7 @@
                             <div class="col-md-4"><c:out value="${left}"/></div>
                             <div class="col-md-4">
                                 <select name="accordance${status.index}" class="form-control">
-                                    <option selected>select...</option>
+                                    <option selected><spring:message code="quiz.passing.select"/>...</option>
                                     <c:forEach items="${answers.rightSide}" var="right">
                                         <option value=""><c:out value="${right}"/></option>
                                     </c:forEach>
@@ -127,17 +110,6 @@
                             </div>
                         </div>
                     </c:forEach>
-                </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input id="submit" type="submit" value="Next" class="btn btn-success">
-                    </div>
-                    <div class="col-sm-4">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
-                    </div>
                 </div>
             </c:when>
             <%--**********************************   SEQUENCE   *****************************--%>
@@ -149,7 +121,7 @@
                             <div class="col-md-4">
                                 <select name="sequence${status.index}" id="sequence${status.index}"
                                         class="form-control">
-                                    <option selected>select...</option>
+                                    <option selected><spring:message code="quiz.passing.select"/>...</option>
                                     <c:forEach items="${answers.correctList}" var="item">
                                         <option value=""><c:out value="${item}"/></option>
                                     </c:forEach>
@@ -158,42 +130,30 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input id="submit" type="submit" value="Next" class="btn btn-success">
-                    </div>
-                    <div class="col-sm-4">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
-                    </div>
-                </div>
             </c:when>
             <%--************************************   NUMBER   *************************************--%>
             <c:when test="${question.questionType eq 'NUMBER'}">
                 <div class="question-answers">
                     <div class="col-sm-4">
                         <input type="text" name="number" class="form-control" style="margin-left: -10px"
-                               placeholder="Enter number">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input id="submit" type="submit" value="Next" class="btn btn-success">
-                    </div>
-                    <div class="col-sm-4">
-                            <%--suppress XmlDuplicatedId --%>
-                        <input type="submit" id="finish" value="Finish" class="btn btn-danger"
-                               formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+                               placeholder="<spring:message code="quiz.passing.enter.number"/>">
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <strong class="error">SOME ERROR</strong>
+                <strong class="error">OOPS, UNEXPECTED ERROR</strong>
             </c:otherwise>
         </c:choose>
+        <div class="row">
+            <div class="col-sm-8">
+                <input id="submit" type="submit" value="<spring:message code="quiz.passing.next"/>"
+                       class="btn btn-success">
+            </div>
+            <div class="col-sm-4">
+                <input type="submit" id="finish" value="<spring:message code="quiz.passing.finish"/>"
+                       class="btn btn-danger btn-wide" formaction="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations"/>
+            </div>
+        </div>
     </form>
 </div>
 <br>
@@ -202,7 +162,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Attention</h5>
+                <h5 class="modal-title" id="modalLabel"><spring:message code="attention"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -211,8 +171,10 @@
             <div class="modal-footer">
                 <form id="congratulationsForm" method="post"
                       action="/quizzes/${sessionScope.currentQuiz.quizId}/congratulations">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <input type="submit" id="yes" class="btn btn-primary" value="Yes">
+                    <button type="button" class="btn btn-secondary"  data-dismiss="modal">
+                        <spring:message code="no"/>
+                    </button>
+                    <input type="submit" id="yes" class="btn btn-primary" value="<spring:message code="yes"/>">
                 </form>
             </div>
         </div>

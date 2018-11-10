@@ -2,10 +2,11 @@
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
 <%@ taglib prefix="localDateTime" uri="/WEB-INF/custom_tags/formatLocalDateTime" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Student info</title>
+    <title><spring:message code="title.student.info"/></title>
     <c:import url="../fragment/head.jsp"/>
 </head>
 <body>
@@ -14,27 +15,26 @@
     <h2>${student.lastName} ${student.firstName}</h2>
     <table class="col-lg-6 table-info">
         <tr>
-            <td>E-mail</td>
+            <td><spring:message code="user.mail"/></td>
             <td>${student.email}</td>
         </tr>
         <tr>
-            <td>Phone number</td>
+            <td><spring:message code="user.phone"/></td>
             <td>${student.phoneNumber}</td>
         </tr>
         <c:if test="${student.dateOfBirth ne null}">
             <tr>
-                <td>Date of birth</td>
+                <td><spring:message code="user.birthday"/></td>
                 <td><localDate:format value="${student.dateOfBirth}"/></td>
             </tr>
         </c:if>
         <c:if test="${group ne null}">
             <tr>
-                <td>Group</td>
+                <td><spring:message code="user.group"/></td>
                 <td><c:out value="${group.name}"/></td>
             </tr>
         </c:if>
     </table>
-    <h3>${student.firstName} passes next quizzes:</h3>
     <c:choose>
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -43,17 +43,26 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    There is no quizzes for ${student.firstName}
+                    ${student.firstName} <spring:message code="quiz.result.student.no.passes"/>
                 </div>
             </div>
         </c:when>
         <c:otherwise>
+            <div class="row no-gutters align-items-center highlight-primary">
+                <div class="col-auto mr-3">
+                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                         width="25" height="25">
+                </div>
+                <div class="col">
+                        ${student.firstName} <spring:message code="quiz.result.student.passes"/>:
+                </div>
+            </div>
             <c:if test="${not empty openedQuizzes}">
-                <h4>Opened</h4>
+                <h4><spring:message code="quiz.quizzes.opened"/></h4>
                 <table class="table">
                     <tr>
-                        <th style="width: 26%">Name</th>
-                        <th style="width: 34%">Submitted</th>
+                        <th style="width: 26%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 34%"><spring:message code="quiz.submitted"/></th>
                         <th colspan="4" style="width: 40%"></th>
                     </tr>
                     <c:forEach items="${openedQuizzes}" var="quiz">
@@ -70,15 +79,15 @@
                 </table>
             </c:if>
             <c:if test="${not empty passedQuizzes}">
-                <h4>Passed</h4>
+                <h4><spring:message code="quiz.quizzes.passed"/></h4>
                 <table class="table">
                     <tr>
-                        <th style="width: 26%">Name</th>
-                        <th style="width: 21%">Submitted</th>
-                        <th style="width: 21%">Passed</th>
-                        <th style="width: 10%;">Result</th>
-                        <th style="width: 10%">Attempt</th>
-                        <th style="width: 12%">Time spent</th>
+                        <th style="width: 26%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 21%"><spring:message code="quiz.submitted"/></th>
+                        <th style="width: 21%"><spring:message code="quiz.passed"/></th>
+                        <th style="width: 10%;"><spring:message code="quiz.result"/></th>
+                        <th style="width: 10%"><spring:message code="quiz.attempt"/></th>
+                        <th style="width: 12%"><spring:message code="quiz.time.spent"/></th>
                     </tr>
                     <c:forEach items="${passedQuizzes}" var="quiz">
                         <tr>
@@ -97,15 +106,15 @@
                 </table>
             </c:if>
             <c:if test="${not empty closedQuizzes}">
-                <h4>Closed</h4>
+                <h4><spring:message code="quiz.quizzes.closed"/></h4>
                 <table class="table">
                     <tr>
-                        <th style="width: 26%">Name</th>
-                        <th style="width: 21%">Submitted</th>
-                        <th style="width: 21%">Passed</th>
-                        <th style="width: 10%;">Result</th>
-                        <th style="width: 10%">Attempt</th>
-                        <th style="width: 12%">Time spent</th>
+                        <th style="width: 26%"><spring:message code="quiz.name"/></th>
+                        <th style="width: 21%"><spring:message code="quiz.submitted"/></th>
+                        <th style="width: 21%"><spring:message code="quiz.passed"/></th>
+                        <th style="width: 10%;"><spring:message code="quiz.result"/></th>
+                        <th style="width: 10%"><spring:message code="quiz.attempt"/></th>
+                        <th style="width: 12%"><spring:message code="quiz.time.spent"/></th>
                     </tr>
                     <c:forEach items="${closedQuizzes}" var="quiz">
                         <tr>
@@ -126,7 +135,7 @@
         </c:otherwise>
     </c:choose>
     <div>
-        <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
     </div>
 </div>
 <br>

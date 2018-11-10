@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,8 @@ import java.util.stream.Collectors;
 
 import static com.company.training_portal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL;
 import static com.company.training_portal.model.enums.QuestionType.*;
-import static com.company.training_portal.model.enums.StudentQuizStatus.CLOSED;
-import static com.company.training_portal.model.enums.StudentQuizStatus.OPENED;
-import static com.company.training_portal.model.enums.StudentQuizStatus.PASSED;
+import static com.company.training_portal.model.enums.StudentQuizStatus.*;
+import static com.company.training_portal.util.Utils.maskPassword;
 
 @Controller
 @SessionAttributes("studentId")
@@ -76,6 +76,7 @@ public class StudentController {
     @RequestMapping("/student")
     public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
+        student.setPassword(maskPassword(student.getPassword()));
         Group group = null;
         String authorName = null;
         if (student.getGroupId() != 0) {
@@ -158,46 +159,42 @@ public class StudentController {
     public String showStudentInfo(@ModelAttribute("studentId") Long studentId,
                                   @PathVariable("groupMateId") Long groupMateId,
                                   Model model) {
+        if (checkGroupMateAccessDenied(studentId, groupMateId)) {
+            throw new AccessDeniedException("Access denied to group mate page");
+        }
+
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
-        List<User> groupMates = userDao.findStudents(groupId);
-        List<Long> groupMatesIds = groupMates.stream()
-                .map(User::getUserId)
-                .collect(Collectors.toList());
-        if (groupMatesIds.contains(groupMateId)) {
-            User groupMate = userDao.findUser(groupMateId);
-            model.addAttribute("student", groupMate);
+        User groupMate = userDao.findUser(groupMateId);
+        model.addAttribute("student", groupMate);
 
-            if (groupId != 0) {
-                Group group = groupDao.findGroup(groupId);
-                model.addAttribute("group", group);
-            }
-
-            List<OpenedQuiz> openedQuizzes = new ArrayList<>();
-            List<PassedQuiz> passedQuizzes = new ArrayList<>();
-            List<PassedQuiz> closedQuizzes = new ArrayList<>();
-            List<Long> commonQuizIds = quizDao.findCommonQuizIds(studentId, groupMateId);
-            for (Long quizId : commonQuizIds) {
-                StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
-                switch (status) {
-                    case OPENED:
-                        openedQuizzes.add(quizDao.findOpenedQuiz(studentId, quizId));
-                        break;
-                    case PASSED:
-                        passedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
-                        break;
-                    case CLOSED:
-                        closedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
-                }
-            }
-            model.addAttribute("openedQuizzes", openedQuizzes);
-            model.addAttribute("passedQuizzes", passedQuizzes);
-            model.addAttribute("closedQuizzes", closedQuizzes);
-
-            return "student_general/student-info";
-        } else {
-            return "error/access-denied";
+        if (groupId != 0) {
+            Group group = groupDao.findGroup(groupId);
+            model.addAttribute("group", group);
         }
+
+        List<OpenedQuiz> openedQuizzes = new ArrayList<>();
+        List<PassedQuiz> passedQuizzes = new ArrayList<>();
+        List<PassedQuiz> closedQuizzes = new ArrayList<>();
+        List<Long> commonQuizIds = quizDao.findCommonQuizIds(studentId, groupMateId);
+        for (Long quizId : commonQuizIds) {
+            StudentQuizStatus status = quizDao.findStudentQuizStatus(studentId, quizId);
+            switch (status) {
+                case OPENED:
+                    openedQuizzes.add(quizDao.findOpenedQuiz(studentId, quizId));
+                    break;
+                case PASSED:
+                    passedQuizzes.add(quizDao.findPassedQuiz(studentId, quizId));
+                    break;
+                case CLOSED:
+                    closedQuizzes.add(quizDao.findClosedQuiz(studentId, quizId));
+            }
+        }
+        model.addAttribute("openedQuizzes", openedQuizzes);
+        model.addAttribute("passedQuizzes", passedQuizzes);
+        model.addAttribute("closedQuizzes", closedQuizzes);
+
+        return "student_general/student-info";
     }
 
     // STUDENT GROUP =================================================================
@@ -239,6 +236,10 @@ public class StudentController {
     @RequestMapping("/student/teachers/{teacherId}")
     public String showTeacherDetails(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("teacherId") Long teacherId, Model model) {
+        if (checkTeacherAccessDenied(studentId, teacherId)) {
+            throw new AccessDeniedException("Access denied to teacher page");
+        }
+
         User teacher = userDao.findUser(teacherId);
         model.addAttribute("teacher", teacher);
 
@@ -246,11 +247,11 @@ public class StudentController {
                 quizDao.findQuizzes(studentId, teacherId);
         model.addAttribute("quizzes", quizzes);
 
-        List<StudentQuizStatus> statusList = new ArrayList<>();
+        List<String> statusList = new ArrayList<>();
         for (Quiz quiz : quizzes) {
             StudentQuizStatus status =
                     quizDao.findStudentQuizStatus(studentId, quiz.getQuizId());
-            statusList.add(status);
+            statusList.add(status.toString());
         }
         model.addAttribute("statusList", statusList);
 
@@ -281,7 +282,7 @@ public class StudentController {
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         User student = userDao.findUser(studentId);
@@ -333,7 +334,7 @@ public class StudentController {
                                         Integer currentQuestionSerial,
                                 ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         if (currentQuestionSerial != null) {
@@ -352,7 +353,7 @@ public class StudentController {
                                          Integer currentQuestionSerial,
                                  ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         if (currentQuestionSerial != null) {
@@ -368,14 +369,14 @@ public class StudentController {
     public String showAnswers(@ModelAttribute("studentId") Long studentId,
                               @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
-        Integer totalStudents = groupDao.findStudentsNumberInGroup(groupId);
+        Integer totalStudents = userDao.findStudentsNumber(groupId, quizId);
         Integer closedStudents = userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
         if (!closedStudents.equals(totalStudents)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -481,7 +482,7 @@ public class StudentController {
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
-            return "error/access-denied";
+            throw new AccessDeniedException("Access denied to quiz");
         }
 
         Quiz quiz = quizDao.findQuiz(quizId);
@@ -528,10 +529,23 @@ public class StudentController {
 
     private boolean checkQuizAccessDenied(Long studentId, Long quizId) {
         List<Long> studentQuizIds = quizDao.findStudentQuizIds(studentId);
-        if (studentQuizIds.contains(quizId)) {
-            return false;
-        }
-        logger.info("Access denied");
-        return true;
+        return !studentQuizIds.contains(quizId);
+    }
+
+    private boolean checkTeacherAccessDenied(Long studentId, Long teacherId) {
+        List<Long> teacherIds = quizDao.findStudentQuizzes(studentId)
+                .stream()
+                .map(Quiz::getAuthorId)
+                .collect(Collectors.toList());
+        return !teacherIds.contains(teacherId);
+    }
+
+    private boolean checkGroupMateAccessDenied(Long studentId, Long groupMateId) {
+        User student = userDao.findUser(studentId);
+        List<Long> groupMatesIds = userDao.findStudents(student.getGroupId())
+                .stream()
+                .map(User::getUserId)
+                .collect(Collectors.toList());
+        return !groupMatesIds.contains(groupMateId);
     }
 }

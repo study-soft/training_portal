@@ -1,8 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Publication</title>
+    <title><spring:message code="title.publication"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
@@ -35,7 +36,7 @@
             $("#publicationForm").submit(function () {
                 var checkboxes = $("[id*='group']:checked, [id*='student']:checked");
                 if (checkboxes.length === 0) {
-                    alert("Select anyone to whom you want to publish this quiz");
+                    alert('<spring:message code="group.select.student"/>');
                     return false;
                 }
                 $("[id*='group']:checked").prop("disabled", true);
@@ -56,7 +57,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    There is no students and groups that you can publish quiz
+                    <spring:message code="quiz.publish.all.published"/>
                 </div>
             </div>
         </c:when>
@@ -64,11 +65,11 @@
             <form id="publicationForm" action="/teacher/quizzes/${quiz.quizId}/publication" method="post">
                 <div class="row">
                     <div class="col-sm-4">
-                        <h4>Publication</h4>
+                        <h3><spring:message code="quiz.publish.publication"/></h3>
                     </div>
                     <div class="col-sm-2 align-self-end">
-                        <button type="submit" class="btn btn-success" style="margin-bottom: 20px">
-                            <i class="fa fa-share-square-o"></i> Publish
+                        <button type="submit" class="btn btn-success btn-wide" style="margin-bottom: 20px">
+                            <i class="fa fa-share-square-o"></i> <spring:message code="quiz.publish.publish"/>
                         </button>
                     </div>
                 </div>
@@ -79,7 +80,7 @@
                                  width="25" height="25">
                         </div>
                         <div class="col">
-                            After publication of the quiz you can no longer edit it
+                            <spring:message code="quiz.publish.no.edit"/>
                         </div>
                     </div>
                 </c:if>
@@ -89,13 +90,13 @@
                              width="25" height="25">
                     </div>
                     <div class="col">
-                        Select students or groups for whom you want to publish quiz
+                        <spring:message code="quiz.publish.select.students"/>
                     </div>
                 </div>
                 <div class="row">
                     <c:if test="${not empty groups}">
                         <div class="col-sm-6">
-                            <div class="accordion-header">Groups</div>
+                            <div class="accordion-header"><spring:message code="group.groups"/></div>
                             <c:forEach items="${groups}" var="group">
                                 <div class="card">
                                     <div class="card-header" id="heading${group.groupId}">
@@ -141,7 +142,7 @@
                         <div class="col-sm-6">
                             <table class="table">
                                 <tr>
-                                    <th style="width: 90%">Students without group</th>
+                                    <th style="width: 90%"><spring:message code="quiz.students.without.group"/></th>
                                     <th style="width: 10%"></th>
                                 </tr>
                                 <c:forEach items="${studentsWithoutGroup}" var="student">
@@ -165,7 +166,7 @@
             </form>
         </c:otherwise>
     </c:choose>
-    <button type="button" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
 </div>
 <br>
 </body>

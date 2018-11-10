@@ -1,9 +1,10 @@
 <%@ taglib prefix="localDate" uri="/WEB-INF/custom_tags/formatLocalDate" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Group info</title>
+    <title><spring:message code="title.group"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
@@ -31,10 +32,12 @@
                 }
             });
 
-            $('a:contains(Delete)').click(function (event) {
+            $("a[href*='/delete-student']").click(function (event) {
+                window.scrollTo(0, 0);
                 event.preventDefault();
                 const studentName = $(this).parent().prev().text();
-                $('.modal-body').text('Are you sure you want to delete ' + studentName + ' from group?');
+                $('.modal-body').html("<spring:message code="group.delete.student.sure"/> " +
+                    studentName + " <spring:message code="group.delete.student.from"/>?");
                 const studentId = $(this).next().val();
                 $('#studentId').val(studentId);
                 $("#modal-student").modal();
@@ -47,7 +50,7 @@
                     url: "/teacher/groups/${group.groupId}/delete-student",
                     data: "studentId=" + studentId,
                     success: function (studentId) {
-                        var $numberOfStudents = $("#numberOfStudents");
+                        let $numberOfStudents = $("#numberOfStudents");
                         $numberOfStudents.text(Number($numberOfStudents.text()) - 1);
 
                         $("#" + studentId).remove();
@@ -59,7 +62,7 @@
                                 '                         width="25" height="25">\n' +
                                 '                </div>\n' +
                                 '                <div class="col">\n' +
-                                '                    There is no students in this group\n' +
+                                '                    <spring:message code="group.no.students"/>\n' +
                                 '                </div>\n' +
                                 '            </div>');
                             studentsTable.remove();
@@ -69,8 +72,9 @@
             });
 
             $("#delete-group").click(function () {
+                window.scrollTo(0, 0);
                 $("#deleteForm").attr("action", "/teacher/groups/" + "${group.groupId}" + "/delete");
-                $(".modal-body").text("Are you sure you want to delete group '" + "${group.name}" + "'?");
+                $(".modal-body").html("<spring:message code="group.delete.sure"/> '${group.name}'?");
                 $("#modal-group").modal();
             });
         });
@@ -80,30 +84,30 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <div id="create-success" class="col-lg-5 mx-auto text-center correct update-success">
-        Group successfully created
+        <spring:message code="group.created"/>
         <button class="close">&times;</button>
     </div>
     <div id="edit-success" class="col-lg-5 mx-auto text-center correct update-success">
-        Group information successfully changed
+        <spring:message code="group.changed"/>
         <button class="close">&times;</button>
     </div>
     <h2><c:out value="${group.name}"/></h2>
     <c:if test="${group.description ne null}">
         <div class="col-lg-6">
-            <strong>Description: </strong><c:out value="${group.description}"/>
+            <strong><spring:message code="group.description"/>: </strong><c:out value="${group.description}"/>
         </div>
     </c:if>
     <table class="col-lg-6 table-info">
         <tr>
-            <td>Creation date</td>
+            <td><spring:message code="group.creation.date"/></td>
             <td><localDate:format value="${group.creationDate}"/></td>
         </tr>
         <tr>
-            <td>Number of students</td>
+            <td><spring:message code="group.students.number"/></td>
             <td id="numberOfStudents">${studentsNumber}</td>
         </tr>
     </table>
-    <h4>You gave next quizzes to this group</h4>
+    <h4><spring:message code="group.quizzes"/></h4>
     <c:choose>
         <c:when test="${empty publishedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -112,7 +116,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    You did not give quizzes to this group
+                    <spring:message code="group.no.quizzes"/>
                 </div>
             </div>
         </c:when>
@@ -132,7 +136,7 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <h4>Students</h4>
+    <h4><spring:message code="group.students"/></h4>
     <c:choose>
         <c:when test="${empty studentsList}">
             <div class="row no-gutters align-items-center highlight-primary">
@@ -141,7 +145,7 @@
                          width="25" height="25">
                 </div>
                 <div class="col">
-                    There is no students in this group
+                    <spring:message code="group.no.students"/>
                 </div>
             </div>
         </c:when>
@@ -154,7 +158,7 @@
                         </td>
                         <td>
                             <a href="/teacher/groups/${group.groupId}/delete-student" class="danger">
-                                <i class="fa fa-user-times"></i> Delete
+                                <i class="fa fa-user-times"></i> <spring:message code="delete"/>
                             </a>
                             <input type="hidden" name="studentId" value="${student.userId}">
                         </td>
@@ -163,29 +167,35 @@
             </table>
         </c:otherwise>
     </c:choose>
-    <button id="back" class="btn btn-primary">Back</button>
-    <a href="/teacher/groups/${group.groupId}/add-students" class="btn btn-success" style="width: 150px">
-        <i class="fa fa-user-plus"></i> Add students
+    <button id="back" class="btn btn-primary"><spring:message code="back"/></button>
+    <a href="/teacher/groups/${group.groupId}/add-students" class="btn btn-success btn-wide">
+        <i class="fa fa-user-plus"></i> <spring:message code="group.add.students"/>
     </a>
-    <a href="/teacher/groups/${group.groupId}/edit" class="btn btn-primary">
-        <i class="fa fa-edit"></i> Edit
+    <a href="/teacher/groups/${group.groupId}/edit" class="btn btn-primary btn-wide">
+        <i class="fa fa-edit"></i> <spring:message code="edit"/>
     </a>
-    <button id="delete-group" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
+    <button id="delete-group" class="btn btn-danger btn-wide">
+        <i class="fa fa-trash-o"></i> <spring:message code="delete"/>
+    </button>
 
     <div class="modal fade" id="modal-student" tabindex="-1" role="dialog"
          aria-labelledby="modalLabelStudent" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelStudent">Attention</h5>
+                    <h5 class="modal-title" id="modalLabelStudent"><spring:message code="attention"/></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button id="yes-student" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <spring:message code="no"/>
+                    </button>
+                    <button id="yes-student" type="button" class="btn btn-primary" data-dismiss="modal">
+                        <spring:message code="yes"/>
+                    </button>
                     <input id="studentId" type="hidden" name="studentId" value="">
                 </div>
             </div>
@@ -197,7 +207,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelGroup">Attention</h5>
+                    <h5 class="modal-title red" id="modalLabelGroup"><spring:message code="danger"/></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -205,8 +215,11 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer">
                     <form id="deleteForm" action="" method="post">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <input type="submit" id="yes-group" class="btn btn-primary" value="Yes">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <spring:message code="no"/>
+                        </button>
+                        <input type="submit" id="yes-group" class="btn btn-primary"
+                               value="<spring:message code="yes"/>">
                     </form>
                 </div>
             </div>

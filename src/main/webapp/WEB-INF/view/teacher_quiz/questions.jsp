@@ -1,8 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Questions</title>
+    <title><spring:message code="title.questions"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         var oldHeader;
@@ -830,7 +831,7 @@
                                  width="25" height="25">
                         </div>
                         <div class="col">
-                            There is no questions in '<c:out value="${quiz.name}"/>' quiz
+                            There is no questions for quiz '<c:out value="${quiz.name}"/>'
                         </div>
                     </div>
                 </c:otherwise>
@@ -838,14 +839,13 @@
         </div>
         <div class="col-sm-2 offset-sm-1 shifted-down-20px">
             <button id="addQuestion" type="button" class="btn btn-success btn-wide">
-                <i class="fa fa-plus"></i>
-                Add question
+                <i class="fa fa-plus"></i> Add question
             </button>
         </div>
     </div>
     <c:if test="${not empty questionsOneAnswer}">
         <%--***********************     One answer questions     *****************************--%>
-        <h4 class="shifted-left">Questions with one correct answer</h4>
+        <h4 class="shifted-left"><spring:message code="quiz.questions.one.answer"/></h4>
         <c:forEach items="${questionsOneAnswer}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -853,7 +853,7 @@
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-auto col-sm-2">
-                        <h6>${question.score} points</h6>
+                        <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                     </div>
                     <div class="col-sm-auto">
                         <div class="shifted-down-10px">
@@ -888,7 +888,8 @@
                 </c:forEach>
                 <c:if test="${question.explanation ne null}">
                     <div>
-                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                        <strong><spring:message code="quiz.explanation"/>: </strong>
+                        <c:out value="${question.explanation}"/>
                     </div>
                 </c:if>
             </div>
@@ -896,7 +897,7 @@
     </c:if>
     <c:if test="${not empty questionsFewAnswers}">
         <%--***********************     Few answers questions     *****************************--%>
-        <h4 class="shifted-left">Questions with few correct answers</h4>
+        <h4 class="shifted-left"><spring:message code="quiz.questions.few.answers"/></h4>
         <c:forEach items="${questionsFewAnswers}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -904,7 +905,7 @@
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-auto col-sm-2">
-                        <h6>${question.score} points</h6>
+                        <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                     </div>
                     <div class="col-sm-auto">
                         <div class="shifted-down-10px">
@@ -939,7 +940,8 @@
                 </c:forEach>
                 <c:if test="${question.explanation ne null}">
                     <div>
-                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                        <strong><spring:message code="quiz.explanation"/>: </strong>
+                        <c:out value="${question.explanation}"/>
                     </div>
                 </c:if>
             </div>
@@ -947,7 +949,7 @@
     </c:if>
     <c:if test="${not empty questionsAccordance}">
         <%--***********************     Accordance questions     *****************************--%>
-        <h4 class="shifted-left">Accordance questions</h4>
+        <h4 class="shifted-left"><spring:message code="quiz.questions.accordance"/></h4>
         <c:forEach items="${questionsAccordance}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -955,7 +957,7 @@
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-auto col-sm-2">
-                        <h6>${question.score} points</h6>
+                        <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                     </div>
                     <div class="col-auto">
                         <div class="shifted-down-10px">
@@ -986,7 +988,8 @@
                 </table>
                 <c:if test="${question.explanation ne null}">
                     <div>
-                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                        <strong><spring:message code="quiz.explanation"/>: </strong>
+                        <c:out value="${question.explanation}"/>
                     </div>
                 </c:if>
             </div>
@@ -994,7 +997,7 @@
     </c:if>
     <c:if test="${not empty questionsSequence}">
         <%--***********************     Sequence questions     *****************************--%>
-        <h4 class="shifted-left">Sequence questions</h4>
+        <h4 class="shifted-left"><spring:message code="quiz.questions.sequence"/></h4>
         <c:forEach items="${questionsSequence}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -1002,7 +1005,7 @@
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-auto col-sm-2">
-                        <h6>${question.score} points</h6>
+                        <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                     </div>
                     <div class="col-sm-auto">
                         <div class="shifted-down-10px">
@@ -1032,7 +1035,8 @@
                 </table>
                 <c:if test="${question.explanation ne null}">
                     <div>
-                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                        <strong><spring:message code="quiz.explanation"/>: </strong>
+                        <c:out value="${question.explanation}"/>
                     </div>
                 </c:if>
             </div>
@@ -1040,7 +1044,7 @@
     </c:if>
     <c:if test="${not empty questionsNumber}">
         <%--***********************     Numerical questions     *****************************--%>
-        <h4 class="shifted-left">Questions with numerical answers</h4>
+        <h4 class="shifted-left"><spring:message code="quiz.questions.numerical"/></h4>
         <c:forEach items="${questionsNumber}" var="question">
             <div class="question-header">
                 <div class="row">
@@ -1048,7 +1052,7 @@
                         <h5><c:out value="${question.body}"/></h5>
                     </div>
                     <div class="col-auto col-sm-2">
-                        <h6>${question.score} points</h6>
+                        <h6>${question.score} <spring:message code="quiz.passing.points"/></h6>
                     </div>
                     <div class="col-sm-auto">
                         <div class="shifted-down-10px">
@@ -1069,19 +1073,22 @@
             <div class="question-answers">
                 <table class="col-lg-8 table-info">
                     <tr>
-                        <td style="width: 50%;">Answer</td>
+                        <td style="width: 50%;"><spring:message code="quiz.answer"/></td>
                         <td style="width: 50%;">${quizAnswersNumber[question.questionId].correct}</td>
                     </tr>
                 </table>
                 <c:if test="${question.explanation ne null}">
                     <div>
-                        <strong>Explanation: </strong><c:out value="${question.explanation}"/>
+                        <strong><spring:message code="quiz.explanation"/>: </strong>
+                        <c:out value="${question.explanation}"/>
                     </div>
                 </c:if>
             </div>
         </c:forEach>
     </c:if>
-    <button value="Back" class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+    <button class="btn btn-primary" onclick="window.history.go(-1);">
+        <spring:message code="back"/>
+    </button>
 </div>
 <br>
 </body>

@@ -1,17 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="duration" uri="/WEB-INF/custom_tags/formatDuration" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Repass quiz</title>
+    <title><spring:message code="title.quiz.repass"/></title>
     <c:import url="../fragment/head.jsp"/>
     <script>
         $(document).ready(function () {
-            var percent = "${passedQuiz.attempt * 10}";
-            var attempt = $("#attempt");
-            var repass = $("#repass");
+            let percent = "${passedQuiz.attempt * 10}";
+            let attempt = $("#attempt");
+            let repass = $("#repass");
             if (percent >= 100) {
-                attempt.text("You used maximum number of attempts and need to close quiz");
+                attempt.text('<spring:message code="quiz.max.attempts"/>');
                 repass.remove();
             }
         });
@@ -21,35 +22,35 @@
 <c:import url="../fragment/navbar.jsp"/>
 <div class="container">
     <h2><c:out value="${passedQuiz.quizName}"/></h2>
-    <h4>Information about result</h4>
+    <h4><spring:message code="quiz.info.result"/></h4>
     <table class="col-lg-6 table-info">
         <tr>
-            <td>Result</td>
+            <td><spring:message code="quiz.result"/></td>
             <td>${passedQuiz.result}/${passedQuiz.score}</td>
         </tr>
         <tr>
-            <td>Time spent</td>
+            <td><spring:message code="quiz.time.spent"/></td>
             <td><duration:format value="${passedQuiz.timeSpent}"/></td>
         </tr>
         <tr>
-            <td>Attempts</td>
+            <td><spring:message code="quiz.attempts"/></td>
             <td>${passedQuiz.attempt}</td>
         </tr>
     </table>
-    <h4>Information about passing</h4>
+    <h4><spring:message code="quiz.info.quiz"/></h4>
     <table class="col-lg-6 table-info">
         <c:if test="${passedQuiz.passingTime ne null}">
             <tr>
-                <td>Passing time</td>
+                <td><spring:message code="quiz.passing.time"/></td>
                 <td><duration:format value="${passedQuiz.passingTime}"/></td>
             </tr>
         </c:if>
         <tr>
-            <td>Number of questions</td>
+            <td><spring:message code="quiz.total.questions"/></td>
             <td>${passedQuiz.questionsNumber}</td>
         </tr>
         <tr>
-            <td>Total score</td>
+            <td><spring:message code="quiz.score"/></td>
             <td>${passedQuiz.score}</td>
         </tr>
     </table>
@@ -59,9 +60,9 @@
                  width="25" height="25">
         </div>
         <div class="col">
-            If you press "Repass" you will begin repassing the quiz
-            <br><span id="attempt">Your total score will be less on ${passedQuiz.attempt * 10}%</span>
-            <br>If you do not want to repass quiz than press "Back"
+            <spring:message code="quiz.press.repass"/>
+            <br><span id="attempt"><spring:message code="quiz.score.less"/> ${passedQuiz.attempt * 10}%</span>
+            <br><spring:message code="quiz.press.back"/>
         </div>
     </div>
     <div class="row no-gutters align-items-center highlight-danger">
@@ -70,13 +71,13 @@
                  width="25" height="25">
         </div>
         <div class="col">
-            Attention! Your previous result will be overwritten
+            <spring:message code="quiz.prev.result"/>
         </div>
     </div>
     <div>
-        <button class="btn btn-primary" onclick="window.history.go(-1);">Back</button>
+        <button class="btn btn-primary" onclick="window.history.go(-1);"><spring:message code="back"/></button>
         <a href="/quizzes/${passedQuiz.quizId}/initialize" id="repass"
-           class="btn btn-success">Repass</a>
+           class="btn btn-success btn-wide"><spring:message code="quiz.repass"/></a>
     </div>
 </div>
 <br>

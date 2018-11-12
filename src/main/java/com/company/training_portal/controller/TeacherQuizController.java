@@ -482,7 +482,7 @@ public class TeacherQuizController {
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
         Integer score = Integer.valueOf(params.get("points"));
         String questionBody = params.get("question");
-        String explanation = params.get("explanation");
+        String explanation = params.get("explanation").trim();
 
         Question question = new Question.QuestionBuilder()
                 .quizId(quizId)

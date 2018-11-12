@@ -1,6 +1,7 @@
 package com.company.training_portal.config;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "com.company.training_portal")
@@ -35,14 +37,14 @@ public class AppConfig {
 //                .build();
 //    }
 
-    @Bean
-    public DataSource dataSource() {
-        BoneCPDataSource dataSource = new BoneCPDataSource();
-        dataSource.setDriverClass(environment.getProperty("jdbc.driverClass"));
-        dataSource.setJdbcUrl(environment.getProperty("jdbc.jdbcUrl"));
-        dataSource.setUsername(environment.getProperty("jdbc.username"));
-        dataSource.setPassword(environment.getProperty("jdbc.password"));
-        return dataSource;
+    @Bean(destroyMethod = "close")
+    public HikariDataSource dataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(environment.getRequiredProperty("jdbc.driverClass"));
+        config.setJdbcUrl(environment.getRequiredProperty("jdbc.jdbcUrl"));
+        config.setUsername(environment.getRequiredProperty("jdbc.username"));
+        config.setPassword(environment.getRequiredProperty("jdbc.password"));
+        return new HikariDataSource(config);
     }
 
 //    @Bean

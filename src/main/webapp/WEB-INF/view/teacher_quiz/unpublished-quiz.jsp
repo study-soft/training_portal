@@ -202,7 +202,7 @@
         </div>
     </c:if>
     <button type="button" id="back" class="btn btn-primary"><spring:message code="back"/></button>
-    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary">
+    <a href="/teacher/quizzes/${unpublishedQuiz.quizId}/questions" class="btn btn-primary btn-wide">
         <spring:message code="quiz.questions"/>
     </a>
     <a id="preview" href="/quizzes/${unpublishedQuiz.quizId}/initialize" class="btn btn-primary btn-wide">

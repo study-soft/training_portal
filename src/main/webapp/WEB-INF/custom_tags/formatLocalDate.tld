@@ -10,7 +10,7 @@
     <uri>/WEB-INF/custom_tags/formatLocalDate</uri>
     <tag>
         <name>format</name>
-        <tag-class>com.company.training_portal.jstl.FormatLocalDate</tag-class>
+        <tag-class>com.studysoft.trainingportal.jstl.FormatLocalDate</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>var</name>

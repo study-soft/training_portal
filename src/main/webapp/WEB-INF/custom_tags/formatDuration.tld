@@ -10,7 +10,7 @@
     <uri>/WEB-INF/custom_tags/formatDuration</uri>
     <tag>
         <name>format</name>
-        <tag-class>com.company.training_portal.jstl.FormatDuration</tag-class>
+        <tag-class>com.studysoft.trainingportal.jstl.FormatDuration</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>var</name>

@@ -734,7 +734,7 @@
             '                </div>\n' +
             '            </div>\n' +
             '            <div class="text-center">\n' +
-            '                <button id="cancel" type="button" class="btn btn-primary"><spring:message code="cancel"/></button>\n' +
+            '                <button id="cancel" type="button" class="btn btn-primary btn-wide"><spring:message code="cancel"/></button>\n' +
             '                <button id="save" type="submit" class="btn btn-success" value=""><spring:message code="save"/></button>\n' +
             '            </div>\n' +
             '        </div>\n' +

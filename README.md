@@ -45,8 +45,8 @@
         <a href="https://github.com/study-soft/training_portal/tree/master/src/main">main/</a>
             <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java">java/</a>
                 <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com">com/</a>
-                    <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com/company">company/</a>
-                        <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com/company/training_portal">training_portal/</a>
+                    <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com/company">studysoft/</a>
+                        <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com/company/training_portal">trainingportal/</a>
                             <a href="https://github.com/study-soft/training_portal/tree/master/src/main/java/com/company/training_portal/config">config/</a>
                                 <a href="https://github.com/study-soft/training_portal/blob/master/src/main/java/com/company/training_portal/config/AppConfig.java">AppConfig.java</a>
                                 <a href="https://github.com/study-soft/training_portal/blob/master/src/main/java/com/company/training_portal/config/WebAppInitializer.java">WebAppInitializer.java</a>

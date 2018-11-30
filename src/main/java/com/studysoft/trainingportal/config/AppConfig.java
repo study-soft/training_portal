@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -37,38 +38,40 @@ public class AppConfig {
 //                .build();
 //    }
 
+//    @Bean(destroyMethod = "close")
+//    public HikariDataSource dataSource() {
+//        HikariConfig config = new HikariConfig();
+//        config.setDriverClassName(environment.getRequiredProperty("jdbc.driverClass"));
+//        config.setJdbcUrl(environment.getRequiredProperty("jdbc.jdbcUrl"));
+//        config.setUsername(environment.getRequiredProperty("jdbc.username"));
+//        config.setPassword(environment.getRequiredProperty("jdbc.password"));
+//        return new HikariDataSource(config);
+//    }
+
     @Bean(destroyMethod = "close")
     public HikariDataSource dataSource() {
+        URI dbUri = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            dbUri = new URI(System.getenv("DATABASE_URL"));
+        } catch (ClassNotFoundException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        Assert.notNull(dbUri, "Environment variable 'DATABASE_URL' must not be null");
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
+                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(environment.getRequiredProperty("jdbc.driverClass"));
-        config.setJdbcUrl(environment.getRequiredProperty("jdbc.jdbcUrl"));
-        config.setUsername(environment.getRequiredProperty("jdbc.username"));
-        config.setPassword(environment.getRequiredProperty("jdbc.password"));
+        config.setJdbcUrl(dbUrl);
+        config.setUsername(username);
+        config.setPassword(password);
+
         return new HikariDataSource(config);
     }
-
-//    @Bean
-//    public DataSource dataSource() {
-//        URI dbUri = null;
-//        try {
-//            Class.forName("org.postgresql.Driver");
-//            dbUri = new URI(System.getenv("DATABASE_URL"));
-//        } catch (ClassNotFoundException | URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String username = dbUri.getUserInfo().split(":")[0];
-//        String password = dbUri.getUserInfo().split(":")[1];
-//        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
-//                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-//
-//        BoneCPDataSource dataSource = new BoneCPDataSource();
-//        dataSource.setJdbcUrl(dbUrl);
-//        dataSource.setUsername(username);
-//        dataSource.setPassword(password);
-//
-//        return dataSource;
-//    }
 
     @Bean
     public PlatformTransactionManager transactionManager() {

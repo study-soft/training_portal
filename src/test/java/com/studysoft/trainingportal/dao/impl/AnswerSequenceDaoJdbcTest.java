@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(classes = AppConfig.class)
 @WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
-        scripts = {"classpath:schema_postgres.sql", "classpath:test-data.sql"})
+        scripts = {"classpath:dump_postgres.sql"})
 public class AnswerSequenceDaoJdbcTest {
 
     @Autowired

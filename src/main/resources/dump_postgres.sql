@@ -1,54 +1,174 @@
--- MySQL
--- Clear test data
--- SET FOREIGN_KEY_CHECKS = 0;
--- TRUNCATE TABLE ANSWERS_ACCORDANCE;
--- TRUNCATE TABLE ANSWERS_NUMBER;
--- TRUNCATE TABLE ANSWERS_SEQUENCE;
--- TRUNCATE TABLE ANSWERS_SIMPLE;
--- TRUNCATE TABLE GROUPS;
--- TRUNCATE TABLE QUESTIONS;
--- TRUNCATE TABLE QUIZZES;
--- TRUNCATE TABLE USERS;
--- TRUNCATE TABLE USER_QUIZ_JUNCTIONS;
--- SET FOREIGN_KEY_CHECKS = 1;
-
--- PostgreSQL
 ALTER USER postgres WITH SUPERUSER;
+--ALTER ROLE postgres SET SEARCH_PATH = training_portal;
+--SHOW search_path;
+--SET search_path TO public;
 
--- Disable triggers
-ALTER TABLE answers_accordance DISABLE TRIGGER ALL;
-ALTER TABLE answers_number DISABLE TRIGGER ALL;
-ALTER TABLE answers_sequence DISABLE TRIGGER ALL;
-ALTER TABLE answers_simple DISABLE TRIGGER ALL;
-ALTER TABLE groups DISABLE TRIGGER ALL;
-ALTER TABLE questions DISABLE TRIGGER ALL;
-ALTER TABLE quizzes DISABLE TRIGGER ALL;
-ALTER TABLE users DISABLE TRIGGER ALL;
-ALTER TABLE user_quiz_junctions DISABLE TRIGGER ALL;
+--------------------------------- CREATE TABLES -------------------------------------
 
--- Clear test data
-TRUNCATE TABLE ANSWERS_ACCORDANCE CASCADE;
-TRUNCATE TABLE ANSWERS_NUMBER CASCADE;
-TRUNCATE TABLE ANSWERS_SEQUENCE CASCADE;
-TRUNCATE TABLE ANSWERS_SIMPLE CASCADE;
-TRUNCATE TABLE GROUPS CASCADE;
-TRUNCATE TABLE QUESTIONS CASCADE;
-TRUNCATE TABLE QUIZZES CASCADE;
-TRUNCATE TABLE USERS CASCADE;
-TRUNCATE TABLE USER_QUIZ_JUNCTIONS CASCADE;
+-- tables
+-- Table: answers_accordance
+DROP TABLE IF EXISTS answers_accordance CASCADE;
+CREATE TABLE answers_accordance (
+  question_id BIGINT PRIMARY KEY ,
+  left_side_1 VARCHAR(255) NOT NULL,
+  right_side_1 VARCHAR(255) NOT NULL,
+  left_side_2 VARCHAR(255) NOT NULL,
+  right_side_2 VARCHAR(255) NOT NULL,
+  left_side_3 VARCHAR(255) NOT NULL,
+  right_side_3 VARCHAR(255) NOT NULL,
+  left_side_4 VARCHAR(255) NOT NULL,
+  right_side_4 VARCHAR(255) NOT NULL
+);
 
--- Reset serials
-ALTER SEQUENCE answers_simple_answer_simple_id_seq RESTART WITH 1;
-ALTER SEQUENCE groups_group_id_seq RESTART WITH 1;
-ALTER SEQUENCE questions_question_id_seq RESTART WITH 1;
-ALTER SEQUENCE quizzes_quiz_id_seq RESTART WITH 1;
-ALTER SEQUENCE users_user_id_seq RESTART WITH 1;
+-- Table: answers_number
+DROP TABLE IF EXISTS answers_number CASCADE;
+CREATE TABLE answers_number (
+  question_id BIGINT PRIMARY KEY ,
+  correct int NOT NULL
+);
+
+-- Table: answers_sequence
+DROP TABLE IF EXISTS answers_sequence CASCADE;
+CREATE TABLE answers_sequence (
+  question_id BIGINT PRIMARY KEY,
+  item_1 VARCHAR(255) NOT NULL,
+  item_2 VARCHAR(255) NOT NULL,
+  item_3 VARCHAR(255) NOT NULL,
+  item_4 VARCHAR(255) NOT NULL
+);
+
+-- Table: answers_simple
+DROP TABLE IF EXISTS answers_simple CASCADE;
+DROP SEQUENCE IF EXISTS answers_simple_answer_simple_id_seq;
+CREATE TABLE answers_simple (
+  answer_simple_id BIGSERIAL PRIMARY KEY,
+  question_id bigint NOT NULL,
+  body varchar(255) NOT NULL,
+  correct BOOLEAN NOT NULL
+);
+
+-- Table: groups
+DROP TABLE IF EXISTS groups CASCADE;
+DROP SEQUENCE IF EXISTS groups_group_id_seq;
+CREATE TABLE groups (
+  group_id BIGSERIAL PRIMARY KEY,
+  name varchar(255) UNIQUE NOT NULL,
+  description VARCHAR(65535),
+  creation_date DATE NOT NULL,
+  author_id BIGINT NOT NULL
+);
+
+-- Table: questions
+DROP TABLE IF EXISTS questions CASCADE;
+DROP SEQUENCE IF EXISTS questions_question_id_seq;
+CREATE TABLE questions (
+  question_id BIGSERIAL PRIMARY KEY,
+  quiz_id bigint NOT NULL,
+  body VARCHAR(65535) NOT NULL,
+  explanation VARCHAR(65535) NULL,
+  question_type varchar(255) NOT NULL,
+  score int NOT NULL
+);
+
+-- Table: quizzes
+DROP TABLE IF EXISTS quizzes CASCADE;
+DROP SEQUENCE IF EXISTS quizzes_quiz_id_seq;
+CREATE TABLE quizzes (
+  quiz_id BIGSERIAL PRIMARY KEY,
+  name varchar(255) UNIQUE NOT NULL,
+  description VARCHAR(65535) NULL,
+  explanation VARCHAR(65535) NULL,
+  creation_date date NOT NULL,
+  passing_time time NULL,
+  author_id bigint NOT NULL,
+  teacher_quiz_status VARCHAR(255) NOT NULL
+);
+
+-- Table: users
+DROP TABLE IF EXISTS users CASCADE;
+DROP SEQUENCE IF EXISTS users_user_id_seq;
+CREATE TABLE users (
+  user_id BIGSERIAL PRIMARY KEY,
+  group_id bigint NULL,
+  first_name varchar(255) NOT NULL,
+  last_name varchar(255) NOT NULL,
+  email varchar(255) UNIQUE NOT NULL,
+  date_of_birth varchar(255) NULL,
+  phone_number varchar(255) UNIQUE NOT NULL,
+  photo bytea NULL,
+  login varchar(255) UNIQUE NOT NULL,
+  password varchar(255) NOT NULL,
+  user_role varchar(255) NOT NULL
+);
+
+-- Table: user_quiz_junctions
+DROP TABLE IF EXISTS user_quiz_junctions CASCADE ;
+CREATE TABLE user_quiz_junctions (
+  user_id BIGINT NOT NULL,
+  quiz_id BIGINT NOT NULL,
+  result int NULL,
+  submit_date TIMESTAMP NOT NULL,
+  start_date TIMESTAMP NULL,
+  finish_date TIMESTAMP NULL,
+  attempt int NOT NULL,
+  student_quiz_status varchar(255) NOT NULL
+);
+
+--------------------------------- ADD CONSTRAINTS -------------------------------------
+
+-- primary keys
+-- user_quiz_junction
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_pk
+PRIMARY KEY (user_id, quiz_id);
+
+-- foreign keys
+-- Reference: User_Group (table: users)
+ALTER TABLE users ADD CONSTRAINT users_groups_fk FOREIGN KEY (group_id)
+REFERENCES groups (group_id);
+
+-- Reference: answer_accordance_question (table: answers_accordance)
+ALTER TABLE answers_accordance ADD CONSTRAINT answers_accordance_questions_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
+
+-- Reference: question_answer_sequence (table: answers_sequence)
+ALTER TABLE answers_sequence ADD CONSTRAINT questions_answers_sequence_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
+
+-- Reference: question_answer_simple (table: answers_simple)
+ALTER TABLE answers_simple ADD CONSTRAINT questions_answers_simple_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
+
+-- Reference: question_answer_number (table: answers_number)
+ALTER TABLE answers_number ADD CONSTRAINT questions_answers_number_fk FOREIGN KEY (question_id)
+REFERENCES questions (question_id);
+
+-- Reference: question_quiz (table: questions)
+ALTER TABLE questions ADD CONSTRAINT questions_quizzes_fk FOREIGN KEY (quiz_id)
+REFERENCES quizzes (quiz_id);
+
+-- Reference: user_quiz_junction_quiz (table: user_quiz_junctions)
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_quizzes_fk FOREIGN KEY (quiz_id)
+REFERENCES quizzes (quiz_id);
+
+-- Reference: user_quiz_junction_user (table: user_quiz_junctions)
+ALTER TABLE user_quiz_junctions ADD CONSTRAINT user_quiz_junctions_users_fk FOREIGN KEY (user_id)
+REFERENCES users (user_id);
+
+-- Reference: quiz_user (table: quizzes)
+ALTER TABLE quizzes ADD CONSTRAINT quizzes_users_fk FOREIGN KEY (author_id)
+REFERENCES users(user_id);
+
+-- Reference: group_user (table: groups)
+ALTER TABLE groups ADD CONSTRAINT groups_users_fk FOREIGN KEY (author_id)
+REFERENCES users(user_id);
+
+--------------------------------- INSERT DATA -------------------------------------
 
 -- Table: users (teachers)
 /*1*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '(073)-000-00-11', null, 'Andrew', '123', 'TEACHER');
+     VALUES (null, 'Andrew', 'Bronson', 'andrew@example.com', '1970-05-10', '(073)-000-00-11', null, 'Andrew', '123', 'TEACHER');
 /*2*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '(073)-003-02-01', null, 'Angel', '123', 'TEACHER');
+     VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '(073)-003-02-01', null, 'Angel', '123', 'TEACHER');
 
 -- Table: groups
 /*1*/INSERT INTO groups (name, description, creation_date, author_id) VALUES ('IS-4', 'Program engineering', '2018-03-02', 1);
@@ -57,169 +177,169 @@ VALUES (null, 'Angel', 'Peterson', 'angel@example.com', '1980-06-15', '(073)-003
 
 -- Table: users (students)
 /*3*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '(095)-123-45-67', null, 'Anton', '123', 'STUDENT');
+     VALUES (1, 'Anton', 'Yakovenko', 'anton@example.com', '1996-01-28', '(095)-123-45-67', null, 'Anton', '123', 'STUDENT');
 /*4*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '(095)-498-76-54', null, 'Artem', '123', 'STUDENT');
+     VALUES (1, 'Artem', 'Yakovenko', 'artem@example.com', '1996-01-28', '(095)-498-76-54', null, 'Artem', '123', 'STUDENT');
 /*5*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '(098)-024-68-10', null, 'Mike', '123', 'STUDENT');
+     VALUES (2, 'Mike', 'Jameson', 'mike@example.com', '1997-02-16', '(098)-024-68-10', null, 'Mike', '123', 'STUDENT');
 /*6*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (2, 'Sarah', 'Stivens', 'sarah@example.com', '1998-03-01', '(098)-135-79-11', null, 'Sarah', '123', 'STUDENT');
+     VALUES (2, 'Sarah', 'Stivens', 'sarah@example.com', '1998-03-01', '(098)-135-79-11', null, 'Sarah', '123', 'STUDENT');
 /*7*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '(073)-000-11-11', null, 'Jason', '123', 'STUDENT');
+     VALUES (null, 'Jason', 'Statham', 'jason@example.com', '1995-04-10', '(073)-000-11-11', null, 'Jason', '123', 'STUDENT');
 /*8*/INSERT INTO users (group_id, first_name, last_name, email, date_of_birth, phone_number, photo, login, password, user_role)
-VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '(073)-000-11-22', null, 'William', '123', 'STUDENT');
+     VALUES (null, 'William', 'Mathew', 'william@example.com', '1995-04-10', '(073)-000-11-22', null, 'William', '123', 'STUDENT');
 /*9*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '(095)-456-34-37', NULL, 'Jack', '123', 'STUDENT');
+     VALUES (NULL, 'Jack', 'Campton', 'jack@example.com', NULL, '(095)-456-34-37', NULL, 'Jack', '123', 'STUDENT');
 /*10*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (NULL, 'Lily', 'Collins', 'lily@example.com', NULL, '(095)-437-78-45', NULL, 'Lily', '123', 'STUDENT');
+      VALUES (NULL, 'Lily', 'Collins', 'lily@example.com', NULL, '(095)-437-78-45', NULL, 'Lily', '123', 'STUDENT');
 /*11*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Thomas', 'Scott', 'thomas@example.com', NULL, '(095)-444-78-45', NULL, 'Thomas', '123', 'STUDENT');
+      VALUES (1, 'Thomas', 'Scott', 'thomas@example.com', NULL, '(095)-444-78-45', NULL, 'Thomas', '123', 'STUDENT');
 /*12*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Katy', 'Walter', 'katy@example.com', NULL, '(095)-437-44-45', NULL, 'Katy', '123', 'STUDENT');
+      VALUES (1, 'Katy', 'Walter', 'katy@example.com', NULL, '(095)-437-44-45', NULL, 'Katy', '123', 'STUDENT');
 /*13*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Jane', 'Nikolas', 'jane@example.com', NULL, '(095)-437-78-44', NULL, 'Jane', '123', 'STUDENT');
+      VALUES (1, 'Jane', 'Nikolas', 'jane@example.com', NULL, '(095)-437-78-44', NULL, 'Jane', '123', 'STUDENT');
 /*14*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (1, 'Mary', 'Hendrix', 'mary@example.com', NULL, '(095)-437-44-44', NULL, 'Mary', '123', 'STUDENT');
+      VALUES (1, 'Mary', 'Hendrix', 'mary@example.com', NULL, '(095)-437-44-44', NULL, 'Mary', '123', 'STUDENT');
 /*15*/INSERT INTO USERS (GROUP_ID, FIRST_NAME, LAST_NAME, EMAIL, DATE_OF_BIRTH, PHONE_NUMBER, PHOTO, LOGIN, PASSWORD, USER_ROLE)
-VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '(095)-787-22-56', NULL, 'Jimmy', '123', 'STUDENT');
+      VALUES (3, 'Jimmy', 'Jimmy', 'jimmy@example.com', NULL, '(095)-787-22-56', NULL, 'Jimmy', '123', 'STUDENT');
 
 -- Table: quizzes
 /*1*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (1, 'Object Oriented Programming', 'There are questions to test your skills in object oriented programming in Java', null, '2018-03-01', '00:10:00', 1, 'PUBLISHED');
+     VALUES (1, 'Object Oriented Programming', 'There are questions to test your skills in object oriented programming in Java', null, '2018-05-01', '00:10:00', 1, 'PUBLISHED');
 /*2*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (2, 'Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-03-02', '00:10:00', 1, 'PUBLISHED');
+     VALUES (2, 'Exceptions', 'Try your exceptions skills', 'Hope you had fun with exceptions :)', '2018-12-02', '00:10:00', 1, 'PUBLISHED');
 /*3*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (3, 'Generics', 'Try your generics skills', 'Hope you had fun with generics :)', '2018-02-01', '00:15:00', 2, 'PUBLISHED');
+     VALUES (3, 'Generics', 'Try your generics skills', 'Hope you had fun with generics :)', '2018-02-01', '00:15:00', 2, 'PUBLISHED');
 /*4*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (4, 'Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:00:10', 2, 'PUBLISHED');
+     VALUES (4, 'Multithreading', 'Try your multithreading skills', 'Hope you had multithreading fun :)', '2018-02-02', '00:00:10', 2, 'PUBLISHED');
 /*5*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (5, 'Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
+     VALUES (5, 'Collections', 'Try your collections skills', 'Hope you had fun with collections :)', '2018-03-11', '00:15:00', 1, 'PUBLISHED');
 /*6*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (6, 'Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
+     VALUES (6, 'Input output', 'Try your IO skills', 'Hope you had IO fun :)', '2018-03-11', '00:12:30', 2, 'PUBLISHED');
 /*7*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (7, 'Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun but Pascal is dead :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
+     VALUES (7, 'Pascal basics', 'Try your pascal skills', 'Hope you had pascal fun but Pascal is dead :)', '2018-02-02', '00:05:00', 2, 'UNPUBLISHED');
 /*8*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (8, 'Pascal advanced', 'Try your senior pascal skills', 'Hope you had Pascal fun but Pascal is dead :)', '2018-03-11', '00:05:00', 2, 'UNPUBLISHED');
+     VALUES (8, 'Pascal advanced', 'Try your senior pascal skills', 'Hope you had Pascal fun but Pascal is dead :)', '2018-03-11', '00:05:00', 2, 'UNPUBLISHED');
 /*9*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (9, 'HTML basics', 'Try your HTML skills', null, '2018-03-11', '00:10:00', 1, 'UNPUBLISHED');
+     VALUES (9, 'HTML basics', 'Try your HTML skills', null, '2018-03-11', '00:10:00', 1, 'UNPUBLISHED');
 /*10*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (10, 'HTML forms', 'Try your HTML skills with forms', 'Hope you had HTML fun :)', '2018-03-11', '00:09:00', 1, 'UNPUBLISHED');
+      VALUES (10, 'HTML forms', 'Try your HTML skills with forms', 'Hope you had HTML fun :)', '2018-03-11', '00:09:00', 1, 'UNPUBLISHED');
 /*11*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (11, 'Servlet API', null, null, '2018-03-27', null, 1, 'PUBLISHED');
+      VALUES (11, 'Servlet API', null, null, '2018-03-27', null, 1, 'PUBLISHED');
 /*12*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (12, 'Java server pages', null, null, '2018-03-27', null, 1, 'PUBLISHED');
+      VALUES (12, 'Java server pages', null, null, '2018-03-27', null, 1, 'PUBLISHED');
 /*13*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (13, 'SQL', null, null, '2018-03-29', null, 1, 'UNPUBLISHED');
+      VALUES (13, 'SQL', null, null, '2018-03-29', null, 1, 'UNPUBLISHED');
 /*14*/INSERT INTO quizzes (quiz_id, name, description, explanation, creation_date, passing_time, author_id, teacher_quiz_status)
-VALUES (14, 'Javascript basics', null, null, '2018-03-29', null, 1, 'UNPUBLISHED');
+      VALUES (14, 'Javascript basics', null, null, '2018-03-29', null, 1, 'UNPUBLISHED');
 
 -- Table: user_quiz_junctions
 /*1*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (7, 1, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:02', '2018-03-05 00:00:04', 1, 'PASSED');
+      VALUES (7, 1, 20, '2018-03-05 00:00:00', '2018-03-05 00:00:02', '2018-03-05 00:00:04', 1, 'PASSED');
 /*2*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (7, 2, 13, '2018-03-05 00:00:00', '2018-04-04 15:32:03', '2018-04-04 15:37:04', 1, 'CLOSED');
+      VALUES (7, 2, 13, '2018-03-05 00:00:00', '2018-04-04 15:32:03', '2018-04-04 15:37:04', 1, 'CLOSED');
 /*3*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 3, 7, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:00:04', 2, 'CLOSED');
+      VALUES (3, 3, 7, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:00:04', 2, 'CLOSED');
 /*4*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 4, 12, '2018-03-05 00:00:00', '2018-04-04 15:32:02', '2018-04-04 15:32:08', 3, 'CLOSED');
+      VALUES (3, 4, 12, '2018-03-05 00:00:00', '2018-04-04 15:32:02', '2018-04-04 15:32:08', 3, 'CLOSED');
 /*5*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 2, 16, '2018-03-05 00:00:00', '2018-03-05 00:00:03', '2018-03-05 00:00:04', 2, 'PASSED');
+      VALUES (3, 2, 16, '2018-03-05 00:00:00', '2018-03-05 00:00:03', '2018-03-05 00:00:04', 2, 'PASSED');
 /*6*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 1, 23, '2018-03-05 00:00:00', '2018-04-04 15:30:34', '2018-04-04 15:40:04', 2, 'CLOSED');
+      VALUES (3, 1, 23, '2018-03-05 00:00:00', '2018-04-04 15:30:34', '2018-04-04 15:40:04', 2, 'CLOSED');
 /*7*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 1, 10, '2018-03-08 00:13:00', '2018-04-04 15:35:40', '2018-04-04 15:41:32', 1, 'PASSED');
+      VALUES (4, 1, 10, '2018-03-08 00:13:00', '2018-04-04 15:35:40', '2018-04-04 15:41:32', 1, 'PASSED');
 /*8*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (5, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
+      VALUES (5, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*9*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (6, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
+      VALUES (6, 3, null, '2018-03-05 00:00:00', null, null, 0, 'OPENED');
 /*10*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 2, 10, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:03:04', 1, 'CLOSED');
+       VALUES (4, 2, 10, '2018-03-05 00:00:00', '2018-03-05 00:00:01', '2018-03-05 00:03:04', 1, 'CLOSED');
 /*11*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 3, 5, '2018-03-06 00:14:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 2, 'CLOSED');
+       VALUES (4, 3, 5, '2018-03-06 00:14:00', '2018-03-11 00:00:00', '2018-03-11 00:05:00', 2, 'CLOSED');
 /*12*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 4, 11, '2018-03-05 00:08:00', '2018-03-11 00:10:00', '2018-03-11 00:10:04', 2, 'PASSED');
+       VALUES (4, 4, 11, '2018-03-05 00:08:00', '2018-03-11 00:10:00', '2018-03-11 00:10:04', 2, 'PASSED');
 /*13*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
+       VALUES (4, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
 /*14*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
+       VALUES (4, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 /*15*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
+       VALUES (3, 5, null, '2018-03-05 00:24:00', null, null, 0, 'OPENED');
 /*16*/ INSERT INTO user_quiz_junctions (user_id, quiz_id, result, submit_date, start_date, finish_date, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
+       VALUES (3, 6, null, '2018-03-05 00:31:30', null, null, 0, 'OPENED');
 /*17*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (5, 5, 5, '2018-03-23 16:18:35', '2018-03-23 19:20:45', '2018-03-23 19:25:45', 1, 'PASSED');
+      VALUES (5, 5, 5, '2018-03-23 16:18:35', '2018-03-23 19:20:45', '2018-03-23 19:25:45', 1, 'PASSED');
 /*18*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (6, 6, NULL, '2018-02-12 14:34:56', NULL, NULL, 0, 'OPENED');
+      VALUES (6, 6, NULL, '2018-02-12 14:34:56', NULL, NULL, 0, 'OPENED');
 /*19*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (6, 5, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
+      VALUES (6, 5, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
 /*20*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (5, 6, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
+      VALUES (5, 6, NULL, '2018-03-23 16:18:35', NULL, NULL, 0, 'OPENED');
 /*21*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 1, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
+      VALUES (11, 1, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
 /*22*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 1, 25, '2018-03-05 00:00:00', '2018-03-27 10:20:00', '2018-03-27 10:27:00', 1, 'CLOSED');
+      VALUES (12, 1, 25, '2018-03-05 00:00:00', '2018-03-27 10:20:00', '2018-03-27 10:27:00', 1, 'CLOSED');
 /*23*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 1, 15, '2018-03-05 00:00:00', '2018-03-27 10:20:00', '2018-03-27 10:29:00', 2, 'CLOSED');
+      VALUES (13, 1, 15, '2018-03-05 00:00:00', '2018-03-27 10:20:00', '2018-03-27 10:29:00', 2, 'CLOSED');
 /*24*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 1, 21, '2018-03-05 00:00:00', '2018-03-27 10:23:00', '2018-03-27 10:30:00', 1, 'PASSED');
+      VALUES (14, 1, 21, '2018-03-05 00:00:00', '2018-03-27 10:23:00', '2018-03-27 10:30:00', 1, 'PASSED');
 /*25*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 2, 6, '2018-03-05 00:00:00', '2018-03-27 10:25:00', '2018-03-27 10:31:30', 1, 'PASSED');
+      VALUES (11, 2, 6, '2018-03-05 00:00:00', '2018-03-27 10:25:00', '2018-03-27 10:31:30', 1, 'PASSED');
 /*26*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 2, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
+      VALUES (12, 2, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
 /*27*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 2, 9, '2018-03-05 00:00:00', '2018-03-27 10:24:00', '2018-03-27 10:32:22', 2, 'CLOSED');
+      VALUES (13, 2, 9, '2018-03-05 00:00:00', '2018-03-27 10:24:00', '2018-03-27 10:32:22', 2, 'CLOSED');
 /*28*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 2, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
+      VALUES (14, 2, NULL, '2018-03-05 00:00:00', NULL, NULL, 0, 'OPENED');
 /*29*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 3, 1, '2018-03-06 00:14:00', '2018-03-27 10:20:00', '2018-03-27 10:33:45', 1, 'CLOSED');
+      VALUES (11, 3, 1, '2018-03-06 00:14:00', '2018-03-27 10:20:00', '2018-03-27 10:33:45', 1, 'CLOSED');
 /*30*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 3, 9, '2018-03-06 00:14:00', '2018-03-27 10:25:00', '2018-03-27 10:34:00', 2, 'CLOSED');
+      VALUES (12, 3, 9, '2018-03-06 00:14:00', '2018-03-27 10:25:00', '2018-03-27 10:34:00', 2, 'CLOSED');
 /*31*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 3, 8, '2018-03-06 00:14:00', '2018-03-27 10:27:00', '2018-03-27 10:35:11', 1, 'CLOSED');
+      VALUES (13, 3, 8, '2018-03-06 00:14:00', '2018-03-27 10:27:00', '2018-03-27 10:35:11', 1, 'CLOSED');
 /*32*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 3, 6, '2018-03-06 00:14:00', '2018-03-27 10:28:00', '2018-03-27 10:35:55', 1, 'CLOSED');
+      VALUES (14, 3, 6, '2018-03-06 00:14:00', '2018-03-27 10:28:00', '2018-03-27 10:35:55', 1, 'CLOSED');
 /*33*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 4, NULL, '2018-03-05 00:08:00', NULL, NULL, 0, 'OPENED');
+      VALUES (11, 4, NULL, '2018-03-05 00:08:00', NULL, NULL, 0, 'OPENED');
 /*34*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 4, NULL, '2018-03-05 00:08:00', NULL, NULL, 0, 'OPENED');
+      VALUES (12, 4, NULL, '2018-03-05 00:08:00', NULL, NULL, 0, 'OPENED');
 /*35*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 4, 9, '2018-03-05 00:08:00', '2018-03-27 10:30:00', '2018-03-27 10:30:09', 2, 'CLOSED');
+      VALUES (13, 4, 9, '2018-03-05 00:08:00', '2018-03-27 10:30:00', '2018-03-27 10:30:09', 2, 'CLOSED');
 /*36*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 4, 14, '2018-03-05 00:08:00', '2018-03-27 10:33:00', '2018-03-27 10:33:11', 1, 'PASSED');
+      VALUES (14, 4, 14, '2018-03-05 00:08:00', '2018-03-27 10:33:00', '2018-03-27 10:33:11', 1, 'PASSED');
 /*37*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 5, 18, '2018-03-05 00:24:00', '2018-03-27 10:30:00', '2018-03-27 10:38:10', 1, 'CLOSED');
+      VALUES (11, 5, 18, '2018-03-05 00:24:00', '2018-03-27 10:30:00', '2018-03-27 10:38:10', 1, 'CLOSED');
 /*38*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 5, 15, '2018-03-05 00:24:00', '2018-03-27 10:32:00', '2018-03-27 10:38:43', 2, 'CLOSED');
+      VALUES (12, 5, 15, '2018-03-05 00:24:00', '2018-03-27 10:32:00', '2018-03-27 10:38:43', 2, 'CLOSED');
 /*39*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 5, 20, '2018-03-05 00:24:00', '2018-03-27 10:30:00', '2018-03-27 10:39:00', 1, 'PASSED');
+      VALUES (13, 5, 20, '2018-03-05 00:24:00', '2018-03-27 10:30:00', '2018-03-27 10:39:00', 1, 'PASSED');
 /*40*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 5, 8, '2018-03-05 00:24:00', '2018-03-27 10:34:00', '2018-03-27 10:39:25', 2, 'PASSED');
+      VALUES (14, 5, 8, '2018-03-05 00:24:00', '2018-03-27 10:34:00', '2018-03-27 10:39:25', 2, 'PASSED');
 /*41*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (11, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
+      VALUES (11, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
 /*42*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (12, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
+      VALUES (12, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
 /*43*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (13, 6, 4, '2018-03-05 00:31:30', '2018-03-27 10:30:00', '2018-03-27 10:40:00', 1, 'PASSED');
+      VALUES (13, 6, 4, '2018-03-05 00:31:30', '2018-03-27 10:30:00', '2018-03-27 10:40:00', 1, 'PASSED');
 /*44*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (14, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
+      VALUES (14, 6, NULL, '2018-03-05 00:31:30', NULL, NULL, 0, 'OPENED');
 /*45*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 11, 13, '2018-03-27 11:04:00', '2018-04-05 14:28:32', '2018-04-05 14:32:33', 1, 'CLOSED');
+      VALUES (4, 11, 13, '2018-03-27 11:04:00', '2018-04-05 14:28:32', '2018-04-05 14:32:33', 1, 'CLOSED');
 /*46*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (4, 12, 21, '2018-03-27 11:05:00', '2018-03-27 11:06:00', '2018-03-27 11:07:00', 1, 'PASSED');
+      VALUES (4, 12, 21, '2018-03-27 11:05:00', '2018-03-27 11:06:00', '2018-03-27 11:07:00', 1, 'PASSED');
 /*47*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (3, 11, 19, '2018-03-27 11:06:00', '2018-03-27 11:06:45', '2018-03-27 11:07:30', 1, 'CLOSED');
+      VALUES (3, 11, 19, '2018-03-27 11:06:00', '2018-03-27 11:06:45', '2018-03-27 11:07:30', 1, 'CLOSED');
 /*48*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (7, 5, NULL, '2018-04-01 17:39:00', NULL, NULL, 0, 'OPENED');
+      VALUES (7, 5, NULL, '2018-04-01 17:39:00', NULL, NULL, 0, 'OPENED');
 /*49*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (15, 5, NULL, '2018-04-02 21:17:00', NULL, NULL, 0, 'OPENED');
+      VALUES (15, 5, NULL, '2018-04-02 21:17:00', NULL, NULL, 0, 'OPENED');
 /*50*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (15, 11, NULL, '2018-04-02 21:23:00', NULL, NULL, 0, 'OPENED');
+      VALUES (15, 11, NULL, '2018-04-02 21:23:00', NULL, NULL, 0, 'OPENED');
 /*51*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (5, 11, NULL, '2018-04-02 21:23:55', NULL, NULL, 0, 'OPENED');
+      VALUES (5, 11, NULL, '2018-04-02 21:23:55', NULL, NULL, 0, 'OPENED');
 /*52*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (8, 11, NULL, '2018-04-04 10:40:00', NULL, NULL, 0, 'OPENED');
+      VALUES (8, 11, NULL, '2018-04-04 10:40:00', NULL, NULL, 0, 'OPENED');
 /*53*/INSERT INTO USER_QUIZ_JUNCTIONS (USER_ID, QUIZ_ID, RESULT, SUBMIT_DATE, START_DATE, FINISH_DATE, ATTEMPT, STUDENT_QUIZ_STATUS)
-VALUES (8, 5, NULL, '2018-04-04 10:41:05', NULL, NULL, 0, 'OPENED');
+      VALUES (8, 5, NULL, '2018-04-04 10:41:05', NULL, NULL, 0, 'OPENED');
 
 -- Table: questions
 INSERT INTO questions (question_id, quiz_id, body, explanation, question_type, score)
@@ -680,28 +800,3 @@ INSERT INTO answers_number (question_id, correct) VALUES (58, 1974);
 INSERT INTO answers_number (question_id, correct) VALUES (64, 5);
 INSERT INTO answers_number (question_id, correct) VALUES (76, 1999);
 INSERT INTO answers_number (question_id, correct) VALUES (112, 12);
-
-
--- PostgreSQL
--- set current serial to max + 1
-SELECT setval('answers_simple_answer_simple_id_seq',
-              COALESCE((SELECT MAX(answer_simple_id) + 1 FROM answers_simple), 1), false);
-SELECT setval('groups_group_id_seq',
-              COALESCE((SELECT MAX(group_id) + 1 FROM groups), 1), false);
-SELECT setval('questions_question_id_seq',
-              COALESCE((SELECT MAX(question_id) + 1 FROM questions), 1), false);
-SELECT setval('quizzes_quiz_id_seq',
-              COALESCE((SELECT MAX(quiz_id) + 1 FROM quizzes), 1), false);
-SELECT setval('users_user_id_seq',
-              COALESCE((SELECT MAX(user_id) + 1 FROM users), 1), false);
-
--- Enable triggers
-ALTER TABLE answers_accordance ENABLE TRIGGER ALL;
-ALTER TABLE answers_number ENABLE TRIGGER ALL;
-ALTER TABLE answers_sequence ENABLE TRIGGER ALL;
-ALTER TABLE answers_simple ENABLE TRIGGER ALL;
-ALTER TABLE groups ENABLE TRIGGER ALL;
-ALTER TABLE questions ENABLE TRIGGER ALL;
-ALTER TABLE quizzes ENABLE TRIGGER ALL;
-ALTER TABLE users ENABLE TRIGGER ALL;
-ALTER TABLE user_quiz_junctions ENABLE TRIGGER ALL;

@@ -1,16 +1,24 @@
 package com.studysoft.trainingportal.util;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static java.time.format.FormatStyle.MEDIUM;
 import static java.time.format.FormatStyle.SHORT;
 
 public class Utils {
+
+    private static String DATE_PATTERN = "yyyy MMM dd";
+    private static String TIME_PATTERN = "HH:mm:ss";
+    private static String DATE_TIME_PATTERN = DATE_PATTERN + " " + TIME_PATTERN;
 
     // Prevent creation of instances
     private Utils() {
@@ -54,15 +62,13 @@ public class Utils {
     }
 
     public static String formatDate(LocalDate localDate) {
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofLocalizedDate(MEDIUM);
-        return localDate.format(dateTimeFormatter);
+        Locale locale = LocaleContextHolder.getLocale();
+        return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN, locale));
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofLocalizedDateTime(MEDIUM, SHORT);
-        return localDateTime.format(dateTimeFormatter);
+        Locale locale = LocaleContextHolder.getLocale();
+        return localDateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, locale));
     }
 
     public static String formatPhoneNumber(String target) {

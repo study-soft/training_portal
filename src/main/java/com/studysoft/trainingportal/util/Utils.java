@@ -16,7 +16,7 @@ import static java.time.format.FormatStyle.SHORT;
 
 public class Utils {
 
-    private static String DATE_PATTERN = "yyyy MMM dd";
+    private static String DATE_PATTERN = "dd MMM yyyy";
     private static String TIME_PATTERN = "HH:mm:ss";
     private static String DATE_TIME_PATTERN = DATE_PATTERN + " " + TIME_PATTERN;
 

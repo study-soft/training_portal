@@ -25,10 +25,7 @@
         <h2.version>1.4.196</h2.version>
         <javax-annotation-api.version>1.2</javax-annotation-api.version>
         <jackson.version>2.9.7</jackson.version>
-        <webapp-runner.version>7.0.22</webapp-runner.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-        <maven-war-plugin.version>2.2</maven-war-plugin.version>
-        <maven-dependency-plugin.version>2.4</maven-dependency-plugin.version>
     </properties>
 
     <dependencies>
@@ -163,13 +160,6 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.jsimone</groupId>
-            <artifactId>webapp-runner</artifactId>
-            <version>${webapp-runner.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -187,24 +177,21 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven-war-plugin.version}</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
-                    <warName>${project.artifactId}</warName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
+                <version>2.10</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <goals><goal>copy-dependencies</goal></goals>
+                        <goals><goal>copy</goal></goals>
                         <configuration>
-                            <includeArtifactIds>webapp-runner</includeArtifactIds>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.github.jsimone</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>8.5.23.0</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
                     </execution>
                 </executions>

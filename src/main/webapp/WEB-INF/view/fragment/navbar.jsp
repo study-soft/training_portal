@@ -17,26 +17,36 @@
         <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher"><spring:message code="navbar.home"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher">
+                        <i class="fa fa-home"></i> <spring:message code="navbar.home"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/quizzes"><spring:message code="navbar.quizzes"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/quizzes">
+                        <i class="fa fa-book"></i> <spring:message code="navbar.quizzes"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/groups"><spring:message code="navbar.groups"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/groups">
+                        <i class="fa fa-group"></i> <spring:message code="navbar.groups"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/students"><spring:message code="navbar.students"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/students">
+                        <i class="fa fa-graduation-cap"></i> <spring:message code="navbar.students"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/results"><spring:message code="navbar.results"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/teacher/results">
+                        <i class="fa fa-signal"></i> <spring:message code="navbar.results"/>
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item dropdown bg-dark">
                     <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <spring:message code="navbar.language"/>
+                        <i class="fa fa-flag"></i> <spring:message code="navbar.language"/>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a id="en" class="dropdown-item" href="javascript:void(0);">
@@ -74,7 +84,7 @@
                 </c:if>
                 <li class="nav-item">
                     <a href="${pageContext.request.contextPath}/help" class="nav-link">
-                        <i class="fa fa-question-circle-o"></i> <spring:message code="navbar.help"/>
+                        <i class="fa fa-question-circle"></i> <spring:message code="navbar.help"/>
                     </a>
                 </li>
             </ul>
@@ -94,34 +104,70 @@
         <div id="navbarSupportedContent" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/student"><spring:message code="navbar.home"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/student">
+                        <i class="fa fa-home"></i> <spring:message code="navbar.home"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/student/quizzes"><spring:message code="navbar.quizzes"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/student/quizzes">
+                        <i class="fa fa-book"></i> <spring:message code="navbar.quizzes"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/student/teachers"><spring:message code="navbar.teachers"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/student/teachers">
+                        <i class="fa fa-group"></i> <spring:message code="navbar.teachers"/>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/student/results"><spring:message code="navbar.results"/></a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/student/results">
+                        <i class="fa fa-signal"></i> <spring:message code="navbar.results"/>
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav justify-content-end align-items-center">
-                <li class="nav-item">
-                    <a id="en" class="nav-link" href="#">EN</a>
+                <li class="nav-item dropdown bg-dark">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-flag"></i> <spring:message code="navbar.language"/>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a id="en" class="dropdown-item" href="javascript:void(0);">
+                            <img src="${pageContext.request.contextPath}/resources/icons/united-states.png"
+                                 width="20" height="20" alt="English">
+                            <spring:message code="navbar.language.english"/>
+                        </a>
+                        <a id="ru" class="dropdown-item" href="javascript:void(0);">
+                            <img src="${pageContext.request.contextPath}/resources/icons/russia.png"
+                                 width="20" height="20" alt="Russian">
+                            <spring:message code="navbar.language.russian"/>
+                        </a>
+                        <a id="uk" class="dropdown-item" href="javascript:void(0);">
+                            <img src="${pageContext.request.contextPath}/resources/icons/ukraine.png"
+                                 width="20" height="20" alt="Ukrainian">
+                            <spring:message code="navbar.language.ukrainian"/>
+                        </a>
+                    </div>
                 </li>
+                <c:if test="${isAutenticated}">
+                    <li class="nav-item dropdown bg-dark">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user"></i> <sec:authentication property="principal.username"/>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/student/edit-profile">
+                                <i class="fa fa-cog"></i> <spring:message code="navbar.settings"/>
+                            </a>
+                            <a id="logout" class="dropdown-item" href="${pageContext.request.contextPath}/quiz-passing-logout">
+                                <i class="fa fa-sign-out"></i> <spring:message code="navbar.logout"/>
+                            </a>
+                        </div>
+                    </li>
+                </c:if>
                 <li class="nav-item">
-                    <a id="ru" class="nav-link" href="#">RU</a>
-                </li>
-                <li class="nav-item">
-                    <a id="uk" class="nav-link" href="#">UK</a>
-                </li>
-                <li class="nav-item">
-                    <a href="${pageContext.request.contextPath}/help" class="nav-link"><spring:message code="navbar.help"/></a>
-                </li>
-                <li class="nav-item" style="position: relative; bottom: 2px;">
-                    <a id="logout" href="${pageContext.request.contextPath}/quiz-passing-logout" class="nav-link"><spring:message code="navbar.logout"/> <i
-                            class="fa fa-sign-out nav-link nav-icon inline"></i></a>
+                    <a href="${pageContext.request.contextPath}/help" class="nav-link">
+                        <i class="fa fa-question-circle"></i> <spring:message code="navbar.help"/>
+                    </a>
                 </li>
             </ul>
         </div>

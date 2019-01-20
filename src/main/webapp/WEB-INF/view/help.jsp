@@ -23,10 +23,23 @@
 <body>
 <div class="container">
     <br>
-    <div class="right">
-        <a id="en" href="#">EN</a> <a id="ru" href="#">RU</a> <a id="uk" href="#">UK</a>
+    <div class="text-center">
+        <a id="en" href="javascript:void(0);">
+            <img src="${pageContext.request.contextPath}/resources/icons/united-states.png"
+                 width="20" height="20" alt="English">
+            <spring:message code="navbar.language.english"/>
+        </a>&nbsp;&nbsp;&nbsp;
+        <a id="ru" href="#">
+            <img src="${pageContext.request.contextPath}/resources/icons/russia.png"
+                 width="20" height="20" alt="Russian">
+            <spring:message code="navbar.language.russian"/>
+        </a>&nbsp;&nbsp;&nbsp;
+        <a id="uk" href="javascript:void(0);">
+            <img src="${pageContext.request.contextPath}/resources/icons/ukraine.png"
+                 width="20" height="20" alt="Ukrainian">
+            <spring:message code="navbar.language.ukrainian"/>
+        </a>
     </div>
-    <br>
     <h1 class="text-center"><spring:message code="help.training.portal"/></h1>
     <a href="" id="teacher" class="text-center"><h2><spring:message code="help.teacher"/></h2></a>
     <div class="hidden">

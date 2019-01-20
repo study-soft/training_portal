@@ -4,6 +4,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -28,5 +30,18 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         return new Filter[]{filter};
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+
+//        set active and default profile
+        String activeProfile = System.getProperty("spring.profiles.active");
+        System.out.println("active profile = " + activeProfile);
+        if (activeProfile == null) {
+            servletContext.setInitParameter("spring.profiles.active", "dev");
+        }
+        servletContext.setInitParameter("spring.profiles.default", "dev");
     }
 }

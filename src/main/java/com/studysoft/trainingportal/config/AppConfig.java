@@ -2,18 +2,17 @@ package com.studysoft.trainingportal.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 @Configuration
 @ComponentScan(basePackages = "com.studysoft.trainingportal")
@@ -22,7 +21,7 @@ import java.net.URISyntaxException;
 public class AppConfig {
 
     @Autowired
-    private Environment environment;
+    private Environment env;
 
 //    @Bean
 //    public DataSource dataSource() {
@@ -33,18 +32,28 @@ public class AppConfig {
 //                .build();
 //    }
 
-//    @Bean
-//    public DataSource dataSource() {
-//        BoneCPDataSource dataSource = new BoneCPDataSource();
-//        dataSource.setDriverClass(environment.getProperty("jdbc.driverClass"));
-//        dataSource.setJdbcUrl(environment.getProperty("jdbc.jdbcUrl"));
-//        dataSource.setUsername(environment.getProperty("jdbc.username"));
-//        dataSource.setPassword(environment.getProperty("jdbc.password"));
-//        return dataSource;
-//    }
+    @Bean
+    @Profile("dev")
+    public DataSource localDataSource() {
+        BoneCPDataSource dataSource = new BoneCPDataSource();
+        dataSource.setDriverClass(env.getProperty("jdbc.driverClass"));
+        dataSource.setJdbcUrl(env.getProperty("jdbc.jdbcUrl"));
+        dataSource.setUsername(env.getProperty("jdbc.username"));
+        dataSource.setPassword(env.getProperty("jdbc.password"));
+        return dataSource;
+    }
+
+    @Bean
+    @Profile("dev")
+    public PlatformTransactionManager devTransactionManager() {
+        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
+        transactionManager.setDataSource(localDataSource());
+        return transactionManager;
+    }
 
     @Bean(destroyMethod = "close")
-    public BoneCPDataSource dataSource() {
+    @Profile("prod")
+    public BoneCPDataSource herokuDataSource() {
         URI dbUri = null;
         try {
             Class.forName("org.postgresql.Driver");
@@ -67,9 +76,10 @@ public class AppConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    @Profile("prod")
+    public PlatformTransactionManager prodTransactionManager() {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-        transactionManager.setDataSource(dataSource());
+        transactionManager.setDataSource(herokuDataSource());
         return transactionManager;
     }
 }

@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/png"
-      href="${pageContext.request.contextPath}/resources/training-portal-favicon.png"/>
+      href="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -47,36 +47,26 @@
     });
 </script>
 <script>
-    function setLang(event, lang) {
-        event.preventDefault();
-        const uri = window.location.href;
-        const paramLang = new URLSearchParams(window.location.search).get("lang");
-        if (paramLang != null) {
-            window.location = uri.replace("lang=" + paramLang, "lang=" + lang);
-        } else {
-            if (uri.includes("?lang=")) {
-                window.location = uri.replace("lang=" + paramLang, "lang=" + lang);
-            } else if (uri.includes("?")) {
-                window.location = uri + "&lang=" + lang;
-            } else {
-                window.location = uri + "?lang=" + lang;
-            }
-        }
-    }
-
-    $(document).ready(function () {
-        $("#en").click(function (event) {
-            const lang = $(this).text().toLowerCase();
-            setLang(event, lang);
+    // change language
+    $(document).ready(() => {
+        $("#en,#ru,#uk").click(event => {
+            event.preventDefault();
+            const lang = event.target.id;
+            const params = new URLSearchParams(location.search);
+            params.set('lang', lang);
+            location.search = '?' + params.toString();
         });
-        $("#ru").click(function (event) {
-            const lang = $(this).text().toLowerCase();
-            setLang(event, lang);
-        });
-        $("#uk").click(function (event) {
-            const lang = $(this).text().toLowerCase();
-            setLang(event, lang);
-        });
-
     })
+
+    // set 'active' class to current language
+    $(document).ready(() => {
+        const lang = '${pageContext.response.locale}';
+        if (lang) {
+            document.querySelectorAll("#en,#ru,#uk").forEach(elem => {
+                if (elem.id === lang) {
+                    elem.classList.add('active');
+                }
+            });
+        }
+    });
 </script>

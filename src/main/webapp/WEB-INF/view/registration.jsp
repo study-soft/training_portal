@@ -15,7 +15,7 @@
     </div>
     <br>
     <div class="text-center">
-        <img src="${pageContext.request.contextPath}/resources/training-portal-favicon.png"
+        <img src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
              width="30" height="35" style="margin-bottom: 15px">
         <h2 style="display: inline"><spring:message code="registration.training.portal"/></h2>
     </div>

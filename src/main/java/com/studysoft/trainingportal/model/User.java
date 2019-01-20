@@ -1,6 +1,7 @@
 package com.studysoft.trainingportal.model;
 
 import com.studysoft.trainingportal.model.enums.UserRole;
+import com.studysoft.trainingportal.util.Utils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -174,7 +175,7 @@ public class User implements Comparable<User> {
                 ", phoneNumber='" + phoneNumber + '\'' +
 //                ", photo=" + Arrays.toString(photo) +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                ", password='" + Utils.maskPassword(password) + '\'' +
                 ", userRole=" + userRole +
                 '}';
     }

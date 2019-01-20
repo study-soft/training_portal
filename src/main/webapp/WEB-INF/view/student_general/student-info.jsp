@@ -39,7 +39,7 @@
         <c:when test="${empty openedQuizzes and empty passedQuizzes and empty closedQuizzes}">
             <div class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
-                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                    <img src="${pageContext.request.contextPath}/resources/icons/icon-primary.png"
                          width="25" height="25">
                 </div>
                 <div class="col">
@@ -50,7 +50,7 @@
         <c:otherwise>
             <div class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
-                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                    <img src="${pageContext.request.contextPath}/resources/icons/icon-primary.png"
                          width="25" height="25">
                 </div>
                 <div class="col">

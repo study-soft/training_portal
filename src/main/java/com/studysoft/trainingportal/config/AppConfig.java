@@ -38,40 +38,40 @@ public class AppConfig {
 //                .build();
 //    }
 
-//    @Bean(destroyMethod = "close")
-//    public HikariDataSource dataSource() {
-//        HikariConfig config = new HikariConfig();
-//        config.setDriverClassName(environment.getRequiredProperty("jdbc.driverClass"));
-//        config.setJdbcUrl(environment.getRequiredProperty("jdbc.jdbcUrl"));
-//        config.setUsername(environment.getRequiredProperty("jdbc.username"));
-//        config.setPassword(environment.getRequiredProperty("jdbc.password"));
-//        return new HikariDataSource(config);
-//    }
-
     @Bean(destroyMethod = "close")
     public HikariDataSource dataSource() {
-        URI dbUri = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            dbUri = new URI(System.getenv("DATABASE_URL"));
-        } catch (ClassNotFoundException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        Assert.notNull(dbUri, "Environment variable 'DATABASE_URL' must not be null");
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
-                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dbUrl);
-        config.setUsername(username);
-        config.setPassword(password);
-
+        config.setDriverClassName(environment.getRequiredProperty("jdbc.driverClass"));
+        config.setJdbcUrl(environment.getRequiredProperty("jdbc.jdbcUrl"));
+        config.setUsername(environment.getRequiredProperty("jdbc.username"));
+        config.setPassword(environment.getRequiredProperty("jdbc.password"));
         return new HikariDataSource(config);
     }
+
+//    @Bean(destroyMethod = "close")
+//    public HikariDataSource dataSource() {
+//        URI dbUri = null;
+//        try {
+//            Class.forName("org.postgresql.Driver");
+//            dbUri = new URI(System.getenv("DATABASE_URL"));
+//        } catch (ClassNotFoundException | URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Assert.notNull(dbUri, "Environment variable 'DATABASE_URL' must not be null");
+//
+//        String username = dbUri.getUserInfo().split(":")[0];
+//        String password = dbUri.getUserInfo().split(":")[1];
+//        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
+//                dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+//
+//        HikariConfig config = new HikariConfig();
+//        config.setJdbcUrl(dbUrl);
+//        config.setUsername(username);
+//        config.setPassword(password);
+//
+//        return new HikariDataSource(config);
+//    }
 
     @Bean
     public PlatformTransactionManager transactionManager() {

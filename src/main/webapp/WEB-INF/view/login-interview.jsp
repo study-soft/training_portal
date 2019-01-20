@@ -29,7 +29,7 @@
     <div class="row justify-content-center">
         <div class="col-auto">
             <div class="media">
-                <img class="mr-2" style="margin-top: 15px" src="${pageContext.request.contextPath}/resources/training-portal-favicon.png"
+                <img class="mr-2" style="margin-top: 15px" src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
                      width="30" height="35">
                 <div class="media-body">
                     <h2><spring:message code="login.training.portal"/></h2>

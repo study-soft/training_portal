@@ -15,7 +15,7 @@
     <h2><spring:message code="quiz.congratulations"/>!</h2>
     <div class="row no-gutters align-items-center highlight-success">
         <div class="col-auto mr-3">
-            <img src="${pageContext.request.contextPath}/resources/icon-success.png"
+            <img src="${pageContext.request.contextPath}/resources/icons/icon-success.png"
                  width="25" height="25">
         </div>
         <div class="col">
@@ -53,7 +53,7 @@
         <c:if test="${status ne 'CLOSED'}">
             <div class="row no-gutters align-items-center highlight-primary">
                 <div class="col-auto mr-3">
-                    <img src="${pageContext.request.contextPath}/resources/icon-primary.png"
+                    <img src="${pageContext.request.contextPath}/resources/icons/icon-primary.png"
                          width="25" height="25">
                 </div>
                 <div class="col">

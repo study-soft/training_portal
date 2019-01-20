@@ -15,7 +15,7 @@
     <h2><spring:message code="oops"/>... <spring:message code="quiz.congratulations.time"/></h2>
     <div class="row no-gutters align-items-center highlight-danger">
         <div class="col-auto mr-3">
-            <img src="${pageContext.request.contextPath}/resources/icon-danger.png"
+            <img src="${pageContext.request.contextPath}/resources/icons/icon-danger.png"
                  width="25" height="25">
         </div>
         <div class="col">

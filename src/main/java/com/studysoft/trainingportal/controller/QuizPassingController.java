@@ -150,6 +150,9 @@ public class QuizPassingController {
                                           HttpSession session, ModelMap model) {
         session.setAttribute(SessionAttributes.CURRENT_QUESTION_SERIAL, ++currentQuestionSerial);
 
+        /**
+         * Check whether time is up
+         */
         if (quiz.getPassingTime() != null) {
             LocalDateTime currentTime = LocalDateTime.now();
             Duration studentPassingTime = Duration.between(startDate, currentTime);

@@ -630,11 +630,13 @@ public class TeacherQuizController {
         List<String> closedQuizInfo = new ArrayList<>();
         switch (status) {
             case OPENED:
+                LocalDateTime currentDate = LocalDateTime.now();
                 quizDao.editStudentInfoAboutOpenedQuiz(studentId, quizId, 0,
-                        LocalDateTime.now(), 0, StudentQuizStatus.CLOSED);
+                        currentDate, 0, StudentQuizStatus.CLOSED);
+                quizDao.editStartDate(currentDate, studentId, quizId);
                 PassedQuiz closedQuiz = quizDao.findClosedQuiz(studentId, quizId);
                 closedQuizInfo.add(Utils.formatDateTime(closedQuiz.getFinishDate()));
-                closedQuizInfo.add(String.valueOf(closedQuiz.getResult() + " / " + closedQuiz.getScore()));
+                closedQuizInfo.add(closedQuiz.getResult() + " / " + closedQuiz.getScore());
                 closedQuizInfo.add(String.valueOf(closedQuiz.getAttempt()));
                 closedQuizInfo.add("00:00");
                 break;

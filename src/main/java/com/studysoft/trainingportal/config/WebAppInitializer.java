@@ -38,7 +38,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
 //        set active and default profile
         String activeProfile = System.getProperty("spring.profiles.active");
-        System.out.println("active profile = " + activeProfile);
         if (activeProfile == null) {
             servletContext.setInitParameter("spring.profiles.active", "dev");
         }

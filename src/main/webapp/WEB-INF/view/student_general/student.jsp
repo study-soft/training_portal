@@ -34,83 +34,85 @@
         <spring:message code="home.info.changed"/>
         <button id="close" class="close">&times;</button>
     </div>
-    <h2><spring:message code="home.hi"/>, ${student.firstName}! <spring:message code="home.welcome"/></h2>
-    <h4><i class="fa fa-graduation-cap"></i> <spring:message code="home.student.info"/></h4>
-    <table class="col-lg-6 table-info">
-        <tr>
-            <td><spring:message code="user.name"/></td>
-            <td>${student.lastName} ${student.firstName}</td>
-        </tr>
-        <tr>
-            <td><spring:message code="user.mail"/></td>
-            <td>${student.email}</td>
-        </tr>
-        <tr>
-            <td><spring:message code="user.phone"/></td>
-            <td>${student.phoneNumber}</td>
-        </tr>
-        <c:if test="${student.dateOfBirth ne null}">
+    <h2 class="text-center"><spring:message code="home.hi"/>, ${student.firstName}! <spring:message code="home.welcome"/></h2>
+    <div class="offset-lg-3">
+        <h4><i class="fa fa-graduation-cap"></i> <spring:message code="home.student.info"/></h4>
+        <table class="table-info">
             <tr>
-                <td><spring:message code="user.birthday"/></td>
-                <td><localDate:format value="${student.dateOfBirth}"/></td>
+                <td><spring:message code="user.name"/></td>
+                <td>${student.lastName} ${student.firstName}</td>
             </tr>
-        </c:if>
-    </table>
-    <h4 class="inline"><i class="fa fa-lock"></i> <spring:message code="home.security.info"/></h4>
-    <a href="" id="switcher" style="padding-left: 15px;"><spring:message code="home.show"/></a>
-    <table id="credentials" class="col-lg-6 table-info hidden">
-        <tr>
-            <td><spring:message code="user.login"/></td>
-            <td>${student.login}</td>
-        </tr>
-        <tr>
-            <td><spring:message code="user.password"/></td>
-            <td>${student.password}</td>
-        </tr>
-    </table>
-    <div>
-        <a href="${pageContext.request.contextPath}/student/edit-profile"
-           class="btn btn-primary btn-wide"><spring:message code="home.edit.profile"/></a>
+            <tr>
+                <td><spring:message code="user.mail"/></td>
+                <td>${student.email}</td>
+            </tr>
+            <tr>
+                <td><spring:message code="user.phone"/></td>
+                <td>${student.phoneNumber}</td>
+            </tr>
+            <c:if test="${student.dateOfBirth ne null}">
+                <tr>
+                    <td><spring:message code="user.birthday"/></td>
+                    <td><localDate:format value="${student.dateOfBirth}"/></td>
+                </tr>
+            </c:if>
+        </table>
+        <h4 class="inline"><i class="fa fa-lock"></i> <spring:message code="home.security.info"/></h4>
+        <a href="" id="switcher" style="padding-left: 15px;"><spring:message code="home.show"/></a>
+        <table id="credentials" class="table-info hidden">
+            <tr>
+                <td><spring:message code="user.login"/></td>
+                <td>${student.login}</td>
+            </tr>
+            <tr>
+                <td><spring:message code="user.password"/></td>
+                <td>${student.password}</td>
+            </tr>
+        </table>
+        <div>
+            <a href="${pageContext.request.contextPath}/student/edit-profile"
+               class="btn btn-primary btn-wide"><spring:message code="home.edit.profile"/></a>
+        </div>
+        <h4><i class="fa fa-group"></i> <spring:message code="home.group.information"/></h4>
+        <c:choose>
+            <c:when test="${group eq null}">
+                <div class="row no-gutters align-items-center highlight-primary">
+                    <div class="col-auto mr-3">
+                        <img src="${pageContext.request.contextPath}/resources/icons/icon-primary.png"
+                             width="25" height="25">
+                    </div>
+                    <div class="col">
+                        <spring:message code="home.no.group"/>
+                        <br><spring:message code="home.add.group"/>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <table class="table-info">
+                    <tr>
+                        <td><spring:message code="group.name"/></td>
+                        <td><c:out value="${group.name}"/></td>
+                    </tr>
+                    <tr>
+                        <td><spring:message code="group.creation.date"/></td>
+                        <td><localDate:format value="${group.creationDate}"/></td>
+                    </tr>
+                    <tr>
+                        <td><spring:message code="group.students.number"/></td>
+                        <td>${numberOfStudents}</td>
+                    </tr>
+                    <tr>
+                        <td><spring:message code="group.author"/></td>
+                        <td>${authorName}</td>
+                    </tr>
+                </table>
+                <div>
+                    <a href="${pageContext.request.contextPath}/student/group"
+                       class="btn btn-primary btn-wide"><spring:message code="home.more.info"/></a>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
-    <h4><i class="fa fa-group"></i> <spring:message code="home.group.information"/></h4>
-    <c:choose>
-        <c:when test="${group eq null}">
-            <div class="row no-gutters align-items-center highlight-primary">
-                <div class="col-auto mr-3">
-                    <img src="${pageContext.request.contextPath}/resources/icons/icon-primary.png"
-                         width="25" height="25">
-                </div>
-                <div class="col">
-                    <spring:message code="home.no.group"/>
-                    <br><spring:message code="home.add.group"/>
-                </div>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <table class="col-lg-6 table-info">
-                <tr>
-                    <td><spring:message code="group.name"/></td>
-                    <td><c:out value="${group.name}"/></td>
-                </tr>
-                <tr>
-                    <td><spring:message code="group.creation.date"/></td>
-                    <td><localDate:format value="${group.creationDate}"/></td>
-                </tr>
-                <tr>
-                    <td><spring:message code="group.students.number"/></td>
-                    <td>${numberOfStudents}</td>
-                </tr>
-                <tr>
-                    <td><spring:message code="group.author"/></td>
-                    <td>${authorName}</td>
-                </tr>
-            </table>
-            <div>
-                <a href="${pageContext.request.contextPath}/student/group"
-                   class="btn btn-primary btn-wide"><spring:message code="home.more.info"/></a>
-            </div>
-        </c:otherwise>
-    </c:choose>
 </div>
 <br>
 </body>

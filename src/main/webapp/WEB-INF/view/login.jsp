@@ -42,7 +42,8 @@
     <div class="row justify-content-center">
         <div class="col-auto">
             <div class="media">
-                <img class="mr-2" style="margin-top: 15px" src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
+                <img class="mr-2" style="margin-top: 15px"
+                     src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
                      width="30" height="35">
                 <div class="media-body">
                     <h2><spring:message code="login.training.portal"/></h2>
@@ -56,20 +57,42 @@
         </a>
     </div>
     <br>
+    <div class="col-lg-6 offset-lg-3">
+        <div class="row correct">
+            <div class="col-6">
+                <div>
+                    <strong>Teacher credentials:</strong>
+                </div>
+                <div>Login: Andrew</div>
+                <div>Password: 123</div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <strong>Student credentials:</strong>
+                </div>
+                <div>Login: Artem</div>
+                <div>Password: 123</div>
+            </div>
+        </div>
+    </div>
+    <br>
     <div id="registration-success" class="col mx-auto text-center correct update-success">
-        ${registrationSuccess}<button id="close" class="close">&times;</button>
+        ${registrationSuccess}
+        <button id="close" class="close">&times;</button>
     </div>
     <form action="/login" method="post" class="col col-md-6 center">
         <c:if test="${param.error ne null}">
             <p class="error"><spring:message code="login.invalid.login.password"/></p>
         </c:if>
         <div class="form-group row">
-            <label for="username" class="col-4 col-form-label"><strong><spring:message code="user.login"/></strong></label>
+            <label for="username" class="col-4 col-form-label"><strong><spring:message
+                    code="user.login"/></strong></label>
             <input type="text" class="col-8 form-control" id="username" name="username"
                    placeholder="<spring:message code="user.login"/>">
         </div>
         <div class="form-group row">
-            <label for="password" class="col-4 col-form-label"><strong><spring:message code="user.password"/></strong></label>
+            <label for="password" class="col-4 col-form-label"><strong><spring:message
+                    code="user.password"/></strong></label>
             <input type="password" class="col-8 form-control" id="password" name="password"
                    placeholder="<spring:message code="user.password"/>">
         </div>

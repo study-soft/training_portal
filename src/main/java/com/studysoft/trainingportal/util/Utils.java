@@ -1,6 +1,7 @@
 package com.studysoft.trainingportal.util;
 
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -90,6 +91,9 @@ public class Utils {
      * @return masked password
      */
     public static String maskPassword(String password) {
+        if (StringUtils.isEmpty(password)) {
+            return "";
+        }
         String masked = new String(password.chars().map(ch -> 42).toArray(), 2, password.length() - 2);
         return password.substring(0, 1) + masked + password.substring(password.length() - 1);
     }

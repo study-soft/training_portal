@@ -1,0 +1,11 @@
+# Resources to provision on app creation
+setup:
+  addons:
+    - plan: heroku-postgresql:hobby-dev
+      as: DATABASE
+# Reference the Dockerfiles to build into Docker images 
+build:
+  docker:
+    web: Dockerfile
+  config:
+    SPRING_PROFILES_ACTIVE: prod

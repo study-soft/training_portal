@@ -70,7 +70,7 @@ public class TeacherResultsController {
         List<LocalDateTime> closingDates = new ArrayList<>();
         List<Map<String, Integer>> quizStudents = new ArrayList<>();
 
-        for (Quiz quiz : groupQuizzes) {
+        groupQuizzes.forEach(quiz -> {
             Long quizId = quiz.getQuizId();
             Integer closedStudents =
                     userDao.findStudentsNumberInGroupWithClosedQuiz(groupId, quizId);
@@ -78,10 +78,8 @@ public class TeacherResultsController {
                     quizDao.findStudentsNumberWithStudentQuizStatus(teacherId, groupId, quizId);
             Map<String, Integer> stringMap = new HashMap<>();
             enumMap.forEach((k, v) -> stringMap.put(k.getStudentQuizStatus(), v));
-            Integer totalStudents = stringMap
-                    .values()
-                    .stream()
-                    .reduce(0, (x, y) -> x + y);
+            Integer totalStudents = stringMap.values().stream()
+                    .reduce(0, Integer::sum);
             stringMap.put("TOTAL", totalStudents);
             if (closedStudents.equals(totalStudents)) {
                 closedQuizzes.add(quiz);
@@ -91,7 +89,7 @@ public class TeacherResultsController {
                 passedQuizzes.add(quiz);
                 quizStudents.add(stringMap);
             }
-        }
+        });
 
         model.addAttribute("closedQuizzes", closedQuizzes);
         model.addAttribute("closingDates", closingDates);
@@ -151,7 +149,7 @@ public class TeacherResultsController {
         User student = userDao.findUser(studentId);
         model.addAttribute("student", student);
 
-        if (student.getGroupId() != 0) {
+        if (!student.getGroupId().equals(0L)) {
             Group group = groupDao.findGroup(student.getGroupId());
             model.addAttribute("group", group);
         }

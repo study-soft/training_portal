@@ -123,15 +123,15 @@ public class TeacherController {
     @RequestMapping("/teacher/students")
     public String showStudents(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<User> students = userDao.findStudentsByTeacherId(teacherId);
-        List<Group> groups = new ArrayList<>();
-        for (User student : students) {
+        final List<Group> groups = new ArrayList<>();
+        students.forEach(student -> {
             Long groupId = student.getGroupId();
-            if (groupId == 0) {
+            if (groupId.equals(0L)) {
                 groups.add(null);
             } else {
                 groups.add(groupDao.findGroup(groupId));
             }
-        }
+        });
 
         model.addAttribute("students", students);
         model.addAttribute("groups", groups);

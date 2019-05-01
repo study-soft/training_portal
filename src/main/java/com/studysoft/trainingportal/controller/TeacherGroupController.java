@@ -9,8 +9,7 @@ import com.studysoft.trainingportal.model.SecurityUser;
 import com.studysoft.trainingportal.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 
 @Controller
-@PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
 @PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherGroupController {
@@ -37,19 +35,16 @@ public class TeacherGroupController {
     private UserDao userDao;
     private GroupDao groupDao;
     private QuizDao quizDao;
-    private Environment environment;
 
-    private static final Logger logger = Logger.getLogger(TeacherController.class);
+    private static final Logger logger = Logger.getLogger(TeacherGroupController.class);
 
     @Autowired
     public TeacherGroupController(UserDao userDao,
                                   GroupDao groupDao,
-                                  QuizDao quizDao,
-                                  Environment environment) {
+                                  QuizDao quizDao) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
-        this.environment = environment;
     }
 
     @ModelAttribute("teacherId")
@@ -148,18 +143,20 @@ public class TeacherGroupController {
         logger.info("request param 'name' = " + name);
         logger.info("request param 'description' = " + description);
         logger.info("request param 'studentIdsMap' = " + studentIdsMap);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
+
         name = name.trim();
         if (name.isEmpty()) {
-            String emptyName = environment.getProperty("group.name.empty");
-            logger.info("Get property 'group.name.empty': " + emptyName);
+            String emptyName = bundle.getString("validation.group.name.empty");
             List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("emptyName", emptyName);
             model.addAttribute("students", students);
             return "teacher_group/group-create";
         }
         if (groupDao.groupExists(name)) {
-            String groupExists = environment.getProperty("group.name.exists");
-            logger.info("Get property 'group.name.exists': " + groupExists);
+            String groupExists = bundle.getString("validation.group.name.exists");
             List<User> students = userDao.findStudentsWithoutGroup();
             model.addAttribute("groupExists", groupExists);
             model.addAttribute("students", students);
@@ -250,9 +247,13 @@ public class TeacherGroupController {
                             RedirectAttributes redirectAttributes,
                             ModelMap model) {
         Group oldGroup = groupDao.findGroup(groupId);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
+
         editedName = editedName.trim();
         if (editedName.isEmpty()) {
-            String emptyName = environment.getProperty("group.name.empty");
+            String emptyName = bundle.getString("validation.group.name.empty");
             List<User> students = userDao.findStudents(groupId);
             model.addAttribute("group", oldGroup);
             model.addAttribute("students", students);
@@ -261,7 +262,7 @@ public class TeacherGroupController {
         }
         String name = oldGroup.getName();
         if (!editedName.equals(name) && groupDao.groupExists(editedName)) {
-            String groupExists = environment.getProperty("group.name.exists");
+            String groupExists = bundle.getString("validation.group.name.exists");
             List<User> students = userDao.findStudents(groupId);
             model.addAttribute("group", oldGroup);
             model.addAttribute("students", students);

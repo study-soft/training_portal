@@ -31,7 +31,7 @@ public class TeacherResultsController {
     private GroupDao groupDao;
     private QuizDao quizDao;
 
-    private static final Logger logger = Logger.getLogger(TeacherController.class);
+    private static final Logger logger = Logger.getLogger(TeacherResultsController.class);
 
     @Autowired
     public TeacherResultsController(UserDao userDao,

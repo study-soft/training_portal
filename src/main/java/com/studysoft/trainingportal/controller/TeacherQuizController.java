@@ -4,12 +4,11 @@ import com.studysoft.trainingportal.dao.*;
 import com.studysoft.trainingportal.model.*;
 import com.studysoft.trainingportal.model.enums.QuestionType;
 import com.studysoft.trainingportal.model.enums.StudentQuizStatus;
+import com.studysoft.trainingportal.model.enums.TeacherQuizStatus;
 import com.studysoft.trainingportal.util.Utils;
 import com.studysoft.trainingportal.validator.QuizValidator;
-import com.studysoft.trainingportal.model.enums.TeacherQuizStatus;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,8 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
@@ -30,7 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-@PropertySource("classpath:validationMessages.properties")
 @SessionAttributes("teacherId")
 @PreAuthorize("hasRole('ROLE_TEACHER')")
 public class TeacherQuizController {
@@ -45,7 +43,7 @@ public class TeacherQuizController {
     private AnswerNumberDao answerNumberDao;
     private QuizValidator quizValidator;
 
-    private Logger logger = Logger.getLogger(QuizPassingController.class);
+    private Logger logger = Logger.getLogger(TeacherQuizController.class);
 
     @Autowired
     public TeacherQuizController(QuizDao quizDao,
@@ -471,7 +469,7 @@ public class TeacherQuizController {
     @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
     @ResponseBody
     public Long editQuestion(@PathVariable("quizId") Long quizId,
-                                          @RequestParam Map<String, String> params) {
+                             @RequestParam Map<String, String> params) {
         logger.info(params);
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
         Integer score = Integer.valueOf(params.get("points"));

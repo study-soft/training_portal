@@ -44,7 +44,7 @@ public class FormatLocalDate extends TagSupport {
             throw new JspException("Value attribute must be instance of java.time.LocalDate," +
                     " was: " + value.getClass().getName());
         }
-        Util.setAttributes(var, formatted, pageContext);
+        JstlUtils.setPageAttributes(var, formatted, pageContext);
         return EVAL_PAGE;
     }
 

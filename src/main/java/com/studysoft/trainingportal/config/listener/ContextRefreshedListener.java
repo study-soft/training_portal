@@ -6,11 +6,16 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.Query;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Set;
 
 @Component
 public class ContextRefreshedListener {
@@ -29,16 +34,22 @@ public class ContextRefreshedListener {
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
         }
-        String serverPort = env.getProperty("server.port");
         String contextPath = env.getProperty("server.servlet.context-path");
         if (contextPath == null || contextPath.isEmpty()) {
             contextPath = "/";
         }
         String hostAddress = "localhost";
+        String serverPort = "8080";
         try {
             hostAddress = InetAddress.getLocalHost().getHostAddress();
+            MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+            Set<ObjectName> objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
+                    Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
+            serverPort = objectNames.iterator().next().getKeyProperty("port");
         } catch (UnknownHostException e) {
             log.warn("The host name could not be determined, using `localhost` as fallback");
+        } catch (MalformedObjectNameException e) {
+            log.warn("The port number could not be determined, using `8080` as fallback");
         }
         log.info(String.format("\n----------------------------------------------------------\n\t" +
                         "Application '%s' is running! Access URLs:\n\t" +

@@ -1,6 +1,6 @@
 package com.studysoft.trainingportal.dao.impl;
 
-import com.studysoft.trainingportal.config.AppConfig;
+import com.studysoft.trainingportal.config.ApplicationConfiguration;
 import com.studysoft.trainingportal.dao.AnswerSequenceDao;
 import com.studysoft.trainingportal.dao.QuestionDao;
 import com.studysoft.trainingportal.model.AnswerSequence;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = ApplicationConfiguration.class)
 @WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:dump_postgres.sql"})

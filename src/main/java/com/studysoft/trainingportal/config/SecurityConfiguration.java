@@ -1,4 +1,4 @@
-package com.studysoft.trainingportal.config.security;
+package com.studysoft.trainingportal.config;
 
 import com.studysoft.trainingportal.service.CustomAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Configuration
-@ComponentScan("com.studysoft.trainingportal")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;

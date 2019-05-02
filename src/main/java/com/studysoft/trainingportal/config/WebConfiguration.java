@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -17,10 +16,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.annotation.PostConstruct;
 import java.util.Locale;
 
-@Configuration
-@ComponentScan("com.studysoft.trainingportal")
 @EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter {
+@Configuration
+public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;

@@ -1,6 +1,6 @@
 package com.studysoft.trainingportal.dao.impl;
 
-import com.studysoft.trainingportal.config.AppConfig;
+import com.studysoft.trainingportal.config.ApplicationConfiguration;
 import com.studysoft.trainingportal.dao.QuestionDao;
 import com.studysoft.trainingportal.model.Question;
 import com.studysoft.trainingportal.model.enums.QuestionType;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = ApplicationConfiguration.class)
 @WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:dump_postgres.sql"})

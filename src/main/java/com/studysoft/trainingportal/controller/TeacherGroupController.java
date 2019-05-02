@@ -52,6 +52,11 @@ public class TeacherGroupController {
         return securityUser.getUserId();
     }
 
+    @ModelAttribute("resourceBundle")
+    public ResourceBundle getResourceBundle() {
+        return ResourceBundle.getBundle("i18n/language", LocaleContextHolder.getLocale());
+    }
+
     // GROUP SHOW ===================================================================
 
     @RequestMapping("/teacher/groups")
@@ -139,13 +144,11 @@ public class TeacherGroupController {
                               @RequestParam("description") String description,
                               @RequestParam Map<String, String> studentIdsMap,
                               @ModelAttribute("teacherId") Long teacherId,
+                              @ModelAttribute("resourceBundle") ResourceBundle bundle,
                               RedirectAttributes redirectAttributes, ModelMap model) {
         logger.info("request param 'name' = " + name);
         logger.info("request param 'description' = " + description);
         logger.info("request param 'studentIdsMap' = " + studentIdsMap);
-
-        Locale locale = LocaleContextHolder.getLocale();
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
 
         name = name.trim();
         if (name.isEmpty()) {
@@ -244,12 +247,10 @@ public class TeacherGroupController {
     public String editGroup(@PathVariable("groupId") Long groupId,
                             @RequestParam("name") String editedName,
                             @RequestParam("description") String editedDescription,
+                            @ModelAttribute("resourceBundle") ResourceBundle bundle,
                             RedirectAttributes redirectAttributes,
                             ModelMap model) {
         Group oldGroup = groupDao.findGroup(groupId);
-
-        Locale locale = LocaleContextHolder.getLocale();
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n/language", locale);
 
         editedName = editedName.trim();
         if (editedName.isEmpty()) {

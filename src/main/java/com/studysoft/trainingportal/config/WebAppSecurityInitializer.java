@@ -1,4 +1,4 @@
-package com.studysoft.trainingportal.config.security;
+package com.studysoft.trainingportal.config;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

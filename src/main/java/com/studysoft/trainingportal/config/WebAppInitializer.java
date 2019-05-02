@@ -11,12 +11,12 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class};
+        return new Class<?>[]{ApplicationConfiguration.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfig.class};
+        return null;
     }
 
     @Override
@@ -37,11 +37,11 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
         super.onStartup(servletContext);
 
 //        set active and default profile
+        servletContext.setInitParameter("spring.profiles.default", Constants.SPRING_PROFILE_LOCAL);
         String activeProfile = System.getProperty("spring.profiles.active");
         System.out.println("active profile = " + activeProfile);
         if (activeProfile == null) {
-            servletContext.setInitParameter("spring.profiles.active", "dev");
+            servletContext.setInitParameter("spring.profiles.active", Constants.SPRING_PROFILE_LOCAL);
         }
-        servletContext.setInitParameter("spring.profiles.default", "dev");
     }
 }

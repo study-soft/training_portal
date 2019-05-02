@@ -1,6 +1,6 @@
 package com.studysoft.trainingportal.dao.impl;
 
-import com.studysoft.trainingportal.config.AppConfig;
+import com.studysoft.trainingportal.config.ApplicationConfiguration;
 import com.studysoft.trainingportal.dao.QuizDao;
 import com.studysoft.trainingportal.dao.UserDao;
 import com.studysoft.trainingportal.model.User;
@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = ApplicationConfiguration.class)
 @WebAppConfiguration
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         scripts = {"classpath:dump_postgres.sql"})
@@ -353,7 +353,7 @@ public class UserDaoJdbcTest {
     public void test_edit_user() {
         userDao.editUser(4L, "firstName", "lastName",
                 "email@example.com", LocalDate.of(2000, 3, 25),
-                "095-000-00-00", "jdbc.password");
+                "095-000-00-00", "password");
 
         User user = userDao.findUser(4L);
 
@@ -362,7 +362,7 @@ public class UserDaoJdbcTest {
         assertThat(user.getEmail(), is("email@example.com"));
         assertThat(user.getDateOfBirth(), is(LocalDate.of(2000, 3, 25)));
         assertThat(user.getPhoneNumber(), is("095-000-00-00"));
-        assertThat(user.getPassword(), is("jdbc.password"));
+        assertThat(user.getPassword(), is("password"));
     }
 
     @Test

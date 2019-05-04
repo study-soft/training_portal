@@ -4,8 +4,8 @@ import com.studysoft.trainingportal.dao.*;
 import com.studysoft.trainingportal.model.*;
 import com.studysoft.trainingportal.model.enums.QuestionType;
 import com.studysoft.trainingportal.model.enums.StudentQuizStatus;
-import com.studysoft.trainingportal.validator.UserValidator;
 import com.studysoft.trainingportal.util.Utils;
+import com.studysoft.trainingportal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -69,7 +69,14 @@ public class StudentController {
 
     // STUDENT GENERAL ===============================================================
 
-    @RequestMapping("/student")
+    /**
+     * Показує головну сторінку для студента
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/student.jsp
+     */
+    @RequestMapping(value = "/student", method = RequestMethod.GET)
     public String showStudentHome(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         student.setPassword(Utils.maskPassword(student.getPassword()));
@@ -89,6 +96,13 @@ public class StudentController {
         return "student_general/student";
     }
 
+    /**
+     * Показує сторінку з формою редагування профіля
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return edit-profile.jsp
+     */
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.GET)
     public String showEditProfile(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
@@ -97,6 +111,19 @@ public class StudentController {
         return "edit-profile";
     }
 
+    /**
+     * Оновлення профіля користувача. Проводиться валідація параметрів, введенех користувачем. Якщо
+     * реєстрація успішна - оновлена інформація зберігається у БД та додається сповіщення успіху на UI
+     *
+     * @param studentId          ID авторизованого користувача у HTTP-сесії
+     * @param newPassword        новий пароль
+     * @param editedStudent      інформація для оновлення, введена користувачем
+     * @param bindingResult      інтерфейс для зручного представлення помилок валідації
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @return edit-profile.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /student при успішному оновленні профіля
+     */
     @RequestMapping(value = "/student/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("studentId") Long studentId,
                               @RequestParam("newPassword") String newPassword,
@@ -151,7 +178,15 @@ public class StudentController {
         return "redirect:/student";
     }
 
-    @RequestMapping("/student/{groupMateId}")
+    /**
+     * Показує сторінку з інформацією про одногрупника
+     *
+     * @param studentId   ID авторизованого користувача у HTTP-сесії
+     * @param groupMateId ID одногрупника
+     * @param model       інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/student-info.jsp
+     */
+    @RequestMapping(value = "/student/{groupMateId}", method = RequestMethod.GET)
     public String showStudentInfo(@ModelAttribute("studentId") Long studentId,
                                   @PathVariable("groupMateId") Long groupMateId,
                                   Model model) {
@@ -195,7 +230,14 @@ public class StudentController {
 
     // STUDENT GROUP =================================================================
 
-    @RequestMapping("/student/group")
+    /**
+     * Показує інформацію про групу студента
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/group.jsp
+     */
+    @RequestMapping(value = "/student/group", method = RequestMethod.GET)
     public String showGroup(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
@@ -216,7 +258,14 @@ public class StudentController {
 
     // STUDENT TEACHERS ==============================================================
 
-    @RequestMapping("/student/teachers")
+    /**
+     * Показує викладачів студента, які публікували йому вікторини
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/teachers.jsp
+     */
+    @RequestMapping(value = "/student/teachers", method = RequestMethod.GET)
     public String showStudentTeachers(@ModelAttribute("studentId") Long studentId, Model model) {
         List<Quiz> quizzes = quizDao.findStudentQuizzes(studentId);
         HashSet<User> teachers = new HashSet<>();
@@ -229,7 +278,15 @@ public class StudentController {
         return "student_general/teachers";
     }
 
-    @RequestMapping("/student/teachers/{teacherId}")
+    /**
+     * Показує інформацію про викладача та вікторини, які він публікував студенту
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param teacherId ID викладача
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/teacher-info.jsp
+     */
+    @RequestMapping(value = "/student/teachers/{teacherId}", method = RequestMethod.GET)
     public String showTeacherDetails(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("teacherId") Long teacherId, Model model) {
         if (checkTeacherAccessDenied(studentId, teacherId)) {
@@ -256,7 +313,14 @@ public class StudentController {
 
     // STUDENT QUIZZES ==============================================================
 
-    @RequestMapping("/student/quizzes")
+    /**
+     * Показує всі вікторини студента, групуючи їх по статусам
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/quizzes.jsp
+     */
+    @RequestMapping(value = "/student/quizzes", method = RequestMethod.GET)
     public String showStudentQuizzes(@ModelAttribute("studentId") Long studentId, Model model) {
         List<OpenedQuiz> openedQuizzes
                 = quizDao.findOpenedQuizzes(studentId);
@@ -273,6 +337,16 @@ public class StudentController {
         return "student_general/quizzes";
     }
 
+    /**
+     * Показує інформацію про вікторину
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_quiz/opened.jsp, якщо вікторина має статус "Відкрита",
+     * student_quiz/passed.jsp, якщо вікторина має статус "Пройдена",
+     * student_quiz/closed.jsp, якщо вікторина має статус "Закрита"
+     */
     @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.GET)
     public String showStudentQuiz(@ModelAttribute("studentId") Long studentId,
                                   @PathVariable("quizId") Long quizId,
@@ -306,6 +380,15 @@ public class StudentController {
         return "student_general/student";
     }
 
+    /**
+     * Переведення статусу вікторини у "Закрита" зі сторінки інформації про пройдену вікторину
+     * student_quiz/passed.jsp. Якщо закриття успішне - додається сповіщення успіху на UI
+     *
+     * @param studentId          ID авторизованого користувача у HTTP-сесії
+     * @param quizId             ID вікторини
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @return проводить перенапрямлення HTTP-запиту на /student/quizzes/ після закриття вікторини
+     */
     @RequestMapping(value = "/student/quizzes/{quizId}", method = RequestMethod.POST)
     public String closeQuiz(@ModelAttribute("studentId") Long studentId,
                             @PathVariable("quizId") Long quizId,
@@ -315,6 +398,14 @@ public class StudentController {
         return "redirect:/student/quizzes/" + quizId;
     }
 
+    /**
+     * Переведення статусу вікторини у "Закрита" зі сторінки вікторин student_general/quizzes.jsp.
+     * Якщо закриття успішне - додається сповіщення успіху на UI
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @return ResponseEntity без тіла і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/student/quizzes/{quizId}/close", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> closeQuiz(@ModelAttribute("studentId") Long studentId,
@@ -323,11 +414,24 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Показує сторінку для початку проходження вікторини. Проводить перевірку на проходження студентом іншої
+     * вікторини, щоб не можна було розпочати нову, не закінчивши попередньої
+     *
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param quizId                ID вікторини
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії, якщо студент
+     *                              вже проходить іншу вікторину
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_quiz/start.jsp або проводить перенапрямлення HTTP-запиту на /student/quizzes/{quizID}/continue,
+     * якщо студент вже почав проходити іншу вікторину
+     */
     @RequestMapping(value = "/student/quizzes/{quizId}/start", method = RequestMethod.GET)
     public String showQuizStart(@ModelAttribute("studentId") Long studentId,
                                 @PathVariable("quizId") Long quizId,
-                                @SessionAttribute(value = com.studysoft.trainingportal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL, required = false)
-                                        Integer currentQuestionSerial,
+                                @SessionAttribute(value =
+                                        com.studysoft.trainingportal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL,
+                                        required = false) Integer currentQuestionSerial,
                                 ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
             throw new AccessDeniedException("Access denied to quiz");
@@ -342,11 +446,24 @@ public class StudentController {
         return "student_quiz/start";
     }
 
+    /**
+     * Показує сторінку для початку повторного проходження вікторини. Проводить перевірку на проходження студентом
+     * іншої вікторини, щоб не можна було розпочати нову, не закінчивши попередньої
+     *
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param quizId                ID вікторини
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії, якщо студент
+     *                              вже проходить іншу вікторину
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_quiz/repass.jsp або проводить перенапрямлення HTTP-запиту на /student/quizzes/{quizID}/continue,
+     * якщо студент вже почав проходити іншу вікторину
+     */
     @RequestMapping(value = "/student/quizzes/{quizId}/repass", method = RequestMethod.GET)
     public String showQuizRepass(@ModelAttribute("studentId") Long studentId,
                                  @PathVariable("quizId") Long quizId,
-                                 @SessionAttribute(value = com.studysoft.trainingportal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL, required = false)
-                                         Integer currentQuestionSerial,
+                                 @SessionAttribute(value =
+                                         com.studysoft.trainingportal.controller.SessionAttributes.CURRENT_QUESTION_SERIAL,
+                                         required = false) Integer currentQuestionSerial,
                                  ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
             throw new AccessDeniedException("Access denied to quiz");
@@ -361,7 +478,16 @@ public class StudentController {
         return "student_quiz/repass";
     }
 
-    @RequestMapping("/student/quizzes/{quizId}/answers")
+    /**
+     * Показує правильні відповіді на питання вікторини. Надає доступ до сторінки тільки тоді, коли
+     * всі студенти в групі пройшли дану вікторину
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_quiz/answers.jsp
+     */
+    @RequestMapping(value = "/student/quizzes/{quizId}/answers", method = RequestMethod.GET)
     public String showAnswers(@ModelAttribute("studentId") Long studentId,
                               @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(studentId, quizId)) {
@@ -427,7 +553,14 @@ public class StudentController {
 
     // STUDENT RESULTS ==================================================================
 
-    @RequestMapping("/student/results")
+    /**
+     * Показує результати студента по всім його вікторинам
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/results.jsp
+     */
+    @RequestMapping(value = "/student/results", method = RequestMethod.GET)
     public String showStudentResults(@ModelAttribute("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);
         Long groupId = student.getGroupId();
@@ -473,7 +606,15 @@ public class StudentController {
         return "student_general/results";
     }
 
-    @RequestMapping("/student/results/{quizId}")
+    /**
+     * Показує порівняння результатів вікторини з результатами одногрупників
+     *
+     * @param studentId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_general/compare-quiz-results.jsp
+     */
+    @RequestMapping(value = "/student/results/{quizId}", method = RequestMethod.GET)
     public String compareQuizResults(@ModelAttribute("studentId") Long studentId,
                                      @PathVariable("quizId") Long quizId,
                                      Model model) {

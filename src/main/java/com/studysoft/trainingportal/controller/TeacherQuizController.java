@@ -73,7 +73,14 @@ public class TeacherQuizController {
 
     // QUIZ SHOW ===============================================================
 
-    @RequestMapping("/teacher/quizzes")
+    /**
+     * Показує всі вікторини викладача
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_general/quizzes.jsp
+     */
+    @RequestMapping(value = "/teacher/quizzes", method = RequestMethod.GET)
     public String showTeacherQuizzes(@ModelAttribute("teacherId") Long teacherId,
                                      Model model) {
         List<Quiz> unpublishedQuizzes = quizDao.findUnpublishedQuizzes(teacherId);
@@ -87,7 +94,16 @@ public class TeacherQuizController {
         return "teacher_general/quizzes";
     }
 
-    @RequestMapping("/teacher/quizzes/{quizId}")
+    /**
+     * Показує інформацію про вікторину та групи й студентів, яким вона опублікована
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_quiz/unpublished-quiz.jsp, якщо вікторина неопублікована,
+     * teacher_quiz/published-quiz, якщо вікторина опублікована
+     */
+    @RequestMapping(value = "/teacher/quizzes/{quizId}", method = RequestMethod.GET)
     public String showTeacherQuiz(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("quizId") Long quizId,
                                   Model model) {
@@ -150,6 +166,14 @@ public class TeacherQuizController {
 
     // QUIZ PUBLICATION =============================================================
 
+    /**
+     * Показує сторінку з формою для публікації
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_quiz/quiz-publication.jsp
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/publication", method = RequestMethod.GET)
     public String showQuizPublication(@ModelAttribute("teacherId") Long teacherId,
                                       @PathVariable("quizId") Long quizId,
@@ -177,6 +201,14 @@ public class TeacherQuizController {
         return "teacher_quiz/quiz-publication";
     }
 
+    /**
+     * Публікація вікторини обраним групам і студентам. Якщо операція успішна - додається сповіщення успіху на UI
+     *
+     * @param quizId             ID вікторини
+     * @param studentIdsMap      ID студентів, яким вікторина публікується
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @return проводить перенапрямлення HTTP-запиту на /teacher/quizzes/ після успішного опублікування
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/publication", method = RequestMethod.POST)
     public String publishQuiz(@PathVariable("quizId") Long quizId,
                               @RequestParam Map<String, String> studentIdsMap,
@@ -196,6 +228,13 @@ public class TeacherQuizController {
 
     // QUIZ UNPUBLICATION ============================================================
 
+    /**
+     * Отримує загальну кількість студентів, яким вікторина була опублікована, та кількість студентів, у яких
+     * статус даної вікторини "Закрита"
+     *
+     * @param quizId ID вікторини
+     * @return ResponseEntity з тілом {"closedStudents": 0, "totalStudents": 0} і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "teacher/quizzes/{quizId}/students-number", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Integer> getStudentsNumber(@PathVariable("quizId") Long quizId) {
@@ -205,6 +244,15 @@ public class TeacherQuizController {
         return studentsNumber;
     }
 
+    /**
+     * Скасування публікації вікторини усім групам і студентам зі сторінки teacher_quiz/unpublished-quiz.jsp.
+     * Якщо операція успішна - додається сповіщення успіху на UI
+     *
+     * @param quizId             ID вікторини
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @return проводить перенапрямлення HTTP-запиту на /teacher/quizzes/{quizId} після успішного
+     * скасування публікації
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/unpublish", method = RequestMethod.POST)
     public String unpublishQuiz(@PathVariable("quizId") Long quizId,
                                 RedirectAttributes redirectAttributes) {
@@ -214,6 +262,13 @@ public class TeacherQuizController {
         return "redirect:/teacher/quizzes/{quizId}";
     }
 
+    /**
+     * Скасування публікації вікторини усім групам і студентам зі сторінки teacher_general/quizzes.jsp.
+     * Якщо операція успішна - додається сповіщення успіху на UI
+     *
+     * @param quizId ID вікторини
+     * @return ResponseEntity без тіла і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/unpublish-from-quizzes", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> unpublishQuizFromQuizzes(@PathVariable("quizId") Long quizId) {
@@ -224,6 +279,13 @@ public class TeacherQuizController {
 
     // QUIZ CLOSE ======================================================================
 
+    /**
+     * Переводить вікторину у статус "Закрита" усій групі
+     *
+     * @param groupId ID групи
+     * @param quizId  ID вікторини
+     * @return ResponseEntity з інформацією про закриту вікторину в тілі і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/results/group/{groupId}/close", method = RequestMethod.POST)
     @ResponseBody
     public List<String> closeQuizToGroup(@PathVariable("groupId") Long groupId,
@@ -236,6 +298,14 @@ public class TeacherQuizController {
         return closedQuizInfo;
     }
 
+    /**
+     * Переводить вікторину у статус "Закрита" студенту зі сторінки teacher_results/student-result.jsp
+     *
+     * @param groupId   ID групи
+     * @param quizId    ID вікторини
+     * @param studentId ID студента
+     * @return ResponseEntity з інформацією про закриту вікторину в тілі і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}/close", method = RequestMethod.POST)
     @ResponseBody
     public List<String> closeQuizToStudentFromStudents(@PathVariable("groupId") Long groupId,
@@ -244,6 +314,13 @@ public class TeacherQuizController {
         return closeQuizToStudent(studentId, quizId);
     }
 
+    /**
+     * Переводить вікторину у статус "Закрита" студенту зі сторінки teacher_results/group-quiz-result.jsp
+     *
+     * @param studentId ID студента
+     * @param quizId    ID вікторини
+     * @return ResponseEntity з інформацією про закриту вікторину в тілі і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/students/{studentId}/close", method = RequestMethod.POST)
     @ResponseBody
     public List<String> closeQuizToStudentFromResults(@PathVariable("studentId") Long studentId,
@@ -253,12 +330,34 @@ public class TeacherQuizController {
 
     // QUIZ CREATE ================================================================
 
+    /**
+     * Показує сторінку з формою створення вікторини
+     *
+     * @param model інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_quiz/quiz-create.jsp
+     */
     @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.GET)
     public String showCreateQuiz(Model model) {
         model.addAttribute("quiz", new Quiz());
         return "teacher_quiz/quiz-create";
     }
 
+    /**
+     * Створення нової вікторини. Проводиться валідація параметрів, введенех користувачем.
+     * Якщо валідація успішна - вікторина створюється у БД та додається сповіщення успіху на UI
+     *
+     * @param teacherId          ID авторизованого користувача у HTTP-сесії
+     * @param quiz               інформація, введена користувачем
+     * @param enabled            показник чи має вікторини час для проходження
+     * @param hours              години для проходження
+     * @param minutes            хвилини для проходження
+     * @param seconds            секунди для проходження
+     * @param bindingResult      інтерфейс для зручного представлення помилок валідації
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @return teacher_quiz/quiz-create.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /teacher/quizzes/{quizId} при успішному створенні вікторини
+     */
     @RequestMapping(value = "/teacher/quizzes/create", method = RequestMethod.POST)
     public String createQuiz(@ModelAttribute("teacherId") Long teacherId,
                              @ModelAttribute("quiz") Quiz quiz,
@@ -317,6 +416,14 @@ public class TeacherQuizController {
 
     // QUIZ EDIT ======================================================================
 
+    /**
+     * Показує сторінку з формою редагування вікторини
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_quiz/quiz-edit.jsp
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.GET)
     public String showEditQuiz(@ModelAttribute("teacherId") Long teacherId,
                                @PathVariable("quizId") Long quizId, Model model) {
@@ -338,6 +445,22 @@ public class TeacherQuizController {
         return "teacher_quiz/quiz-edit";
     }
 
+    /**
+     * Редагування вікторини. Проводиться валідація параметрів, введенех користувачем. Якщо валідація успішна -
+     * вікторина оновлюється у БД та додається сповіщення успіху на UI
+     *
+     * @param quizId             ID вікторини
+     * @param editedQuiz         інформація, введена користувачем
+     * @param bindingResult      інтерфейс для зручного представлення помилок валідації
+     * @param enabled            показник чи має вікторини час для проходження
+     * @param hours              години для проходження
+     * @param minutes            хвилини для проходження
+     * @param seconds            секунди для проходження
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_quiz/quiz-edit.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /teacher/quizzes/{quizId} при успішному оновленні вікторини
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/edit", method = RequestMethod.POST)
     public String editQuiz(@PathVariable("quizId") Long quizId,
                            @ModelAttribute("quiz") Quiz editedQuiz,
@@ -395,6 +518,12 @@ public class TeacherQuizController {
 
     // QUIZ DELETE =================================================================
 
+    /**
+     * Видалення неопублікованої вікторини та усіх її питань
+     *
+     * @param quizId ID вікторини
+     * @return ResponseEntity без тіла і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/quizzes/{quizId}/delete", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> deleteQuiz(@PathVariable("quizId") Long quizId) {
@@ -404,7 +533,17 @@ public class TeacherQuizController {
 
     // QUESTION SHOW ===============================================================
 
-    @RequestMapping("/teacher/quizzes/{quizId}/questions")
+    /**
+     * Показує питання для вікторини з формами створення, редагування і видалення, якщо вікторина
+     * опублікована або просто питання з відповідями, якщо вікторина неопублікована
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return student_quiz/answers.jsp для опублікованої вікторини або
+     * teacher_quiz/questions.jsp для неопублікованої вікторини
+     */
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/questions", method = RequestMethod.GET)
     public String showQuestions(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("quizId") Long quizId, ModelMap model) {
         if (checkQuizAccessDenied(teacherId, quizId)) {
@@ -466,10 +605,17 @@ public class TeacherQuizController {
 
     // QUESTION CREATE AND EDIT ===================================================
 
-    @RequestMapping("/teacher/quizzes/{quizId}/questions/update")
+    /**
+     * Створення або редагування питання. Потрібний алгоритм вибирається в залежності від типу питання
+     *
+     * @param quizId ID вікторини
+     * @param params параметри для створення або редагування питання
+     * @return ResponseEntity з ID створеного або відредагованого питання у тілі і HTTP-статусом 200 OK
+     */
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/questions/update", method = RequestMethod.POST)
     @ResponseBody
-    public Long editQuestion(@PathVariable("quizId") Long quizId,
-                             @RequestParam Map<String, String> params) {
+    public Long createOrEditQuestion(@PathVariable("quizId") Long quizId,
+                                     @RequestParam Map<String, String> params) {
         logger.info(params);
         QuestionType questionType = QuestionType.valueOf(params.get("type"));
         Integer score = Integer.valueOf(params.get("points"));
@@ -608,7 +754,14 @@ public class TeacherQuizController {
 
     // QUESTION DELETE =========================================================
 
-    @RequestMapping("/teacher/quizzes/{quizId}/questions/delete")
+    /**
+     * Видалення питання
+     *
+     * @param quizId     ID вікторини
+     * @param questionId ID питання
+     * @return ResponseEntity без тіла і HTTP-статусом 200 OK
+     */
+    @RequestMapping(value = "/teacher/quizzes/{quizId}/questions/delete", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> deleteQuestion(@PathVariable("quizId") Long quizId,
                                             @RequestParam("questionId") Long questionId) {

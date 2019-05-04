@@ -59,7 +59,14 @@ public class TeacherGroupController {
 
     // GROUP SHOW ===================================================================
 
-    @RequestMapping("/teacher/groups")
+    /**
+     * Показує групи, яким викладач публікував вікторини
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_general/groups.jsp
+     */
+    @RequestMapping(value = "/teacher/groups", method = RequestMethod.GET)
     public String showTeacherGroups(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
         List<Group> teacherGroups = groupDao.findGroups(teacherId);
@@ -88,7 +95,17 @@ public class TeacherGroupController {
         return "teacher_general/groups";
     }
 
-    @RequestMapping("/teacher/groups/{groupId}")
+    /**
+     * Показує інформацію про групу та опубліковані їй вікторини
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param groupId   ID групи
+     * @param locale    об'єкт, що містить інформацію про мову, обрану користувачем
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/own-group-info.jsp, якщо групу створював даний викладач,
+     * teacher_group/foreign-group-info.jsp, якщо група іншого викладача
+     */
+    @RequestMapping(value = "/teacher/groups/{groupId}", method = RequestMethod.GET)
     public String showGroupInfo(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("groupId") Long groupId, Locale locale, Model model) {
         List<Long> teacherGroupIds = groupDao.findTeacherGroupIds(teacherId);
@@ -132,6 +149,12 @@ public class TeacherGroupController {
 
     // GROUP CREATE ===============================================================
 
+    /**
+     * Показує сторінку з формою створення групи
+     *
+     * @param model інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-create.jsp
+     */
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.GET)
     public String showCreateGroup(Model model) {
         List<User> students = userDao.findStudentsWithoutGroup();
@@ -139,6 +162,20 @@ public class TeacherGroupController {
         return "teacher_group/group-create";
     }
 
+    /**
+     * Створення нової групи та додавання до неї студентів. Проводиться валідація параметрів, введенех користувачем.
+     * Якщо валідація успішна - група створюється у БД та додається сповіщення успіху на UI
+     *
+     * @param name               ім'я групи
+     * @param description        опис групи
+     * @param studentIdsMap      ID студентів для додавання у групу
+     * @param teacherId          ID авторизованого користувача у HTTP-сесії
+     * @param bundle             об'єкт для ініціалізації текстових повідомлень, залежно від мови, обраної користувачем
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-create.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /teacher/groups/{groupId} при успішному створенні групи
+     */
     @RequestMapping(value = "/teacher/groups/create", method = RequestMethod.POST)
     public String createGroup(@RequestParam("name") String name,
                               @RequestParam("description") String description,
@@ -188,6 +225,14 @@ public class TeacherGroupController {
         return "redirect:/teacher/groups/" + groupId;
     }
 
+    /**
+     * Показує сторінку з формою додавання студентів до групи
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param groupId   ID групи
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-add-students.jsp
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.GET)
     public String showAddStudents(@ModelAttribute("teacherId") Long teacherId,
                                   @PathVariable("groupId") Long groupId, Model model) {
@@ -204,6 +249,13 @@ public class TeacherGroupController {
         return "teacher_group/group-add-students";
     }
 
+    /**
+     * Додавання студентів до вже створеної групи. Якщо операція успішна - додається сповіщення успіху на UI
+     *
+     * @param groupId       ID групи
+     * @param studentIdsMap ID студентів для додавання у групу
+     * @return ResponseEntity зі списком доданих студентів у тілі і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/add-students", method = RequestMethod.POST)
     @ResponseBody
     public List<User> addStudents(@PathVariable("groupId") Long groupId,
@@ -227,6 +279,14 @@ public class TeacherGroupController {
 
     // GROUP EDIT ==================================================================
 
+    /**
+     * Показує сторінку з формою редагування групи
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param groupId   ID групи
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-edit.jsp
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.GET)
     public String showEditGroup(@ModelAttribute("teacherId") Long teacherId,
                                 @PathVariable("groupId") Long groupId, Model model) {
@@ -243,6 +303,19 @@ public class TeacherGroupController {
         return "teacher_group/group-edit";
     }
 
+    /**
+     * Редагування групи. Проводиться валідація параметрів, введенех користувачем. Якщо валідація успішна -
+     * група оновлюється у БД та додається сповіщення успіху на UI
+     *
+     * @param groupId            ID групи
+     * @param editedName         нове ім'я
+     * @param editedDescription  новий опис
+     * @param bundle             об'єкт для ініціалізації текстових повідомлень, залежно від мови, обраної користувачем
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-edit.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /teacher/groups/{groupId} при успішному оновленні групи
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/edit", method = RequestMethod.POST)
     public String editGroup(@PathVariable("groupId") Long groupId,
                             @RequestParam("name") String editedName,
@@ -289,6 +362,13 @@ public class TeacherGroupController {
 
     // GROUP DELETE ================================================================
 
+    /**
+     * Видалення студента із групи
+     *
+     * @param groupId   ID групи
+     * @param studentId ID студента для видалення
+     * @return ResponseEntity із ID видаленого студента у тілі і HTTP-статусом 200 OK
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/delete-student", method = RequestMethod.POST)
     @ResponseBody
     public Long deleteStudentFromGroup(@PathVariable("groupId") Long groupId,
@@ -297,6 +377,13 @@ public class TeacherGroupController {
         return studentId;
     }
 
+    /**
+     * Видалення групи. Студенти які були в групі, залишаються без групи
+     *
+     * @param groupId ID групи
+     * @param model   інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_group/group-deleted.jsp
+     */
     @RequestMapping(value = "/teacher/groups/{groupId}/delete", method = RequestMethod.POST)
     public String deleteGroup(@PathVariable("groupId") Long groupId, Model model) {
         try {

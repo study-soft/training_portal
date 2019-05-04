@@ -53,6 +53,18 @@ public class QuizPassingController {
         return securityUser.getUserId();
     }
 
+    /**
+     * Попередня ініціалізація вікторини. Проводиться перемішування питань, установлюється дата старту,
+     * а також зберігається інформація про вікторину у HTTP-сесію, для того, щоб не робити додаткових запитів
+     * до БД під час проходження вікторини
+     *
+     * @param securityUser об'єкт, що містить інформацію про користувача, авторизованого в системі
+     * @param studentId    ID авторизованого користувача у HTTP-сесії
+     * @param quizId       ID вікторини, яку збирається пройти користувач
+     * @param session      інтерфейс для роботи з HTTP-сесією
+     * @param model        інтерфейс для додавання атрибутів до моделі на UI
+     * @return проводить перенапрямлення HTTP-запиту на /quizzes/{quizID}/passing для проходження вікторини
+     */
     @RequestMapping(value = "/quizzes/{quizId}/initialize", method = RequestMethod.GET)
     public String initializeQuiz(@AuthenticationPrincipal SecurityUser securityUser,
                                  @ModelAttribute("userId") Long studentId,
@@ -98,6 +110,20 @@ public class QuizPassingController {
         return "redirect:/quizzes/" + quizId + "/passing";
     }
 
+    /**
+     * Ініціалізація першого питання та перевірка часу відведеного на проходження вікторини
+     *
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param quizId                ID вікторини, яку проходить користувач
+     * @param quiz                  вікторина, яку проходить користувач, зберігається у HTTP-сесії
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії
+     * @param questions             питання вікторини, зберігаються у HTTP-сесії
+     * @param startDate             дата початку проходження вікторини, зберігається у HTTP-сесії
+     * @param session               інтерфейс для роботи з HTTP-сесією
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return quiz_passing/question.jsp або перенапрямлення HTTP-запиту на /quizzes/{quizId}/time-up,
+     * якщо сплинув час, відведений на проходження вікторини
+     */
     @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/quizzes/{quizId}/passing", method = RequestMethod.GET)
     public String showCurrentQuestionGet(@ModelAttribute("userId") Long studentId,
@@ -136,6 +162,23 @@ public class QuizPassingController {
         return "quiz_passing/question";
     }
 
+    /**
+     * Ініціалізація поточного питання вікторини та обробка результатів попереднього питання в залежності
+     * від його типу. Також проводиться перевірка часу відведеного на проходження вікторини
+     *
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param studentAnswers        відповідь користувача на попереднє питання
+     * @param quizId                ID вікторини, яку проходить користувач
+     * @param quiz                  вікторина, яку проходить користувач, зберігається у HTTP-сесії
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії
+     * @param questions             питання вікторини, зберігаються у HTTP-сесії
+     * @param result                поточний результат вікторини, яку проходить користувач, зберігається у HTTP-сесії
+     * @param startDate             дата початку проходження вікторини, зберігається у HTTP-сесії
+     * @param session               інтерфейс для роботи з HTTP-сесією
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return quiz_passing/question.jsp або перенапрямлення HTTP-запиту на /quizzes/{quizId}/time-up,
+     * якщо сплинув час, відведений на проходження вікторини
+     */
     @SuppressWarnings("Duplicates")
     @RequestMapping(value = "/quizzes/{quizId}/passing", method = RequestMethod.POST)
     public String showCurrentQuestionPost(@ModelAttribute("userId") Long studentId,
@@ -196,8 +239,6 @@ public class QuizPassingController {
                 }
                 break;
             case ACCORDANCE:
-                // This cast is correct because the array we're creating
-                // is of the same type as the one passed in, which is List<String>
                 @SuppressWarnings("unchecked")
                 List<String> rightSide = (List<String>) session.getAttribute(SessionAttributes.ACCORDANCE_LIST);
                 logger.info(">>> rightSide from session: " + rightSide);
@@ -250,12 +291,33 @@ public class QuizPassingController {
         return "quiz_passing/question";
     }
 
-    @RequestMapping("/quizzes/{quizId}/continue")
+    /**
+     * Обробка дій користувача, якщо він намагається пройти іншу вікторину, не закінчивши першу
+     *
+     * @param quizId ID поточної вікторини, яку проходить користувач
+     * @return quiz_passing/continue.jsp
+     */
+    @RequestMapping(value = "/quizzes/{quizId}/continue", method = RequestMethod.GET)
     public String continuePassing(@PathVariable("quizId") Long quizId) {
         return "quiz_passing/continue";
     }
 
-    @RequestMapping("/quizzes/{quizId}/time-up")
+    /**
+     * Обробка результату, якщо сплив час, відведений на проходження вікторини. Збереження результату до БД,
+     * інкремент спроби на одиницю та відображення сторінки вітань з результатами
+     *
+     * @param securityUser          об'єкт, що містить інформацію про користувача, авторизованого в системі
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param quizId                ID вікторини, яку проходить користувач
+     * @param result                поточний результат вікторини, яку проходить користувач, зберігається у HTTP-сесії
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії
+     * @param timeLeft              час, який залишився для проходження вікторини, зберігається у HTTP-сесії
+     * @param startDate             дата початку проходження вікторини, зберігається у HTTP-сесії
+     * @param session               інтерфейс для роботи з HTTP-сесією
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return quiz_passing/time-up.jsp
+     */
+    @RequestMapping(value = "/quizzes/{quizId}/time-up", method = RequestMethod.GET)
     public String showTimeUp(@AuthenticationPrincipal SecurityUser securityUser,
                              @ModelAttribute("userId") Long studentId,
                              @PathVariable("quizId") Long quizId,
@@ -271,7 +333,22 @@ public class QuizPassingController {
         return "quiz_passing/time-up";
     }
 
-    @RequestMapping("/quizzes/{quizId}/congratulations")
+    /**
+     * Обробка результату при успішному проходженні вікторини. Збереження результату до БД,
+     * інкремент спроби на одиницю та відображення сторінки вітань з результатами
+     *
+     * @param securityUser          об'єкт, що містить інформацію про користувача, авторизованого в системі
+     * @param studentId             ID авторизованого користувача у HTTP-сесії
+     * @param quizId                ID вікторини, яку проходить користувач
+     * @param result                поточний результат вікторини, яку проходить користувач, зберігається у HTTP-сесії
+     * @param currentQuestionSerial порядковий номер поточного питання, зберігається у HTTP-сесії
+     * @param timeLeft              час, який залишився для проходження вікторини, зберігається у HTTP-сесії
+     * @param startDate             дата початку проходження вікторини, зберігається у HTTP-сесії
+     * @param session               інтерфейс для роботи з HTTP-сесією
+     * @param model                 інтерфейс для додавання атрибутів до моделі на UI
+     * @return quiz_passing/congratulations.jsp
+     */
+    @RequestMapping(value = "/quizzes/{quizId}/congratulations", method = RequestMethod.GET)
     public String showResult(@AuthenticationPrincipal SecurityUser securityUser,
                              @ModelAttribute("userId") Long studentId,
                              @PathVariable("quizId") Long quizId,

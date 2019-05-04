@@ -51,7 +51,7 @@
         <h4><spring:message code="quiz.quizzes.opened"/></h4>
         <table id="openedQuizzes" class="table">
             <tr>
-                <th style="width: 18%"><spring:message code="quiz.name"/></th>
+                <th style="width: 26%"><spring:message code="quiz.name"/></th>
                 <th style="width: 21%"><spring:message code="quiz.submitted"/></th>
                 <th colspan="4" style="width: 51%"></th>
             </tr>

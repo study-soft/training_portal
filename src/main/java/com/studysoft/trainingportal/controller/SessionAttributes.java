@@ -11,5 +11,6 @@ public final class SessionAttributes {
     public static final String START_DATE = "startDate";
     public static final String TIME_LEFT = "timeLeft";
 
-    private SessionAttributes() {}
+    private SessionAttributes() {
+    }
 }

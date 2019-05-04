@@ -1,12 +1,12 @@
 package com.studysoft.trainingportal.controller;
 
-import com.studysoft.trainingportal.validator.UserValidator;
 import com.studysoft.trainingportal.dao.GroupDao;
 import com.studysoft.trainingportal.dao.UserDao;
 import com.studysoft.trainingportal.model.Group;
 import com.studysoft.trainingportal.model.SecurityUser;
 import com.studysoft.trainingportal.model.User;
 import com.studysoft.trainingportal.util.Utils;
+import com.studysoft.trainingportal.validator.UserValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,11 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @SessionAttributes("teacherId")
@@ -46,7 +47,14 @@ public class TeacherController {
         return securityUser.getUserId();
     }
 
-    @RequestMapping("/teacher")
+    /**
+     * Показує головну сторінку для викладача
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_general/teacher.jsp
+     */
+    @RequestMapping(value = "/teacher", method = RequestMethod.GET)
     public String showTeacherHome(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
         teacher.setPassword(Utils.maskPassword(teacher.getPassword()));
@@ -54,6 +62,13 @@ public class TeacherController {
         return "teacher_general/teacher";
     }
 
+    /**
+     * Показує сторінку з формою редагування профіля
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return edit-profile.jsp
+     */
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.GET)
     public String showEditProfile(@ModelAttribute("teacherId") Long teacherId, Model model) {
         User teacher = userDao.findUser(teacherId);
@@ -62,6 +77,19 @@ public class TeacherController {
         return "edit-profile";
     }
 
+    /**
+     * Оновлення профіля користувача. Проводиться валідація параметрів, введенех користувачем. Якщо
+     * реєстрація успішна - оновлена інформація зберігається у БД та додається сповіщення успіху на UI
+     *
+     * @param teacherId          ID авторизованого користувача у HTTP-сесії
+     * @param newPassword        новий пароль
+     * @param editedTeacher      інформація для оновлення, введена користувачем
+     * @param bindingResult      інтерфейс для зручного представлення помилок валідації
+     * @param redirectAttributes інтерфейс для збереження атрибутів під час перенапрямлення HTTP-запиту
+     * @param model              інтерфейс для додавання атрибутів до моделі на UI
+     * @return edit-profile.jsp при помилках валідації або проводить перенапрямлення HTTP-запиту
+     * на /teacher при успішному оновленні профіля
+     */
     @RequestMapping(value = "/teacher/edit-profile", method = RequestMethod.POST)
     public String editProfile(@ModelAttribute("teacherId") Long teacherId,
                               @RequestParam("newPassword") String newPassword,
@@ -120,7 +148,14 @@ public class TeacherController {
         return "redirect:/teacher";
     }
 
-    @RequestMapping("/teacher/students")
+    /**
+     * Показує всіх студентів, яким викладач публікував вікторини
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_general/students.jsp
+     */
+    @RequestMapping(value = "/teacher/students", method = RequestMethod.GET)
     public String showStudents(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<User> students = userDao.findStudentsByTeacherId(teacherId);
         final List<Group> groups = new ArrayList<>();

@@ -11,10 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,8 +33,8 @@ public class TeacherResultsController {
 
     @Autowired
     public TeacherResultsController(UserDao userDao,
-                             GroupDao groupDao,
-                             QuizDao quizDao) {
+                                    GroupDao groupDao,
+                                    QuizDao quizDao) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.quizDao = quizDao;
@@ -47,7 +45,15 @@ public class TeacherResultsController {
         return securityUser.getUserId();
     }
 
-    @RequestMapping("/teacher/results")
+    /**
+     * Показує сторінку результатів для викладача з можливістю вибору перегляду результатів по групам
+     * або студентам без групи
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_general/results.jsp
+     */
+    @RequestMapping(value = "/teacher/results", method = RequestMethod.GET)
     public String showResults(@ModelAttribute("teacherId") Long teacherId, Model model) {
         List<Group> groups = groupDao.findGroupsWhichTeacherGaveQuiz(teacherId);
         model.addAttribute("groups", groups);
@@ -58,7 +64,15 @@ public class TeacherResultsController {
         return "teacher_general/results";
     }
 
-    @RequestMapping("/teacher/results/group/{groupId}")
+    /**
+     * Показує результати групи по всім вікторинам, які викладач публікував їй
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param groupId   ID групи
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_results/group-result.jsp
+     */
+    @RequestMapping(value = "/teacher/results/group/{groupId}", method = RequestMethod.GET)
     public String showGroupResults(@ModelAttribute("teacherId") Long teacherId,
                                    @PathVariable("groupId") Long groupId, Model model) {
         List<Quiz> groupQuizzes = quizDao.findPublishedQuizzes(groupId, teacherId);
@@ -102,7 +116,16 @@ public class TeacherResultsController {
         return "teacher_results/group-result";
     }
 
-    @RequestMapping("/teacher/results/group/{groupId}/quiz/{quizId}")
+    /**
+     * Показує детальні результати групи по конкретній вікторині
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param groupId   ID групи
+     * @param quizId    ID вікторини
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_results/group-quiz-result.jsp
+     */
+    @RequestMapping(value = "/teacher/results/group/{groupId}/quiz/{quizId}", method = RequestMethod.GET)
     public String showGroupQuizResults(@ModelAttribute("teacherId") Long teacherId,
                                        @PathVariable("groupId") Long groupId,
                                        @PathVariable("quizId") Long quizId,
@@ -143,7 +166,15 @@ public class TeacherResultsController {
         return "teacher_results/group-quiz-result";
     }
 
-    @RequestMapping("/teacher/students/{studentId}")
+    /**
+     * Показує результати студента по всім вікторинам, які публікував йому викладач
+     *
+     * @param teacherId ID авторизованого користувача у HTTP-сесії
+     * @param studentId ID студента
+     * @param model     інтерфейс для додавання атрибутів до моделі на UI
+     * @return teacher_results/student-result.jsp
+     */
+    @RequestMapping(value = "/teacher/students/{studentId}", method = RequestMethod.GET)
     public String showStudentResults(@ModelAttribute("teacherId") Long teacherId,
                                      @PathVariable("studentId") Long studentId, Model model) {
         User student = userDao.findUser(studentId);

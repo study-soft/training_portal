@@ -29,8 +29,8 @@ public class DatabaseConfiguration {
     public BoneCPDataSource dataSource() {
         URI dbUri = null;
         try {
-            Class.forName(env.getProperty("database.driver-class-name"));
-            dbUri = new URI(env.getProperty("database.url"));
+            Class.forName(env.getRequiredProperty("database.driver-class-name"));
+            dbUri = new URI(env.getRequiredProperty("database.url"));
         } catch (ClassNotFoundException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class DatabaseConfiguration {
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' +
                 dbUri.getPort() + dbUri.getPath() + "?" +
-                (env.getProperty("spring.profiles.active").contains(Constants.SPRING_PROFILE_PROD) ? "sslmode=require" : "");
+                (env.getRequiredProperty("spring.profiles.active").contains(Constants.SPRING_PROFILE_PROD) ? "sslmode=require" : "");
 
         log.debug("database url: " + dbUrl);
 

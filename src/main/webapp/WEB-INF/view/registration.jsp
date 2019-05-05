@@ -10,15 +10,7 @@
 <body>
 <br>
 <div class="container">
-    <div class="right">
-        <a id="en" href="#">EN</a> <a id="ru" href="#">RU</a> <a id="uk" href="#">UK</a>
-    </div>
-    <br>
-    <div class="text-center">
-        <img src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
-             width="30" height="35" style="margin-bottom: 15px">
-        <h2 style="display: inline"><spring:message code="registration.training.portal"/></h2>
-    </div>
+    <c:import url="./fragment/head-without-navbar.jsp"/>
     <br>
     <form:form action="/register" method="post" modelAttribute="user" cssClass="col-md-6 center">
         <div class="form-group row">

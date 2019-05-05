@@ -56,7 +56,7 @@
             params.set('lang', lang);
             location.search = '?' + params.toString();
         });
-    })
+    });
 
     // set 'active' class to current language
     $(document).ready(() => {

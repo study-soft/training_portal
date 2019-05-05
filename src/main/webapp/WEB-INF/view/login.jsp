@@ -21,36 +21,7 @@
 <body>
 <br>
 <div class="container">
-    <div class="text-center">
-        <a id="en" href="javascript:void(0);">
-            <img src="${pageContext.request.contextPath}/resources/icons/united-states.png"
-                 width="20" height="20" alt="English">
-            <spring:message code="navbar.language.english"/>
-        </a>&nbsp;&nbsp;&nbsp;
-        <a id="ru" href="#">
-            <img src="${pageContext.request.contextPath}/resources/icons/russia.png"
-                 width="20" height="20" alt="Russian">
-            <spring:message code="navbar.language.russian"/>
-        </a>&nbsp;&nbsp;&nbsp;
-        <a id="uk" href="javascript:void(0);">
-            <img src="${pageContext.request.contextPath}/resources/icons/ukraine.png"
-                 width="20" height="20" alt="Ukrainian">
-            <spring:message code="navbar.language.ukrainian"/>
-        </a>
-    </div>
-    <br>
-    <div class="row justify-content-center">
-        <div class="col-auto">
-            <div class="media">
-                <img class="mr-2" style="margin-top: 15px"
-                     src="${pageContext.request.contextPath}/resources/icons/training-portal-favicon.png"
-                     width="30" height="35">
-                <div class="media-body">
-                    <h2><spring:message code="login.training.portal"/></h2>
-                </div>
-            </div>
-        </div>
-    </div>
+    <c:import url="./fragment/head-without-navbar.jsp"/>
     <div class="row justify-content-center">
         <a href="${pageContext.request.contextPath}/help" class="ml-5">
             <h5><spring:message code="login.help"/> <i class="fa fa-external-link"></i></h5>

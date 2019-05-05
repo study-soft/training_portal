@@ -10,7 +10,7 @@
 <body>
 <br>
 <div class="container">
-    <c:import url="./fragment/head-without-navbar.jsp"/>
+    <c:import url="fragment/header-without-navbar.jsp"/>
     <br>
     <form:form action="/register" method="post" modelAttribute="user" cssClass="col-md-6 center">
         <div class="form-group row">

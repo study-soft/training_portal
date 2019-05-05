@@ -21,7 +21,7 @@
 <body>
 <br>
 <div class="container">
-    <c:import url="./fragment/head-without-navbar.jsp"/>
+    <c:import url="fragment/header-without-navbar.jsp"/>
     <div class="row justify-content-center">
         <a href="${pageContext.request.contextPath}/help" class="ml-5">
             <h5><spring:message code="login.help"/> <i class="fa fa-external-link"></i></h5>
